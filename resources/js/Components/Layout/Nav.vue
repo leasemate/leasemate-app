@@ -32,7 +32,7 @@ import { Link } from '@inertiajs/vue3';
     <!--- Menu -->
     <div class="srcollbar" data-simplebar>
       <ul class="menu" data-fc-type="accordion">
-        <li class="menu-title">Menu</li>
+        <li class="menu-title">Welcome, {{ $page.props.auth.user.name }}</li>
 
         <li class="menu-item">
 
