@@ -1,3 +1,10 @@
+<script setup>
+
+import DropdownLink from '@/Components/DropdownLink.vue';
+
+</script>
+
+
 <template>
 
   <header class="app-header flex items-center px-4 gap-3">
@@ -201,11 +208,15 @@
         <img src="/images/users/user-6.jpg" alt="user-image" class="rounded-full h-10">
       </button>
       <div class="fc-dropdown fc-dropdown-open:opacity-100 hidden opacity-0 w-44 z-50 transition-[margin,opacity] duration-300 mt-2 bg-white shadow-lg border rounded-lg p-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
-        <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="pages-gallery.html">
-          <i class="mgc_user_2_fill  me-2"></i>
+<!--        <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="pages-gallery.html">-->
+<!--          <i class="mgc_user_2_fill  me-2"></i>-->
 
-          <span>My Profile</span>
-        </a>
+<!--          <span>My Profile</span>-->
+<!--        </a>-->
+        <DropdownLink :href="route('profile.edit')">
+          <i class="mgc_user_2_fill me-2"></i>Profile
+        </DropdownLink>
+
 <!--        <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="apps-kanban.html">-->
 <!--          <i class="mgc_task_2_line  me-2"></i>-->
 <!--          <span>Kanban</span>-->
@@ -215,10 +226,16 @@
 <!--          <span>Lock Screen</span>-->
 <!--        </a>-->
         <hr class="my-2 -mx-2 border-gray-200 dark:border-gray-700">
-        <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('second', ['auth', 'login']) }}">
-          <i class="mgc_exit_line  me-2"></i>
-          <span>Log Out</span>
-        </a>
+<!--        <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('second', ['auth', 'login']) }}">-->
+<!--          <i class="mgc_exit_line  me-2"></i>-->
+<!--          <span>Log Out</span>-->
+<!--        </a>-->
+
+        <DropdownLink :href="route('logout')" method="post" as="button">
+          <i class=""></i>
+          Log Out
+        </DropdownLink>
+
       </div>
     </div>
   </header>

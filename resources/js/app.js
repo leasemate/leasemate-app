@@ -5,6 +5,8 @@ import '../scss/plugins.scss';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
+
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
@@ -19,7 +21,9 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props), mounted() {
+        return createApp({
+            render: () => h(App, props),
+            mounted() {
                 initFrost();
                 new MyApp().init();
                 new ThemeCustomizer().init();
@@ -31,5 +35,12 @@ createInertiaApp({
     },
     progress: {
         color: '#4B5563',
+        showSpinner: true,
     },
+});
+
+Inertia.on('navigate', () => {
+    initFrost();
+    new MyApp().init();
+    new ThemeCustomizer().init();
 });

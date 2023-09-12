@@ -17,10 +17,8 @@ export class MyApp {
                     mybutton.classList.remove('hidden');
 
                 } else {
-                    console.log("esle")
                     mybutton.classList.remove('flex');
                     mybutton.classList.add('hidden');
-
                 }
             });
 
@@ -86,6 +84,8 @@ export class ThemeCustomizer {
         var self = this;
         var pageUrl = window.location.href.split(/[?#]/)[0];
 
+        self.resetSideNav();
+
         document.querySelectorAll('ul.menu a.menu-link').forEach((element) => {
 
             if (element.href === pageUrl) {
@@ -132,6 +132,18 @@ export class ThemeCustomizer {
             };
             animateScroll();
         }
+    }
+
+    resetSideNav() {
+
+        document.querySelectorAll('ul.menu a.menu-link').forEach((element) => {
+            element.classList.remove('open');
+        });
+
+        document.querySelectorAll('ul.sub-menu').forEach((element) => {
+            element.classList.add('hidden');
+        });
+
     }
 
     reverseQuery(element, query) {
