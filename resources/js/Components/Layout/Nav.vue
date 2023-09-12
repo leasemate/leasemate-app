@@ -41,6 +41,11 @@ import { Link } from '@inertiajs/vue3';
             <span class="menu-text"> Dashboard </span>
           </Link>
 
+          <Link :href="route('file-upload')" class="menu-link">
+            <span class="menu-icon"><i class="mgc_file_upload_line"></i></span>
+            <span class="menu-text"> File Upload </span>
+          </Link>
+
 <!--          <a href="{{ route('dashboard') }}" class="menu-link">-->
 <!--            <span class="menu-icon"><i class="mgc_home_3_line"></i></span>-->
 <!--            <span class="menu-text"> Dashboard </span>-->
@@ -77,31 +82,31 @@ import { Link } from '@inertiajs/vue3';
 <!--          </a>-->
 <!--        </li>-->
 
-        <li class="menu-item">
-          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">
-            <span class="menu-icon"><i class="mgc_building_2_line"></i></span>
-            <span class="menu-text"> Project </span>
-            <span class="menu-arrow"></span>
-          </a>
+<!--        <li class="menu-item">-->
+<!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
+<!--            <span class="menu-icon"><i class="mgc_building_2_line"></i></span>-->
+<!--            <span class="menu-text"> Project </span>-->
+<!--            <span class="menu-arrow"></span>-->
+<!--          </a>-->
 
-          <ul class="sub-menu hidden">
-            <li class="menu-item">
-              <a href="/" class="menu-link">
-                <span class="menu-text">List</span>
-              </a>
-            </li>
-            <li class="menu-item">
-              <a href="{{ route('second', ['project', 'detail']) }}" class="menu-link">
-                <span class="menu-text">Detail</span>
-              </a>
-            </li>
-            <li class="menu-item">
-              <a href="{{ route('second', ['project', 'create']) }}" class="menu-link">
-                <span class="menu-text">Create</span>
-              </a>
-            </li>
-          </ul>
-        </li>
+<!--          <ul class="sub-menu hidden">-->
+<!--            <li class="menu-item">-->
+<!--              <a href="/" class="menu-link">-->
+<!--                <span class="menu-text">List</span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="menu-item">-->
+<!--              <a href="{{ route('second', ['project', 'detail']) }}" class="menu-link">-->
+<!--                <span class="menu-text">Detail</span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--            <li class="menu-item">-->
+<!--              <a href="{{ route('second', ['project', 'create']) }}" class="menu-link">-->
+<!--                <span class="menu-text">Create</span>-->
+<!--              </a>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </li>-->
 
 <!--        <li class="menu-title">Custom</li>-->
 
