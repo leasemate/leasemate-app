@@ -277,6 +277,7 @@ export class ThemeCustomizer {
         // Menu Toggle Button ( Placed in Topbar)
         var menuToggleBtn = document.querySelector('#button-toggle-menu');
         if (menuToggleBtn) {
+
             menuToggleBtn.addEventListener('click', function () {
                 var configView = self.config.sidenav.view;
                 var view = self.html.getAttribute('data-sidenav-view', configView);
