@@ -2,18 +2,15 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import moment from "moment";
-import { TailwindPagination } from "laravel-vue-pagination";
+import Pagination from "@/Components/Pagination.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
-defineProps({
+const { uploaded_files } = defineProps({
     uploaded_files: {
         type: Object,
     },
 });
 
-const getResults = async (page = 1) => {
-    const response = await fetch(`/file-upload?page=${page}`);
-    uploaded_files.value = await response.json();
-};
 </script>
 
 <template>
@@ -35,9 +32,7 @@ const getResults = async (page = 1) => {
 
             <div class="card">
                 <div class="card-header">
-                    <h4
-                        class="text-lg font-semibold text-gray-800 dark:text-gray-300"
-                    >
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-300">
                         Your Files
                     </h4>
                 </div>
@@ -46,9 +41,7 @@ const getResults = async (page = 1) => {
                     <div class="overflow-x-auto">
                         <div class="inline-block min-w-full align-middle">
                             <div class="overflow-hidden">
-                                <table
-                                    class="min-w-full divide-y divide-gray-200 dark:divide-gray-600"
-                                >
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                                     <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr
                                             class="text-gray-800 dark:text-gray-300"
@@ -91,45 +84,23 @@ const getResults = async (page = 1) => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody
-                                        class="divide-y divide-gray-200 dark:divide-gray-600"
-                                    >
-                                        <tr
-                                            v-for="file in uploaded_files"
-                                            :key="file.id"
-                                        >
-                                            <td
-                                                class="p-3.5 text-sm text-gray-700 dark:text-gray-400"
-                                            >
-                                                <a
-                                                    href="javascript: void(0);"
-                                                    class="font-medium"
-                                                    >{{ file.original_name }}</a
-                                                >
+                                    <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+
+                                        <tr v-for="file in uploaded_files.data" :key="file.id">
+
+                                            <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
+                                                <a href="javascript: void(0);" class="font-medium">{{ file.original_name }}</a>
                                             </td>
                                             <td
-                                                class="p-3.5 text-sm text-gray-700 dark:text-gray-400"
-                                            >
-                                                <p>
-                                                    {{
-                                                        moment(
-                                                            file.created_at,
-                                                        ).format("MMM DD, YYYY")
-                                                    }}
-                                                </p>
-                                                <span class="text-xs"
-                                                    >by
-                                                    {{ file.user.name }}</span
+                                                class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
+                                                <p>{{ moment(file.created_at,).format("MMM DD, YYYY h:mm a") }}</p>
+                                                <span class="text-xs">by {{ file.user.name }}</span
                                                 >
                                             </td>
-                                            <td
-                                                class="p-3.5 text-sm text-gray-700 dark:text-gray-400"
-                                            >
+                                            <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
                                                 {{ file.size_readable }}
                                             </td>
-                                            <td
-                                                class="p-3.5 text-sm text-gray-700 dark:text-gray-400"
-                                            >
+                                            <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
                                                 Danielle Thompson
                                             </td>
                                             <td class="p-3.5">
@@ -193,13 +164,8 @@ const getResults = async (page = 1) => {
                                                         </svg>
                                                     </button>
 
-                                                    <div
-                                                        class="fc-dropdown hidden fc-dropdown-open:opacity-100 opacity-0 w-40 z-50 mt-2 transition-all duration-300 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                                                    >
-                                                        <a
-                                                            class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                                                            href="#"
-                                                        >
+                                                    <div class="fc-dropdown hidden fc-dropdown-open:opacity-100 opacity-0 w-40 z-50 mt-2 transition-all duration-300 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-2">
+                                                        <a class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="#">
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                                 width="24"
@@ -335,9 +301,9 @@ const getResults = async (page = 1) => {
                 </div>
             </div>
 
-            <TailwindPagination
-                :data="uploaded_files"
-                @pagination-change-page="getResults"
+            <Pagination
+                :links="uploaded_files.links"
+                class="mt-4"
             />
         </div>
     </AuthenticatedLayout>

@@ -28,7 +28,7 @@ createInertiaApp({
         return createApp({
             render: () => h(App, props),
             mounted() {
-                initFrost();
+                // initFrost();
                 new MyApp().init();
                 new ThemeCustomizer().init();
             },
@@ -44,7 +44,7 @@ createInertiaApp({
 });
 
 Inertia.on("navigate", () => {
-    initFrost();
+    // initFrost();
     new MyApp().init();
     new ThemeCustomizer().init();
 });

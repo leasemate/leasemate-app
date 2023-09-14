@@ -14,12 +14,18 @@ class FileUploadController extends Controller
      */
     public function index()
     {
-        $files = FileUpload::with('user')->orderBy('created_at', 'desc')->paginate(4);
+        $files = FileUpload::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        $files = $files->map(function ($file) {
+//        dd($files);
+
+        $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
             return $file;
         });
+
+        $files->setCollection($transformed);
 
         return Inertia::render('FileUpload/Index', [
             'uploaded_files' => $files
@@ -41,7 +47,6 @@ class FileUploadController extends Controller
     {
 
         try {
-//            throw new \Exception("error ");
 
             $request->validate([
                 'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif|max:2048',  // Change max size as needed
@@ -51,17 +56,13 @@ class FileUploadController extends Controller
 
                 $file = $request->file('upload_file');
 
-//                dd($file);
-                $storedName = $file->store('pdfs');
-                $storedName = uuid_create() . '.' . $request->upload_file->extension();
-
-                $request->upload_file->storeAs('public/pdfs', $storedName);                // Store the file on disk (e.g., storage/app/uploads)
+                $storedName = $file->store(auth()->user()->id.'/pdfs', ['disk'=>'s3', 'visibility'=>'public']);
 
                 // Create an entry in the database
                 $fileUpload = new FileUpload();
                 $fileUpload->user_id = auth()->user()->id;
                 $fileUpload->original_name = $file->getClientOriginalName();
-                $fileUpload->stored_name = "pdfs/".$storedName;
+                $fileUpload->stored_name = $storedName;
                 $fileUpload->mime_type = $file->getClientMimeType();
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
