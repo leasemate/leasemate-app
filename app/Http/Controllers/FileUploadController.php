@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
 use App\Models\FileUpload;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class FileUploadController extends Controller
@@ -22,11 +23,12 @@ class FileUploadController extends Controller
 
         $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
+            $file->download_link = Storage::disk('s3')->url($file->stored_name);
             return $file;
         });
 
         $files->setCollection($transformed);
-
+//dd($files->first());
         return Inertia::render('FileUpload/Index', [
             'uploaded_files' => $files
         ]);

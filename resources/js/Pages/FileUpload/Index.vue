@@ -89,7 +89,7 @@ const { uploaded_files } = defineProps({
                                         <tr v-for="file in uploaded_files.data" :key="file.id">
 
                                             <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
-                                                <a href="javascript: void(0);" class="font-medium">{{ file.original_name }}</a>
+                                                <a :href="file.download_link" target="_blank" rel="noopener noreferrer" class="font-medium">{{ file.original_name }}</a>
                                             </td>
                                             <td
                                                 class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
