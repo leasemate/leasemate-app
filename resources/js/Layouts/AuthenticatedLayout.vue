@@ -10,12 +10,16 @@ import Header from "@/Components/Layout/Header.vue";
 import Nav from "@/Components/Layout/Nav.vue";
 import Footer from "@/Components/Layout/Footer.vue";
 import SubHeader from "@/Components/Layout/SubHeader.vue";
+import AutoLogout from "@/Components/AutoLogout.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
     <div>
+
+        <AutoLogout />
+
         <div class="flex wrapper min-h-screen bg-gray-100">
             <!--          <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />-->
 
