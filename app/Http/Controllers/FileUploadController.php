@@ -53,7 +53,7 @@ class FileUploadController extends Controller
         try {
 
             $request->validate([
-                'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif|max:2048',  // Change max size as needed
+                'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif,xls,xlsx|max:2048',  // Change max size as needed
             ], [
                 'upload_file.max' => 'The upload file must not be great than 2MB',  // Change max size as needed
             ]);

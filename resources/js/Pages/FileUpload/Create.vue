@@ -28,11 +28,13 @@ setOptions({
     allowRevert: false,
     acceptedFileTypes: [
         'application/pdf',
-            'image/png',
-            'image/jpeg',
-            'image/jpg',
-            'image/gif',
-        ],
+        'application/x-excel',
+        'application/x-xls',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/gif',
+    ],
     // files: files,
     server: {
         process: {
@@ -71,4 +73,18 @@ setOptions({
     </AuthenticatedLayout>
 </template>
 
-<style scoped></style>
+<style >
+
+.filepond--wrapper {
+    border-radius: 0.875rem;
+    border-width: 3px;
+    border-style: dashed;
+    --tw-border-opacity: 1;
+    border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.filepond--root {
+    margin: 0;
+}
+
+</style>
