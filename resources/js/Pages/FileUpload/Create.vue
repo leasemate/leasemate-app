@@ -12,20 +12,42 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/d
 import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
 
 const token = document.querySelector('meta[name="csrf-token"]').content;
-
-console.log("token", token);
-
 const FilePond = VueFilePond(FilePondPluginFileValidateType);
 const files = ref([]);
 
+let serverResponse = '';
+
 const handleFilePondInit = () => {
-    console.log("FilePond has initialized");
+    // console.log("FilePond has initialized");
 };
 
 setOptions({
+    credits: [],
+    required: true,
+    allowMultiple: true,
+    allowRevert: false,
+    acceptedFileTypes: [
+        'application/pdf',
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+            'image/gif',
+        ],
+    // files: files,
+    server: {
+        process: {
+            url: '/file-upload',
+            headers: {
+                'X-CSRF-TOKEN': token,
+            },
+            onerror: (response) => {
+                serverResponse = JSON.parse(response);
+            }
+        },
+    },
+    labelFileProcessingComplete: "Upload Complete! Processing File...",
     labelFileProcessingError: (error) => {
-        console.log(error);
-        return `Error: ${error.body}`;
+        return serverResponse.errors;
     },
 });
 </script>
@@ -43,26 +65,6 @@ setOptions({
                 class-name="my-file-upload"
                 label-idle="Drag & Drop your PDF files here or <span class='filepond--label-action'>Browse</span>"
                 v-model="files"
-                :credits="[]"
-                :required="true"
-                :allowMultiple="true"
-                :allowRevert="false"
-                :accepted-file-types="[
-                    'application/pdf',
-                    'image/png',
-                    'image/jpeg',
-                    'image/jpg',
-                    'image/gif',
-                ]"
-                :files="files"
-                :server="{
-                    process: {
-                        url: '/file-upload',
-                        headers: {
-                            'X-CSRF-TOKEN': token,
-                        },
-                    },
-                }"
                 @init="handleFilePondInit"
             />
         </div>

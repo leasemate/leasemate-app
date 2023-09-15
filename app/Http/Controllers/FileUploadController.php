@@ -54,6 +54,8 @@ class FileUploadController extends Controller
 
             $request->validate([
                 'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif|max:2048',  // Change max size as needed
+            ], [
+                'upload_file.max' => 'The upload file must not be great than 2MB',  // Change max size as needed
             ]);
 
             if ($request->hasFile('upload_file')) {
@@ -77,13 +79,8 @@ class FileUploadController extends Controller
             }
 
         } catch (\Exception $e) {
-
-            return response()->json(['message' => $e->getMessage()], 422);
+            return response()->json(['errors' => $e->getMessage()], 422);
         }
-
-
-
-
 
     }
 
