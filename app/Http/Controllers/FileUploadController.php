@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\ReaiProcessor;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
+use App\Jobs\ProcessFile;
 use App\Models\FileUpload;
+//use App\Services\ReaiProcessor;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -15,11 +18,10 @@ class FileUploadController extends Controller
      */
     public function index()
     {
+
         $files = FileUpload::with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
-//        dd($files);
 
         $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
@@ -28,7 +30,7 @@ class FileUploadController extends Controller
         });
 
         $files->setCollection($transformed);
-//dd($files->first());
+
         return Inertia::render('FileUpload/Index', [
             'uploaded_files' => $files
         ]);
@@ -69,19 +71,10 @@ class FileUploadController extends Controller
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
 
+                ProcessFile::dispatch($fileUpload);
+
                 return $fileUpload;
-
             }
-
-
-
-
-
-//            $file_uploaded = FileUpload::create(['file' => $fileName]);
-
-//        return redirect()->back()->with('message', 'PDF Uploaded Successfully');
-
-
 
         } catch (\Exception $e) {
 
