@@ -1,7 +1,14 @@
 import "./bootstrap";
-import "../scss/app.scss";
-import "../scss/icons.scss";
-import "../scss/plugins.scss";
+// import "../scss/app.scss";
+// import "../scss/icons.scss";
+// import "../scss/plugins.scss";
+import "../css/style.css";
+
+import flatpickr from "flatpickr";
+import rangePlugin from "flatpickr/dist/plugins/rangePlugin.js";
+import tagify from "@yaireo/tagify";
+import pristne from "pristinejs/dist/pristine.min.js";
+
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";

@@ -3,6 +3,7 @@ import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    mode: 'layers',
     content: [
         "./node_modules/@frostui/tailwindcss/**/*.js",
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -21,7 +22,8 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', 'sans-serif'],
+                serif: ['Merriweather', 'serif'],
             },
             colors: {
                 'primary': '#3073F1',
@@ -32,6 +34,19 @@ export default {
                 'danger': '#E63535',
                 'light': '#eef2f7',
                 'dark': '#313a46',
+                gray: {
+                    50:  '#f8f7ff',
+                    100: '#f6f5ff',
+                    200:  '#eff0fe',
+                    300:  '#e0e0fc',
+                    400:  '#98A5C0',
+                    500:  '#84848f',
+                    600:  '#595983',
+                    700:  '#1e1f48',
+                    800:  '#141430',
+                    900:  '#0a0a18',
+                    950:  '#050329'
+                },
             },
             animation: {
                 loader: "loader 0.6s infinite alternate"
@@ -46,7 +61,11 @@ export default {
             }
         },
     },
-
+    variants: {
+        extend: {
+            backgroundOpacity: ['dark']
+        }
+    },
     plugins: [
         forms,
         require('@frostui/tailwindcss/plugin'),
