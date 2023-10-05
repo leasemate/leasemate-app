@@ -39,16 +39,17 @@ import { Link } from "@inertiajs/vue3";
 
                 <li class="menu-item">
                     <Link :href="route('dashboard')" class="menu-link">
-                        <span class="menu-icon"
-                            ><i class="mgc_home_3_line"></i
-                        ></span>
+                        <span class="menu-icon"><i class="mgc_home_3_line"></i></span>
                         <span class="menu-text"> Dashboard </span>
                     </Link>
 
+                    <Link :href="route('chat.index')" class="menu-link">
+                        <span class="menu-icon"><i class="mgc_chat_2_fill"></i></span>
+                        <span class="menu-text"> Chat </span>
+                    </Link>
+
                     <Link :href="route('file-upload.index')" class="menu-link">
-                        <span class="menu-icon"
-                            ><i class="mgc_file_upload_line"></i
-                        ></span>
+                        <span class="menu-icon"><i class="mgc_file_upload_line"></i></span>
                         <span class="menu-text"> File Upload </span>
                     </Link>
 

@@ -21,7 +21,7 @@ class FileUploadController extends Controller
 
         $files = FileUpload::with('user')
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
 
         $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
@@ -53,16 +53,23 @@ class FileUploadController extends Controller
         try {
 
             $request->validate([
-                'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif,xls,xlsx|max:2048',  // Change max size as needed
+                'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif,xls,xlsx|max:51200',  // Change max size as needed
             ], [
-                'upload_file.max' => 'The upload file must not be great than 2MB',  // Change max size as needed
+                'upload_file.max' => 'The upload file must not be great than 50MB',  // Change max size as needed
             ]);
 
             if ($request->hasFile('upload_file')) {
 
                 $file = $request->file('upload_file');
 
+                $file->store(auth()->user()->id.'/pdfs');
                 $storedName = $file->store(auth()->user()->id.'/pdfs', ['disk'=>'s3', 'visibility'=>'public']);
+
+//                $fullPath = Storage::path($storedName);
+
+                if(!$storedName) {
+                    throw new \Exception("Unable to upload file! Try again.");
+                }
 
                 // Create an entry in the database
                 $fileUpload = new FileUpload();
@@ -79,6 +86,7 @@ class FileUploadController extends Controller
             }
 
         } catch (\Exception $e) {
+
             return response()->json(['errors' => $e->getMessage()], 422);
         }
 

@@ -13,7 +13,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import { MyApp, ThemeCustomizer } from "./MyApp.js";
 
 // import "@frostui/tailwindcss"
-import { initFrost } from "@frostui/tailwindcss";
+// import { initFrost } from "@frostui/tailwindcss";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -28,7 +28,7 @@ createInertiaApp({
         return createApp({
             render: () => h(App, props),
             mounted() {
-                initFrost();
+                // initFrost();
                 new MyApp().init();
                 new ThemeCustomizer().init();
             },
@@ -44,7 +44,7 @@ createInertiaApp({
 });
 
 Inertia.on("navigate", () => {
-    initFrost();
+    // initFrost();
     new MyApp().init();
     new ThemeCustomizer().init();
 });

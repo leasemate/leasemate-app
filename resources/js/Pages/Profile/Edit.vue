@@ -4,6 +4,10 @@ import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
+import VueBasicAlert from "vue-basic-alert";
+import {ref} from "vue";
+
+const alert = ref(null);
 
 defineProps({
     mustVerifyEmail: {
@@ -39,6 +43,10 @@ defineProps({
                   <DeleteUserForm class="max-w-xl" />
               </div>
 
+        <vue-basic-alert
+            :duration="300"
+            @close="true"
+            ref="alert" />
 
     </AuthenticatedLayout>
 </template>

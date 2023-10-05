@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted, ref } from "vue";
+
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import moment from "moment";
@@ -11,7 +13,12 @@ const { uploaded_files } = defineProps({
     },
 });
 
+onMounted(() => {
+    // console.log(uploaded_files);
+});
+
 </script>
+
 
 <template>
     <Head title="File Upload" />
@@ -32,9 +39,7 @@ const { uploaded_files } = defineProps({
 
             <div class="card">
                 <div class="card-header">
-                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-                        Your Files
-                    </h4>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Your Files</h4>
                 </div>
 
                 <div class="flex flex-col">
@@ -305,6 +310,7 @@ const { uploaded_files } = defineProps({
                 :links="uploaded_files.links"
                 class="mt-4"
             />
+            <p class="mt-1">Showing {{ uploaded_files.from }} to {{ uploaded_files.to }} of {{ uploaded_files.total }}</p>
         </div>
     </AuthenticatedLayout>
 </template>

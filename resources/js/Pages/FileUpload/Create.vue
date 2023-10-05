@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 import VueFilePond, { setOptions } from "vue-filepond";
@@ -8,10 +8,10 @@ import VueFilePond, { setOptions } from "vue-filepond";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
 
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
+// import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
 
-const token = document.querySelector('meta[name="csrf-token"]').content;
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
+
 const FilePond = VueFilePond(FilePondPluginFileValidateType);
 const files = ref([]);
 
@@ -28,8 +28,6 @@ setOptions({
     allowRevert: false,
     acceptedFileTypes: [
         'application/pdf',
-        'application/x-excel',
-        'application/x-xls',
         'image/png',
         'image/jpeg',
         'image/jpg',
@@ -40,11 +38,11 @@ setOptions({
         process: {
             url: '/file-upload',
             headers: {
-                'X-CSRF-TOKEN': token,
+                'X-CSRF-TOKEN': usePage().props.csrf,
             },
             onerror: (response) => {
                 serverResponse = JSON.parse(response);
-            }
+            },
         },
     },
     labelFileProcessingComplete: "Upload Complete! Processing File...",
@@ -52,6 +50,7 @@ setOptions({
         return serverResponse.errors;
     },
 });
+
 </script>
 
 <template>
@@ -61,6 +60,7 @@ setOptions({
         <template #header> File Upload </template>
 
         <div class="py-6">
+
             <FilePond
                 name="upload_file"
                 ref="pond"
@@ -69,6 +69,7 @@ setOptions({
                 v-model="files"
                 @init="handleFilePondInit"
             />
+
         </div>
     </AuthenticatedLayout>
 </template>

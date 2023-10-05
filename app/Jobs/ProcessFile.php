@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessFile implements ShouldQueue
 {
@@ -19,6 +21,8 @@ class ProcessFile implements ShouldQueue
      */
     public function __construct(private $file)
     {
+        Log::info('Processing file JOB', ['file' => $file]);
+        Log::info('Q: file-processor');
 
         $this->onQueue('file-processor');
     }
@@ -28,10 +32,13 @@ class ProcessFile implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('File to process: '.Storage::path($this->file->stored_name));
 
-        $resp = ReaiProcessor::processFile($this->file);
+        $resp = ReaiProcessor::processFile(Storage::path($this->file->stored_name));
 
-        dd($resp);
+        Log::info('Response from ReaiProcessor', ['response' => $resp]);
+
+//        dd($resp); // Do something with the response
 
     }
 }

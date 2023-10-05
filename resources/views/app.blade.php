@@ -6,11 +6,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+{{--        <meta name="csrf-token" content="{{ csrf_token() }}">--}}
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.5.0/dist/alpine.min.js"></script>
 
         <!-- Scripts -->
         @routes
@@ -24,5 +26,9 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+
+{{--        <script>--}}
+{{--            window.csrf_token = @json(csrf_token());--}}
+{{--        </script>--}}
     </body>
 </html>

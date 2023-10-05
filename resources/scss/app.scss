@@ -56,3 +56,16 @@ File: Main Css File
 
 // App Pages Plugins
 @import "plugins/fullcalendar";
+
+@layer utilities {
+    .animation-delay-200 {
+        animation-delay: 0.2s;
+    }
+    .animation-delay-400 {
+        animation-delay: 0.4s;
+    }
+}
+
+.dot {
+    @apply w-1.5 h-1.5 mt-3.5 mb-0 mx-0.5 bg-gray-400 rounded-full;
+}

@@ -1,9 +1,12 @@
 <?php
 
+use App\Facades\ReaiProcessor;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
+use App\Models\FileUpload;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -26,6 +29,18 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/test-file-upload', function () {
+
+//    dd(\Illuminate\Support\Facades\Http::get('https://api.publicapis.org/entries')->json());
+
+    $file = FileUpload::find(3);
+
+    $resp = ReaiProcessor::processFile(Storage::path($file->stored_name));
+
+    dd($resp);
+
+})->name('test');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard', function () {
@@ -34,9 +49,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('/file-upload', FileUploadController::class);
 
+    Route::get('/chat',function (){
+        return Inertia::render('Chat/Index');
+    })->name('chat.index');
+
+    Route::get('/chat-test',function (){
+        return Inertia::render('Chat/Index2');
+    })->name('chat.index2');
+
 });
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

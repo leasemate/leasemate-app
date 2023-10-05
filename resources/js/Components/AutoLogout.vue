@@ -47,7 +47,7 @@ const logoutUser = async () => {
 }
 
 const resetTimer = () => {
-    console.log('reset timer');
+    // console.log('reset timer');
     clearTimeout(warningTimer.value);
     clearTimeout(logoutTimer.value);
     warningZone.value = false;
@@ -56,7 +56,7 @@ const resetTimer = () => {
 
 onMounted(() => {
     props.data.forEach(event => {
-        console.log(event);
+        // console.log(event);
         window.addEventListener(event, resetTimer);
     });
     startTimer();

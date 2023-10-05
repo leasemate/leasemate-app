@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ReaiProcessor
 {
@@ -13,28 +14,76 @@ class ReaiProcessor
         $this->baseUrl = config('reai_api.base_url');
     }
 
-    public function hello()
+    public function poke()
     {
-        $endpoint = '/hello';
+        $endpoint = $this->getEndpoint('/poke');
 
-        return $this->makeRequest($endpoint);
+        return $this->makeRequest()->post($endpoint);
     }
 
-    public function processFile($file)
+    public function processFile($file_path)
     {
-        $endpoint = '/process-file';
+        Log::info('SERVICE: Processing file', ['file_path:', $file_path]);
 
-        return $this->makeRequest($endpoint, [
-            'file' => $file
-        ]);
+        $post_data = [
+            'file_path' => $file_path,
+            'delete_original' => true
+        ];
+
+        $response = Http::post(
+            $this->getEndpoint('/process_upload'),
+            $post_data
+        );
+
+        Log::info('response: '. $response->status());
+        Log::error('Error processing file', ['response' => $response]);
+
+        if($response->failed() && $response->status() === 500) {
+
+            return json_encode(['status' => 500, 'message'=> 'Server Error']);
+        }
+
+        return $response->json();
+
+
+//        dump($response->body());
+//        dump($response->json());
+//        dump($response->object());
+////        dump($response->collect($key = null));
+//        dump($response->status()); //500
+//        dump($response->successful());
+////        dump($response->redirect(): bool;
+//        dump($response->failed());
+//        dump($response->clientError());
+////        dump($response->header($header));
+//        dump($response->headers());
+//
+//        dump($response->failed());
+//
+//        dd($response);
     }
 
-    public function makeRequest($endpoint, $method = 'GET', $data = [])
+    public function post($endpoint, $data=[])
     {
-        $url = $this->baseUrl . $endpoint;
+        return $this->makeRequest()->post($this->getEndpoint($endpoint), $data);
+    }
 
-        $response = Http::get($url, $data);
+    public function makeRequest()
+    {
+        return Http::acceptJson()->contentType('application/json');
+    }
 
-        return json_decode($response, true);
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * @param $endpoint
+     * @return string
+     */
+    public function getEndpoint($endpoint): string
+    {
+        return $this->baseUrl.$endpoint;
     }
 }
