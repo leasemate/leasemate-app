@@ -1,7 +1,9 @@
 <script setup>
-import { onMounted, ref, nextTick } from "vue";
+import {nextTick, onMounted, ref, toRef } from "vue";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Inertia } from "@inertiajs/inertia";
+
 import { Head, router } from "@inertiajs/vue3";
 import ChatLoader from "@/Components/Chat/MessageLoader.vue";
 
@@ -16,19 +18,27 @@ const isSending = ref(false);
 const errorMessage = ref(null);
 const messagesPanel = ref(null);
 
-const { chats } = defineProps({
-  conversation: {
+const { chats, chat } = defineProps({
+  chat: {
     type: Object,
+    default: null,
   },
   chats: {
     type: Object,
+    default: () => ({})
   },
 });
 
-const conversations = ref([...chats.data]);
-const conversation = ref(null);
-console.log(conversations);
-// const selectedIndex = ref(0); // Will store the index of the selected chat
+const localChat = ref({
+  chat_uuid: 0,
+  messages: []
+});
+
+const chatProp = toRef(chat, 'data');
+
+if (chatProp.value) {
+    localChat.value = chatProp.value;
+}
 
 const handleKeyDown = (event) => {
 
@@ -38,7 +48,7 @@ const handleKeyDown = (event) => {
         textareaHeight.value += 30;
     }
 
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === 'Enter' && !event.shiftKey && !isSending.value) {
         event.preventDefault();
         sendMessage();
     }
@@ -46,19 +56,13 @@ const handleKeyDown = (event) => {
 
 const handlePaste = (event) => {
 
-  errorMessage.value = null;
+    errorMessage.value = null;
 
     const content = event.target.value;
-
     const pastedData = event.clipboardData.getData('text/plain');
     const numberOfLines = pastedData.split('\n').length;
 
-    // console.log(pastedData);
-    // console.log(numberOfLines);
-
     if (pastedData.includes('\n')) {
-        // console.log('New line detected');
-        // console.log(numberOfLines);
 
         textareaHeight.value = Math.min(numberOfLines * 30, 250);
         // console.log(textareaHeight.value);
@@ -84,56 +88,32 @@ const sendMessage = async () => {
     if(validate()) {
 
       errorMessage.value = null;
-      isSending.value = true;
-      textareaHeight.value = initialTextareaHeight;
 
-      const user_msg = {
-        from: 'user',
-        message: messageToSend.value
-      };
+      const create_chat_response = router.visit(route('chats.store', (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null)), {
+            method: 'post',
+            data: {
+              message: messageToSend.value
+            },
+            preserveScroll: true,
+            onStart: visit => {
+              isSending.value = true;
+              textareaHeight.value = initialTextareaHeight;
 
-      if (conversation.value === null) { //new chat - create
-
-          conversation.value = {
-            chat_uuid: 0,
-            last_message: user_msg,
-            messages: [user_msg]
-          };
-
-        conversations.value.unshift(conversation.value);
-
-      } else {
-          conversation.value.messages.push(user_msg);
-      }
-
-      const create_chat_response = await axios.post(route('chats.store', (conversation.value.chat_uuid != 0 ? conversation.value.chat_uuid : null)), {
-              message: messageToSend.value,
-          })
-          .then(response => {
-
-              conversation.value.chat_uuid = response.data.chat.chat_uuid;
-              conversation.value.messages.push(response.data.chat.last_message);
-              conversation.value.last_message = response.data.chat.last_message;
-
-              messageToSend.value = '';
-              isSending.value = false;
-              messageField.value.focus();
-
-              nextTick(() => {
-                scrollToBottom();
+              localChat.value.messages.push({
+                from: 'user',
+                message: messageToSend.value
               });
 
-          })
-          .catch(error => {
-            // console.log(error);
-            errorMessage.value = error.response.data.message;
-            isSending.value = false;
-            messageField.value.focus();
-          });
+              messageToSend.value = '';
+
+              nextTick( () => {
+                scrollToBottom();
+              });
+            }
+        });
 
     }
 }
-
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -142,10 +122,7 @@ function getRandomInt(min, max) {
 
 
 const addNewChat = () => {
-
-    isSending.value = false;
-    conversation.value = null;
-    messageField.value.focus();
+  router.visit(route('chats.index'));
 };
 
 const scrollToBottom = () => {
@@ -155,49 +132,29 @@ const scrollToBottom = () => {
 
 const selectChat = async (conv_obj) => {
 
-    isSending.value = false;
+    // isSending.value = false;
 
     if(conv_obj.chat_uuid) {
 
-      // router.get(route('chats.show', conv_obj.chat_uuid));
-
-
-      const get_messages = await axios.get(route('chats.show', conv_obj.chat_uuid))
-          .then(response => {
-console.log(response);
-              conversation.value = response.data.chat;
-
-              nextTick(() => {
-                scrollToBottom();
-              });
-
-              messageField.value.focus();
-          })
-          .catch(error => {
-              console.log(error);
-          });
+        router.visit(route('chats.show', conv_obj.chat_uuid), {
+            preserveScroll: true,
+        });
 
     }
 };
 
 const deleteChat = (conv_obj, index) => {
 
-    conversations.value.splice(index, 1);
-    conversation.value = null;
-    messageField.value.focus();
+    // conversations.value.splice(index, 1);
+    // conversation.value = null;
+    // messageField.value.focus();
 
-    axios.delete(route('chats.destroy', conv_obj.chat_uuid))
-      .then(response => {
-
-        console.log(response);
-
-      })
-      .catch(error => {
-
-        console.log(error);
-
-      });
-
+    router.delete(route('chats.destroy', conv_obj.chat_uuid), {
+        preserveScroll: true,
+        onSuccess: () => {
+          localChat.value = null;
+        }
+    });
 }
 
 const truncatedMessage = (message) => {
@@ -225,30 +182,23 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// const selectConversationById = (id) => {
-//   const selectedConversation = chats.value.find(conv => conv.id === id);
-//
-//   if (selectedConversation) {
-//     conversation.value = selectedConversation;
-//   }
-// };
-
-
 
 onMounted(() => {
     messageField.value.focus();
 
-    console.log(conversation.value);
+    // Interia.on('navigate', (event) => {
+    //   nextTick(() => {
+    //     scrollToBottom();
+    //   });
+    // });
 
-    // conversation.value = chats.value[0];
-    //
-    // console.log(conversation);
-    //
-    // selectChat(conversation.value.id);
-    // selectConversationById(conversation.value.id);
+    scrollToBottom();
 
-    // console.log(conversation.value.messages);
-
+    console.log(chat);
+    console.log(chatProp);
+    console.log(localChat);
+  // console.log('chats');
+  //   console.log(chats);
 });
 
 </script>
@@ -259,9 +209,6 @@ onMounted(() => {
 
     <AuthenticatedLayout>
         <template #header> Chat </template>
-
-<!--        <div>{{ displayedText }}</div>-->
-<!--        <button @click="startTyping">Start Typing</button>-->
 
       <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
         <span class="block sm:inline">{{ errorMessage }}</span>
@@ -285,12 +232,13 @@ onMounted(() => {
                 <hr class="mb-4" />
 
                 <div
-                    v-for="(conv_obj, index) in conversations"
+                    v-for="(conv_obj, index) in chats.data"
                     :key="conv_obj.id"
-                    :class="{ 'bg-gray-50': conversation && conversation.chat_uuid === conv_obj.chat_uuid }"
+                    :class="{ 'bg-gray-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
                     @click="selectChat(conv_obj)"
                     class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer border-b shadow"
                 >
+
                     <!-- Favicon or User Icon -->
                     <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
                     <!-- Conversation details -->
@@ -317,8 +265,8 @@ onMounted(() => {
                 <!-- Chat content area -->
                 <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
                     <!-- Example of a message item -->
-                  <div v-if="conversation && conversation.messages">
-                    <div v-for="(entry, index) in conversation.messages" :key="index" class="my-1 sm:my-1.5">
+                  <div v-if="localChat && localChat.messages">
+                    <div v-for="(entry, index) in localChat.messages" :key="index" class="my-1 sm:my-1.5">
 
                         <div
                             class="flex flex-row"
@@ -365,8 +313,9 @@ onMounted(() => {
                                 @keydown="handleKeyDown"
                                 @paste="handlePaste"></textarea>
 
-                             <button @click="sendMessage">
+                             <button :disabled="isSending" @click="sendMessage">
                                  <svg
+                                     v-show="!isSending"
                                      xmlns="http://www.w3.org/2000/svg"
                                      width="24"
                                      height="24"
@@ -382,7 +331,19 @@ onMounted(() => {
                                      <path d="M18 11l-6 -6"></path>
                                      <path d="M6 11l6 -6"></path>
                                  </svg>
+
+                               <svg v-show="isSending" aria-hidden="true" role="status"
+                                    class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-blue-500 text-white hover:opacity-80"
+                                    viewBox="0 0 100 101"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                               </svg>
+
                              </button>
+
+
                          </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class ChatResource extends JsonResource
 {
-    public static $wrap = 'chat';
+//    public static $wrap = 'chat';
     /**
      * Transform the resource into an array.
      *

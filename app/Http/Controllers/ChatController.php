@@ -36,6 +36,7 @@ class ChatController extends Controller
         // then save the message and response
         $validated = $request->validated();
 
+        sleep(5);
 
         if(!$chat->exists) {
             $chat = Chat::create([
@@ -56,7 +57,7 @@ class ChatController extends Controller
 
         $chat->load('last_message');
 
-        return new ChatResource($chat, 201);
+        return redirect()->route('chats.show', $chat->chat_uuid);
 
     }
 
@@ -65,11 +66,14 @@ class ChatController extends Controller
      */
     public function show(Chat $chat)
     {
+        $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
 
         $chat->load(['last_message', 'messages']);
 
-
-        return new ChatResource($chat, 201);
+        return Inertia::render('Chat/Index', [
+            'chat' => new ChatResource($chat),
+            'chats' => ChatResource::collection($chats)
+        ]);
 
     }
 
@@ -81,6 +85,7 @@ class ChatController extends Controller
     {
         $chat->delete();
 
-        return response()->noContent();
+        return redirect()->route('chats.index');
+
     }
 }
