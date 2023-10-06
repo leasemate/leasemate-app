@@ -1,6 +1,8 @@
 <?php
 
 use App\Facades\ReaiProcessor;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ProfileController;
 use App\Models\FileUpload;
@@ -47,15 +49,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('/file-upload', FileUploadController::class);
+    Route::resource('file-upload', FileUploadController::class);
 
-    Route::get('/chat',function (){
-        return Inertia::render('Chat/Index');
-    })->name('chat.index');
+//    Route::resource('chats', ChatController::class);
 
-    Route::get('/chat-test',function (){
-        return Inertia::render('Chat/Index2');
-    })->name('chat.index2');
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+    Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
+    Route::delete('/chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
+
+
+//    Route::resource('chats.messages', ChatMessageController::class);
+
 
 });
 

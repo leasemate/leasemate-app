@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, nextTick } from "vue";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import ChatLoader from "@/Components/Chat/MessageLoader.vue";
 
 const fullText = "This is the complete message.lakjsdflk jaslkflksdajf lksadjlfk sdlkf lkds lkds jlkf";
@@ -13,31 +13,26 @@ const textareaHeight = ref(initialTextareaHeight);
 const messageToSend = ref('');
 const messageField = ref(null);
 const isSending = ref(false);
+const errorMessage = ref(null);
+const messagesPanel = ref(null);
 
-const conversations = ref([
-    {
-        id: 1,
-        last_message: "Last message for id 1",
-        messages: [
-            { type: 'bot', message: "Hi there!!! How can i help?" },
-        ]
-    },
-    {
-        id: 4,
-        last_message: "Last message for id 4",
-        messages: [
-            { type: 'bot', message: "What can i do for ya?" },
-            { type: 'user', message: "Whats the rent?" },
-            { type: 'bot', message: "base rent at that location is $25,000" },
-        ]
-    }
-]);
-// const conversation = ref(conversations.value[0]);
+const { chats } = defineProps({
+  conversation: {
+    type: Object,
+  },
+  chats: {
+    type: Object,
+  },
+});
+
+const conversations = ref([...chats.data]);
 const conversation = ref(null);
-
+console.log(conversations);
 // const selectedIndex = ref(0); // Will store the index of the selected chat
 
 const handleKeyDown = (event) => {
+
+    errorMessage.value = null;
 
     if (event.key === 'Enter' && event.shiftKey) {
         textareaHeight.value += 30;
@@ -50,119 +45,163 @@ const handleKeyDown = (event) => {
 }
 
 const handlePaste = (event) => {
+
+  errorMessage.value = null;
+
     const content = event.target.value;
 
     const pastedData = event.clipboardData.getData('text/plain');
     const numberOfLines = pastedData.split('\n').length;
 
-    console.log(pastedData);
-    console.log(numberOfLines);
+    // console.log(pastedData);
+    // console.log(numberOfLines);
 
     if (pastedData.includes('\n')) {
-        console.log('New line detected');
-        console.log(numberOfLines);
+        // console.log('New line detected');
+        // console.log(numberOfLines);
 
         textareaHeight.value = Math.min(numberOfLines * 30, 250);
-        console.log(textareaHeight.value);
+        // console.log(textareaHeight.value);
     } else {
         textareaHeight.value = initialTextareaHeight;  // Reset the height if no new lines
     }
 };
 
+const validate = () => {
+
+  if (messageToSend.value.trim() === '') {
+    errorMessage.value = 'Please enter a message';
+    isSending.value = false;
+    messageField.value.focus();
+    return false;
+  }
+
+  return true;
+};
+
 const sendMessage = async () => {
 
-    isSending.value = true;
-    textareaHeight.value = initialTextareaHeight;
+    if(validate()) {
 
-    // console.log(messageToSend.value);
-    if(conversation.value === null) {
-      conversation.value = {
-        id: Math.random(),
-        last_message: "",
-        messages: []
+      errorMessage.value = null;
+      isSending.value = true;
+      textareaHeight.value = initialTextareaHeight;
+
+      const user_msg = {
+        from: 'user',
+        message: messageToSend.value
       };
-      conversations.value.unshift(conversation.value);
+
+      if (conversation.value === null) { //new chat - create
+
+          conversation.value = {
+            chat_uuid: 0,
+            last_message: user_msg,
+            messages: [user_msg]
+          };
+
+        conversations.value.unshift(conversation.value);
+
+      } else {
+          conversation.value.messages.push(user_msg);
+      }
+
+      const create_chat_response = await axios.post(route('chats.store', (conversation.value.chat_uuid != 0 ? conversation.value.chat_uuid : null)), {
+              message: messageToSend.value,
+          })
+          .then(response => {
+
+              conversation.value.chat_uuid = response.data.chat.chat_uuid;
+              conversation.value.messages.push(response.data.chat.last_message);
+              conversation.value.last_message = response.data.chat.last_message;
+
+              messageToSend.value = '';
+              isSending.value = false;
+              messageField.value.focus();
+
+              nextTick(() => {
+                scrollToBottom();
+              });
+
+          })
+          .catch(error => {
+            // console.log(error);
+            errorMessage.value = error.response.data.message;
+            isSending.value = false;
+            messageField.value.focus();
+          });
+
     }
-
-    const messages = conversation.value.messages;
-
-    messages.push({ type: 'user', message: messageToSend.value });
-
-    // messages.value = [
-    //     ...messages.value,
-    //     { type: 'user', message: messageToSend.value }
-    // ];
-
-    try {
-
-        //api call
-        await sleep(2000);
-
-        messages.push({ type: 'bot', message: "base rent at that location is $25,000" });
-        conversation.value.last_message = truncatedMessage(messageToSend.value);
-        messageToSend.value = '';
-
-    } catch(error) {
-        console.log(error);
-    } finally {
-        isSending.value = false;
-    }
-
 }
 
 function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 
 const addNewChat = () => {
 
-    // const empty_convo = {
-    //   id: null,
-    //   last_message: "",
-    //   messages: [
-    //     { type: 'bot', message: "What can i do for ya?" },
-    //   ]
-    // };
-    //
-    // console.log(conversations.value);
-    //
-    // const exists = conversations.value.some(convo => convo.id === null);
-    //
-    // console.log("exists:",exists);
-    //
-    // if(!exists) {
-    //   conversations.value.unshift(empty_convo);
-    // }
-    //
-    // selectChat(empty_convo);
-
+    isSending.value = false;
     conversation.value = null;
-
     messageField.value.focus();
 };
 
-const selectChat = (conv_obj) => {
-
-  // console.log(conv_obj.messages);
-
-  conversation.value = conv_obj;
-
-  // selectConversationById(conversation_id);
-
+const scrollToBottom = () => {
+  const container = messagesPanel.value;
+  container.scrollTop = container.scrollHeight;
 };
 
-const deleteChat = (index) => {
-    conversations.value.splice(index, 1);
+const selectChat = async (conv_obj) => {
 
-    if(conversations.value.length === 0) {
-      // addNewChat();
+    isSending.value = false;
+
+    if(conv_obj.chat_uuid) {
+
+      // router.get(route('chats.show', conv_obj.chat_uuid));
+
+
+      const get_messages = await axios.get(route('chats.show', conv_obj.chat_uuid))
+          .then(response => {
+console.log(response);
+              conversation.value = response.data.chat;
+
+              nextTick(() => {
+                scrollToBottom();
+              });
+
+              messageField.value.focus();
+          })
+          .catch(error => {
+              console.log(error);
+          });
+
     }
+};
+
+const deleteChat = (conv_obj, index) => {
+
+    conversations.value.splice(index, 1);
+    conversation.value = null;
+    messageField.value.focus();
+
+    axios.delete(route('chats.destroy', conv_obj.chat_uuid))
+      .then(response => {
+
+        console.log(response);
+
+      })
+      .catch(error => {
+
+        console.log(error);
+
+      });
+
 }
 
 const truncatedMessage = (message) => {
+  if (!message) return null;
   const maxLength = 38;
   return message.length > maxLength ? message.slice(0, maxLength) + '...' : message;
 }
@@ -187,7 +226,7 @@ function sleep(ms) {
 }
 
 // const selectConversationById = (id) => {
-//   const selectedConversation = conversations.value.find(conv => conv.id === id);
+//   const selectedConversation = chats.value.find(conv => conv.id === id);
 //
 //   if (selectedConversation) {
 //     conversation.value = selectedConversation;
@@ -199,7 +238,9 @@ function sleep(ms) {
 onMounted(() => {
     messageField.value.focus();
 
-    // conversation.value = conversations.value[0];
+    console.log(conversation.value);
+
+    // conversation.value = chats.value[0];
     //
     // console.log(conversation);
     //
@@ -222,9 +263,16 @@ onMounted(() => {
 <!--        <div>{{ displayedText }}</div>-->
 <!--        <button @click="startTyping">Start Typing</button>-->
 
+      <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <span class="block sm:inline">{{ errorMessage }}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer">
+            <i @click="errorMessage = null" class="mgc_close_fill"></i> <!-- Assuming you're using Font Awesome -->
+        </span>
+      </div>
+
         <div class="flex h-[52rem] mt-auto mb-auto bg-gray-100 rounded-lg border border-neutral-300 bg-white">
 
-            <!-- Left column for list of conversations -->
+            <!-- Left column for list of chats -->
             <div class=" w-1/3 p-4 overflow-y-auto">
                 <button
                     @click="addNewChat"
@@ -239,24 +287,24 @@ onMounted(() => {
                 <div
                     v-for="(conv_obj, index) in conversations"
                     :key="conv_obj.id"
-                    :class="{ 'bg-gray-50': conversation && conversation.id === conv_obj.id }"
+                    :class="{ 'bg-gray-50': conversation && conversation.chat_uuid === conv_obj.chat_uuid }"
                     @click="selectChat(conv_obj)"
-                    class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer"
+                    class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer border-b shadow"
                 >
                     <!-- Favicon or User Icon -->
                     <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
                     <!-- Conversation details -->
                     <div class="flex-1 mr-3">
-                        <p class="text-sm text-gray-500">{{ conv_obj.last_message }}</p>
+                        <p class="text-sm text-gray-500">{{ truncatedMessage(conv_obj?.last_message?.message) || null }}</p>
                     </div>
 
                     <!-- Date/Time -->
                     <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">
-                        Jan 25, 10:15 AM
+                      {{ conv_obj.updated_at }}
                     </div>
 
                     <i
-                        @click="deleteChat(index)"
+                        @click.stop="deleteChat(conv_obj, index)"
                         class="mgc_close_fill text-sm text-gray-400 hover:text-red-500 cursor-pointer"
                     ></i>
 
@@ -267,23 +315,23 @@ onMounted(() => {
             <!-- Right column for the chat prompt and conversation -->
             <div class="flex flex-col w-2/3 p-4 border-l">
                 <!-- Chat content area -->
-                <div class="flex-1 overflow-y-auto mb-4">
+                <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
                     <!-- Example of a message item -->
                   <div v-if="conversation && conversation.messages">
                     <div v-for="(entry, index) in conversation.messages" :key="index" class="my-1 sm:my-1.5">
 
                         <div
                             class="flex flex-row"
-                            :class="{ 'justify-start ': entry.type === 'bot', 'justify-end': entry.type === 'user' }"
+                            :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
                         >
 
                         <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
-                             :class="{ 'items-start ': entry.type === 'bot', 'items-end': entry.type === 'user' }">
+                             :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
                             <div
                                 class="flex items-center px-3 py-2 whitespace-pre-wrap"
                                 :class="{
-                                'bg-neutral-200 text-neutral-900 rounded-2xl rounded-bl-none': entry.type === 'bot',
-                                'bg-blue-500 text-white rounded-2xl rounded-br-none': entry.type === 'user'
+                                'bg-neutral-200 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
+                                'bg-blue-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
                             }">
                                 {{ entry.message }}
                             </div>

@@ -43,7 +43,7 @@ import { Link } from "@inertiajs/vue3";
                         <span class="menu-text"> Dashboard </span>
                     </Link>
 
-                    <Link :href="route('chat.index')" class="menu-link">
+                    <Link :href="route('chats.index')" class="menu-link">
                         <span class="menu-icon"><i class="mgc_chat_2_fill"></i></span>
                         <span class="menu-text"> Chat </span>
                     </Link>
