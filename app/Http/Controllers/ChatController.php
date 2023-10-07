@@ -32,39 +32,44 @@ class ChatController extends Controller
     public function store(StoreChatRequest $request, Chat $chat)
     {
 
-        //send API request to bot - get back Chat id and response
-        // create chat reocrd
-        // then save the message and response
-        $validated = $request->validated();
+        try {
 
-        $reai_response = ReaiProcessor::chat($validated['message'], $chat->chat_uuid);
+            //send API request to bot - get back Chat id and response
+            // create chat reocrd
+            // then save the message and response
+            $validated = $request->validated();
 
-        if($reai_response->ok()) {
-            $json = $reai_response->json();
-            $chat_uuid = $json['chat_id'];
+            $reai_response = ReaiProcessor::chat($validated['message'], $chat->chat_uuid);
 
-            if(!$chat->exists) {
-                $chat = Chat::create([
-                    'user_id' => auth()->user()->id,
-                    'chat_uuid' => $chat_uuid,
+            if($reai_response->ok()) {
+
+                $json = $reai_response->json();
+                $chat_uuid = $json['chat_id'];
+
+                if(!$chat->exists) {
+                    $chat = Chat::create([
+                        'user_id' => auth()->user()->id,
+                        'chat_uuid' => $chat_uuid,
+                    ]);
+                }
+
+                $chat->messages()->createMany([
+                    ['from'=> 'user', 'message' => $validated['message']],
+                    ['from'=> 'bot', 'message' => $json['bot_message']]
                 ]);
+
+                $chat->load('last_message');
+
+                return redirect()->route('chats.show', $chat->chat_uuid);
+
             }
 
-            $messages = [];
+        } catch (\Exception $e) {
 
-            $user_message = ['from'=> 'user', 'message' => $validated['message']];
-            $messages[] = $user_message;
-
-            $bot_message = ['from'=> 'bot', 'message' => $json['bot_message']];
-            $messages[] = $bot_message;
-
-            $chat->messages()->createMany($messages);
-
-            $chat->load('last_message');
-
-            return redirect()->route('chats.show', $chat->chat_uuid);
+//            return response()->json(['errors' => $e->getMessage()], 422);
 
         }
+
 
     }
 
