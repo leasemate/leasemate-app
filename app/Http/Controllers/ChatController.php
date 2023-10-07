@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateChatRequest;
 use App\Http\Resources\ChatResource;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use App\Facades\ReaiProcessor;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -36,28 +37,34 @@ class ChatController extends Controller
         // then save the message and response
         $validated = $request->validated();
 
-        sleep(5);
+        $reai_response = ReaiProcessor::chat($validated['message'], $chat->chat_uuid);
 
-        if(!$chat->exists) {
-            $chat = Chat::create([
-                'user_id' => auth()->user()->id,
-                'chat_uuid' => Str::uuid()->toString(),
-            ]);
+        if($reai_response->ok()) {
+            $json = $reai_response->json();
+            $chat_uuid = $json['chat_id'];
+
+            if(!$chat->exists) {
+                $chat = Chat::create([
+                    'user_id' => auth()->user()->id,
+                    'chat_uuid' => $chat_uuid,
+                ]);
+            }
+
+            $messages = [];
+
+            $user_message = ['from'=> 'user', 'message' => $validated['message']];
+            $messages[] = $user_message;
+
+            $bot_message = ['from'=> 'bot', 'message' => $json['bot_message']];
+            $messages[] = $bot_message;
+
+            $chat->messages()->createMany($messages);
+
+            $chat->load('last_message');
+
+            return redirect()->route('chats.show', $chat->chat_uuid);
+
         }
-
-        $messages = [];
-
-        $user_message = ['from'=> 'user', 'message' => $validated['message']];
-        $messages[] = $user_message;
-
-        $bot_message = ['from'=> 'bot', 'message' => 'Hi there!!!!!!!! How can i help? this is my bot response'];
-        $messages[] = $bot_message;
-
-        $chat->messages()->createMany($messages);
-
-        $chat->load('last_message');
-
-        return redirect()->route('chats.show', $chat->chat_uuid);
 
     }
 

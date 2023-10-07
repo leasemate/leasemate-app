@@ -1,11 +1,17 @@
 <script setup>
+
 import {nextTick, onMounted, ref, toRef } from "vue";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Inertia } from "@inertiajs/inertia";
 
 import { Head, router } from "@inertiajs/vue3";
 import ChatLoader from "@/Components/Chat/MessageLoader.vue";
+
+import Modal from '@/Components/Modal.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+
+const open = ref(true)
 
 const fullText = "This is the complete message.lakjsdflk jaslkflksdajf lksadjlfk sdlkf lkds lkds jlkf";
 const displayedText = ref("");
@@ -29,16 +35,34 @@ const { chats, chat } = defineProps({
   },
 });
 
-const localChat = ref({
-  chat_uuid: 0,
-  messages: []
-});
+const defaultChatState = () => {
+  return {
+    chat_uuid: 0,
+    messages: []
+  }
+};
+
+const localChat = ref(defaultChatState());
 
 const chatProp = toRef(chat, 'data');
 
 if (chatProp.value) {
     localChat.value = chatProp.value;
 }
+
+const chatToDelete = ref(null);
+const confirmingChatDeletion = ref(false);
+
+const confirmChatDeletion = (chat_obj) => {
+  confirmingChatDeletion.value = true;
+  chatToDelete.value = chat_obj;
+};
+
+const closeModal = () => {
+  confirmingChatDeletion.value = false;
+  chatToDelete.value = null;
+};
+
 
 const handleKeyDown = (event) => {
 
@@ -89,11 +113,14 @@ const sendMessage = async () => {
 
       errorMessage.value = null;
 
+      console.log(localChat.value);
+
       const create_chat_response = router.visit(route('chats.store', (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null)), {
             method: 'post',
             data: {
               message: messageToSend.value
             },
+            // only: ['chat'],
             preserveScroll: true,
             onStart: visit => {
               isSending.value = true;
@@ -120,7 +147,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-
 const addNewChat = () => {
   router.visit(route('chats.index'));
 };
@@ -143,18 +169,18 @@ const selectChat = async (conv_obj) => {
     }
 };
 
-const deleteChat = (conv_obj, index) => {
+const deleteChat = () => {
 
-    // conversations.value.splice(index, 1);
-    // conversation.value = null;
-    // messageField.value.focus();
-
-    router.delete(route('chats.destroy', conv_obj.chat_uuid), {
+  if(chatToDelete.value) {
+      router.delete(route('chats.destroy', chatToDelete.value.chat_uuid), {
         preserveScroll: true,
         onSuccess: () => {
-          localChat.value = null;
+          localChat.value = defaultChatState();
+          chatToDelete.value = null;
+          closeModal();
         }
-    });
+      });
+  }
 }
 
 const truncatedMessage = (message) => {
@@ -178,28 +204,15 @@ const startTyping = () => {
     typeCharacter();
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 
 onMounted(() => {
     messageField.value.focus();
 
-    // Interia.on('navigate', (event) => {
-    //   nextTick(() => {
-    //     scrollToBottom();
-    //   });
-    // });
-
     scrollToBottom();
 
-    console.log(chat);
-    console.log(chatProp);
-    console.log(localChat);
-  // console.log('chats');
-  //   console.log(chats);
 });
+
+
 
 </script>
 
@@ -252,7 +265,7 @@ onMounted(() => {
                     </div>
 
                     <i
-                        @click.stop="deleteChat(conv_obj, index)"
+                        @click.stop="confirmChatDeletion(conv_obj)"
                         class="mgc_close_fill text-sm text-gray-400 hover:text-red-500 cursor-pointer"
                     ></i>
 
@@ -351,8 +364,28 @@ onMounted(() => {
         </div>
 
 
+        <Modal :show="confirmingChatDeletion" @close="closeModal">
+          <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900">
+              Are you sure you want to delete this chat?
+            </h2>
+
+                  <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        @click="deleteChat(localChat)"
+                    >
+                      Delete Chat
+                    </DangerButton>
+                  </div>
+          </div>
+        </Modal>
 
     </AuthenticatedLayout>
+
+
 
 </template>
 

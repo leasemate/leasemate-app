@@ -11,7 +11,7 @@ class ReaiProcessor
 
     public function __construct()
     {
-        $this->baseUrl = config('reai_api.base_url');
+        $this->baseUrl = config('services.reai_api.base_url');
     }
 
     public function poke()
@@ -19,6 +19,18 @@ class ReaiProcessor
         $endpoint = $this->getEndpoint('/poke');
 
         return $this->makeRequest()->post($endpoint);
+    }
+
+    public function chat($message, $chat_uuid=null)
+    {
+        $endpoint = "/chat".($chat_uuid ? "/".$chat_uuid : null);
+
+        $post_data = [
+            'user_id' => auth()->user()->id,
+            'user_message' => $message
+        ];
+
+        return $this->post($endpoint, $post_data);
     }
 
     public function processFile($file_path)
@@ -44,23 +56,6 @@ class ReaiProcessor
         }
 
         return $response->json();
-
-
-//        dump($response->body());
-//        dump($response->json());
-//        dump($response->object());
-////        dump($response->collect($key = null));
-//        dump($response->status()); //500
-//        dump($response->successful());
-////        dump($response->redirect(): bool;
-//        dump($response->failed());
-//        dump($response->clientError());
-////        dump($response->header($header));
-//        dump($response->headers());
-//
-//        dump($response->failed());
-//
-//        dd($response);
     }
 
     public function post($endpoint, $data=[])
@@ -70,7 +65,11 @@ class ReaiProcessor
 
     public function makeRequest()
     {
-        return Http::acceptJson()->contentType('application/json');
+        return Http::acceptJson()
+            ->contentType('application/json')
+            ->withHeaders([
+                'x-api-key' => config('services.reai_api.api_key'),
+            ]);
     }
 
     public function getBaseUrl()
