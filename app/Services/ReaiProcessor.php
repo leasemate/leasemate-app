@@ -25,7 +25,7 @@ class ReaiProcessor
     {
         $endpoint = "/chat".($chat_uuid ? "/".$chat_uuid : null);
 
-        throw new \Exception("error happeend");
+//        throw new \Exception("error happeend");
 
         $post_data = [
             'user_id' => auth()->user()->id,
