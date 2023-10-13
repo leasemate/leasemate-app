@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateFileUploadRequest;
 use App\Jobs\ProcessFile;
 use App\Models\FileUpload;
 //use App\Services\ReaiProcessor;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -97,7 +98,7 @@ class FileUploadController extends Controller
      */
     public function show(FileUpload $fileUpload)
     {
-        //
+
     }
 
     /**
@@ -123,4 +124,5 @@ class FileUploadController extends Controller
     {
         //
     }
+
 }
