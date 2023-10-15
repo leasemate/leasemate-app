@@ -7,6 +7,9 @@ import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+
 const { uploaded_files } = defineProps({
     uploaded_files: {
         type: Object,
@@ -73,13 +76,7 @@ onMounted(() => {
                                                 scope="col"
                                                 class="p-3.5 text-sm text-start font-semibold min-w-[8rem]"
                                             >
-                                                Owner
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                class="p-3.5 text-sm text-start font-semibold min-w-[6rem]"
-                                            >
-                                                Members
+                                                Status
                                             </th>
                                             <th
                                                 scope="col"
@@ -106,196 +103,72 @@ onMounted(() => {
                                                 {{ file.size_readable }}
                                             </td>
                                             <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
-                                                Danielle Thompson
-                                            </td>
-                                            <td class="p-3.5">
-                                                <div class="flex -space-x-1.5">
-                                                    <img
-                                                        class="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-700"
-                                                        src="/images/users/avatar-1.jpg"
-                                                        alt="Image Description"
-                                                    />
-                                                    <img
-                                                        class="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-700"
-                                                        src="/images/users/avatar-2.jpg"
-                                                        alt="Image Description"
-                                                    />
-                                                    <img
-                                                        class="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-700"
-                                                        src="/images/users/avatar-3.jpg"
-                                                        alt="Image Description"
-                                                    />
-                                                    <img
-                                                        class="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-700"
-                                                        src="/images/users/avatar-4.jpg"
-                                                        alt="Image Description"
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td class="p-3.5">
-                                                <div>
-                                                    <button
-                                                        data-fc-type="dropdown"
-                                                        data-fc-placement="bottom-end"
-                                                        class="inline-flex text-slate-700 hover:bg-slate-100 dark:hover:bg-gray-700 dark:text-gray-300 rounded-full p-2 fc-dropdown"
-                                                    >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="24"
-                                                            height="24"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            stroke-width="2"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            class="feather feather-more-vertical w-4 h-4"
-                                                        >
-                                                            <circle
-                                                                cx="12"
-                                                                cy="12"
-                                                                r="1"
-                                                            ></circle>
-                                                            <circle
-                                                                cx="12"
-                                                                cy="5"
-                                                                r="1"
-                                                            ></circle>
-                                                            <circle
-                                                                cx="12"
-                                                                cy="19"
-                                                                r="1"
-                                                            ></circle>
-                                                        </svg>
-                                                    </button>
 
-                                                    <div class="fc-dropdown hidden fc-dropdown-open:opacity-100 opacity-0 w-40 z-50 mt-2 transition-all duration-300 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-2">
-                                                        <a class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="#">
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                class="feather feather-edit-3 w-4 h-4 me-3"
-                                                            >
-                                                                <path
-                                                                    d="M12 20h9"
-                                                                ></path>
-                                                                <path
-                                                                    d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-                                                                ></path>
-                                                            </svg>
-                                                            Edit
-                                                        </a>
-                                                        <a
-                                                            class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                                                            href="#"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                class="feather feather-link w-4 h-4 me-3"
-                                                            >
-                                                                <path
-                                                                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-                                                                ></path>
-                                                                <path
-                                                                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-                                                                ></path>
-                                                            </svg>
-                                                            Copy Link
-                                                        </a>
-                                                        <a
-                                                            class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                                                            href="#"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                class="feather feather-share-2 w-4 h-4 me-3"
-                                                            >
-                                                                <circle
-                                                                    cx="18"
-                                                                    cy="5"
-                                                                    r="3"
-                                                                ></circle>
-                                                                <circle
-                                                                    cx="6"
-                                                                    cy="12"
-                                                                    r="3"
-                                                                ></circle>
-                                                                <circle
-                                                                    cx="18"
-                                                                    cy="19"
-                                                                    r="3"
-                                                                ></circle>
-                                                                <line
-                                                                    x1="8.59"
-                                                                    y1="13.51"
-                                                                    x2="15.42"
-                                                                    y2="17.49"
-                                                                ></line>
-                                                                <line
-                                                                    x1="15.41"
-                                                                    y1="6.51"
-                                                                    x2="8.59"
-                                                                    y2="10.49"
-                                                                ></line>
-                                                            </svg>
-                                                            Share
-                                                        </a>
-                                                        <a
-                                                            class="flex items-center py-2 px-4 text-sm rounded text-gray-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                                                            href="#"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                class="feather feather-download w-4 h-4 me-3"
-                                                            >
-                                                                <path
-                                                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
-                                                                ></path>
-                                                                <polyline
-                                                                    points="7 10 12 15 17 10"
-                                                                ></polyline>
-                                                                <line
-                                                                    x1="12"
-                                                                    y1="15"
-                                                                    x2="12"
-                                                                    y2="3"
-                                                                ></line>
-                                                            </svg>
-                                                            Download
-                                                        </a>
-                                                    </div>
+                                              <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
+                                                {{file.status }}
+                                              </span>
+                                            </td>
+                                            
+                                            <td class="p-3.5">
+
+
+                                              <Menu as="div" class="relative inline-block text-left">
+                                                <div>
+                                                  <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        class="feather feather-more-vertical w-4 h-4"
+                                                    >
+                                                      <circle
+                                                          cx="12"
+                                                          cy="12"
+                                                          r="1"
+                                                      ></circle>
+                                                      <circle
+                                                          cx="12"
+                                                          cy="5"
+                                                          r="1"
+                                                      ></circle>
+                                                      <circle
+                                                          cx="12"
+                                                          cy="19"
+                                                          r="1"
+                                                      ></circle>
+                                                    </svg>
+<!--                                                    <ChevronDownIcon class="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />-->
+                                                  </MenuButton>
                                                 </div>
+
+                                                <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                                                  <MenuItems class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                    <div class="py-1">
+                                                      <MenuItem v-slot="{ active }">
+                                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Account settings</a>
+                                                      </MenuItem>
+                                                      <MenuItem v-slot="{ active }">
+                                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Support</a>
+                                                      </MenuItem>
+                                                      <MenuItem v-slot="{ active }">
+                                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">License</a>
+                                                      </MenuItem>
+                                                      <form method="POST" action="#">
+                                                        <MenuItem v-slot="{ active }">
+                                                          <button type="submit" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-left text-sm']">Sign out</button>
+                                                        </MenuItem>
+                                                      </form>
+                                                    </div>
+                                                  </MenuItems>
+                                                </transition>
+                                              </Menu>
+
                                             </td>
                                         </tr>
                                     </tbody>

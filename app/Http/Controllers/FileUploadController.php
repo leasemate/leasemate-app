@@ -63,6 +63,8 @@ class FileUploadController extends Controller
 
                 $file = $request->file('upload_file');
 
+
+
 //                $file->store(auth()->user()->id.'/pdfs');
                 $storedName = $file->store(auth()->user()->id, ['disk'=>'s3', 'visibility'=>'public']);
 
