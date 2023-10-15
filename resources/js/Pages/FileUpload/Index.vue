@@ -108,7 +108,7 @@ onMounted(() => {
                                                 {{file.status }}
                                               </span>
                                             </td>
-                                            
+
                                             <td class="p-3.5">
 
 
