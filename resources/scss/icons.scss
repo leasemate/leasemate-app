@@ -7,5 +7,8 @@ File: Icons Css File
 */
 
 // Icons
-@import "icons/mingcute";
-@import "icons/material-symbol";
+@import "./fontawesome/fontawesome.scss";
+
+// our project needs Solid + Brands
+@import "./fontawesome/solid.scss";
+@import "./fontawesome/brands.scss";

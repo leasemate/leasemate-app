@@ -23,6 +23,11 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.4.2",
+        "@fortawesome/free-brands-svg-icons": "^6.4.2",
+        "@fortawesome/free-regular-svg-icons": "^6.4.2",
+        "@fortawesome/free-solid-svg-icons": "^6.4.2",
+        "@fortawesome/vue-fontawesome": "^3.0.3",
         "@frostui/tailwindcss": "^0.1.5",
         "@headlessui/vue": "^1.7.16",
         "@heroicons/vue": "^2.0.18",
@@ -47,6 +52,7 @@
         "inputmask": "^5.0.7",
         "jsvectormap": "1.4.2",
         "laravel-vue-pagination": "^4.1.1",
+        "metismenu": "^3.0.7",
         "moment": "^2.29.4",
         "nice-select2": "^2.1.0",
         "nouislider": "^15.6.1",

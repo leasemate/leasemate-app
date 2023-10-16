@@ -1,420 +1,370 @@
-import feather from "feather-icons";
-export class MyApp {
 
-    // Components
-    initComponents() {
 
-        // Feather Icons
-        feather.replace()
+(function () {
 
-        // Back To Top
-        const mybutton= document.querySelector('[data-toggle="back-to-top"]');
+    'use strict';
 
-        if(mybutton) {
-            window.addEventListener('scroll', function () {
-                if (window.pageYOffset > 72) {
-                    mybutton.classList.add('flex');
-                    mybutton.classList.remove('hidden');
+    // MetisMenu js
+    function initMetisMenu() {
+        // MetisMenu js
+        document.addEventListener("DOMContentLoaded", function (event) {
+            if (document.getElementById("side-menu"))
+                new MetisMenu('#side-menu');
+        });
+    }
 
-                } else {
-                    mybutton.classList.remove('flex');
-                    mybutton.classList.add('hidden');
-                }
-            });
-
-            mybutton.addEventListener('click', function (e) {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+    // initLeftMenuCollapse
+    function initLeftMenuCollapse() {
+        var currentSIdebarSize = document.body.getAttribute('data-sidebar-size');
+        window.onload = function () {
+            if (window.innerWidth >= 1024 && window.innerWidth <= 1366) {
+                document.body.setAttribute('data-sidebar-size', 'sm');
+                updateRadio('sidebar-size-small')
+            }
+        }
+        var verticalButton = document.getElementsByClassName("vertical-menu-btn");
+        for (var i = 0; i < verticalButton.length; i++) {
+            (function (index) {
+                verticalButton[index] && verticalButton[index].addEventListener('click', function (event) {
+                    event.preventDefault();
+                    document.body.classList.toggle('sidebar-enable');
+                    if (window.innerWidth >= 992) {
+                        if (currentSIdebarSize == null) {
+                            (document.body.getAttribute('data-sidebar-size') == null || document.body.getAttribute('data-sidebar-size') == "lg") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'lg')
+                        } else if (currentSIdebarSize == "md") {
+                            (document.body.getAttribute('data-sidebar-size') == "md") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'md')
+                        } else {
+                            (document.body.getAttribute('data-sidebar-size') == "sm") ? document.body.setAttribute('data-sidebar-size', 'lg') : document.body.setAttribute('data-sidebar-size', 'sm')
+                        }
+                    } else {
+                        initMenuItemScroll();
+                    }
+                });
+            })(i);
         }
     }
 
-    // Topbar Fullscreen Button
-    initfullScreenListener() {
-        var self = this;
-        var fullScreenBtn = document.querySelector('[data-toggle="fullscreen"]');
+    // menu active
+    function initActiveMenu() {
+        var menuItems = document.querySelectorAll("#sidebar-menu a");
+        menuItems && menuItems.forEach(function (item) {
+            var pageUrl = window.location.href.split(/[?#]/)[0];
 
-        if (fullScreenBtn) {
-            fullScreenBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.body.classList.toggle('fullscreen-enable')
-                if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-                    if (document.documentElement.requestFullscreen) {
-                        document.documentElement.requestFullscreen();
-                    } else if (document.documentElement.mozRequestFullScreen) {
-                        document.documentElement.mozRequestFullScreen();
-                    } else if (document.documentElement.webkitRequestFullscreen) {
-                        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                    }
-                } else {
-                    if (document.cancelFullScreen) {
-                        document.cancelFullScreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen();
+            if (item.href == pageUrl) {
+                item.classList.add("active");
+                var parent = item.parentElement;
+                if (parent && parent.id !== "side-menu") {
+                    parent.classList.add("mm-active");
+                    var parent2 = parent.parentElement; // ul .
+                    if (parent2 && parent2.id !== "side-menu") {
+                        parent2.classList.add("mm-show"); // ul tag
+                        var parent3 = parent2.parentElement; // li tag
+                        if (parent3 && parent3.id !== "side-menu") {
+                            parent3.classList.add("mm-active"); // li
+                            var parent4 = parent3.parentElement; // ul
+                            if (parent4 && parent4.id !== "side-menu") {
+                                parent4.classList.add("mm-show"); // ul
+                                var parent5 = parent4.parentElement;
+                                if (parent5 && parent5.id !== "side-menu") {
+                                    parent5.classList.add("mm-active"); // li
+                                }
+                            }
+                        }
                     }
                 }
+            }
+        });
+    }
+
+
+    // sidebarMenu
+
+    function initMenuItemScroll() {
+        setTimeout(function () {
+            var sidebarMenu = document.getElementById("side-menu");
+            if (sidebarMenu) {
+                var activeMenu = sidebarMenu.querySelector(".mm-active .active");
+                var offset = activeMenu ? activeMenu.offsetTop : 0;
+                if (offset > 300) {
+                    var verticalMenu = document.getElementsByClassName("vertical-menu") ? document.getElementsByClassName("vertical-menu")[0] : "";
+                    if (verticalMenu && verticalMenu.querySelector(".simplebar-content-wrapper")) {
+                        setTimeout(function () {
+                            offset == 330 ?
+                                (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset + 85) :
+                                (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset);
+                        }, 0);
+                    }
+                }
+            }
+        }, 250);
+    }
+
+    function initModeSetting() {
+        var body = document.body;
+        var lightDarkBtn = document.querySelectorAll('.light-dark-mode');
+        if (lightDarkBtn) {
+            lightDarkBtn.forEach(function (item) {
+                item.addEventListener('click', function (event) {
+                    if (body.hasAttribute("data-mode") && body.getAttribute("data-mode") == "dark") {
+                        body.setAttribute('data-mode', 'light');
+                        sessionStorage.setItem("data-layout-mode", "light");
+                    } else {
+                        body.setAttribute('data-mode', 'dark');
+                        sessionStorage.setItem("data-layout-mode", "dark");
+                    }
+                });
             });
+        }
+
+        if (sessionStorage.getItem("data-layout-mode") && sessionStorage.getItem("data-layout-mode") == "light") {
+            body.setAttribute('data-mode', 'light');
+        } else if (sessionStorage.getItem("data-layout-mode") == "dark") {
+            body.setAttribute('data-mode', 'dark');
         }
     }
 
-    init() {
-        this.initComponents();
-        this.initfullScreenListener();
+    function init() {
+        initMetisMenu();
+        initLeftMenuCollapse();
+        initActiveMenu();
+        initMenuItemScroll();
+        initModeSetting();
     }
+
+    init();
+
+})();
+
+
+/********* Alert common js *********/
+
+// alert dismissible
+if (document.querySelectorAll('.alert-dismissible')) {
+    var alertDismiss = document.querySelectorAll('.alert-dismissible');
+
+    Array.from(alertDismiss).forEach(function (item) {
+        item.querySelector(".alert-close").addEventListener('click', function () {
+            item.classList.add('hidden');
+        });
+    });
 }
 
-export class ThemeCustomizer {
 
-    constructor() {
-        this.html = document.getElementsByTagName('html')[0]
-        this.config = {};
-        this.defaultConfig = window.config;
-    }
 
-    initConfig() {
-        this.defaultConfig = JSON.parse(JSON.stringify(window.defaultConfig));
-        this.config = JSON.parse(JSON.stringify(window.config));
-        this.setSwitchFromConfig();
-    }
+/********* dropdown common js *********/
+var dropdownElem = document.querySelectorAll('.dropdown');
+var dropupElem = document.querySelectorAll('.dropup');
+var dropStartElem = document.querySelectorAll('.dropstart');
+var dropendElem = document.querySelectorAll('.dropend');
+var isShowDropMenu = false;
+var isMenuInside = false;
+// dropdown event
+dropdownEvent(dropdownElem, 'bottom-start');
+// dropup event
+dropdownEvent(dropupElem, 'top-start');
+// dropstart event
+dropdownEvent(dropStartElem, 'left-start');
+// dropend event
+dropdownEvent(dropendElem, 'right-start');
 
-    initSidenav() {
+function dropdownEvent(elem, place) {
+    Array.from(elem).forEach(function (item) {
+        item.querySelectorAll(".dropdown-toggle").forEach(function (subitem) {
+            subitem.addEventListener("click", function (event) {
+                subitem.classList.toggle("show");
+                var popper = Popper.createPopper(subitem, item.querySelector(".dropdown-menu"), {
+                    placement: place
+                });
 
-        var self = this;
-        var pageUrl = window.location.href.split(/[?#]/)[0];
-
-        self.resetSideNav();
-
-        document.querySelectorAll('ul.menu a.menu-link').forEach((element) => {
-
-            if (element.href === pageUrl) {
-                element.classList.add('active');
-                let parentMenu = element.parentElement.parentElement.parentElement;
-                if (parentMenu && parentMenu.classList.contains('menu-item')) {
-                    const collapseElement = parentMenu.querySelector('[data-fc-type="collapse"]');
-                    if (collapseElement && frost != null) {
-                        const collapse = frost.Collapse.getInstanceOrCreate(collapseElement);
-                        collapse.show();
-                    }
-                }
-            }
-        })
-
-        setTimeout(function () {
-            var activatedItem = document.querySelector('ul.menu .active');
-            if (activatedItem != null) {
-                var simplebarContent = document.querySelector('.app-menu .simplebar-content-wrapper');
-                var offset = activatedItem.offsetTop - 300;
-                if (simplebarContent && offset > 100) {
-                    scrollTo(simplebarContent, offset, 600);
-                }
-            }
-        }, 200);
-
-        // scrollTo (Sidenav Active Menu)
-        function easeInOutQuad(t, b, c, d) {
-            t /= d / 2;
-            if (t < 1) return c / 2 * t * t + b;
-            t--;
-            return -c / 2 * (t * (t - 2) - 1) + b;
-        }
-
-        function scrollTo(element, to, duration) {
-            var start = element.scrollTop, change = to - start, currentTime = 0, increment = 20;
-            var animateScroll = function () {
-                currentTime += increment;
-                var val = easeInOutQuad(currentTime, start, change, duration);
-                element.scrollTop = val;
-                if (currentTime < duration) {
-                    setTimeout(animateScroll, increment);
-                }
-            };
-            animateScroll();
-        }
-    }
-
-    resetSideNav() {
-
-        document.querySelectorAll('ul.menu a.menu-link').forEach((element) => {
-            element.classList.remove('open');
-        });
-
-        document.querySelectorAll('ul.sub-menu').forEach((element) => {
-            element.classList.add('hidden');
-        });
-
-    }
-
-    reverseQuery(element, query) {
-        while (element) {
-            if (element.parentElement) {
-                if (element.parentElement.querySelector(query) === element) return element
-            }
-            element = element.parentElement;
-        }
-        return null;
-    }
-
-    changeThemeDirection(direction) {
-        this.config.direction = direction;
-        this.html.setAttribute('dir', direction);
-        this.setSwitchFromConfig();
-    }
-
-    changeThemeMode(color) {
-        this.config.theme = color;
-        this.html.setAttribute('data-mode', color);
-        this.setSwitchFromConfig();
-    }
-
-    changeLayoutWidth(width, save = true) {
-        this.html.setAttribute('data-layout-width', width);
-        if (save) {
-            this.config.layout.width = width;
-            this.setSwitchFromConfig();
-        }
-    }
-
-    changeLayoutPosition(position, save = true) {
-        this.html.setAttribute('data-layout-position', position);
-        if (save) {
-            this.config.layout.position = position;
-            this.setSwitchFromConfig();
-        }
-    }
-
-    changeTopbarColor(color) {
-        this.config.topbar.color = color;
-        this.html.setAttribute('data-topbar-color', color);
-        this.setSwitchFromConfig();
-    }
-
-    changeMenuColor(color) {
-        this.config.menu.color = color;
-        this.html.setAttribute('data-menu-color', color);
-        this.setSwitchFromConfig();
-    }
-
-    changeSidenavView(view, save = true) {
-        this.html.setAttribute('data-sidenav-view', view);
-        if (save) {
-            this.config.sidenav.view = view;
-            this.setSwitchFromConfig();
-        }
-    }
-
-    resetTheme() {
-        this.config = JSON.parse(JSON.stringify(window.defaultConfig));
-        this.changeThemeDirection(this.config.direction);
-        this.changeThemeMode(this.config.theme);
-        this.changeLayoutWidth(this.config.layout.width);
-        this.changeLayoutPosition(this.config.layout.position);
-        this.changeTopbarColor(this.config.topbar.color);
-        this.changeMenuColor(this.config.menu.color);
-        this.changeSidenavView(this.config.sidenav.view);
-        this.adjustLayout();
-    }
-
-    initSwitchListener() {
-        var self = this;
-
-        document.querySelectorAll('input[name=dir]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeThemeDirection(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-mode]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeThemeMode(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-layout-width]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeLayoutWidth(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-layout-position]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeLayoutPosition(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-topbar-color]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeTopbarColor(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-menu-color]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeMenuColor(element.value);
-            })
-        });
-
-        document.querySelectorAll('input[name=data-sidenav-view]').forEach(function (element) {
-            element.addEventListener('change', function (e) {
-                self.changeSidenavView(element.value);
-            })
-        });
-
-        //  Light Dark Button
-        var themeColorToggle = document.getElementById('light-dark-mode');
-        if (themeColorToggle) {
-            themeColorToggle.addEventListener('click', function (e) {
-
-                if (self.config.theme === 'light') {
-                    self.changeThemeMode('dark');
+                if (subitem.classList.contains("show") != true) {
+                    item.querySelector(".dropdown-menu").classList.remove("block")
+                    item.querySelector(".dropdown-menu").classList.add("hidden")
                 } else {
-                    self.changeThemeMode('light');
-                }
-            });
-        }
-
-        // Menu Toggle Button ( Placed in Topbar)
-        var menuToggleBtn = document.querySelector('#button-toggle-menu');
-        if (menuToggleBtn) {
-
-            menuToggleBtn.addEventListener('click', function () {
-                var configView = self.config.sidenav.view;
-                var view = self.html.getAttribute('data-sidenav-view', configView);
-
-                if (view === 'mobile') {
-                    self.showBackdrop();
-                    self.html.classList.toggle('sidenav-enable');
-                } else {
-                    if (configView == 'hidden') {
-                        if (view === 'hidden') {
-                            self.changeSidenavView(configView == 'hidden' ? 'default' : configView, false);
-                        } else {
-                            self.changeSidenavView('hidden', false);
-                        }
+                    dismissDropdownMenu()
+                    item.querySelector(".dropdown-menu").classList.add("block")
+                    item.querySelector(".dropdown-menu").classList.remove("hidden")
+                    if (item.querySelector(".dropdown-menu").classList.contains("block")) {
+                        subitem.classList.add("show")
                     } else {
-                        if (view === 'sm') {
-                            self.changeSidenavView(configView == 'sm' ? 'default' : configView, false);
-                        } else {
-                            self.changeSidenavView('sm', false);
-                        }
+                        subitem.classList.remove("show")
                     }
+                    event.stopPropagation();
                 }
+
+                isMenuInside = false;
             });
-        }
+        });
+    });
+}
 
-        var menuHoverToggleBtn = document.querySelector('#button-hover-toggle');
-        if (menuHoverToggleBtn) {
-            menuHoverToggleBtn.addEventListener('click', function () {
-                var configView = self.config.sidenav.view;
-                var view = self.html.getAttribute('data-sidenav-view', configView);
+function dismissDropdownMenu() {
+    Array.from(document.querySelectorAll(".dropdown-menu")).forEach(function (item) {
+        item.classList.remove("block")
+        item.classList.add("hidden")
+    });
+    Array.from(document.querySelectorAll(".dropdown-toggle")).forEach(function (item) {
+        item.classList.remove("show")
+    });
+    isShowDropMenu = false;
+}
 
-                if (configView == 'hover') {
-                    if (view === 'hover') {
-                        self.changeSidenavView(configView == 'hover' ? 'hover-active' : configView, true);
-                    } else {
-                        self.changeSidenavView('hover', true);
-                    }
-                } else {
-                    if (view === 'hover-active') {
-                        self.changeSidenavView(configView == 'hover-active' ? 'hover' : configView, true);
-                    } else {
-                        self.changeSidenavView('hover-active', true);
-                    }
+// dropdown form
+Array.from(document.querySelectorAll(".dropdown-menu")).forEach(function (item) {
+    if (item.querySelectorAll("form")) {
+        Array.from(item.querySelectorAll("form")).forEach(function (subitem) {
+            subitem.addEventListener("click", function (event) {
+                if (!isShowDropMenu) {
+                    isShowDropMenu = true;
                 }
-            });
-        }
-
-        // Config Reset Button
-        var resetBtn = document.querySelector('#reset-layout')
-        if (resetBtn) {
-            resetBtn.addEventListener('click', function (e) {
-                self.resetTheme();
-            });
-        }
+            })
+        });
     }
+});
 
-    showBackdrop() {
-        const backdrop = document.createElement('div');
-        backdrop.id = 'backdrop';
-        backdrop.classList = 'transition-all fixed inset-0 z-40 bg-gray-900 bg-opacity-50 dark:bg-opacity-80';
-        document.body.appendChild(backdrop);
-
-        if (document.getElementsByTagName('html')[0]) {
-            document.body.style.overflow = "hidden";
-            if (window.innerWidth > 1140) {
-                document.body.style.paddingRight = "15px";
+// data-tw-auto-close
+Array.from(document.querySelectorAll(".dropdown-toggle")).forEach(function (item) {
+    var elem = item.parentElement
+    if (item.getAttribute('data-tw-auto-close') == 'outside') {
+        elem.querySelector(".dropdown-menu").addEventListener("click", function () {
+            if (!isShowDropMenu) {
+                isShowDropMenu = true;
             }
-        }
-
-        const self = this
-        backdrop.addEventListener('click', function (e) {
-            self.html.classList.remove('sidenav-enable');
-            self.hideBackdrop();
-        })
+        });
+    } else if (item.getAttribute('data-tw-auto-close') == 'inside') {
+        item.addEventListener("click", function () {
+            isShowDropMenu = true;
+            isMenuInside = true;
+        });
+        elem.querySelector(".dropdown-menu").addEventListener("click", function () {
+            isShowDropMenu = false;
+            isMenuInside = false;
+        });
     }
+});
 
-    hideBackdrop() {
-        var backdrop = document.getElementById('backdrop');
-        if (backdrop) {
-            document.body.removeChild(backdrop);
-            document.body.style.overflow = null;
-            document.body.style.paddingRight = null;
-        }
+window.addEventListener('click', function (e) {
+    if (!isShowDropMenu && !isMenuInside) {
+        dismissDropdownMenu();
     }
+    isShowDropMenu = false;
+});
 
-    initWindowSize() {
-        var self = this;
-        window.addEventListener('resize', function (e) {
-            self.adjustLayout();
-        })
+
+
+// Handler that uses various data-* attributes to trigger
+// specific actions, mimicing bootstraps attributes
+const triggers = Array.from(document.querySelectorAll('[data-toggle="collapse"]'));
+
+window.addEventListener('click', (ev) => {
+    const elm = ev.target;
+    if (triggers.includes(elm)) {
+        const selector = elm.getAttribute('data-target');
+        collapse(selector, 'toggle');
     }
+}, false);
 
-    adjustLayout() {
-        var self = this;
 
-        if (window.innerWidth <= 1140) {
-            self.changeSidenavView('mobile', false);
+const fnmap = {
+    'toggle': 'toggle',
+    'show': 'add',
+    'hide': 'remove'
+};
+const collapse = (selector, cmd) => {
+    const targets = Array.from(document.querySelectorAll(selector));
+    targets.forEach(target => {
+        target.classList[fnmap[cmd]]('show');
+    });
+}
+
+
+/********* modal common js *********/
+// openModal
+var modalTrigger = document.querySelectorAll('[data-tw-toggle="modal"]');
+var isModalShow = false;
+Array.from(modalTrigger).forEach(function (item) {
+    item.addEventListener("click", function () {
+        var target = this.getAttribute('data-tw-target').substr(1);
+        var modalWindow = document.getElementById(target);
+
+        if (modalWindow.classList.contains("hidden")) {
+            modalWindow.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
         } else {
-            self.changeSidenavView(self.config.sidenav.view);
+            modalWindow.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
-    }
+        isModalShow = false;
 
-    setSwitchFromConfig() {
-
-        sessionStorage.setItem('__CONFIG__', JSON.stringify(this.config));
-        // localStorage.setItem('__CONFIG__', JSON.stringify(this.config));
-
-        document.querySelectorAll('#theme-customization input[type=radio]').forEach(function (radio) {
-            radio.checked = false;
-        })
-
-        var config = this.config;
-        if (config) {
-            var layoutDirectionSwitch = document.querySelector('input[type=radio][name=dir][value=' + config.direction + ']');
-            var layoutModeSwitch = document.querySelector('input[type=radio][name=data-mode][value=' + config.theme + ']');
-            var layoutWidthSwitch = document.querySelector('input[type=radio][name=data-layout-width][value=' + config.layout.width + ']');
-            var layoutPositionSwitch = document.querySelector('input[type=radio][name=data-layout-position][value=' + config.layout.position + ']');
-            var topbarColorSwitch = document.querySelector('input[type=radio][name=data-topbar-color][value=' + config.topbar.color + ']');
-            var menuColorSwitch = document.querySelector('input[type=radio][name=data-menu-color][value=' + config.menu.color + ']');
-            var sidenavViewSwitch = document.querySelector('input[type=radio][name=data-sidenav-view][value=' + config.sidenav.view + ']');
-
-            if (layoutDirectionSwitch) layoutDirectionSwitch.checked = true;
-            if (layoutModeSwitch) layoutModeSwitch.checked = true;
-            if (layoutWidthSwitch) layoutWidthSwitch.checked = true;
-            if (layoutPositionSwitch) layoutPositionSwitch.checked = true;
-            if (topbarColorSwitch) topbarColorSwitch.checked = true;
-            if (menuColorSwitch) menuColorSwitch.checked = true;
-            if (sidenavViewSwitch) sidenavViewSwitch.checked = true;
+        if (item.getAttribute('data-tw-backdrop') == 'static') {
+            isModalShow = true;
         }
-    }
+    });
+});
 
-    init() {
-        this.initConfig();
-        this.initSidenav();
-        this.initSwitchListener();
-        this.initWindowSize();
-        this.adjustLayout();
-        this.setSwitchFromConfig();
-    }
+// closeButton
+var closeButton = document.querySelectorAll('[data-tw-dismiss="modal"]');
+Array.from(closeButton).forEach(function (subElem) {
+    subElem.addEventListener("click", function () {
+
+        var modalWindow = subElem.closest(".modal");
+        if (modalWindow.classList.contains("hidden")) {
+            modalWindow.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        } else {
+            modalWindow.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+    });
+});
+
+// closeModal
+var modalElem = document.querySelectorAll('.modal');
+Array.from(modalElem).forEach(function (elem) {
+
+    // modalOverlay
+    var modalOverlay = elem.querySelectorAll('.modal-overlay');
+    Array.from(modalOverlay).forEach(function (subItem) {
+        subItem.addEventListener("click", function () {
+            if (!isModalShow) {
+                if (elem.classList.contains("hidden")) {
+                    elem.classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
+                } else {
+                    elem.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            }
+        });
+    });
+
+    // Escape
+    document.addEventListener("keydown", function (event) {
+        var key = event.key;
+        if (!isModalShow) {
+            if (key == "Escape") {
+                elem.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+    });
+});
+
+feather.replace()
+
+
+
+
+// ltr-rtl
+var isChangeMode = document.getElementById("ltr-rtl");
+if (isChangeMode) {
+    isChangeMode.addEventListener("click", function (e) {
+        var themeMode = document.documentElement.getAttribute("dir");
+        if (themeMode == "ltr") {
+            document.documentElement.setAttribute("dir", "rtl");
+        } else {
+            document.documentElement.setAttribute("dir", "ltr");
+        }
+
+        swiperDir();
+    });
 }

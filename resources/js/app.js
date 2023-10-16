@@ -10,7 +10,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
-import { MyApp, ThemeCustomizer } from "./MyApp.js";
+import "./MyApp.js";
 
 // import "@frostui/tailwindcss"
 // import { initFrost } from "@frostui/tailwindcss";
@@ -45,6 +45,7 @@ createInertiaApp({
 
 Inertia.on("navigate", () => {
     // initFrost();
-    new MyApp().init();
-    new ThemeCustomizer().init();
+    // new MyApp().init();
+    // new ThemeCustomizer().init();
 });
+
