@@ -1,7 +1,5 @@
 import "./bootstrap";
 import "../scss/app.scss";
-import "../scss/icons.scss";
-import "../scss/plugins.scss";
 
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
@@ -10,10 +8,6 @@ import { Inertia } from "@inertiajs/inertia";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
-import "./MyApp.js";
-
-// import "@frostui/tailwindcss"
-// import { initFrost } from "@frostui/tailwindcss";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -29,8 +23,8 @@ createInertiaApp({
             render: () => h(App, props),
             mounted() {
                 // initFrost();
-                new MyApp().init();
-                new ThemeCustomizer().init();
+                // new MyApp().init();
+                // new ThemeCustomizer().init();
             },
         })
             .use(plugin)

@@ -12,7 +12,7 @@ import { Head } from '@inertiajs/vue3';
         </template>
 
         <div>
-          You're logged in!
+          You're logged in!!!
         </div>
 
     </AuthenticatedLayout>
