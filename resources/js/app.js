@@ -34,6 +34,7 @@ createInertiaApp({
             render: () => h(App, props),
             mounted() {
                 feather.replace();
+                init();
                 // initFrost();
                 // new MyApp().init();
                 // new ThemeCustomizer().init();
@@ -57,140 +58,132 @@ Inertia.on("navigate", () => {
 
 
 
-(function () {
-
-    'use strict';
-
+// MetisMenu js
+function initMetisMenu() {
     // MetisMenu js
-    function initMetisMenu() {
-        // MetisMenu js
-        document.addEventListener("DOMContentLoaded", function (event) {
-            if (document.getElementById("side-menu"))
-                new MetisMenu('#side-menu');
-        });
+     if (document.getElementById("side-menu")) {
+        new MetisMenu('#side-menu');
     }
+}
 
-    // initLeftMenuCollapse
-    function initLeftMenuCollapse() {
-        var currentSIdebarSize = document.body.getAttribute('data-sidebar-size');
-        window.onload = function () {
-            if (window.innerWidth >= 1024 && window.innerWidth <= 1366) {
-                document.body.setAttribute('data-sidebar-size', 'sm');
-                updateRadio('sidebar-size-small')
-            }
+// initLeftMenuCollapse
+function initLeftMenuCollapse() {
+    var currentSIdebarSize = document.body.getAttribute('data-sidebar-size');
+    window.onload = function () {
+        if (window.innerWidth >= 1024 && window.innerWidth <= 1366) {
+            document.body.setAttribute('data-sidebar-size', 'sm');
+            updateRadio('sidebar-size-small')
         }
-        var verticalButton = document.getElementsByClassName("vertical-menu-btn");
-        for (var i = 0; i < verticalButton.length; i++) {
-            (function (index) {
-                verticalButton[index] && verticalButton[index].addEventListener('click', function (event) {
-                    event.preventDefault();
-                    document.body.classList.toggle('sidebar-enable');
-                    if (window.innerWidth >= 992) {
-                        if (currentSIdebarSize == null) {
-                            (document.body.getAttribute('data-sidebar-size') == null || document.body.getAttribute('data-sidebar-size') == "lg") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'lg')
-                        } else if (currentSIdebarSize == "md") {
-                            (document.body.getAttribute('data-sidebar-size') == "md") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'md')
-                        } else {
-                            (document.body.getAttribute('data-sidebar-size') == "sm") ? document.body.setAttribute('data-sidebar-size', 'lg') : document.body.setAttribute('data-sidebar-size', 'sm')
-                        }
+    }
+    var verticalButton = document.getElementsByClassName("vertical-menu-btn");
+    for (var i = 0; i < verticalButton.length; i++) {
+        (function (index) {
+            verticalButton[index] && verticalButton[index].addEventListener('click', function (event) {
+                event.preventDefault();
+                document.body.classList.toggle('sidebar-enable');
+                if (window.innerWidth >= 992) {
+                    if (currentSIdebarSize == null) {
+                        (document.body.getAttribute('data-sidebar-size') == null || document.body.getAttribute('data-sidebar-size') == "lg") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'lg')
+                    } else if (currentSIdebarSize == "md") {
+                        (document.body.getAttribute('data-sidebar-size') == "md") ? document.body.setAttribute('data-sidebar-size', 'sm') : document.body.setAttribute('data-sidebar-size', 'md')
                     } else {
-                        initMenuItemScroll();
+                        (document.body.getAttribute('data-sidebar-size') == "sm") ? document.body.setAttribute('data-sidebar-size', 'lg') : document.body.setAttribute('data-sidebar-size', 'sm')
                     }
-                });
-            })(i);
-        }
+                } else {
+                    initMenuItemScroll();
+                }
+            });
+        })(i);
     }
+}
 
-    // menu active
-    function initActiveMenu() {
-        var menuItems = document.querySelectorAll("#sidebar-menu a");
-        menuItems && menuItems.forEach(function (item) {
-            var pageUrl = window.location.href.split(/[?#]/)[0];
+// menu active
+function initActiveMenu() {
+    var menuItems = document.querySelectorAll("#sidebar-menu a");
+    menuItems && menuItems.forEach(function (item) {
+        var pageUrl = window.location.href.split(/[?#]/)[0];
 
-            if (item.href == pageUrl) {
-                item.classList.add("active");
-                var parent = item.parentElement;
-                if (parent && parent.id !== "side-menu") {
-                    parent.classList.add("mm-active");
-                    var parent2 = parent.parentElement; // ul .
-                    if (parent2 && parent2.id !== "side-menu") {
-                        parent2.classList.add("mm-show"); // ul tag
-                        var parent3 = parent2.parentElement; // li tag
-                        if (parent3 && parent3.id !== "side-menu") {
-                            parent3.classList.add("mm-active"); // li
-                            var parent4 = parent3.parentElement; // ul
-                            if (parent4 && parent4.id !== "side-menu") {
-                                parent4.classList.add("mm-show"); // ul
-                                var parent5 = parent4.parentElement;
-                                if (parent5 && parent5.id !== "side-menu") {
-                                    parent5.classList.add("mm-active"); // li
-                                }
+        if (item.href == pageUrl) {
+            item.classList.add("active");
+            var parent = item.parentElement;
+            if (parent && parent.id !== "side-menu") {
+                parent.classList.add("mm-active");
+                var parent2 = parent.parentElement; // ul .
+                if (parent2 && parent2.id !== "side-menu") {
+                    parent2.classList.add("mm-show"); // ul tag
+                    var parent3 = parent2.parentElement; // li tag
+                    if (parent3 && parent3.id !== "side-menu") {
+                        parent3.classList.add("mm-active"); // li
+                        var parent4 = parent3.parentElement; // ul
+                        if (parent4 && parent4.id !== "side-menu") {
+                            parent4.classList.add("mm-show"); // ul
+                            var parent5 = parent4.parentElement;
+                            if (parent5 && parent5.id !== "side-menu") {
+                                parent5.classList.add("mm-active"); // li
                             }
                         }
                     }
                 }
             }
+        }
+    });
+}
+
+
+// sidebarMenu
+
+function initMenuItemScroll() {
+    setTimeout(function () {
+        var sidebarMenu = document.getElementById("side-menu");
+        if (sidebarMenu) {
+            var activeMenu = sidebarMenu.querySelector(".mm-active .active");
+            var offset = activeMenu ? activeMenu.offsetTop : 0;
+            if (offset > 300) {
+                var verticalMenu = document.getElementsByClassName("vertical-menu") ? document.getElementsByClassName("vertical-menu")[0] : "";
+                if (verticalMenu && verticalMenu.querySelector(".simplebar-content-wrapper")) {
+                    setTimeout(function () {
+                        offset == 330 ?
+                            (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset + 85) :
+                            (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset);
+                    }, 0);
+                }
+            }
+        }
+    }, 250);
+}
+
+function initModeSetting() {
+    var body = document.body;
+    var lightDarkBtn = document.querySelectorAll('.light-dark-mode');
+    if (lightDarkBtn) {
+        lightDarkBtn.forEach(function (item) {
+            item.addEventListener('click', function (event) {
+                if (body.hasAttribute("data-mode") && body.getAttribute("data-mode") == "dark") {
+                    body.setAttribute('data-mode', 'light');
+                    sessionStorage.setItem("data-layout-mode", "light");
+                } else {
+                    body.setAttribute('data-mode', 'dark');
+                    sessionStorage.setItem("data-layout-mode", "dark");
+                }
+            });
         });
     }
 
-
-    // sidebarMenu
-
-    function initMenuItemScroll() {
-        setTimeout(function () {
-            var sidebarMenu = document.getElementById("side-menu");
-            if (sidebarMenu) {
-                var activeMenu = sidebarMenu.querySelector(".mm-active .active");
-                var offset = activeMenu ? activeMenu.offsetTop : 0;
-                if (offset > 300) {
-                    var verticalMenu = document.getElementsByClassName("vertical-menu") ? document.getElementsByClassName("vertical-menu")[0] : "";
-                    if (verticalMenu && verticalMenu.querySelector(".simplebar-content-wrapper")) {
-                        setTimeout(function () {
-                            offset == 330 ?
-                                (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset + 85) :
-                                (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset);
-                        }, 0);
-                    }
-                }
-            }
-        }, 250);
+    if (sessionStorage.getItem("data-layout-mode") && sessionStorage.getItem("data-layout-mode") == "light") {
+        body.setAttribute('data-mode', 'light');
+    } else if (sessionStorage.getItem("data-layout-mode") == "dark") {
+        body.setAttribute('data-mode', 'dark');
     }
+}
 
-    function initModeSetting() {
-        var body = document.body;
-        var lightDarkBtn = document.querySelectorAll('.light-dark-mode');
-        if (lightDarkBtn) {
-            lightDarkBtn.forEach(function (item) {
-                item.addEventListener('click', function (event) {
-                    if (body.hasAttribute("data-mode") && body.getAttribute("data-mode") == "dark") {
-                        body.setAttribute('data-mode', 'light');
-                        sessionStorage.setItem("data-layout-mode", "light");
-                    } else {
-                        body.setAttribute('data-mode', 'dark');
-                        sessionStorage.setItem("data-layout-mode", "dark");
-                    }
-                });
-            });
-        }
+function init() {
 
-        if (sessionStorage.getItem("data-layout-mode") && sessionStorage.getItem("data-layout-mode") == "light") {
-            body.setAttribute('data-mode', 'light');
-        } else if (sessionStorage.getItem("data-layout-mode") == "dark") {
-            body.setAttribute('data-mode', 'dark');
-        }
-    }
-
-    function init() {
-        initMetisMenu();
-        initLeftMenuCollapse();
-        initActiveMenu();
-        initMenuItemScroll();
-        initModeSetting();
-    }
-
-    init();
-
-})();
+    initMetisMenu();
+    initLeftMenuCollapse();
+    initActiveMenu();
+    initMenuItemScroll();
+    initModeSetting();
+}
 
 
 /********* Alert common js *********/
@@ -229,6 +222,7 @@ function dropdownEvent(elem, place) {
         item.querySelectorAll(".dropdown-toggle").forEach(function (subitem) {
             subitem.addEventListener("click", function (event) {
                 subitem.classList.toggle("show");
+                console.log('popper');
                 var popper = createPopper(subitem, item.querySelector(".dropdown-menu"), {
                     placement: place
                 });
