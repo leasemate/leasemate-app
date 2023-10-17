@@ -33,8 +33,6 @@ Route::get('/', function () {
 
 Route::get('/test-file-upload', function () {
 
-//    dd(\Illuminate\Support\Facades\Http::get('https://api.publicapis.org/entries')->json());
-
     $file = FileUpload::find(3);
 
     $resp = ReaiProcessor::processFile(Storage::path($file->stored_name));
@@ -51,16 +49,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('file-upload', FileUploadController::class);
 
-//    Route::resource('chats', ChatController::class);
-
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
     Route::delete('/chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
-
-
-//    Route::resource('chats.messages', ChatMessageController::class);
-
 
 });
 
