@@ -14,7 +14,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
-import {popper} from "@popperjs/core";
+import {createPopper} from "@popperjs/core";
 import feather from "feather-icons";
 import {MetisMenu} from "metismenujs";
 import simplebar from "simplebar";
@@ -229,7 +229,7 @@ function dropdownEvent(elem, place) {
         item.querySelectorAll(".dropdown-toggle").forEach(function (subitem) {
             subitem.addEventListener("click", function (event) {
                 subitem.classList.toggle("show");
-                var popper = Popper.createPopper(subitem, item.querySelector(".dropdown-menu"), {
+                var popper = createPopper(subitem, item.querySelector(".dropdown-menu"), {
                     placement: place
                 });
 
