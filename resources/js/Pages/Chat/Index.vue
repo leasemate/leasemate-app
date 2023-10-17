@@ -234,13 +234,21 @@ onMounted(() => {
 
             <!-- Left column for list of chats -->
             <div class=" w-1/3 p-4 overflow-y-auto">
+<!--                <button-->
+<!--                    @click="addNewChat"-->
+<!--                    class="flex items-center mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">-->
+<!--                    <i class="mgc_add_line text-base mr-2"></i>-->
+<!--                    <span class="font-bold">Chat</span>-->
+<!--                </button>-->
+
                 <button
                     @click="addNewChat"
-                    class="flex items-center mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                    <i class="mgc_add_line text-base mr-2"></i>
-                    <span class="font-bold">Chat</span>
+                    type="button"
+                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
+                >
+                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
+                    Chat
                 </button>
-
 
                 <hr class="mb-4" />
 

@@ -90,6 +90,8 @@ const initActiveMenu = () => {
 
 onMounted(() => {
 
+    console.log('on mount');
+
     feather.replace();
     // initActiveMenu
     Inertia.on('navigate', closeVerticalMenu);
@@ -179,11 +181,11 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <div>
-                    <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block " />
-                    <i data-feather="moon" class="h-5 w-5 block dark:hidden"></i>
-                    <i data-feather="sun" class="h-5 w-5 hidden dark:block"></i>
-                </div>
+<!--                <div>-->
+<!--                    <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block " />-->
+<!--                    <i data-feather="moon" class="h-5 w-5 block dark:hidden"></i>-->
+<!--                    <i data-feather="sun" class="h-5 w-5 hidden dark:block"></i>-->
+<!--                </div>-->
 
                 <div>
                     <div class="dropdown relative text-gray-600 hidden sm:block">
@@ -323,7 +325,7 @@ onBeforeUnmount(() => {
                     <div class="dropdown relative ltr:mr-4 rtl:ml-4">
                         <button type="button" class="flex items-center px-4 py-5 border-x border-gray-50 bg-gray-50/30 dropdown-toggle dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-100" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <img class="h-8 w-8 rounded-full ltr:xl:mr-2 rtl:xl:ml-2" src="@/../images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="fw-medium hidden xl:block">Shawn L.</span>
+                            <span class="fw-medium hidden xl:block">{{ $page.props.auth.user.name }}</span>
                             <i class="mdi mdi-chevron-down align-bottom hidden xl:block"></i>
                         </button>
                         <div class="dropdown-menu absolute top-0 ltr:-left-3 rtl:-right-3 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="profile/log">
