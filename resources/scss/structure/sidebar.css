@@ -52,8 +52,11 @@
 #sidebar-menu ul li a svg {
     @apply h-4 w-4 ltr:mr-[10px] mt-[-3px] inline-block rtl:ml-[10px];
 }
-.metismenu .mm-active .active{
-    @apply text-violet-500 !important;
+.metismenu .mm-active {
+    @apply px-2;
+}
+.metismenu .mm-active .active {
+    @apply text-violet-500 bg-violet-50 rounded pl-4 !important;
 }
 
 [data-mode=dark] .metismenu .mm-active .active {
