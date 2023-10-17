@@ -40,10 +40,10 @@ onMounted(() => {
                 </Link>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Your Files</h4>
-                </div>
+<!--            <div class="card">-->
+<!--                <div class="card-header">-->
+<!--                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-300">Your Files</h4>-->
+<!--                </div>-->
 
                 <div class="flex flex-col">
                     <div class="overflow-x-auto">
@@ -177,7 +177,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-            </div>
+<!--            </div>-->
 
             <Pagination
                 :links="uploaded_files.links"

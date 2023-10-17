@@ -15,7 +15,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 
 import {popper} from "@popperjs/core";
-import {feather} from "feather-icons";
+import feather from "feather-icons";
 import {MetisMenu} from "metismenujs";
 import simplebar from "simplebar";
 
@@ -33,6 +33,7 @@ createInertiaApp({
         return createApp({
             render: () => h(App, props),
             mounted() {
+                feather.replace();
                 // initFrost();
                 // new MyApp().init();
                 // new ThemeCustomizer().init();
@@ -404,10 +405,6 @@ Array.from(modalElem).forEach(function (elem) {
         }
     });
 });
-
-console.log(feather);
-
-feather.replace();
 
 
 
