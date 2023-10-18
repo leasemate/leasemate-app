@@ -2,24 +2,22 @@
 
 ## Document Status Updates
 
-API Endpoint
+**API Endpoint**
 
 ```/api/file-processing/status-update```
 
-Request Method
+**Request Method**
 
 ```POST```
 
-Request Headers
-
+**Request Headers**
 ```
     "Accept": "application/json"
     "Content-Type": "application/json"
     "Authorization": "<token>"
 ```
 
-Request Body
-
+**Request Body**
 ```json
 {
     "status": "In Progress",
