@@ -15,12 +15,7 @@ Request Headers
 ```
     "Accept": "application/json"
     "Content-Type": "application/json"
-```
-
-Authorization
-
-```
-    "Bearer <token>"
+    "Authorization": "<token>"
 ```
 
 Request Body
