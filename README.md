@@ -4,11 +4,7 @@
 
 **API Endpoint**
 
-```/api/file-processing/status-update```
-
-**Request Method**
-
-```POST```
+```POST``` ```/api/file-processing/status-update```
 
 **Request Headers**
 ```
