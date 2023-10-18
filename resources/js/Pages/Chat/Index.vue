@@ -255,9 +255,9 @@ onMounted(() => {
                 <div
                     v-for="(conv_obj, index) in chats.data"
                     :key="conv_obj.id"
-                    :class="{ 'bg-gray-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
+                    :class="{ 'bg-slate-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
                     @click="selectChat(conv_obj)"
-                    class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer border-b shadow"
+                    class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
                 >
 
                     <!-- Favicon or User Icon -->
@@ -299,8 +299,8 @@ onMounted(() => {
                             <div
                                 class="flex items-center px-3 py-2 whitespace-pre-wrap"
                                 :class="{
-                                'bg-neutral-200 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
-                                'bg-blue-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
+                                'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
+                                'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
                             }">
                                 {{ entry.message }}
                             </div>

@@ -4,12 +4,16 @@ import { Inertia } from '@inertiajs/inertia';
 import {Link} from "@inertiajs/vue3";
 import {MetisMenu} from "metismenujs";
 import feather from "feather-icons";
+import {createPopper} from "@popperjs/core";
+import simplebar from "simplebar";
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 
 const toggleMenu = (event) => {
     event.preventDefault();
     document.body.classList.toggle('sidebar-enable');
+
+    console.log('toggle menu');
 
     if (window.innerWidth >= 992) {
         const bodyAttribute = document.body.getAttribute('data-sidebar-size');
@@ -35,6 +39,8 @@ const closeVerticalMenu = () => {
 };
 
 const initMenuItemScroll = () => {
+    console.log('init menu scroll');
+
     setTimeout(function () {
         var sidebarMenu = document.getElementById("side-menu");
         if (sidebarMenu) {
@@ -88,9 +94,124 @@ const initActiveMenu = () => {
     });
 }
 
+const isShowDropMenu = ref(false);
+const isMenuInside = ref(false);
+
+/********* dropdown common js *********/
+// var dropdownElem = document.querySelectorAll('.dropdown');
+// var dropupElem = document.querySelectorAll('.dropup');
+// var dropStartElem = document.querySelectorAll('.dropstart');
+// var dropendElem = document.querySelectorAll('.dropend');
+// var isShowDropMenu = false;
+// var isMenuInside = false;
+// dropdown event
+// dropdownEvent(dropdownElem, 'bottom-start');
+// // dropup event
+// dropdownEvent(dropupElem, 'top-start');
+// // dropstart event
+// dropdownEvent(dropStartElem, 'left-start');
+// // dropend event
+// dropdownEvent(dropendElem, 'right-start');
+
+const dropdownEvent = (elem, place) => {
+    const items = document.querySelectorAll(elem);
+
+    Array.from(items).forEach(item => {
+        item.querySelectorAll(".dropdown-toggle").forEach( subitem => {
+            subitem.addEventListener("click", event => {
+                subitem.classList.toggle("show");
+
+                console.log('popper');
+
+                var popper = createPopper(subitem, item.querySelector(".dropdown-menu"), {
+                    placement: place
+                });
+
+                if (subitem.classList.contains("show") != true) {
+                    item.querySelector(".dropdown-menu").classList.remove("block")
+                    item.querySelector(".dropdown-menu").classList.add("hidden")
+                } else {
+                    dismissDropdownMenu()
+                    item.querySelector(".dropdown-menu").classList.add("block")
+                    item.querySelector(".dropdown-menu").classList.remove("hidden")
+                    if (item.querySelector(".dropdown-menu").classList.contains("block")) {
+                        subitem.classList.add("show")
+                    } else {
+                        subitem.classList.remove("show")
+                    }
+                    event.stopPropagation();
+                }
+
+                isMenuInside.value = false;
+            });
+        });
+    });
+}
+
+const dismissDropdownMenu = () => {
+    console.log('dismiss dropdown');
+    Array.from(document.querySelectorAll(".dropdown-menu")).forEach( item => {
+        item.classList.remove("block")
+        item.classList.add("hidden")
+    });
+    Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
+        item.classList.remove("show")
+    });
+    isShowDropMenu.value = false;
+}
+
+Array.from(document.querySelectorAll(".dropdown-menu")).forEach( item => {
+    if (item.querySelectorAll("form")) {
+        Array.from(item.querySelectorAll("form")).forEach( subitem => {
+            subitem.addEventListener("click", event => {
+                if (!isShowDropMenu.value) {
+                    isShowDropMenu.value = true;
+                }
+            })
+        });
+    }
+});
+
+// data-tw-auto-close
+Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
+    var elem = item.parentElement
+    if (item.getAttribute('data-tw-auto-close') == 'outside') {
+        elem.querySelector(".dropdown-menu").addEventListener("click",  () => {
+            if (!isShowDropMenu.value) {
+                isShowDropMenu.value = true;
+            }
+        });
+    } else if (item.getAttribute('data-tw-auto-close') == 'inside') {
+        item.addEventListener("click", () => {
+            isShowDropMenu.value = true;
+            isMenuInside.value = true;
+        });
+        elem.querySelector(".dropdown-menu").addEventListener("click", () => {
+            isShowDropMenu.value = false;
+            isMenuInside.value = true;
+        });
+    }
+});
+
+const closeDropdownOutsideClick = (event) => {
+    if (!isShowDropMenu.value && !isMenuInside.value) {
+        dismissDropdownMenu();
+    }
+    isShowDropMenu.value = false;
+}
+
 onMounted(() => {
 
     console.log('on mount');
+
+    dropdownEvent('.dropdown', 'bottom-start');
+    dropdownEvent('.dropup', 'top-start');
+    dropdownEvent('.dropstart', 'left-start');
+    dropdownEvent('.dropend', 'right-start');
+
+    window.addEventListener('click', closeDropdownOutsideClick);
+
+    initMenuItemScroll();
 
     feather.replace();
     // initActiveMenu
@@ -109,7 +230,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     // Clean up the event listener when the component is destroyed
-    // Inertia.off('navigate', closeVerticalMenu);
+
+    window.removeEventListener('click', closeDropdownOutsideClick);
+
 });
 
 </script>
@@ -159,27 +282,27 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <div class="dropdown relative language hidden sm:block">
-                    <button class="btn border-0 py-0 dropdown-toggle px-4 h-[70px]" type="button" aria-expanded="false" data-dropdown-toggle="navNotifications">
-                        <img src="@/../images/flags/us.jpg" alt="" class="h-4" id="header-lang-img">
-                    </button>
-                    <div class="dropdown-menu absolute -left-24 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="navNotifications">
-                        <ul class="border border-gray-50 dark:border-gray-700" aria-labelledby="navNotifications">
-                            <li>
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/us.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">English</span></a>
-                            </li>
-                            <li>
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/spain.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Spanish</span></a>
-                            </li>
-                            <li>
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/germany.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">German</span></a>
-                            </li>
-                            <li>
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/italy.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Italian</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<!--                <div class="dropdown relative language hidden sm:block">-->
+<!--                    <button class="btn border-0 py-0 dropdown-toggle px-4 h-[70px]" type="button" aria-expanded="false" data-dropdown-toggle="navNotifications">-->
+<!--                        <img src="@/../images/flags/us.jpg" alt="" class="h-4" id="header-lang-img">-->
+<!--                    </button>-->
+<!--                    <div class="dropdown-menu absolute -left-24 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="navNotifications">-->
+<!--                        <ul class="border border-gray-50 dark:border-gray-700" aria-labelledby="navNotifications">-->
+<!--                            <li>-->
+<!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/us.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">English</span></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/spain.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Spanish</span></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/germany.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">German</span></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/italy.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Italian</span></a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </div>-->
 
 <!--                <div>-->
 <!--                    <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block " />-->
@@ -311,7 +434,7 @@ onBeforeUnmount(() => {
                                     </div>
                                 </div>
                                 <div class="p-1 border-t grid border-gray-50 dark:border-zinc-600 justify-items-center">
-                                    <a class="btn border-0 text-violet-500" href="javascript:void(0)">
+                                    <a class="btn border-0 text-violet-500" href="">
                                         <i class="mdi mdi-arrow-right-circle mr-1"></i> <span>View More..</span>
                                     </a>
                                 </div>
@@ -353,126 +476,6 @@ onBeforeUnmount(() => {
             </div>
         </div>
     </nav>
-
-    <div class="hidden">
-        <div class="fixed inset-0 bg-black/40 transition-opacity z-40"></div>
-        <div class="h-screen z-50 bg-white fixed w-80 right-0" data-simplebar>
-            <div class="flex items-center p-4 border-b border-gray-100">
-                <h5 class="m-0 mr-2">Theme Customizer</h5>
-                <a href="javascript:void(0);" class="h-6 w-6 text-center bg-gray-700 ml-auto rounded-full" >
-                    <i class="mdi mdi-close text-15 align-middle text-white leading-relaxed"></i>
-                </a>
-            </div>
-            <div class="p-4">
-                <h6 class="mb-3">Layout</h6>
-                <div class="flex gap-4">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout" id="layout-vertical" value="vertical">
-                        <label class="align-middle" for="layout-vertical">Vertical</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" type="radio" name="layout" id="layout-horizontal" value="horizontal">
-                        <label class="align-middle" for="layout-horizontal">Horizontal</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">Layout Mode</h6>
-                <div class="flex gap-4">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout-mode" id="layout-mode-light" value="light">
-                        <label class="form-check-label" for="layout-mode-light">Light</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" type="radio" name="layout-mode" id="layout-mode-dark" value="dark">
-                        <label class="form-check-label" for="layout-mode-dark">Dark</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">Layout Width</h6>
-
-                <div class="flex gap-4">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout-width" id="layout-width-fuild" value="fuild" onchange="document.body.setAttribute('data-layout-size', 'fluid')">
-                        <label class="form-check-label" for="layout-width-fuild">Fluid</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" type="radio" name="layout-width" id="layout-width-boxed" value="boxed" onchange="document.body.setAttribute('data-layout-size', 'boxed')">
-                        <label class="form-check-label" for="layout-width-boxed">Boxed</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">Layout Position</h6>
-                <div class="flex gap-4">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout-position" id="layout-position-fixed" value="fixed" onchange="document.body.setAttribute('data-layout-scrollable', 'false')">
-                        <label class="form-check-label" for="layout-position-fixed">Fixed</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout-position" id="layout-position-scrollable" value="scrollable" onchange="document.body.setAttribute('data-layout-scrollable', 'true')">
-                        <label class="form-check-label" for="layout-position-scrollable">Scrollable</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">Topbar Color</h6>
-                <div class="flex gap-4">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="topbar-color" id="topbar-color-light" value="light" onchange="document.body.setAttribute('data-topbar', 'light')">
-                        <label class="form-check-label" for="topbar-color-light">Light</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" type="radio" name="topbar-color" id="topbar-color-dark" value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
-                        <label class="form-check-label" for="topbar-color-dark">Dark</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2 sidebar-setting">Sidebar Size</h6>
-
-                <div class="space-y-1">
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" checked type="radio" name="sidebar-size" id="sidebar-size-default" value="default" onchange="document.body.setAttribute('data-sidebar-size', 'lg')">
-                        <label class="form-check-label" for="sidebar-size-default">Default</label>
-                    </div>
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" type="radio" name="sidebar-size" id="sidebar-size-compact" value="compact" onchange="document.body.setAttribute('data-sidebar-size', 'md')">
-                        <label class="form-check-label" for="sidebar-size-compact">Compact</label>
-                    </div>
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" type="radio" name="sidebar-size" id="sidebar-size-small" value="small" onchange="document.body.setAttribute('data-sidebar-size', 'sm')">
-                        <label class="form-check-label" for="sidebar-size-small">Small (Icon View)</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2 sidebar-setting">Sidebar Color</h6>
-                <div class="space-y-1">
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" checked type="radio" name="sidebar-color" id="sidebar-color-light" value="light" onchange="document.body.setAttribute('data-sidebar', 'light')">
-                        <label class="form-check-label" for="sidebar-color-light">Light</label>
-                    </div>
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" type="radio" name="sidebar-color" id="sidebar-color-dark" value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')">
-                        <label class="form-check-label" for="sidebar-color-dark">Dark</label>
-                    </div>
-                    <div class="form-check sidebar-setting">
-                        <input class="focus:ring-0" type="radio" name="sidebar-color" id="sidebar-color-brand" value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')">
-                        <label class="form-check-label" for="sidebar-color-brand">Brand</label>
-                    </div>
-                </div>
-
-                <h6 class="mt-4 mb-3 pt-2">Direction</h6>
-                <div class="space-y-1">
-                    <div>
-                        <input class="focus:ring-0" checked type="radio" name="layout-direction" id="layout-direction-ltr" value="ltr">
-                        <label class="form-check-label" for="layout-direction-ltr">LTR</label>
-                    </div>
-                    <div>
-                        <input class="focus:ring-0" type="radio" name="layout-direction" id="layout-direction-rtl" value="rtl">
-                        <label class="form-check-label" for="layout-direction-rtl">RTL</label>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 
     <!---- side bar ---->
 
