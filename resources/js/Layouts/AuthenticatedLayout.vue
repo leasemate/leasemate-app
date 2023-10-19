@@ -1,184 +1,149 @@
 <script setup>
-import { ref } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { Link } from "@inertiajs/vue3";
-import Header from "@/Components/Layout/Header.vue";
-import Nav from "@/Components/Layout/Nav.vue";
-import Footer from "@/Components/Layout/Footer.vue";
-import SubHeader from "@/Components/Layout/SubHeader.vue";
-import AutoLogout from "@/Components/AutoLogout.vue";
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-const showingNavigationDropdown = ref(false);
+import TopBar from "@/Components/Layout/TopBar.vue";
+import Nav from "@/Components/Layout/Nav.vue";
+import SubHeader from "@/Components/Layout/SubHeader.vue";
+import Footer from "@/Components/Layout/Footer.vue";
+
+import feather from "feather-icons";
+import {createPopper} from "@popperjs/core";
+
+const isShowDropMenu = ref(false);
+const isMenuInside = ref(false);
+
+const dropdownEvent = (elem, place) => {
+    const items = document.querySelectorAll(elem);
+
+    Array.from(items).forEach(item => {
+        item.querySelectorAll(".dropdown-toggle").forEach( subitem => {
+            subitem.addEventListener("click", event => {
+                subitem.classList.toggle("show");
+
+                var popper = createPopper(subitem, item.querySelector(".dropdown-menu"), {
+                    placement: place
+                });
+
+                if (subitem.classList.contains("show") != true) {
+                    item.querySelector(".dropdown-menu").classList.remove("block")
+                    item.querySelector(".dropdown-menu").classList.add("hidden")
+                } else {
+                    dismissDropdownMenu()
+                    item.querySelector(".dropdown-menu").classList.add("block")
+                    item.querySelector(".dropdown-menu").classList.remove("hidden")
+                    if (item.querySelector(".dropdown-menu").classList.contains("block")) {
+                        subitem.classList.add("show")
+                    } else {
+                        subitem.classList.remove("show")
+                    }
+                    event.stopPropagation();
+                }
+
+                isMenuInside.value = false;
+            });
+        });
+    });
+}
+
+const dismissDropdownMenu = () => {
+    // console.log('dismiss dropdown');
+    Array.from(document.querySelectorAll(".dropdown-menu")).forEach( item => {
+        item.classList.remove("block")
+        item.classList.add("hidden")
+    });
+    Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
+        item.classList.remove("show")
+    });
+    isShowDropMenu.value = false;
+}
+
+const closeDropdownOutsideClick = (event) => {
+    if (!isShowDropMenu.value && !isMenuInside.value) {
+        dismissDropdownMenu();
+    }
+    isShowDropMenu.value = false;
+}
+
+Array.from(document.querySelectorAll(".dropdown-menu")).forEach( item => {
+    if (item.querySelectorAll("form")) {
+        Array.from(item.querySelectorAll("form")).forEach( subitem => {
+            subitem.addEventListener("click", event => {
+                if (!isShowDropMenu.value) {
+                    isShowDropMenu.value = true;
+                }
+            })
+        });
+    }
+});
+
+// data-tw-auto-close
+Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
+    var elem = item.parentElement
+    if (item.getAttribute('data-tw-auto-close') == 'outside') {
+        elem.querySelector(".dropdown-menu").addEventListener("click",  () => {
+            if (!isShowDropMenu.value) {
+                isShowDropMenu.value = true;
+            }
+        });
+    } else if (item.getAttribute('data-tw-auto-close') == 'inside') {
+        item.addEventListener("click", () => {
+            isShowDropMenu.value = true;
+            isMenuInside.value = true;
+        });
+        elem.querySelector(".dropdown-menu").addEventListener("click", () => {
+            isShowDropMenu.value = false;
+            isMenuInside.value = true;
+        });
+    }
+});
+
+onMounted(() => {
+
+    dropdownEvent('.dropdown', 'bottom-start');
+    dropdownEvent('.dropup', 'top-start');
+    dropdownEvent('.dropstart', 'left-start');
+    dropdownEvent('.dropend', 'right-start');
+
+    window.addEventListener('click', closeDropdownOutsideClick);
+
+    feather.replace();
+});
+
+onBeforeUnmount(() => {
+    // Clean up the event listener when the component is destroyed
+
+    window.removeEventListener('click', closeDropdownOutsideClick);
+});
+
 </script>
 
 <template>
-    <div>
 
-<!--        <AutoLogout />-->
+    <!---- top bar ---->
 
-        <div class="flex wrapper min-h-screen bg-gray-100">
-            <!--          <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />-->
+    <TopBar />
 
-            <!--            <nav class="bg-white border-b border-gray-100">-->
-            <!--                &lt;!&ndash; Primary Navigation Menu &ndash;&gt;-->
-            <!--                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">-->
-            <!--                    <div class="flex justify-between h-16">-->
-            <!--                        <div class="flex">-->
-            <!--                            &lt;!&ndash; Logo &ndash;&gt;-->
-            <!--                            <div class="shrink-0 flex items-center">-->
-            <!--                                <Link :href="route('dashboard')">-->
-            <!--                                    <ApplicationLogo-->
-            <!--                                        class="block h-9 w-auto fill-current text-gray-800"-->
-            <!--                                    />-->
-            <!--                                </Link>-->
-            <!--                            </div>-->
+    <Nav />
 
-            <!--                            &lt;!&ndash; Navigation Links &ndash;&gt;-->
-            <!--                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">-->
-            <!--                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">-->
-            <!--                                    Dashboard-->
-            <!--                                </NavLink>-->
-            <!--                            </div>-->
-            <!--                        </div>-->
+    <div class="main-content">
+        <div class="page-content dark:bg-zinc-700 min-h-screen">
 
-            <!--                        <div class="hidden sm:flex sm:items-center sm:ml-6">-->
-            <!--                            &lt;!&ndash; Settings Dropdown &ndash;&gt;-->
-            <!--                            <div class="ml-3 relative">-->
-            <!--                                <Dropdown align="right" width="48">-->
-            <!--                                    <template #trigger>-->
-            <!--                                        <span class="inline-flex rounded-md">-->
-            <!--                                            <button-->
-            <!--                                                type="button"-->
-            <!--                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"-->
-            <!--                                            >-->
-            <!--                                                {{ $page.props.auth.user.name }}-->
+            <div class="container-fluid px-[0.625rem]">
 
-            <!--                                                <svg-->
-            <!--                                                    class="ml-2 -mr-0.5 h-4 w-4"-->
-            <!--                                                    xmlns="http://www.w3.org/2000/svg"-->
-            <!--                                                    viewBox="0 0 20 20"-->
-            <!--                                                    fill="currentColor"-->
-            <!--                                                >-->
-            <!--                                                    <path-->
-            <!--                                                        fill-rule="evenodd"-->
-            <!--                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"-->
-            <!--                                                        clip-rule="evenodd"-->
-            <!--                                                    />-->
-            <!--                                                </svg>-->
-            <!--                                            </button>-->
-            <!--                                        </span>-->
-            <!--                                    </template>-->
+                <!--- page title --->
+                <SubHeader>
+                    <template #header>
+                        <slot name="header" />
+                    </template>
+                </SubHeader>
 
-            <!--                                    <template #content>-->
-            <!--                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>-->
-            <!--                                        <DropdownLink :href="route('logout')" method="post" as="button">-->
-            <!--                                            Log Out*-->
-            <!--                                        </DropdownLink>-->
-            <!--                                    </template>-->
-            <!--                                </Dropdown>-->
-            <!--                            </div>-->
-            <!--                        </div>-->
+                <slot />
 
-            <!--                        &lt;!&ndash; Hamburger &ndash;&gt;-->
-            <!--                        <div class="-mr-2 flex items-center sm:hidden">-->
-            <!--                            <button-->
-            <!--                                @click="showingNavigationDropdown = !showingNavigationDropdown"-->
-            <!--                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"-->
-            <!--                            >-->
-            <!--                                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">-->
-            <!--                                    <path-->
-            <!--                                        :class="{-->
-            <!--                                            hidden: showingNavigationDropdown,-->
-            <!--                                            'inline-flex': !showingNavigationDropdown,-->
-            <!--                                        }"-->
-            <!--                                        stroke-linecap="round"-->
-            <!--                                        stroke-linejoin="round"-->
-            <!--                                        stroke-width="2"-->
-            <!--                                        d="M4 6h16M4 12h16M4 18h16"-->
-            <!--                                    />-->
-            <!--                                    <path-->
-            <!--                                        :class="{-->
-            <!--                                            hidden: !showingNavigationDropdown,-->
-            <!--                                            'inline-flex': showingNavigationDropdown,-->
-            <!--                                        }"-->
-            <!--                                        stroke-linecap="round"-->
-            <!--                                        stroke-linejoin="round"-->
-            <!--                                        stroke-width="2"-->
-            <!--                                        d="M6 18L18 6M6 6l12 12"-->
-            <!--                                    />-->
-            <!--                                </svg>-->
-            <!--                            </button>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-
-            <!--                &lt;!&ndash; Responsive Navigation Menu &ndash;&gt;-->
-            <!--                <div-->
-            <!--                    :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"-->
-            <!--                    class="sm:hidden"-->
-            <!--                >-->
-            <!--                    <div class="pt-2 pb-3 space-y-1">-->
-            <!--                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">-->
-            <!--                            Dashboard-->
-            <!--                        </ResponsiveNavLink>-->
-            <!--                    </div>-->
-
-            <!--                    &lt;!&ndash; Responsive Settings Options &ndash;&gt;-->
-            <!--                    <div class="pt-4 pb-1 border-t border-gray-200">-->
-            <!--                        <div class="px-4">-->
-            <!--                            <div class="font-medium text-base text-gray-800">-->
-            <!--                                {{ $page.props.auth.user.name }}-->
-            <!--                            </div>-->
-            <!--                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>-->
-            <!--                        </div>-->
-
-            <!--                        <div class="mt-3 space-y-1">-->
-            <!--                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>-->
-            <!--                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">-->
-            <!--                                Log Out!!-->
-            <!--                            </ResponsiveNavLink>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </nav>-->
-
-            <Nav />
-
-            <div class="page-content">
-                <!-- Topbar Start -->
-                <Header />
-                <!-- Topbar End -->
-
-                <!-- Page Content -->
-                <main class="flex-grow p-6">
-                    <!-- Page Title Start -->
-                    <SubHeader>
-                        <template #header>
-                            <slot name="header" />
-                        </template>
-                    </SubHeader>
-                    <!-- Page Title End -->
-
-                    <div class="max-w-7xl mx-auto space-y-6">
-                        <slot />
-                    </div>
-
-                    <button
-                        data-toggle="back-to-top"
-                        class="fixed hidden h-10 w-10 items-center justify-center rounded-full z-10 bottom-20 end-14 p-2.5 bg-primary cursor-pointer shadow-lg text-white"
-                    >
-                        <i class="mgc_arrow_up_line text-lg"></i>
-                    </button>
-                </main>
-
-                <!-- Footer Start -->
                 <Footer />
-                <!-- Footer End -->
+
             </div>
         </div>
     </div>
+
+
 </template>

@@ -27,21 +27,27 @@ defineProps({
             Profile
         </template>
 
-              <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div class="card">
+              <div class="p-4 sm:p-8">
                   <UpdateProfileInformationForm
                       :must-verify-email="mustVerifyEmail"
                       :status="status"
                       class="max-w-xl"
                   />
               </div>
+        </div>
 
-              <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div class="card">
+              <div class="p-4 sm:p-8">
                   <UpdatePasswordForm class="max-w-xl" />
               </div>
-
-              <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        </div>
+        <div class="card">
+              <div class="p-4 sm:p-8">
                   <DeleteUserForm class="max-w-xl" />
               </div>
+
+        </div>
 
         <vue-basic-alert
             :duration="300"

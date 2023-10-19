@@ -1,18 +1,32 @@
 <template>
 
-  <footer class="footer h-16 flex items-center px-6 bg-white shadow dark:bg-gray-800">
-    <div class="flex md:justify-between justify-center w-full gap-4">
-      <div>
-        &copy;  REAI
-      </div>
-      <div class="md:flex hidden gap-4 item-center md:justify-end">
-        <a href="javascript: void(0);" class="text-sm leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">About</a>
-        <span class="border-e border-gray-300 dark:border-gray-700"></span>
-        <a href="javascript: void(0);" class="text-sm leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">Support</a>
-        <span class="border-e border-gray-300 dark:border-gray-700"></span>
-        <a href="javascript: void(0);" class="text-sm leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white">Contact Us</a>
-      </div>
-    </div>
-  </footer>
+    <footer class="footer absolute bottom-0 right-0 left-0 border-t border-gray-50 py-5 px-5 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-200">
+        <div class="flex justify-between items-center">
+            <div class="grow">
+                &copy; 2023 REAI
+            </div>
+            <div class=" md:inline-block text-end">
+
+                <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+                    <li>
+                        <a href="#" class="mr-4 hover:underline md:mr-6 ">About</a>
+                    </li>
+                    <li>
+                        <a href="#" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href="#" class="mr-4 hover:underline md:mr-6">Licensing</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:underline">Contact</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </footer>
 
 </template>
+<script setup>
+</script>

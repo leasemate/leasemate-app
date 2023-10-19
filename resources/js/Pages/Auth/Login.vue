@@ -33,6 +33,11 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
+        <div class="text-center">
+            <h5 class="text-gray-600 dark:text-gray-100">Welcome Back !</h5>
+            <p class="text-gray-500 dark:text-gray-100/60 mt-1">Sign in to continue to REAI.</p>
+        </div>
+
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
@@ -90,5 +95,28 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+
+        <div class="mt-4 pt-2 text-center">
+            <div>
+                <h6 class="text-14 mb-3 text-gray-500 dark:text-gray-100 font-medium">- Sign in with -</h6>
+            </div>
+
+            <div class="flex justify-center gap-3">
+                <a href="" class="h-9 w-9 bg-violet-500 leading-[2.9] rounded-full">
+                    <i class="mdi mdi-facebook text-lg text-white"></i>
+                </a>
+                <a href="" class="h-9 w-9 bg-sky-500 leading-[2.9] rounded-full">
+                    <i class="mdi mdi-twitter text-lg text-white"></i>
+                </a>
+                <a href="" class="h-9 w-9 bg-red-400 leading-[2.9] rounded-full">
+                    <i class="mdi mdi-google text-lg text-white"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center">
+            <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <a href="register.html" class="text-violet-500 font-semibold"> Signup now </a> </p>
+        </div>
+
     </GuestLayout>
 </template>

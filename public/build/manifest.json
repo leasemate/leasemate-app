@@ -1,161 +1,560 @@
 {
-  "_AuthenticatedLayout-8392fe29.js": {
-    "file": "assets/AuthenticatedLayout-8392fe29.js",
+  "_AuthenticatedLayout-dfb72771.js": {
+    "assets": [
+      "assets/bitbucket-67a996b1.png",
+      "assets/dribbble-a29e9e23.png",
+      "assets/dropbox-5a804c70.png",
+      "assets/github-ccf4fac2.png",
+      "assets/mail_chimp-5b9280cc.png",
+      "assets/slack-441a04d1.png",
+      "assets/giftbox-d3aecfd0.png",
+      "assets/logo-sm-f047c034.svg",
+      "assets/avatar-3-2586b501.jpg",
+      "assets/avatar-6-a1eb17e6.jpg"
+    ],
+    "file": "assets/AuthenticatedLayout-dfb72771.js",
     "imports": [
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_DangerButton-03eb5596.js": {
-    "file": "assets/DangerButton-03eb5596.js",
+  "_DangerButton-a79831c4.js": {
+    "file": "assets/DangerButton-a79831c4.js",
     "imports": [
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ]
   },
-  "_GuestLayout-fc331048.js": {
-    "file": "assets/GuestLayout-fc331048.js",
+  "_GuestLayout-078ef524.js": {
+    "file": "assets/GuestLayout-078ef524.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_PrimaryButton-018ec332.js": {
+    "file": "assets/PrimaryButton-018ec332.js",
     "imports": [
       "__plugin-vue_export-helper-c27b6911.js",
       "resources/js/app.js"
     ]
   },
-  "_PrimaryButton-af4741e4.js": {
-    "file": "assets/PrimaryButton-af4741e4.js",
-    "imports": [
-      "__plugin-vue_export-helper-c27b6911.js",
-      "resources/js/app.js"
-    ]
-  },
-  "_TextInput-a11e3ffd.js": {
-    "file": "assets/TextInput-a11e3ffd.js",
+  "_TextInput-df11b62a.js": {
+    "file": "assets/TextInput-df11b62a.js",
     "imports": [
       "resources/js/app.js"
     ]
-  },
-  "__commonjsHelpers-de833af9.js": {
-    "file": "assets/_commonjsHelpers-de833af9.js"
   },
   "__plugin-vue_export-helper-c27b6911.js": {
     "file": "assets/_plugin-vue_export-helper-c27b6911.js"
   },
-  "node_modules/dropzone/dist/min/dropzone.min.js?commonjs-entry": {
-    "file": "assets/dropzone.min-fac04286.js",
-    "isEntry": true,
-    "src": "node_modules/dropzone/dist/min/dropzone.min.js?commonjs-entry"
+  "resources/images/auth-bg.jpg": {
+    "file": "assets/auth-bg-84a013ce.jpg",
+    "src": "resources/images/auth-bg.jpg"
   },
-  "resources/fonts/MingCute.eot": {
-    "file": "assets/MingCute-98d666aa.eot",
-    "src": "resources/fonts/MingCute.eot"
+  "resources/images/bg-1.jpg": {
+    "file": "assets/bg-1-64271adf.jpg",
+    "src": "resources/images/bg-1.jpg"
   },
-  "resources/fonts/MingCute.svg": {
-    "file": "assets/MingCute-ba18f844.svg",
-    "src": "resources/fonts/MingCute.svg"
+  "resources/images/bg-2.jpg": {
+    "file": "assets/bg-2-6cdb762b.jpg",
+    "src": "resources/images/bg-2.jpg"
   },
-  "resources/fonts/MingCute.ttf": {
-    "file": "assets/MingCute-378ecbb0.ttf",
-    "src": "resources/fonts/MingCute.ttf"
+  "resources/images/bg-3.jpg": {
+    "file": "assets/bg-3-fb419968.jpg",
+    "src": "resources/images/bg-3.jpg"
   },
-  "resources/fonts/MingCute.woff": {
-    "file": "assets/MingCute-9cae076c.woff",
-    "src": "resources/fonts/MingCute.woff"
+  "resources/images/bg-body.png": {
+    "file": "assets/bg-body-6fda78b2.png",
+    "src": "resources/images/bg-body.png"
+  },
+  "resources/images/brands/bitbucket.png": {
+    "file": "assets/bitbucket-67a996b1.png",
+    "src": "resources/images/brands/bitbucket.png"
+  },
+  "resources/images/brands/dribbble.png": {
+    "file": "assets/dribbble-a29e9e23.png",
+    "src": "resources/images/brands/dribbble.png"
+  },
+  "resources/images/brands/dropbox.png": {
+    "file": "assets/dropbox-5a804c70.png",
+    "src": "resources/images/brands/dropbox.png"
+  },
+  "resources/images/brands/github.png": {
+    "file": "assets/github-ccf4fac2.png",
+    "src": "resources/images/brands/github.png"
+  },
+  "resources/images/brands/mail_chimp.png": {
+    "file": "assets/mail_chimp-5b9280cc.png",
+    "src": "resources/images/brands/mail_chimp.png"
+  },
+  "resources/images/brands/slack.png": {
+    "file": "assets/slack-441a04d1.png",
+    "src": "resources/images/brands/slack.png"
+  },
+  "resources/images/dashboards/crovex.jpg": {
+    "file": "assets/crovex-b7a6b8bd.jpg",
+    "src": "resources/images/dashboards/crovex.jpg"
+  },
+  "resources/images/dashboards/dastyle.jpg": {
+    "file": "assets/dastyle-a9a119c6.jpg",
+    "src": "resources/images/dashboards/dastyle.jpg"
+  },
+  "resources/images/dashboards/frogetor.jpg": {
+    "file": "assets/frogetor-dbd69592.jpg",
+    "src": "resources/images/dashboards/frogetor.jpg"
+  },
+  "resources/images/dashboards/metrica.jpg": {
+    "file": "assets/metrica-3377c0e5.jpg",
+    "src": "resources/images/dashboards/metrica.jpg"
+  },
+  "resources/images/error-img.png": {
+    "file": "assets/error-img-8fd82a8c.png",
+    "src": "resources/images/error-img.png"
+  },
+  "resources/images/favicon.ico": {
+    "file": "assets/favicon-81ac9ef6.ico",
+    "src": "resources/images/favicon.ico"
+  },
+  "resources/images/flags/french.jpg": {
+    "file": "assets/french-e0c0958d.jpg",
+    "src": "resources/images/flags/french.jpg"
+  },
+  "resources/images/flags/french_flag.jpg": {
+    "file": "assets/french_flag-6adcbaee.jpg",
+    "src": "resources/images/flags/french_flag.jpg"
+  },
+  "resources/images/flags/germany.jpg": {
+    "file": "assets/germany-e4804904.jpg",
+    "src": "resources/images/flags/germany.jpg"
+  },
+  "resources/images/flags/germany_flag.jpg": {
+    "file": "assets/germany_flag-b051a166.jpg",
+    "src": "resources/images/flags/germany_flag.jpg"
+  },
+  "resources/images/flags/italy.jpg": {
+    "file": "assets/italy-60312152.jpg",
+    "src": "resources/images/flags/italy.jpg"
+  },
+  "resources/images/flags/italy_flag.jpg": {
+    "file": "assets/italy_flag-269e8284.jpg",
+    "src": "resources/images/flags/italy_flag.jpg"
+  },
+  "resources/images/flags/russia.jpg": {
+    "file": "assets/russia-5ec913be.jpg",
+    "src": "resources/images/flags/russia.jpg"
+  },
+  "resources/images/flags/russia_flag.jpg": {
+    "file": "assets/russia_flag-634e6377.jpg",
+    "src": "resources/images/flags/russia_flag.jpg"
+  },
+  "resources/images/flags/select2/ak.png": {
+    "file": "assets/ak-9b5b547f.png",
+    "src": "resources/images/flags/select2/ak.png"
+  },
+  "resources/images/flags/select2/ca.png": {
+    "file": "assets/ca-d198862f.png",
+    "src": "resources/images/flags/select2/ca.png"
+  },
+  "resources/images/flags/select2/hi.png": {
+    "file": "assets/hi-b264301d.png",
+    "src": "resources/images/flags/select2/hi.png"
+  },
+  "resources/images/flags/select2/nv.png": {
+    "file": "assets/nv-f36cfe6a.png",
+    "src": "resources/images/flags/select2/nv.png"
+  },
+  "resources/images/flags/select2/or.png": {
+    "file": "assets/or-9ba416f0.png",
+    "src": "resources/images/flags/select2/or.png"
+  },
+  "resources/images/flags/select2/wa.png": {
+    "file": "assets/wa-70353bb1.png",
+    "src": "resources/images/flags/select2/wa.png"
+  },
+  "resources/images/flags/spain.jpg": {
+    "file": "assets/spain-b8603382.jpg",
+    "src": "resources/images/flags/spain.jpg"
+  },
+  "resources/images/flags/spain_flag.jpg": {
+    "file": "assets/spain_flag-5a70d23c.jpg",
+    "src": "resources/images/flags/spain_flag.jpg"
+  },
+  "resources/images/flags/us.jpg": {
+    "file": "assets/us-39840385.jpg",
+    "src": "resources/images/flags/us.jpg"
+  },
+  "resources/images/flags/us_flag.jpg": {
+    "file": "assets/us_flag-4c7fd9b2.jpg",
+    "src": "resources/images/flags/us_flag.jpg"
+  },
+  "resources/images/giftbox.png": {
+    "file": "assets/giftbox-d3aecfd0.png",
+    "src": "resources/images/giftbox.png"
+  },
+  "resources/images/logo-sm.svg": {
+    "file": "assets/logo-sm-f047c034.svg",
+    "src": "resources/images/logo-sm.svg"
+  },
+  "resources/images/logos/chrome.png": {
+    "file": "assets/chrome-a7dc4eae.png",
+    "src": "resources/images/logos/chrome.png"
+  },
+  "resources/images/logos/in-explorer.png": {
+    "file": "assets/in-explorer-f9737804.png",
+    "src": "resources/images/logos/in-explorer.png"
+  },
+  "resources/images/logos/micro-edge.png": {
+    "file": "assets/micro-edge-880dd19d.png",
+    "src": "resources/images/logos/micro-edge.png"
+  },
+  "resources/images/logos/mozilla.png": {
+    "file": "assets/mozilla-d12885f1.png",
+    "src": "resources/images/logos/mozilla.png"
+  },
+  "resources/images/logos/opera.png": {
+    "file": "assets/opera-faf9890a.png",
+    "src": "resources/images/logos/opera.png"
+  },
+  "resources/images/logos/safari.png": {
+    "file": "assets/safari-b4392795.png",
+    "src": "resources/images/logos/safari.png"
+  },
+  "resources/images/pattern.png": {
+    "file": "assets/pattern-012cdbb5.png",
+    "src": "resources/images/pattern.png"
+  },
+  "resources/images/products/01.png": {
+    "file": "assets/01-b32e7eb5.png",
+    "src": "resources/images/products/01.png"
+  },
+  "resources/images/products/02.png": {
+    "file": "assets/02-f14757d1.png",
+    "src": "resources/images/products/02.png"
+  },
+  "resources/images/products/03.png": {
+    "file": "assets/03-15f51343.png",
+    "src": "resources/images/products/03.png"
+  },
+  "resources/images/products/04.png": {
+    "file": "assets/04-a74ae22b.png",
+    "src": "resources/images/products/04.png"
+  },
+  "resources/images/products/05.png": {
+    "file": "assets/05-3d42740b.png",
+    "src": "resources/images/products/05.png"
+  },
+  "resources/images/products/p-1.png": {
+    "file": "assets/p-1-78807e39.png",
+    "src": "resources/images/products/p-1.png"
+  },
+  "resources/images/small/img-1.jpg": {
+    "file": "assets/img-1-2d4a179f.jpg",
+    "src": "resources/images/small/img-1.jpg"
+  },
+  "resources/images/small/img-2.jpg": {
+    "file": "assets/img-2-55923297.jpg",
+    "src": "resources/images/small/img-2.jpg"
+  },
+  "resources/images/small/img-3.jpg": {
+    "file": "assets/img-3-129f3638.jpg",
+    "src": "resources/images/small/img-3.jpg"
+  },
+  "resources/images/small/img-4.jpg": {
+    "file": "assets/img-4-50324a5c.jpg",
+    "src": "resources/images/small/img-4.jpg"
+  },
+  "resources/images/small/img-5.jpg": {
+    "file": "assets/img-5-81e3e355.jpg",
+    "src": "resources/images/small/img-5.jpg"
+  },
+  "resources/images/small/img-6.jpg": {
+    "file": "assets/img-6-08998b59.jpg",
+    "src": "resources/images/small/img-6.jpg"
+  },
+  "resources/images/small/img-7.jpg": {
+    "file": "assets/img-7-d52f89d3.jpg",
+    "src": "resources/images/small/img-7.jpg"
+  },
+  "resources/images/undraw-calendar.svg": {
+    "file": "assets/undraw-calendar-90f6bc07.svg",
+    "src": "resources/images/undraw-calendar.svg"
+  },
+  "resources/images/users/avatar-1.jpg": {
+    "file": "assets/avatar-1-5a810d3e.jpg",
+    "src": "resources/images/users/avatar-1.jpg"
+  },
+  "resources/images/users/avatar-10.jpg": {
+    "file": "assets/avatar-10-0f41c0eb.jpg",
+    "src": "resources/images/users/avatar-10.jpg"
+  },
+  "resources/images/users/avatar-2.jpg": {
+    "file": "assets/avatar-2-9ea1a0ad.jpg",
+    "src": "resources/images/users/avatar-2.jpg"
+  },
+  "resources/images/users/avatar-3.jpg": {
+    "file": "assets/avatar-3-2586b501.jpg",
+    "src": "resources/images/users/avatar-3.jpg"
+  },
+  "resources/images/users/avatar-4.jpg": {
+    "file": "assets/avatar-4-092984f1.jpg",
+    "src": "resources/images/users/avatar-4.jpg"
+  },
+  "resources/images/users/avatar-5.jpg": {
+    "file": "assets/avatar-5-9051d3e7.jpg",
+    "src": "resources/images/users/avatar-5.jpg"
+  },
+  "resources/images/users/avatar-6.jpg": {
+    "file": "assets/avatar-6-a1eb17e6.jpg",
+    "src": "resources/images/users/avatar-6.jpg"
+  },
+  "resources/images/users/avatar-7.jpg": {
+    "file": "assets/avatar-7-87bdf8a8.jpg",
+    "src": "resources/images/users/avatar-7.jpg"
+  },
+  "resources/images/users/avatar-8.jpg": {
+    "file": "assets/avatar-8-6fc3e6e0.jpg",
+    "src": "resources/images/users/avatar-8.jpg"
+  },
+  "resources/images/users/avatar-9.jpg": {
+    "file": "assets/avatar-9-8223c5ae.jpg",
+    "src": "resources/images/users/avatar-9.jpg"
+  },
+  "resources/images/widgets/1.jpg": {
+    "file": "assets/1-b6d45dd6.jpg",
+    "src": "resources/images/widgets/1.jpg"
+  },
+  "resources/images/widgets/bg-1.jpg": {
+    "file": "assets/bg-1-73b40b5d.jpg",
+    "src": "resources/images/widgets/bg-1.jpg"
+  },
+  "resources/images/widgets/boa.png": {
+    "file": "assets/boa-d864abb3.png",
+    "src": "resources/images/widgets/boa.png"
+  },
+  "resources/images/widgets/c.gif": {
+    "file": "assets/c-ad6cccad.gif",
+    "src": "resources/images/widgets/c.gif"
+  },
+  "resources/images/widgets/calendar.svg": {
+    "file": "assets/calendar-92e10f19.svg",
+    "src": "resources/images/widgets/calendar.svg"
+  },
+  "resources/images/widgets/card.jpg": {
+    "file": "assets/card-ed63cde8.jpg",
+    "src": "resources/images/widgets/card.jpg"
+  },
+  "resources/images/widgets/error.png": {
+    "file": "assets/error-48d9ef46.png",
+    "src": "resources/images/widgets/error.png"
+  },
+  "resources/images/widgets/ill-1.png": {
+    "file": "assets/ill-1-df6e71d7.png",
+    "src": "resources/images/widgets/ill-1.png"
+  },
+  "resources/images/widgets/ill-2.png": {
+    "file": "assets/ill-2-1bcbe94e.png",
+    "src": "resources/images/widgets/ill-2.png"
+  },
+  "resources/images/widgets/img-1.jpg": {
+    "file": "assets/img-1-778192b2.jpg",
+    "src": "resources/images/widgets/img-1.jpg"
+  },
+  "resources/images/widgets/img-2.jpg": {
+    "file": "assets/img-2-04c09878.jpg",
+    "src": "resources/images/widgets/img-2.jpg"
+  },
+  "resources/images/widgets/img-3.jpg": {
+    "file": "assets/img-3-9dd87607.jpg",
+    "src": "resources/images/widgets/img-3.jpg"
+  },
+  "resources/images/widgets/img-4.jpg": {
+    "file": "assets/img-4-e6beeedc.jpg",
+    "src": "resources/images/widgets/img-4.jpg"
+  },
+  "resources/images/widgets/img-5.jpg": {
+    "file": "assets/img-5-270572a9.jpg",
+    "src": "resources/images/widgets/img-5.jpg"
+  },
+  "resources/images/widgets/img-6.jpg": {
+    "file": "assets/img-6-26abfca9.jpg",
+    "src": "resources/images/widgets/img-6.jpg"
+  },
+  "resources/images/widgets/m-p.png": {
+    "file": "assets/m-p-864429c3.png",
+    "src": "resources/images/widgets/m-p.png"
+  },
+  "resources/images/widgets/m-p2.png": {
+    "file": "assets/m-p2-f9319f18.png",
+    "src": "resources/images/widgets/m-p2.png"
+  },
+  "resources/images/widgets/nft-1.png": {
+    "file": "assets/nft-1-35fe7122.png",
+    "src": "resources/images/widgets/nft-1.png"
+  },
+  "resources/images/widgets/nft-10.png": {
+    "file": "assets/nft-10-b1eb937f.png",
+    "src": "resources/images/widgets/nft-10.png"
+  },
+  "resources/images/widgets/nft-2.png": {
+    "file": "assets/nft-2-ae39263c.png",
+    "src": "resources/images/widgets/nft-2.png"
+  },
+  "resources/images/widgets/nft-3.png": {
+    "file": "assets/nft-3-d23df83c.png",
+    "src": "resources/images/widgets/nft-3.png"
+  },
+  "resources/images/widgets/nft-4.png": {
+    "file": "assets/nft-4-c8ef56a7.png",
+    "src": "resources/images/widgets/nft-4.png"
+  },
+  "resources/images/widgets/nft-5.png": {
+    "file": "assets/nft-5-2a26130c.png",
+    "src": "resources/images/widgets/nft-5.png"
+  },
+  "resources/images/widgets/nft-6.png": {
+    "file": "assets/nft-6-fb6bdbf6.png",
+    "src": "resources/images/widgets/nft-6.png"
+  },
+  "resources/images/widgets/nft-7.png": {
+    "file": "assets/nft-7-02f74abf.png",
+    "src": "resources/images/widgets/nft-7.png"
+  },
+  "resources/images/widgets/nft-8.png": {
+    "file": "assets/nft-8-82ca9957.png",
+    "src": "resources/images/widgets/nft-8.png"
+  },
+  "resources/images/widgets/nft-9.png": {
+    "file": "assets/nft-9-df59afd1.png",
+    "src": "resources/images/widgets/nft-9.png"
+  },
+  "resources/images/widgets/p-1.png": {
+    "file": "assets/p-1-550d17d3.png",
+    "src": "resources/images/widgets/p-1.png"
+  },
+  "resources/images/widgets/p-2.png": {
+    "file": "assets/p-2-eb928d56.png",
+    "src": "resources/images/widgets/p-2.png"
+  },
+  "resources/images/widgets/pro-img.png": {
+    "file": "assets/pro-img-d1b7068b.png",
+    "src": "resources/images/widgets/pro-img.png"
+  },
+  "resources/images/widgets/rocket.gif": {
+    "file": "assets/rocket-d9a3fc4f.gif",
+    "src": "resources/images/widgets/rocket.gif"
+  },
+  "resources/images/widgets/sm-1.jpg": {
+    "file": "assets/sm-1-0f70e317.jpg",
+    "src": "resources/images/widgets/sm-1.jpg"
+  },
+  "resources/images/widgets/sm-2.jpg": {
+    "file": "assets/sm-2-12888956.jpg",
+    "src": "resources/images/widgets/sm-2.jpg"
+  },
+  "resources/images/widgets/svg-map.svg": {
+    "file": "assets/svg-map-e547c8ae.svg",
+    "src": "resources/images/widgets/svg-map.svg"
+  },
+  "resources/images/widgets/user-light.png": {
+    "file": "assets/user-light-b3a6cc94.png",
+    "src": "resources/images/widgets/user-light.png"
+  },
+  "resources/images/widgets/user.png": {
+    "file": "assets/user-2bb91b76.png",
+    "src": "resources/images/widgets/user.png"
+  },
+  "resources/images/widgets/wallet.png": {
+    "file": "assets/wallet-aa32d83e.png",
+    "src": "resources/images/widgets/wallet.png"
   },
   "resources/js/Pages/Auth/ConfirmPassword.vue": {
-    "file": "assets/ConfirmPassword-bf9306dd.js",
+    "file": "assets/ConfirmPassword-f7aff93a.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ConfirmPassword.vue"
   },
   "resources/js/Pages/Auth/ForgotPassword.vue": {
-    "file": "assets/ForgotPassword-75c6d12c.js",
+    "file": "assets/ForgotPassword-099ab8fe.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ForgotPassword.vue"
   },
   "resources/js/Pages/Auth/Login.vue": {
-    "file": "assets/Login-d6f5df12.js",
+    "file": "assets/Login-fb739866.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/Login.vue"
   },
   "resources/js/Pages/Auth/Register.vue": {
-    "file": "assets/Register-0a9959a6.js",
+    "file": "assets/Register-0a3144e8.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/Register.vue"
   },
   "resources/js/Pages/Auth/ResetPassword.vue": {
-    "file": "assets/ResetPassword-5e5e37d2.js",
+    "file": "assets/ResetPassword-9e972fa1.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/ResetPassword.vue"
   },
   "resources/js/Pages/Auth/VerifyEmail.vue": {
-    "file": "assets/VerifyEmail-f638b2bd.js",
+    "file": "assets/VerifyEmail-2d6ecd9b.js",
     "imports": [
       "resources/js/app.js",
-      "_GuestLayout-fc331048.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_GuestLayout-078ef524.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Auth/VerifyEmail.vue"
   },
   "resources/js/Pages/Chat/Index.vue": {
-    "file": "assets/Index-dea3884d.js",
+    "file": "assets/Index-4fb28766.js",
     "imports": [
       "resources/js/app.js",
-      "_AuthenticatedLayout-8392fe29.js",
+      "_AuthenticatedLayout-dfb72771.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DangerButton-03eb5596.js",
-      "__commonjsHelpers-de833af9.js"
+      "_DangerButton-a79831c4.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Chat/Index.vue"
   },
   "resources/js/Pages/Dashboard.vue": {
-    "file": "assets/Dashboard-94b22017.js",
+    "file": "assets/Dashboard-0207d4c7.js",
     "imports": [
-      "_AuthenticatedLayout-8392fe29.js",
+      "_AuthenticatedLayout-dfb72771.js",
       "resources/js/app.js",
-      "__plugin-vue_export-helper-c27b6911.js",
-      "__commonjsHelpers-de833af9.js"
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Dashboard.vue"
@@ -168,75 +567,69 @@
     "css": [
       "assets/Create-003d9223.css"
     ],
-    "file": "assets/Create-123c51de.js",
+    "file": "assets/Create-3d8970be.js",
     "imports": [
-      "_AuthenticatedLayout-8392fe29.js",
+      "_AuthenticatedLayout-dfb72771.js",
       "resources/js/app.js",
-      "__plugin-vue_export-helper-c27b6911.js",
-      "__commonjsHelpers-de833af9.js"
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/FileUpload/Create.vue"
   },
   "resources/js/Pages/FileUpload/Index.vue": {
-    "file": "assets/Index-57eec43c.js",
+    "file": "assets/Index-5a89ea11.js",
     "imports": [
-      "_AuthenticatedLayout-8392fe29.js",
       "resources/js/app.js",
-      "__plugin-vue_export-helper-c27b6911.js",
-      "__commonjsHelpers-de833af9.js"
+      "_AuthenticatedLayout-dfb72771.js",
+      "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/FileUpload/Index.vue"
   },
   "resources/js/Pages/Profile/Edit.vue": {
-    "file": "assets/Edit-8a38829b.js",
+    "file": "assets/Edit-2807be6d.js",
     "imports": [
-      "_AuthenticatedLayout-8392fe29.js",
+      "_AuthenticatedLayout-dfb72771.js",
       "resources/js/Pages/Profile/Partials/DeleteUserForm.vue",
       "resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
       "resources/js/app.js",
       "__plugin-vue_export-helper-c27b6911.js",
-      "_DangerButton-03eb5596.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js"
+      "_DangerButton-a79831c4.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Profile/Edit.vue"
   },
   "resources/js/Pages/Profile/Partials/DeleteUserForm.vue": {
-    "file": "assets/DeleteUserForm-58612662.js",
+    "file": "assets/DeleteUserForm-4f6fe0d5.js",
     "imports": [
       "resources/js/app.js",
-      "_DangerButton-03eb5596.js",
-      "_TextInput-a11e3ffd.js",
-      "__commonjsHelpers-de833af9.js",
+      "_DangerButton-a79831c4.js",
+      "_TextInput-df11b62a.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Profile/Partials/DeleteUserForm.vue"
   },
   "resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue": {
-    "file": "assets/UpdatePasswordForm-37731cd4.js",
+    "file": "assets/UpdatePasswordForm-213e7f13.js",
     "imports": [
       "resources/js/app.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue"
   },
   "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue": {
-    "file": "assets/UpdateProfileInformationForm-9cd15ff6.js",
+    "file": "assets/UpdateProfileInformationForm-7461ed83.js",
     "imports": [
       "resources/js/app.js",
-      "_TextInput-a11e3ffd.js",
-      "_PrimaryButton-af4741e4.js",
-      "__commonjsHelpers-de833af9.js",
+      "_TextInput-df11b62a.js",
+      "_PrimaryButton-018ec332.js",
       "__plugin-vue_export-helper-c27b6911.js"
     ],
     "isDynamicEntry": true,
@@ -250,27 +643,42 @@
     "css": [
       "assets/Welcome-665689a9.css"
     ],
-    "file": "assets/Welcome-64552615.js",
+    "file": "assets/Welcome-f54f7b1b.js",
     "imports": [
-      "resources/js/app.js",
-      "__commonjsHelpers-de833af9.js"
+      "resources/js/app.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/Pages/Welcome.vue"
   },
   "resources/js/app.css": {
-    "file": "assets/app-46dffad3.css",
+    "file": "assets/app-fe604b0c.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/MingCute-98d666aa.eot",
-      "assets/MingCute-378ecbb0.ttf",
-      "assets/MingCute-9cae076c.woff",
-      "assets/MingCute-ba18f844.svg"
+      "assets/fa-brands-400-5d919029.woff2",
+      "assets/fa-brands-400-a0c14538.ttf",
+      "assets/fa-regular-400-6a8c8e9e.woff2",
+      "assets/fa-regular-400-f32b94a2.ttf",
+      "assets/fa-solid-900-7f4d3fd0.woff2",
+      "assets/fa-solid-900-231d68ce.ttf",
+      "assets/materialdesignicons-webfont-f5966bae.eot",
+      "assets/materialdesignicons-webfont-739dc70d.woff2",
+      "assets/materialdesignicons-webfont-6d5e4be4.woff",
+      "assets/materialdesignicons-webfont-c02d41ce.ttf",
+      "assets/dripicons-v2-4551d45f.eot",
+      "assets/dripicons-v2-e87a09ce.woff",
+      "assets/dripicons-v2-d8c798b5.ttf",
+      "assets/dripicons-v2-2c1ce9e2.svg",
+      "assets/boxicons-c23887bb.eot",
+      "assets/boxicons-4b87cbc7.woff2",
+      "assets/boxicons-d5d511cf.woff",
+      "assets/boxicons-47509a2d.ttf",
+      "assets/boxicons-3fe502d8.svg",
+      "assets/auth-bg-84a013ce.jpg"
     ],
     "css": [
-      "assets/app-46dffad3.css"
+      "assets/app-fe604b0c.css"
     ],
     "dynamicImports": [
       "resources/js/Pages/Auth/ConfirmPassword.vue",
@@ -289,24 +697,84 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
       "resources/js/Pages/Welcome.vue"
     ],
-    "file": "assets/app-59b1d466.js",
-    "imports": [
-      "__commonjsHelpers-de833af9.js"
-    ],
+    "file": "assets/app-225b0b20.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
-  "resources/js/config.js": {
-    "file": "assets/config-ad3aa8f7.js",
-    "isEntry": true,
-    "src": "resources/js/config.js"
+  "resources/scss/fonts/boxicons.eot": {
+    "file": "assets/boxicons-c23887bb.eot",
+    "src": "resources/scss/fonts/boxicons.eot"
   },
-  "resources/js/head.js": {
-    "file": "assets/head-efc941af.js",
-    "imports": [
-      "__commonjsHelpers-de833af9.js"
-    ],
-    "isEntry": true,
-    "src": "resources/js/head.js"
+  "resources/scss/fonts/boxicons.svg": {
+    "file": "assets/boxicons-3fe502d8.svg",
+    "src": "resources/scss/fonts/boxicons.svg"
+  },
+  "resources/scss/fonts/boxicons.ttf": {
+    "file": "assets/boxicons-47509a2d.ttf",
+    "src": "resources/scss/fonts/boxicons.ttf"
+  },
+  "resources/scss/fonts/boxicons.woff": {
+    "file": "assets/boxicons-d5d511cf.woff",
+    "src": "resources/scss/fonts/boxicons.woff"
+  },
+  "resources/scss/fonts/boxicons.woff2": {
+    "file": "assets/boxicons-4b87cbc7.woff2",
+    "src": "resources/scss/fonts/boxicons.woff2"
+  },
+  "resources/scss/fonts/dripicons-v2.eot": {
+    "file": "assets/dripicons-v2-4551d45f.eot",
+    "src": "resources/scss/fonts/dripicons-v2.eot"
+  },
+  "resources/scss/fonts/dripicons-v2.svg": {
+    "file": "assets/dripicons-v2-2c1ce9e2.svg",
+    "src": "resources/scss/fonts/dripicons-v2.svg"
+  },
+  "resources/scss/fonts/dripicons-v2.ttf": {
+    "file": "assets/dripicons-v2-d8c798b5.ttf",
+    "src": "resources/scss/fonts/dripicons-v2.ttf"
+  },
+  "resources/scss/fonts/dripicons-v2.woff": {
+    "file": "assets/dripicons-v2-e87a09ce.woff",
+    "src": "resources/scss/fonts/dripicons-v2.woff"
+  },
+  "resources/scss/fonts/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-a0c14538.ttf",
+    "src": "resources/scss/fonts/fa-brands-400.ttf"
+  },
+  "resources/scss/fonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-5d919029.woff2",
+    "src": "resources/scss/fonts/fa-brands-400.woff2"
+  },
+  "resources/scss/fonts/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-f32b94a2.ttf",
+    "src": "resources/scss/fonts/fa-regular-400.ttf"
+  },
+  "resources/scss/fonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-6a8c8e9e.woff2",
+    "src": "resources/scss/fonts/fa-regular-400.woff2"
+  },
+  "resources/scss/fonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-231d68ce.ttf",
+    "src": "resources/scss/fonts/fa-solid-900.ttf"
+  },
+  "resources/scss/fonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-7f4d3fd0.woff2",
+    "src": "resources/scss/fonts/fa-solid-900.woff2"
+  },
+  "resources/scss/fonts/materialdesignicons-webfont.eot": {
+    "file": "assets/materialdesignicons-webfont-f5966bae.eot",
+    "src": "resources/scss/fonts/materialdesignicons-webfont.eot"
+  },
+  "resources/scss/fonts/materialdesignicons-webfont.ttf": {
+    "file": "assets/materialdesignicons-webfont-c02d41ce.ttf",
+    "src": "resources/scss/fonts/materialdesignicons-webfont.ttf"
+  },
+  "resources/scss/fonts/materialdesignicons-webfont.woff": {
+    "file": "assets/materialdesignicons-webfont-6d5e4be4.woff",
+    "src": "resources/scss/fonts/materialdesignicons-webfont.woff"
+  },
+  "resources/scss/fonts/materialdesignicons-webfont.woff2": {
+    "file": "assets/materialdesignicons-webfont-739dc70d.woff2",
+    "src": "resources/scss/fonts/materialdesignicons-webfont.woff2"
   }
 }
