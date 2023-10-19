@@ -5,12 +5,11 @@ import {nextTick, onMounted, ref, toRef } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 import { Head, router } from "@inertiajs/vue3";
-import ChatLoader from "@/Components/Chat/MessageLoader.vue";
+import MessageLoader from "@/Components/Chat/MessageLoader.vue";
 
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import simplebar from "simplebar-vue";
 
 const open = ref(true)
 
@@ -221,13 +220,6 @@ onMounted(() => {
     <AuthenticatedLayout>
         <template #header>Chats</template>
 
-      <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <span class="block sm:inline">{{ errorMessage }}</span>
-        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer">
-            <i @click="errorMessage = null" class="mgc_close_fill"></i> <!-- Assuming you're using Font Awesome -->
-        </span>
-      </div>
-
         <div class="card">
             <div class="flex h-[52rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">
 
@@ -315,7 +307,7 @@ onMounted(() => {
 
                     <div class="my-1 sm:my-1.5" v-if="isSending">
                         <div class="flex flex-col items-start">
-                            <ChatLoader />
+                            <MessageLoader />
                         </div>
                     </div>
 
@@ -371,6 +363,11 @@ onMounted(() => {
 
                          </div>
                 </div>
+
+                <div v-if="errorMessage" class="text-red-700" role="alert">
+                    <span class="block sm:inline">{{ errorMessage }}</span>
+                </div>
+
             </div>
 
         </div>
