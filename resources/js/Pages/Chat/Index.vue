@@ -221,7 +221,8 @@ onMounted(() => {
         <template #header>Chats</template>
 
         <div class="card">
-            <div class="flex h-[52rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">
+<!--            h-[52rem]-->
+            <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">
 
             <!-- Left column for list of chats -->
             <div class=" w-1/3 p-4">
@@ -342,7 +343,7 @@ onMounted(() => {
                                      stroke-width="2"
                                      stroke-linecap="round"
                                      stroke-linejoin="round"
-                                     class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-blue-500 text-white hover:opacity-80">
+                                     class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80">
 
                                      <path d="M12 5l0 14"></path>
                                      <path d="M18 11l-6 -6"></path>
@@ -350,7 +351,7 @@ onMounted(() => {
                                  </svg>
 
                                <svg v-show="isSending" aria-hidden="true" role="status"
-                                    class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-blue-500 text-white hover:opacity-80"
+                                    class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80"
                                     viewBox="0 0 100 101"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg">

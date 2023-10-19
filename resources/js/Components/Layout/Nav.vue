@@ -109,7 +109,7 @@ onMounted(() => {
 
                     <li>
 
-                        <Link :href="route('dashboard')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                        <Link :href="route('dashboard')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 hover:bg-violet-50 hover:bg-opacity-20 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="home"></i>
                             <span data-key="t-dashboard"> Dashboard</span>
                         </Link>

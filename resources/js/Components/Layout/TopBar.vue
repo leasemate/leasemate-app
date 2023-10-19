@@ -77,9 +77,10 @@ onBeforeUnmount(() => {
 
         <div class="flex items-center justify-between w-full">
             <div class="topbar-brand flex items-center">
-                <div class="navbar-brand flex items-center justify-between shrink px-5 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
+                <div class="navbar-brand flex items-center justify-between shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                     <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
-                        <img src="@/../images/logo-sm.svg" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />
+<!--                        <img src="@/../images/logo-sm.svg" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />-->
+                        <i data-feather="anchor" class="h-9 w-9 mr-2"></i>
                         <span class="hidden xl:block align-middle">REAI</span>
                     </a>
                 </div>
@@ -279,7 +280,7 @@ onBeforeUnmount(() => {
                 <div>
                     <div class="dropdown relative ltr:mr-4 rtl:ml-4">
                         <button type="button" class="flex items-center px-4 py-6 border-x border-gray-50 bg-gray-50/30 dropdown-toggle dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-100" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <!--                            <img class="h-8 w-8 rounded-full ltr:xl:mr-2 rtl:xl:ml-2" src="@/../images/users/avatar-1.jpg" alt="Header Avatar">-->
+<!--                            <img class="h-8 w-8 rounded-full ltr:xl:mr-2 rtl:xl:ml-2" src="@/../images/users/avatar-1.jpg" alt="Header Avatar">-->
                             <span class="fw-medium hidden xl:block">{{ $page.props.auth.user.name }}</span>
                             <i class="mdi mdi-chevron-down align-bottom hidden xl:block"></i>
                         </button>
