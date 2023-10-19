@@ -116,13 +116,11 @@ onMounted(() => {
 
                     </li>
 
-                    <li>
-
+<!--                    <li>-->
 <!--                        <Link :href="route('file-upload.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
 <!--                            <i data-feather="file-text"></i>-->
 <!--                            <span data-key="t-dashboard"> File Upload</span>-->
 <!--                        </Link>-->
-
                         <!--                        <ul>-->
                         <!--                            <li>-->
                         <!--&lt;!&ndash;                                <a href="/app-calendar.html" class="">Calendar</a>&ndash;&gt;-->
@@ -132,8 +130,7 @@ onMounted(() => {
                         <!--                                </Link>-->
                         <!--                            </li>-->
                         <!--                        </ul>-->
-
-                    </li>
+<!--                    </li>-->
                     <li>
                         <Link :href="route('chats.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="message-circle"></i>
