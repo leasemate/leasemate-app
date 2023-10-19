@@ -1,576 +1,518 @@
 <script setup>
+import { onMounted } from 'vue';
 import { Link } from "@inertiajs/vue3";
+import simplebar from "simplebar-vue";
+import {Inertia} from "@inertiajs/inertia";
+import {MetisMenu} from "metismenujs";
+
+const closeVerticalMenu = () => {
+    // Logic to close the vertical menu
+    document.body.classList.remove('sidebar-enable');
+};
+
+const initMenuItemScroll = () => {
+    // console.log('init menu scroll');
+
+    setTimeout(function () {
+        var sidebarMenu = document.getElementById("side-menu");
+        if (sidebarMenu) {
+            var activeMenu = sidebarMenu.querySelector(".mm-active .active");
+            var offset = activeMenu ? activeMenu.offsetTop : 0;
+            if (offset > 300) {
+                var verticalMenu = document.getElementsByClassName("vertical-menu") ? document.getElementsByClassName("vertical-menu")[0] : "";
+                if (verticalMenu && verticalMenu.querySelector(".simplebar-content-wrapper")) {
+                    setTimeout(function () {
+                        offset == 330 ?
+                            (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset + 85) :
+                            (verticalMenu.querySelector(".simplebar-content-wrapper").scrollTop = offset);
+                    }, 0);
+                }
+            }
+        }
+    }, 250);
+}
+
+const initActiveMenu = () => {
+    var menuItems = document.querySelectorAll("#sidebar-menu a");
+
+    var pageUrl = window.location.href.split(/[?#]/)[0];
+// console.log(pageUrl);
+    menuItems && menuItems.forEach(function (item) {
+        const pattern = new RegExp("^" + item.href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+        // console.log(item.href);
+
+        if (pattern.test(pageUrl)) {
+            item.classList.add("active");
+            var parent = item.parentElement;
+            if (parent && parent.id !== "side-menu") {
+                parent.classList.add("mm-active");
+                var parent2 = parent.parentElement; // ul .
+                if (parent2 && parent2.id !== "side-menu") {
+                    parent2.classList.add("mm-show"); // ul tag
+                    var parent3 = parent2.parentElement; // li tag
+                    if (parent3 && parent3.id !== "side-menu") {
+                        parent3.classList.add("mm-active"); // li
+                        var parent4 = parent3.parentElement; // ul
+                        if (parent4 && parent4.id !== "side-menu") {
+                            parent4.classList.add("mm-show"); // ul
+                            var parent5 = parent4.parentElement;
+                            if (parent5 && parent5.id !== "side-menu") {
+                                parent5.classList.add("mm-active"); // li
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+onMounted(() => {
+    // console.log('on mount top bar');
+    initMenuItemScroll();
+
+    Inertia.on('navigate', initActiveMenu);
+    Inertia.on('navigate', closeVerticalMenu);
+
+    if (window.innerWidth >= 1024 && window.innerWidth <= 1366) {
+        document.body.setAttribute('data-sidebar-size', 'sm');
+    }
+
+    if (document.getElementById("side-menu")) {
+        new MetisMenu('#side-menu');
+    }
+
+});
+
+
 </script>
 
 <template>
-    <div class="app-menu">
-        <!-- Sidenav Brand Logo -->
-        <a href="{{ route('any', 'index') }}" class="logo-box">
-            <!-- Light Brand Logo -->
-            <div class="logo-light">
-                <h4>LOGO</h4>
-                <!--        <img src="/images/logo-light.png" class="logo-lg h-6" alt="Light logo">-->
-                <!--        <img src="/images/logo-sm.png" class="logo-sm" alt="Small logo">-->
+
+    <div class="vertical-menu rtl:right-0 fixed ltr:left-0 bottom-0 top-16 h-screen border-r bg-slate-50 border-gray-50 print:hidden dark:bg-zinc-800 dark:border-neutral-700 z-10">
+
+        <simplebar data-simplebar class="h-full">
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu" id="side-menu">
+                    <li class="menu-heading px-4 py-3.5 text-xs font-medium text-gray-500 cursor-default" data-key="t-menu">Menu</li>
+
+                    <li>
+
+                        <Link :href="route('dashboard')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="home"></i>
+                            <span data-key="t-dashboard"> Dashboard</span>
+                        </Link>
+
+                    </li>
+
+                    <li>
+
+                        <Link :href="route('file-upload.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="file-text"></i>
+                            <span data-key="t-dashboard"> File Upload</span>
+                        </Link>
+
+                        <!--                        <ul>-->
+                        <!--                            <li>-->
+                        <!--&lt;!&ndash;                                <a href="/app-calendar.html" class="">Calendar</a>&ndash;&gt;-->
+                        <!--                                <Link :href="route('file-upload.create')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+                        <!--                                    <i data-feather="home"></i>-->
+                        <!--                                    <span data-key="t-dashboard"> Create</span>-->
+                        <!--                                </Link>-->
+                        <!--                            </li>-->
+                        <!--                        </ul>-->
+
+                    </li>
+                    <li>
+
+                        <Link :href="route('chats.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="message-circle"></i>
+                            <span data-key="t-dashboard"> Chat</span>
+                        </Link>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="grid"></i>
+                            <span data-key="t-apps"> Apps</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/app-calendar.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Calendar</a>
+                            </li>
+                            <li>
+                                <a href="/app-chat.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Chat</a>
+                            </li>
+
+                            <li>
+                                <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                    <span data-key="t-apps">Email</span>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="/apps-email-inbox.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Inbox</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-email-read.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Read Email</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                    <span data-key="t-apps">Invoices</span>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="/apps-invoices-list.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Invoice List</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-invoices-detail.html" class="pl-14 pr-4  py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Invoice Detail</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                    <span data-key="t-apps">Contacts</span>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="/apps-contacts-grid.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">User Grid</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-contacts-list.html" class="pl-14 pr-4  py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">User List</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-contacts-profile.html" class="pl-14 pr-4  py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Profile</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" aria-expanded="false" class="flex items-center justify-between pl-14 pr-4 py-2  text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                    <span data-key="t-apps">Blog</span>
+                                    <span class="badge px-2 py-0.5 bg-red-100 text-xs rounded-full font-medium text-red-400 text-end">New</span>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a href="/apps-blog-grid.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Blog Grid</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-blog-list.html" class="pl-14 pr-4  py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Blog List</a>
+                                    </li>
+                                    <li>
+                                        <a href="/apps-blog-detail.html" class="pl-14 pr-4  py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Blog Details</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false"  class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="users"></i>
+                            <span data-key="t-auth">Authentication</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/login.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Login</a>
+                            </li>
+                            <li>
+                                <a href="/register.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Register</a>
+                            </li>
+                            <li>
+                                <a href="/recoverpw.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Recover Password</a>
+                            </li>
+                            <li>
+                                <a href="/lock-screen.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Lock Screen</a>
+                            </li>
+                            <li>
+                                <a href="/logout.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Log Out</a>
+                            </li>
+                            <li>
+                                <a href="/confirm-mail.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Confirm Mail</a>
+                            </li>
+                            <li>
+                                <a href="/email-verification.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Email Verification</a>
+                            </li>
+                            <li>
+                                <a href="/two-step-verification.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Two Step Verification</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li >
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="briefcase"></i><span data-key="t-pages">Pages</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/starter.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Starter Page</a>
+                            </li>
+                            <li>
+                                <a href="/maintenance.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Maintenance</a>
+                            </li>
+                            <li>
+                                <a href="/coming-soon.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Coming Soon</a>
+                            </li>
+                            <li>
+                                <a href="/timeline.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Timeline</a>
+                            </li>
+                            <li>
+                                <a href="/faqs.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">FAQs</a>
+                            </li>
+                            <li>
+                                <a href="/pricing.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Pricing</a>
+                            </li>
+                            <li>
+                                <a href="/404.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Error 404</a>
+                            </li>
+                            <li>
+                                <a href="/500.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Error 500</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-heading px-4 py-3 text-xs font-medium text-gray-500 cursor-default" data-key="t-elements">Elements</li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false"  class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="briefcase"></i>
+                            <span data-key="t-compo">Components</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/alerts.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Alerts</a>
+                            </li>
+                            <li>
+                                <a href="/buttons.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Buttons</a>
+                            </li>
+                            <li>
+                                <a href="/cards.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Cards</a>
+                            </li>
+                            <li>
+                                <a href="/dropdown.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Dropdown</a>
+                            </li>
+                            <li>
+                                <a href="/flexbox&grid.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Flexbox & Grid</a>
+                            </li>
+                            <li>
+                                <a href="/sizing.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Sizing</a>
+                            </li>
+                            <li>
+                                <a href="/avatars.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Avatar</a>
+                            </li>
+                            <li>
+                                <a href="/modals.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Modals</a>
+                            </li>
+                            <li>
+                                <a href="/progress.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Progress</a>
+                            </li>
+                            <li>
+                                <a href="/tabs&accordions.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Tabs & Accordions</a>
+                            </li>
+                            <li>
+                                <a href="/typography.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Typography</a>
+                            </li>
+                            <li>
+                                <a href="/toasts.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Toasts</a>
+                            </li>
+                            <li>
+                                <a href="/general.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">General</a>
+                            </li>
+                            <li>
+                                <a href="/colors.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Colors</a>
+                            </li>
+                            <li>
+                                <a href="/utilities.html" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Utilities</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="gift"></i>
+                            <span data-key="t-extend">Extended</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/extended-lightbox.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Lightbox</a>
+                            </li>
+                            <li>
+                                <a href="/extended-rangeslider.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Rangeslider</a>
+                            </li>
+                            <li>
+                                <a href="/extended-sweet-alert.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">SweetAlert 2</a>
+                            </li>
+                            <li>
+                                <a href="/extended-rating.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Rating</a>
+                            </li>
+                            <li>
+                                <a href="/extended-notifications.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Notifications</a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <span class="badge bg-red-50 text-danger ltr:float-right rtl:float-left z-50 px-1.5 rounded-full text-11 text-red-500" data-toggle="collapse">7</span>
+                            <i data-feather="box"></i>
+                            <span data-key="t-forms">Forms</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/form-elements.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Basic Elements</a>
+                            </li>
+                            <li>
+                                <a href="/form-validation.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Rangeslider</a>
+                            </li>
+                            <li>
+                                <a href="/form-advanced.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">SweetAlert 2</a>
+                            </li>
+                            <li>
+                                <a href="/form-editors.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Editors</a>
+                            </li>
+                            <li>
+                                <a href="/file-uploads.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">File Upload</a>
+                            </li>
+                            <li>
+                                <a href="/form-wizard.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Wizard</a>
+                            </li>
+                            <li>
+                                <a href="/form-mask.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Mask</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="sliders"></i>
+                            <span data-key="t-charts">Tables</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/tables-basic.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Basic Elements</a>
+                            </li>
+                            <li>
+                                <a href="/tables-datatable.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">DataTables</a>
+                            </li>
+                            <li>
+                                <a href="/tables-responsive.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Responsive</a>
+                            </li>
+                            <li>
+                                <a href="/tables-editable.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Editable </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="pie-chart"></i>
+                            <span data-key="t-charts">Charts</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/charts-apex.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Apexcharts</a>
+                            </li>
+                            <li>
+                                <a href="/charts-echart.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Echarts</a>
+                            </li>
+                            <li>
+                                <a href="/charts-chartjs.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Chartjs</a>
+                            </li>
+                            <li>
+                                <a href="/charts-knob.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Jquery Knob</a>
+                            </li>
+                            <li>
+                                <a href="/charts-sparkline.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Sparkline Chart</a>
+                            </li>
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="cpu"></i>
+                            <span data-key="t-icons">Icons</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/icons-boxicons.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Boxicons</a>
+                            </li>
+                            <li>
+                                <a href="/icons-materialdesign.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Material Design</a>
+                            </li>
+                            <li>
+                                <a href="/icons-dripicons.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Dripicons</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="map"></i>
+                            <span data-key="t-maps"> Maps</span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/maps-google.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Google</a>
+                            </li>
+                            <li>
+                                <a href="/maps-vector.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Vector</a>
+                            </li>
+                            <li>
+                                <a href="/maps-leaflet.html" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Leaflet</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu__item w-full ">
+                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                            <i data-feather="share-2"></i>
+                            <span data-key="t-level">Multi Level</span>
+                        </a>
+                        <div>
+                            <ul>
+                                <li>
+                                    <a href="/index.html" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Level 1.1</a>
+                                </li>
+                                <li>
+                                    <a href="#!" data-toggle="collapse" data-target=".Level1.2-menu" class="nav-menu pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                        <span data-key="t-level">Level 1.2</span>
+                                    </a>
+                                    <ul class="collapse Level1.2-menu">
+                                        <li>
+                                            <a href="#" class="pl-14 pr-4 py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Level 2.1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="pl-14 pr-4  py-2 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Level 2.2</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </li>
+
+                </ul>
+
+                <div class="sidebar-alert text-center mx-5 my-12">
+                    <div class="card-body bg-primary rounded bg-violet-50/50 dark:bg-zinc-700/60">
+                        <img src="@/../images/giftbox.png" class="block mx-auto">
+                        <div class="mt-4">
+                            <h5 class="text-violet-500 mb-3 font-medium">Unlimited Access</h5>
+                            <p class="text-slate-600 text-13 dark:text-gray-50">Upgrade your plan from a Free trial, to select ‘Business Plan’.</p>
+                            <a href="#!" class="btn bg-violet-500 text-white border-transparent mt-6">Upgrade Now</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Dark Brand Logo -->
-            <div class="logo-dark">
-                <h4>LOGO</h4>
-                <!--        <img src="/images/logo-dark.png" class="logo-lg h-6" alt="Dark logo">-->
-                <!--        <img src="/images/logo-sm.png" class="logo-sm" alt="Small logo">-->
-            </div>
-        </a>
-
-        <!-- Sidenav Menu Toggle Button -->
-        <button
-            id="button-hover-toggle"
-            class="absolute top-5 end-2 rounded-full p-1.5"
-        >
-            <span class="sr-only">Menu Toggle Button</span>
-            <i class="mgc_round_line text-xl"></i>
-        </button>
-
-        <!--- Menu -->
-        <div class="srcollbar" data-simplebar>
-            <ul class="menu" data-fc-type="accordion">
-                <li class="menu-title">
-                    Welcome, {{ $page.props.auth.user.name }}
-                </li>
-
-                <li class="menu-item">
-                    <Link :href="route('dashboard')" class="menu-link">
-                        <span class="menu-icon"><i class="mgc_home_3_line"></i></span>
-                        <span class="menu-text"> Dashboard </span>
-                    </Link>
-
-                    <Link :href="route('chats.index')" class="menu-link">
-                        <span class="menu-icon"><i class="mgc_chat_2_fill"></i></span>
-                        <span class="menu-text"> Chat </span>
-                    </Link>
-
-                    <Link :href="route('file-upload.index')" class="menu-link">
-                        <span class="menu-icon"><i class="mgc_file_upload_line"></i></span>
-                        <span class="menu-text"> File Upload </span>
-                    </Link>
-
-                    <!--          <a href="{{ route('dashboard') }}" class="menu-link">-->
-                    <!--            <span class="menu-icon"><i class="mgc_home_3_line"></i></span>-->
-                    <!--            <span class="menu-text"> Dashboard </span>-->
-                    <!--          </a>-->
-                </li>
-
-                <!--        <li class="menu-title">Apps</li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="{{ route('second', ['apps', 'calendar']) }}" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_calendar_line"></i></span>-->
-                <!--            <span class="menu-text"> Calendar </span>-->
-                <!--          </a>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="{{ route('second', ['apps', 'tickets']) }}" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_coupon_line"></i></span>-->
-                <!--            <span class="menu-text"> Tickets </span>-->
-                <!--          </a>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="{{ route('second', ['apps', 'file-manager']) }}" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_folder_2_line"></i></span>-->
-                <!--            <span class="menu-text"> File Manager </span>-->
-                <!--          </a>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="{{ route('second', ['apps', 'kanban']) }}" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_task_2_line"></i></span>-->
-                <!--            <span class="menu-text">Kanban</span>-->
-                <!--          </a>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_building_2_line"></i></span>-->
-                <!--            <span class="menu-text"> Project </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="/" class="menu-link">-->
-                <!--                <span class="menu-text">List</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['project', 'detail']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Detail</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['project', 'create']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Create</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-title">Custom</li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_user_3_line"></i></span>-->
-                <!--            <span class="menu-text"> Auth Pages </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['auth', 'login']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Log In</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['auth', 'register']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Register</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['auth', 'recoverpw']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Recover Password</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['auth', 'lock-screen']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Lock Screen</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_box_3_line"></i></span>-->
-                <!--            <span class="menu-text"> Extra Pages </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'starter']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Starter</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'timeline']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Timeline</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'invoice']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Invoice</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'gallery']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Gallery</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'faqs']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">FAQs</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'pricing']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Pricing</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'maintenance']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Maintenance</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', 'coming-soon']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Coming Soon</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', '404']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Error 404</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', '404-alt']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Error 404-alt</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['pages', '500']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Error 500</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_layout_line"></i></span>-->
-                <!--            <span class="menu-text"> Layout </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['layouts-eg', 'hover-view']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Hovered Menu</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['layouts-eg', 'icon-view']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Icon View Menu</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['layouts-eg', 'compact-view']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Compact Menu</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['layouts-eg', 'mobile-view']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Mobile View Menu</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['layouts-eg', 'hidden-view']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Hidden Menu</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-title">Elements</li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_classify_2_line"></i></span>-->
-                <!--            <span class="menu-text"> Components </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'accordions']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Accordions</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'alerts']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Alerts</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'avatars']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Avatars</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'buttons']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Buttons</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'badges']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Badges</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'breadcrumbs']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Breadcrumb</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'cards']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Cards</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'collapse']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Collapse</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'dismissible']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Dismissible</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'dropdowns']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Dropdowns</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'progress']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Progress</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'skeleton']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Skeleton</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'spinners']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Spinners</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'list-group']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">List Group</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'ratio']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Ratio</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'tabs']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Tab</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'modals']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Modals</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'offcanvas']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Offcanvas</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'popovers']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Popovers</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'tooltips']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Tooltips</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['ui', 'typography']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Typography</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_box_3_line"></i></span>-->
-                <!--            <span class="menu-text"> Extended </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'swiper']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Swiper</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'nestable']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Nestable List</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'ratings']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Ratings</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'animation']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Animation</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'player']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Player</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'scrollbar']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Scrollbar</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'sweet-alert']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Sweet Alert</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'tour']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Tour Page</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'tippy-tooltips']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Tippy Tooltip</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['extended', 'lightbox']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Lightbox</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_file_check_line"></i></span>-->
-                <!--            <span class="menu-text"> Forms </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'elements']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Form Elements</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'select']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Select</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'range']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Range</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'pickers']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Pickers</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'masks']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Masks</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'editor']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Editor</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'file-uploads']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">File Uploads</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'validation']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Validation</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['forms', 'layout']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Form Layout</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_layout_grid_line"></i></span>-->
-                <!--            <span class="menu-text"> Tables </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['tables', 'basic']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Basic Tables</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['tables', 'datatables']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Data Tables</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_dribbble_line"></i></span>-->
-                <!--            <span class="menu-text"> Icons </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['icons', 'mingcute']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Mingcute</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['icons', 'feather']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Feather</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['icons', 'material-symbols']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Material Symbols </span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="{{ route('any', 'charts') }}" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_chart_bar_line"></i></span>-->
-                <!--            <span class="menu-text"> Chart </span>-->
-                <!--          </a>-->
-                <!--        </li>-->
-
-                <!--        <li class="menu-item">-->
-                <!--          <a href="javascript:void(0)" data-fc-type="collapse" class="menu-link">-->
-                <!--            <span class="menu-icon"><i class="mgc_location_line"></i></span>-->
-                <!--            <span class="menu-text"> Maps </span>-->
-                <!--            <span class="menu-arrow"></span>-->
-                <!--          </a>-->
-
-                <!--          <ul class="sub-menu hidden">-->
-                <!--            <li class="menu-item">-->
-                <!--              <a href="{{ route('second', ['maps', 'google']) }}" class="menu-link">-->
-                <!--                <span class="menu-text">Google Maps</span>-->
-                <!--              </a>-->
-                <!--            </li>-->
-                <!--          </ul>-->
-                <!--        </li>-->
-            </ul>
-
-            <!-- Help Box Widget -->
-            <div class="my-10 mx-5">
-                <!--                <div class="help-box p-6 bg-black/5 text-center rounded-md">-->
-                <!--                  <div class="flex justify-center mb-4">-->
-                <!--                    <svg width="30" height="18" aria-hidden="true">-->
-                <!--                      <path fill-rule="evenodd" clip-rule="evenodd" d="M15 0c-4 0-6.5 2-7.5 6 1.5-2 3.25-2.75 5.25-2.25 1.141.285 1.957 1.113 2.86 2.03C17.08 7.271 18.782 9 22.5 9c4 0 6.5-2 7.5-6-1.5 2-3.25 2.75-5.25 2.25-1.141-.285-1.957-1.113-2.86-2.03C20.42 1.728 18.718 0 15 0ZM7.5 9C3.5 9 1 11 0 15c1.5-2 3.25-2.75 5.25-2.25 1.141.285 1.957 1.113 2.86 2.03C9.58 16.271 11.282 18 15 18c4 0 6.5-2 7.5-6-1.5 2-3.25 2.75-5.25 2.25-1.141-.285-1.957-1.113-2.86-2.03C12.92 10.729 11.218 9 7.5 9Z"-->
-                <!--                            fill="#38BDF8"></path>-->
-                <!--                    </svg>-->
-                <!--                  </div>-->
-                <!--                  <h5 class="mb-2">Unlimited Access</h5>-->
-                <!--                  <p class="mb-3">Upgrade to plan to get access to unlimited reports</p>-->
-                <!--                  <a href="javascript: void(0);" class="btn btn-sm bg-secondary text-white">Upgrade</a>-->
-                <!--                </div>-->
-            </div>
-        </div>
+            <!-- Sidebar -->
+        </simplebar>
     </div>
-    <!-- Sidenav Menu End  -->
+
 </template>

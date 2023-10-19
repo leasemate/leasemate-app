@@ -17,7 +17,7 @@ const { uploaded_files } = defineProps({
 });
 
 onMounted(() => {
-    console.log(uploaded_files);
+    // console.log(uploaded_files);
 });
 
 </script>

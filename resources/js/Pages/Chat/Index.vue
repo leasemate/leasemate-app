@@ -112,11 +112,11 @@ const sendMessage = async () => {
 
     if(validate()) {
 
-      errorMessage.value = null;
+        errorMessage.value = null;
 
-      console.log(localChat.value);
+        const chat_id = (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null);
 
-      const create_chat_response = router.visit(route('chats.store', (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null)), {
+        const create_chat_response = router.visit(route('chats.store', chat_id), {
             method: 'post',
             data: {
               message: messageToSend.value
@@ -139,7 +139,6 @@ const sendMessage = async () => {
               });
             }
         });
-
     }
 }
 function getRandomInt(min, max) {
@@ -158,8 +157,6 @@ const scrollToBottom = () => {
 };
 
 const selectChat = async (conv_obj) => {
-
-    // isSending.value = false;
 
     if(conv_obj.chat_uuid) {
 
