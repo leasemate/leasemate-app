@@ -10,6 +10,7 @@ import ChatLoader from "@/Components/Chat/MessageLoader.vue";
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import simplebar from "simplebar-vue";
 
 const open = ref(true)
 
@@ -230,10 +231,12 @@ onMounted(() => {
         </span>
       </div>
 
-        <div class="flex h-[52rem] mt-auto mb-auto bg-gray-100 rounded-lg border border-neutral-300 bg-white">
+        <div class="card">
+            <div class="flex h-[52rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">
 
             <!-- Left column for list of chats -->
-            <div class=" w-1/3 p-4 overflow-y-auto">
+            <div class=" w-1/3 p-4">
+
 <!--                <button-->
 <!--                    @click="addNewChat"-->
 <!--                    class="flex items-center mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">-->
@@ -252,30 +255,34 @@ onMounted(() => {
 
                 <hr class="mb-4" />
 
-                <div
-                    v-for="(conv_obj, index) in chats.data"
-                    :key="conv_obj.id"
-                    :class="{ 'bg-slate-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
-                    @click="selectChat(conv_obj)"
-                    class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
-                >
+                <div class="overflow-y-auto">
 
-                    <!-- Favicon or User Icon -->
-                    <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
-                    <!-- Conversation details -->
-                    <div class="flex-1 mr-3">
-                        <p class="text-sm text-gray-500">{{ truncatedMessage(conv_obj?.last_message?.message) || null }}</p>
+                    <div
+                        v-for="(conv_obj, index) in chats.data"
+                        :key="conv_obj.id"
+                        :class="{ 'bg-slate-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
+                        @click="selectChat(conv_obj)"
+                        class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
+                    >
+
+                        <!-- Favicon or User Icon -->
+                        <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
+                        <!-- Conversation details -->
+                        <div class="flex-1 mr-3">
+                            <p class="text-sm text-gray-500">{{ truncatedMessage(conv_obj?.last_message?.message) || null }}</p>
+                        </div>
+
+                        <!-- Date/Time -->
+                        <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">
+                          {{ conv_obj.updated_at }}
+                        </div>
+
+                        <i
+                            @click.stop="confirmChatDeletion(conv_obj)"
+                            class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"
+                        ></i>
+
                     </div>
-
-                    <!-- Date/Time -->
-                    <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">
-                      {{ conv_obj.updated_at }}
-                    </div>
-
-                    <i
-                        @click.stop="confirmChatDeletion(conv_obj)"
-                        class="mgc_close_fill text-sm text-gray-400 hover:text-red-500 cursor-pointer"
-                    ></i>
 
                 </div>
 
@@ -370,7 +377,7 @@ onMounted(() => {
             </div>
 
         </div>
-
+        </div>
 
         <Modal :show="confirmingChatDeletion" @close="closeModal">
           <div class="p-6">

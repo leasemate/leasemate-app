@@ -5,7 +5,7 @@ import {Link} from "@inertiajs/vue3";
 import {MetisMenu} from "metismenujs";
 import feather from "feather-icons";
 import {createPopper} from "@popperjs/core";
-import simplebar from "simplebar";
+import simplebar from "simplebar-vue";
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 
@@ -64,9 +64,11 @@ const initActiveMenu = () => {
     var menuItems = document.querySelectorAll("#sidebar-menu a");
 
     var pageUrl = window.location.href.split(/[?#]/)[0];
-
+console.log(pageUrl);
     menuItems && menuItems.forEach(function (item) {
         const pattern = new RegExp("^" + item.href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+        console.log(item.href);
 
         if (pattern.test(pageUrl)) {
             item.classList.add("active");
@@ -97,21 +99,6 @@ const initActiveMenu = () => {
 const isShowDropMenu = ref(false);
 const isMenuInside = ref(false);
 
-/********* dropdown common js *********/
-// var dropdownElem = document.querySelectorAll('.dropdown');
-// var dropupElem = document.querySelectorAll('.dropup');
-// var dropStartElem = document.querySelectorAll('.dropstart');
-// var dropendElem = document.querySelectorAll('.dropend');
-// var isShowDropMenu = false;
-// var isMenuInside = false;
-// dropdown event
-// dropdownEvent(dropdownElem, 'bottom-start');
-// // dropup event
-// dropdownEvent(dropupElem, 'top-start');
-// // dropstart event
-// dropdownEvent(dropStartElem, 'left-start');
-// // dropend event
-// dropdownEvent(dropendElem, 'right-start');
 
 const dropdownEvent = (elem, place) => {
     const items = document.querySelectorAll(elem);
@@ -120,8 +107,6 @@ const dropdownEvent = (elem, place) => {
         item.querySelectorAll(".dropdown-toggle").forEach( subitem => {
             subitem.addEventListener("click", event => {
                 subitem.classList.toggle("show");
-
-                console.log('popper');
 
                 var popper = createPopper(subitem, item.querySelector(".dropdown-menu"), {
                     placement: place
@@ -200,6 +185,34 @@ const closeDropdownOutsideClick = (event) => {
     isShowDropMenu.value = false;
 }
 
+const initModeSetting = () => {
+    var body = document.body;
+    var lightDarkBtn = document.querySelectorAll('.light-dark-mode');
+    console.log('init mode setting');
+    console.log(body);
+    console.log(lightDarkBtn);
+
+    if (lightDarkBtn) {
+        lightDarkBtn.forEach( item => {
+            item.addEventListener('click', event => {
+                if (body.hasAttribute("data-mode") && body.getAttribute("data-mode") == "dark") {
+                    body.setAttribute('data-mode', 'light');
+                    sessionStorage.setItem("data-layout-mode", "light");
+                } else {
+                    body.setAttribute('data-mode', 'dark');
+                    sessionStorage.setItem("data-layout-mode", "dark");
+                }
+            });
+        });
+    }
+
+    if (sessionStorage.getItem("data-layout-mode") && sessionStorage.getItem("data-layout-mode") == "light") {
+        body.setAttribute('data-mode', 'light');
+    } else if (sessionStorage.getItem("data-layout-mode") == "dark") {
+        body.setAttribute('data-mode', 'dark');
+    }
+}
+
 onMounted(() => {
 
     console.log('on mount');
@@ -212,6 +225,7 @@ onMounted(() => {
     window.addEventListener('click', closeDropdownOutsideClick);
 
     initMenuItemScroll();
+    initModeSetting();
 
     feather.replace();
     // initActiveMenu
@@ -225,7 +239,6 @@ onMounted(() => {
     if (document.getElementById("side-menu")) {
         new MetisMenu('#side-menu');
     }
-
 });
 
 onBeforeUnmount(() => {
@@ -304,11 +317,12 @@ onBeforeUnmount(() => {
 <!--                    </div>-->
 <!--                </div>-->
 
-<!--                <div>-->
-<!--                    <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block " />-->
-<!--                    <i data-feather="moon" class="h-5 w-5 block dark:hidden"></i>-->
-<!--                    <i data-feather="sun" class="h-5 w-5 hidden dark:block"></i>-->
-<!--                </div>-->
+                <div>
+                    <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block ">
+                    <i data-feather="moon" class="h-5 w-5 block dark:hidden"></i>
+                    <i data-feather="sun" class="h-5 w-5 hidden dark:block"></i>
+                    </button>
+                </div>
 
                 <div>
                     <div class="dropdown relative text-gray-600 hidden sm:block">
@@ -369,7 +383,7 @@ onBeforeUnmount(() => {
                                         <a href="#!" class="text-xs underline dark:text-gray-400"> Unread (3)</a>
                                     </div>
                                 </div>
-                                <div class="max-h-56" data-simplebar>
+                                <simplebar class="max-h-56" data-simplebar>
                                     <div>
                                         <a href="#!" class="text-reset notification-item">
                                             <div class="flex px-4 py-2 hover:bg-gray-50/50 dark:hover:bg-zinc-700/50">
@@ -432,17 +446,16 @@ onBeforeUnmount(() => {
                                             </div>
                                         </a>
                                     </div>
-                                </div>
+                                </simplebar>
                                 <div class="p-1 border-t grid border-gray-50 dark:border-zinc-600 justify-items-center">
                                     <a class="btn border-0 text-violet-500" href="">
-                                        <i class="mdi mdi-arrow-right-circle mr-1"></i> <span>View More..</span>
+                                        <i class="mdi mdi-arrow-right-circle mr-1"></i> <span>View More</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <div>
                     <div class="dropdown relative ltr:mr-4 rtl:ml-4">
@@ -454,9 +467,15 @@ onBeforeUnmount(() => {
                         <div class="dropdown-menu absolute top-0 ltr:-left-3 rtl:-right-3 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="profile/log">
                             <div class="border border-gray-50 dark:border-zinc-600" aria-labelledby="navNotifications">
                                 <div class="dropdown-item dark:text-gray-100">
-                                    <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="apps-contacts-profile.html">
-                                        <i class="mdi mdi-face-man text-16 align-middle mr-1"></i> Profile
-                                    </a>
+                                    <Link
+                                        :href="route('profile.edit')"
+                                        class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50">
+                                    <i class="mdi mdi-face-man text-16 align-middle mr-1"></i> Profile
+                                </Link>
+
+<!--                                    <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="apps-contacts-profile.html">-->
+<!--                                        <i class="mdi mdi-face-man text-16 align-middle mr-1"></i> Profile-->
+<!--                                    </a>-->
                                 </div>
                                 <div class="dropdown-item dark:text-gray-100">
                                     <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="lock-screen.html">
@@ -465,9 +484,18 @@ onBeforeUnmount(() => {
                                 </div>
                                 <hr class="border-gray-50 dark:border-gray-700">
                                 <div class="dropdown-item dark:text-gray-100">
-                                    <a class="p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="logout.html">
+                                    <Link
+                                        :href="route('logout')"
+                                        class=" w-full flex p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50"
+                                        method="post"
+                                        as="button"
+                                    >
                                         <i class="mdi mdi-logout text-16 align-middle mr-1"></i> Logout
-                                    </a>
+                                    </Link>
+
+<!--                                    <a class="p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="logout.html">-->
+<!--                                        <i class="mdi mdi-logout text-16 align-middle mr-1"></i> Logout-->
+<!--                                    </a>-->
                                 </div>
                             </div>
                         </div>
@@ -479,11 +507,10 @@ onBeforeUnmount(() => {
 
     <!---- side bar ---->
 
-
     <!-- ========== Left Sidebar Start ========== -->
     <div class="vertical-menu rtl:right-0 fixed ltr:left-0 bottom-0 top-16 h-screen border-r bg-slate-50 border-gray-50 print:hidden dark:bg-zinc-800 dark:border-neutral-700 z-10">
 
-        <div data-simplebar class="h-full">
+        <simplebar data-simplebar class="h-full">
             <!--- Sidemenu -->
             <div id="sidebar-menu">
                 <!-- Left Menu Start -->
@@ -903,7 +930,7 @@ onBeforeUnmount(() => {
                 </div>
             </div>
             <!-- Sidebar -->
-        </div>
+        </simplebar>
     </div>
     <!-- Left Sidebar End -->
 

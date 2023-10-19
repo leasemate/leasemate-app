@@ -93,7 +93,7 @@
         "shepherd.js": "^11.0.1",
         "shufflejs": "^6.1.0",
         "simple-datatables": "^3.2.0",
-        "simplebar": "^6.2.5",
+        "simplebar-vue": "^2.3.3",
         "sortablejs": "^1.13.0",
         "sweetalert2": "^11.5.1",
         "swiper": "^8.4.4",

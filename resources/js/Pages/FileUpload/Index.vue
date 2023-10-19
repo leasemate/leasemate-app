@@ -17,7 +17,7 @@ const { uploaded_files } = defineProps({
 });
 
 onMounted(() => {
-    // console.log(uploaded_files);
+    console.log(uploaded_files);
 });
 
 </script>
@@ -34,9 +34,9 @@ onMounted(() => {
                 <Link
                     :href="route('file-upload.create')"
                     type="button"
-                    class="btn inline-flex justify-center items-center bg-primary text-white"
+                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
                 >
-                    <i class="mgc_add_line text-lg me-2"></i> Upload
+                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i> Upload
                 </Link>
             </div>
 
@@ -183,7 +183,7 @@ onMounted(() => {
                 :links="uploaded_files.links"
                 class="mt-4"
             />
-            <p class="mt-1">Showing {{ uploaded_files.from }} to {{ uploaded_files.to }} of {{ uploaded_files.total }}</p>
+            <p v-if="uploaded_files.from" class="mt-1">Showing {{ uploaded_files.from }} - {{ uploaded_files.to }} of {{ uploaded_files.total }}</p>
         </div>
     </AuthenticatedLayout>
 </template>
