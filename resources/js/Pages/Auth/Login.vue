@@ -115,7 +115,7 @@ const submit = () => {
         </div>
 
         <div class="mt-12 text-center">
-            <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <a href="register.html" class="text-violet-500 font-semibold"> Signup now </a> </p>
+            <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register')" class="text-violet-500 font-semibold"> Signup now </Link> </p>
         </div>
 
     </GuestLayout>

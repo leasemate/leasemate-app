@@ -47,7 +47,7 @@ const initActiveMenu = () => {
             isAMatch = item.href == pageUrl;
         }
 
-        console.log(isAMatch);
+        // console.log(isAMatch);
         //pattern.test(pageUrl)
 
         if (isAMatch) {

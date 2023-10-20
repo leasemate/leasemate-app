@@ -1,6 +1,11 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+import feather from "feather-icons";
+
+onMounted(() => {
+    feather.replace();
+});
+
 </script>
 
 <template>
@@ -12,8 +17,10 @@ import { Link } from '@inertiajs/vue3';
                     <div class="w-full bg-white xl:p-12 p-10 dark:bg-zinc-800">
                         <div class="flex h-[90vh] flex-col">
                             <div class="mx-auto">
-                                <a href="index.html" class="">
-                                    <img src="assets/images/logo-sm.svg" alt="" class="h-8 inline"> <span class="text-xl align-middle font-medium ltr:ml-2 rtl:mr-2 dark:text-white">REAI</span>
+                                <a href="/" class="">
+<!--                                    <img src="" alt="" class="h-8 inline">-->
+                                    <i data-feather="anchor" class="h-9 w-9 mr-2 inline"></i>
+                                    <span class="text-xl align-middle font-medium ltr:ml-2 rtl:mr-2 dark:text-white">REAI</span>
                                 </a>
                             </div>
 
