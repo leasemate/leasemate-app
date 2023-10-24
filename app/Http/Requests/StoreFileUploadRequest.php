@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueFileName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -15,12 +16,20 @@ class StoreFileUploadRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'upload_file' => [
+                'required',
+                'file',
+                'mimes:pdf,jpg,jpeg,png,xls,xlsx',
+                'max:51200',
+                new UniqueFileName
+            ]
+        ];
     }
 
     public function messages(): array
     {
-        return [];
+        return ['upload_file.max' => 'The upload file must not be great than 50MB'];
     }
 
 }

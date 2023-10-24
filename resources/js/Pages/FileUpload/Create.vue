@@ -1,12 +1,12 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { ref } from "vue";
 
 import VueFilePond, { setOptions } from "vue-filepond";
 
 import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+// import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
 
 // import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
 
@@ -38,6 +38,7 @@ setOptions({
         process: {
             url: '/file-upload',
             headers: {
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': usePage().props.csrf,
             },
             onerror: (response) => {
@@ -45,9 +46,13 @@ setOptions({
             },
         },
     },
-    labelFileProcessingComplete: "Upload Complete! Processing File...",
+    // labelFileProcessingComplete: "Upload Complete! Processing File...",
     labelFileProcessingError: (error) => {
-        return serverResponse.errors;
+        console.log(error);
+        if (serverResponse.errors && serverResponse.errors.upload_file) {
+            return serverResponse.errors.upload_file.join(' ');
+        }
+        return serverResponse.message;
     },
 });
 

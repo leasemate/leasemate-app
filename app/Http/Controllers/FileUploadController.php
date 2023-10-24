@@ -53,18 +53,11 @@ class FileUploadController extends Controller
 
         try {
 
-            $request->validate([
-                'upload_file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif,xls,xlsx|max:51200',  // Change max size as needed
-            ], [
-                'upload_file.max' => 'The upload file must not be great than 50MB',  // Change max size as needed
-            ]);
-
             if ($request->hasFile('upload_file')) {
 
                 $file = $request->file('upload_file');
 
-
-
+//                $storedName = $file->getBasename();
 //                $file->store(auth()->user()->id.'/pdfs');
                 $storedName = $file->store(auth()->user()->id, ['disk'=>'s3', 'visibility'=>'public']);
 
@@ -83,7 +76,7 @@ class FileUploadController extends Controller
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
 
-                ProcessFile::dispatch($fileUpload);
+//                ProcessFile::dispatch($fileUpload);
 
                 return $fileUpload;
             }

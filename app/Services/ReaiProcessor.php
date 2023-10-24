@@ -21,18 +21,16 @@ class ReaiProcessor
         return $this->makeRequest()->post($endpoint);
     }
 
-    public function chat($message, $chat_uuid=null)
+    public function chat($chat_uuid, $message)
     {
-        $endpoint = "/chat".($chat_uuid ? "/".$chat_uuid : null);
-
-//        throw new \Exception("error happeend");
-
         $post_data = [
+            'chat_id' => $chat_uuid,
             'user_id' => auth()->user()->id,
             'user_message' => $message
         ];
+        Log::info('SERVICE: Chat', ['post_data:', $post_data]);
 
-        return $this->post($endpoint, $post_data);
+        return $this->post("/chat", $post_data);
     }
 
     public function processFile($file_path)
@@ -62,6 +60,7 @@ class ReaiProcessor
 
     public function post($endpoint, $data=[])
     {
+        Log::info("Endpoint: ".$this->getEndpoint($endpoint));
         return $this->makeRequest()->post($this->getEndpoint($endpoint), $data);
     }
 
