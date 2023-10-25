@@ -13,6 +13,7 @@ class FileProcessingController extends Controller
         try {
 
             $s3_object = $request->get('s3_object');
+            $document_id = $request->get('document_id');
             $status = $request->get('status');
 
             if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
@@ -21,7 +22,7 @@ class FileProcessingController extends Controller
 
             if(!$file) throw new \Exception('File not found');
 
-            $file->bot_doc_id = 0;
+            $file->bot_doc_id = $document_id;
             $file->status = $status;
             $file->save();
 
