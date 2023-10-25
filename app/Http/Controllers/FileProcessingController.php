@@ -21,6 +21,7 @@ class FileProcessingController extends Controller
 
             if(!$file) throw new \Exception('File not found');
 
+            $file->bot_doc_id = 0;
             $file->status = $status;
             $file->save();
 

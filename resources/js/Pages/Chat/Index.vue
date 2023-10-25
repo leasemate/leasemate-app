@@ -1,10 +1,9 @@
 <script setup>
 
 import {nextTick, onMounted, ref, toRef } from "vue";
+import { Head, router, usePage } from "@inertiajs/vue3";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-import { Head, router } from "@inertiajs/vue3";
 import MessageLoader from "@/Components/Chat/MessageLoader.vue";
 
 import Modal from '@/Components/Modal.vue';
@@ -12,6 +11,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 
 const open = ref(true)
+const page = usePage();
 
 const fullText = "This is the complete message.lakjsdflk jaslkflksdajf lksadjlfk sdlkf lkds lkds jlkf";
 const displayedText = ref("");
@@ -207,6 +207,9 @@ onMounted(() => {
 
     scrollToBottom();
 
+    console.log('props');
+    console.log(page.props);
+
 });
 
 
@@ -218,6 +221,7 @@ onMounted(() => {
     <Head title="Chat" />
 
     <AuthenticatedLayout>
+
         <template #header>Chats</template>
 
         <div class="card">
@@ -245,7 +249,7 @@ onMounted(() => {
 
                 <hr class="mb-4" />
 
-                <div class="overflow-y-auto">
+                <div class="max-h-[36rem] overflow-y-auto">
 
                     <div
                         v-for="(conv_obj, index) in chats.data"

@@ -8,6 +8,7 @@ use App\Http\Resources\ChatResource;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Facades\ReaiProcessor;
+use Aws\ElastiCache\Exception\ElastiCacheException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -39,38 +40,39 @@ class ChatController extends Controller
             // then save the message and response
             $validated = $request->validated();
 
-            $reai_response = ReaiProcessor::chat($validated['message'], $chat->chat_uuid);
+            if(!$chat->exists) {
+                $chat = Chat::create([
+                    'user_id' => auth()->user()->id,
+                    'chat_uuid' => Str::uuid(),
+                ]);
+            }
+
+            $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
+
+            $reai_response = ReaiProcessor::chat($chat->chat_uuid, $validated['message']);
 
             if($reai_response->ok()) {
 
                 $json = $reai_response->json();
-                $chat_uuid = $json['chat_id'];
 
-                if(!$chat->exists) {
-                    $chat = Chat::create([
-                        'user_id' => auth()->user()->id,
-                        'chat_uuid' => $chat_uuid,
-                    ]);
-                }
-
-                $chat->messages()->createMany([
-                    ['from'=> 'user', 'message' => $validated['message']],
-                    ['from'=> 'bot', 'message' => $json['bot_message']]
-                ]);
+                $chat->messages()->create(['from'=> 'bot', 'message' => $json['bot_message']]);
 
                 $chat->load('last_message');
-
                 return redirect()->route('chats.show', $chat->chat_uuid);
 
+            } elseif($reai_response->serverError()) {
+
+                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Server Error: ".$reai_response->status()." ".$reai_response->reason());
+            } elseif($reai_response->clientError()) {
+
+                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Client Error: ".$reai_response->status()." ".$reai_response->reason());
             }
+
 
         } catch (\Exception $e) {
 
-//            return response()->json(['errors' => $e->getMessage()], 422);
-
+            return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
         }
-
-
     }
 
     /**

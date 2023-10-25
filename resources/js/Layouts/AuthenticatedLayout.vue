@@ -8,6 +8,7 @@ import Footer from "@/Components/Layout/Footer.vue";
 
 import feather from "feather-icons";
 import {createPopper} from "@popperjs/core";
+import GlobalValidation from "@/Components/Layout/GlobalValidation.vue";
 
 const isShowDropMenu = ref(false);
 const isMenuInside = ref(false);
@@ -107,6 +108,7 @@ onMounted(() => {
     window.addEventListener('click', closeDropdownOutsideClick);
 
     feather.replace();
+
 });
 
 onBeforeUnmount(() => {
@@ -129,6 +131,8 @@ onBeforeUnmount(() => {
         <div class="page-content dark:bg-zinc-700 min-h-screen">
 
             <div class="container-fluid px-[0.625rem]">
+
+                <GlobalValidation />
 
                 <!--- page title --->
                 <SubHeader>
