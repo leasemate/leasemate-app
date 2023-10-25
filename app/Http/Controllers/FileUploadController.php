@@ -124,6 +124,9 @@ class FileUploadController extends Controller
 
             \Log::info($fileUpload);
 
+            \Log::info("stored name");
+            \Log::info($fileUpload->stored_name);
+
             $response = ReaiProcessor::deleteFile($fileUpload->stored_name);
 
             \Log::info($response);
@@ -139,7 +142,7 @@ class FileUploadController extends Controller
                 return redirect()->back()->with('error', $response->status().": ".$response->reason());
             } else {
 
-                return redirect()->back()->with('error', $response->response());
+                return redirect()->back()->with('error', "Error deleting file");
             }
 
         } catch(\Exception $e) {

@@ -41,6 +41,8 @@ class ReaiProcessor
             's3_object' => $s3_object
         ];
 
+        Log::info($post_data);
+
         return $this->delete("/document", $post_data);
     }
 
@@ -77,7 +79,6 @@ class ReaiProcessor
 
     public function delete($endpoint, $data=[])
     {
-
         return $this->makeRequest()->delete($this->getEndpoint($endpoint), $data);
     }
 
@@ -86,7 +87,7 @@ class ReaiProcessor
         return Http::acceptJson()
             ->contentType('application/json')
             ->withHeaders([
-                'x-api-key' => $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
             ]);
     }
 
