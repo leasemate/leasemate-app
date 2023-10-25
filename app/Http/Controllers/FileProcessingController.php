@@ -12,6 +12,9 @@ class FileProcessingController extends Controller
     {
         try {
 
+            \Log::info("start status update");
+            \Log::info($request->all());
+
             $s3_object = $request->get('s3_object');
             $document_id = $request->get('document_id');
             $status = $request->get('status');
