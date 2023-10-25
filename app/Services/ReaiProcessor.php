@@ -87,7 +87,7 @@ class ReaiProcessor
         return Http::acceptJson()
             ->contentType('application/json')
             ->withHeaders([
-                'x-api-key' => $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
             ]);
     }
 
