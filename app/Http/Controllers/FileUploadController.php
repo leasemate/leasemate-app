@@ -124,6 +124,9 @@ class FileUploadController extends Controller
 
             \Log::info($fileUpload);
 
+            \Log::info("stored name");
+            \Log::info($fileUpload->stored_name);
+
             $response = ReaiProcessor::deleteFile($fileUpload->stored_name);
 
             \Log::info($response);

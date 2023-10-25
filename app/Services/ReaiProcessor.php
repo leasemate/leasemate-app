@@ -41,6 +41,8 @@ class ReaiProcessor
             's3_object' => $s3_object
         ];
 
+        Log::info($post_data);
+
         return $this->delete("/document", $post_data);
     }
 
