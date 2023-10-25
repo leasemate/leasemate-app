@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Log;
 class ReaiProcessor
 {
     private $baseUrl;
+    private $apiKey;
 
-    public function __construct()
+    public function __construct($base_url, $api_key)
     {
-        $this->baseUrl = config('services.reai_api.base_url');
+        $this->baseUrl = $base_url;
+        $this->apiKey = $api_key;
     }
 
     public function poke()
@@ -31,6 +33,15 @@ class ReaiProcessor
         Log::info('SERVICE: Chat', ['post_data:', $post_data]);
 
         return $this->post("/chat", $post_data);
+    }
+
+    public function deleteFile($s3_object)
+    {
+        $post_data = [
+            's3_object' => $s3_object
+        ];
+
+        return $this->delete("/document", $post_data);
     }
 
     public function processFile($file_path)
@@ -60,8 +71,14 @@ class ReaiProcessor
 
     public function post($endpoint, $data=[])
     {
-        Log::info("Endpoint: ".$this->getEndpoint($endpoint));
+
         return $this->makeRequest()->post($this->getEndpoint($endpoint), $data);
+    }
+
+    public function delete($endpoint, $data=[])
+    {
+
+        return $this->makeRequest()->delete($this->getEndpoint($endpoint), $data);
     }
 
     public function makeRequest()
@@ -69,7 +86,7 @@ class ReaiProcessor
         return Http::acceptJson()
             ->contentType('application/json')
             ->withHeaders([
-                'x-api-key' => config('services.reai_api.api_key'),
+                'x-api-key' => $this->apiKey,
             ]);
     }
 

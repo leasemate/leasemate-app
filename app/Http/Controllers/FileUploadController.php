@@ -24,6 +24,10 @@ class FileUploadController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(5);
 
+        if(request()->has('page') && !$files->count()) {
+            return redirect()->route('file-upload.index', ['page' => $files->lastPage()]);
+        }
+
         $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
             $file->download_link = Storage::disk('s3')->url($file->stored_name);
@@ -66,8 +70,7 @@ class FileUploadController extends Controller
                 if(!$storedName) {
                     throw new \Exception("Unable to upload file! Try again.");
                 }
-
-                // Create an entry in the database
+                
                 $fileUpload = new FileUpload();
                 $fileUpload->user_id = auth()->user()->id;
                 $fileUpload->original_name = $file->getClientOriginalName();
@@ -117,7 +120,34 @@ class FileUploadController extends Controller
      */
     public function destroy(FileUpload $fileUpload)
     {
-        //
+        try {
+
+            \Log::info($fileUpload);
+
+            $response = ReaiProcessor::deleteFile($fileUpload->stored_name);
+
+            \Log::info($response);
+
+            if($response->ok()) {
+
+                $fileUpload->delete();
+
+                return redirect()->back()->with('success', "File deleted");
+
+            } elseif($response->serverError() || $response->clientError()) {
+
+                return redirect()->back()->with('error', $response->status().": ".$response->reason());
+            } else {
+
+                return redirect()->back()->with('error', $response->response());
+            }
+
+        } catch(\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+
+        }
+
     }
 
 }

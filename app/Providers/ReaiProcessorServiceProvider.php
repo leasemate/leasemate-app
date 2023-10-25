@@ -12,7 +12,10 @@ class ReaiProcessorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind('reai_processor', function () {
-            return new \App\Services\ReaiProcessor();
+            return new \App\Services\ReaiProcessor(
+                config('services.reai_api.base_url'),
+                config('services.reai_api.api_key')
+            );
         });
     }
 

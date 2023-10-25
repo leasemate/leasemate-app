@@ -10,13 +10,7 @@ class FileUpload extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'original_name',
-        'stored_name',
-        'mime_type',
-        'size',
-    ];
+    protected $guarded = [];
 
     protected static function booted(): void
     {
