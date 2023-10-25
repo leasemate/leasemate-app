@@ -139,7 +139,7 @@ class FileUploadController extends Controller
                 return redirect()->back()->with('error', $response->status().": ".$response->reason());
             } else {
 
-                return redirect()->back()->with('error', $response->response());
+                return redirect()->back()->with('error', "Error deleting file");
             }
 
         } catch(\Exception $e) {

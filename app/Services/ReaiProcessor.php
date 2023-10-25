@@ -77,7 +77,6 @@ class ReaiProcessor
 
     public function delete($endpoint, $data=[])
     {
-
         return $this->makeRequest()->delete($this->getEndpoint($endpoint), $data);
     }
 
