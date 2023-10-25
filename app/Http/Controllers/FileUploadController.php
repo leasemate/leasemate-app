@@ -70,7 +70,7 @@ class FileUploadController extends Controller
                 if(!$storedName) {
                     throw new \Exception("Unable to upload file! Try again.");
                 }
-                
+
                 $fileUpload = new FileUpload();
                 $fileUpload->user_id = auth()->user()->id;
                 $fileUpload->original_name = $file->getClientOriginalName();
