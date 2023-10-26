@@ -10,6 +10,8 @@ import Modal from "@/Components/Modal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
+import { fileStatusClass } from "@/Composables/fileStatusClass.js";
+
 const { uploaded_files } = defineProps({
     uploaded_files: {
         type: Object,
@@ -18,6 +20,7 @@ const { uploaded_files } = defineProps({
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const { getFileStatusClass } = fileStatusClass();
 
 const fileToDelete = ref(null);
 const confirmingFileDeletion = ref(false);
@@ -48,19 +51,17 @@ const deleteFile = () => {
 
 onMounted(() => {
 
-    console.log('on mounted file upload index');
-
-    console.log('channel::');
-    console.log(`App.Models.User.${user.value.id}`);
-    console.log(Echo);
+    // console.log('on mounted file upload index');
+    // console.log('channel::');
+    // console.log(`App.Models.User.${user.value.id}`);
+    // console.log(Echo);
 
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileProcessed', (e) => {
-            console.log('file-processed');
-            console.log(e);
+            console.log('file-processed event..');
+            // console.log(e);
 
             router.reload();
-
         });
 });
 
@@ -69,7 +70,6 @@ onBeforeUnmount(() => {
 });
 
 </script>
-
 
 <template>
     <Head title="File Upload" />
@@ -147,7 +147,9 @@ onBeforeUnmount(() => {
                                         </td>
                                         <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
 
-                                          <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
+                                          <span
+                                              class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                                              :class="getFileStatusClass(file.status)">
                                             {{file.status }}
                                           </span>
                                         </td>
