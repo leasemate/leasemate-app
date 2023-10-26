@@ -61,7 +61,7 @@ onMounted(() => {
             console.log('file-processed event..');
             // console.log(e);
 
-            router.reload();
+            router.reload({ only: ['uploaded_files'] });
         });
 });
 
