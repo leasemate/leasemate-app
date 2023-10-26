@@ -84,6 +84,7 @@ class FileUploadController extends Controller
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
 
+
                 Log::info('Fire event: FileProcessed');
 
                 event(new FileProcessed(auth()->user()->id, $fileUpload));

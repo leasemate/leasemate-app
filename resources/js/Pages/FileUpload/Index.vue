@@ -50,6 +50,8 @@ onMounted(() => {
 
     console.log('on mounted file upload index');
 
+    console.log('channel::');
+    console.log(`App.Models.User.${user.value.id}`);
     console.log(Echo);
 
     Echo.private(`App.Models.User.${user.value.id}`)
