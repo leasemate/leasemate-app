@@ -50,6 +50,8 @@ onMounted(() => {
 
     console.log('on mounted file upload index');
 
+    console.log(Echo);
+
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileProcessed', (e) => {
             console.log('file-processed');
