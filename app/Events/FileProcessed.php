@@ -17,12 +17,13 @@ class FileProcessed implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $payload;
-
+    private $user_id;
     /**
      * Create a new event instance.
      */
-    public function __construct($payload)
+    public function __construct($user_id, $payload)
     {
+        $this->user_id = $user_id;
         $this->payload = $payload;
     }
 
@@ -33,8 +34,10 @@ class FileProcessed implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
+        Log::info('Broadcast On: '.'App.Models.User.'.$this->user_id);
+
         return [
-            new PrivateChannel('App.Models.User.'.auth()->user()->id),
+            new PrivateChannel('App.Models.User.'.$this->user_id),
         ];
     }
 

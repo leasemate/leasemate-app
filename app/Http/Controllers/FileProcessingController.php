@@ -6,6 +6,7 @@ use App\Events\FileProcessed;
 use App\Models\FileUpload;
 use App\Models\Scopes\UserScope;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class FileProcessingController extends Controller
 {
@@ -30,7 +31,9 @@ class FileProcessingController extends Controller
             $file->status = $status;
             $file->save();
 
-            event(new FileProcessed($file));
+            Log::info('Fire event: FileProcessed');
+
+            event(new FileProcessed(auth()->user()->id, $file));
 
             return response()->json(['status' => 'success']);
 

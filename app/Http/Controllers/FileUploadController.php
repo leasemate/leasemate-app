@@ -10,6 +10,7 @@ use App\Jobs\ProcessFile;
 use App\Models\FileUpload;
 //use App\Services\ReaiProcessor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -72,6 +73,9 @@ class FileUploadController extends Controller
                     throw new \Exception("Unable to upload file! Try again.");
                 }
 
+                Log::info('File uploaded:'.$file->getClientOriginalName());
+                Log::info('Save uploaded file to DB:'.$storedName);
+
                 $fileUpload = new FileUpload();
                 $fileUpload->user_id = auth()->user()->id;
                 $fileUpload->original_name = $file->getClientOriginalName();
@@ -80,7 +84,10 @@ class FileUploadController extends Controller
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
 
-                event(new FileProcessed($fileUpload));
+                Log::info('Fire event: FileProcessed');
+
+                event(new FileProcessed(auth()->user()->id, $fileUpload));
+
 //                ProcessFile::dispatch($fileUpload);
 
                 return $fileUpload;

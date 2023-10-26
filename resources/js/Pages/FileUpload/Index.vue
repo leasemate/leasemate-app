@@ -56,9 +56,6 @@ onMounted(() => {
             router.reload();
 
         });
-
-
-
 });
 
 onBeforeUnmount(() => {
