@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref } from "vue";
 
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {Head, Link, router} from "@inertiajs/vue3";
+import {usePage, Head, Link, router} from "@inertiajs/vue3";
 import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 
@@ -16,6 +16,8 @@ const { uploaded_files } = defineProps({
     },
 });
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const fileToDelete = ref(null);
 const confirmingFileDeletion = ref(false);
@@ -45,7 +47,23 @@ const deleteFile = () => {
 }
 
 onMounted(() => {
-    // console.log(uploaded_files);
+
+    Echo.private(`App.Models.User.${user.value.id}`)
+        .listen('FileProcessed', (e) => {
+            console.log('file-processed');
+            console.log(e);
+
+            router.reload();
+
+        });
+
+
+
+});
+
+onBeforeUnmount(() => {
+    // Echo.leaveChannel('file-processed');
+
 });
 
 </script>

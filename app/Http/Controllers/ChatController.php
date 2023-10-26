@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FileProcessed;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Http\Resources\ChatResource;
@@ -88,7 +89,6 @@ class ChatController extends Controller
             'chat' => new ChatResource($chat),
             'chats' => ChatResource::collection($chats)
         ]);
-
     }
 
 

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { usePage } from '@inertiajs/vue3'
 
 import TopBar from "@/Components/Layout/TopBar.vue";
 import Nav from "@/Components/Layout/Nav.vue";
@@ -9,6 +10,9 @@ import Footer from "@/Components/Layout/Footer.vue";
 import feather from "feather-icons";
 import {createPopper} from "@popperjs/core";
 import GlobalValidation from "@/Components/Layout/GlobalValidation.vue";
+
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const isShowDropMenu = ref(false);
 const isMenuInside = ref(false);
@@ -112,7 +116,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    // Clean up the event listener when the component is destroyed
 
     window.removeEventListener('click', closeDropdownOutsideClick);
 });

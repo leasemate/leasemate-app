@@ -2,7 +2,6 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import {Link} from "@inertiajs/vue3";
 import simplebar from "simplebar-vue";
-import {Inertia} from "@inertiajs/inertia";
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 

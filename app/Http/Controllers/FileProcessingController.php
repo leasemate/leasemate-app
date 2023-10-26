@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FileProcessed;
 use App\Models\FileUpload;
 use App\Models\Scopes\UserScope;
 use Illuminate\Http\Request;
@@ -28,6 +29,8 @@ class FileProcessingController extends Controller
             $file->bot_doc_id = $document_id;
             $file->status = $status;
             $file->save();
+
+            event(new FileProcessed($file));
 
             return response()->json(['status' => 'success']);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FileProcessed;
 use App\Facades\ReaiProcessor;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
@@ -79,6 +80,7 @@ class FileUploadController extends Controller
                 $fileUpload->size = $file->getSize();
                 $fileUpload->save();
 
+                event(new FileProcessed($fileUpload));
 //                ProcessFile::dispatch($fileUpload);
 
                 return $fileUpload;
