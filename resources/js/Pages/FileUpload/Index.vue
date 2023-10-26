@@ -63,8 +63,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    // Echo.leaveChannel('file-processed');
-
+    Echo.leaveChannel(`App.Models.User.${user.value.id}`);
 });
 
 </script>
