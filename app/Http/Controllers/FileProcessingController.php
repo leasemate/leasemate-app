@@ -33,7 +33,7 @@ class FileProcessingController extends Controller
 
             Log::info('Fire event: FileProcessed');
 
-            event(new FileProcessed(auth()->user()->id, $file));
+            event(new FileProcessed($file->user_id, $file));
 
             return response()->json(['status' => 'success']);
 
