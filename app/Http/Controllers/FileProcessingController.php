@@ -21,7 +21,7 @@ class FileProcessingController extends Controller
             $document_id = $request->get('document_id');
             $status = $request->get('status');
 
-            if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
+//            if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
 
             $file = FileUpload::withoutGlobalScope(UserScope::class)->where('stored_name', $s3_object)->first();
 
@@ -31,14 +31,17 @@ class FileProcessingController extends Controller
             $file->status = $status;
             $file->save();
 
-            Log::info('Fire event: FileProcessed');
+            Log::info('Fire event: FileProcessed:'.$file);
 
             event(new FileProcessed($file->user_id, $file));
 
             return response()->json(['status' => 'success']);
 
         } catch(\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+
+            Log::error($e->getMessage());
+
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
 
     }
