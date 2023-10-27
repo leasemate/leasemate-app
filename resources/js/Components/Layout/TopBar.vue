@@ -98,6 +98,8 @@ onMounted(() => {
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
+            console.log(notification);
+
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
                     // console.log(response.data);
