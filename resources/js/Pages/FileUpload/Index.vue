@@ -51,15 +51,9 @@ const deleteFile = () => {
 
 onMounted(() => {
 
-    // console.log('on mounted file upload index');
-    // console.log('channel::');
-    // console.log(`App.Models.User.${user.value.id}`);
-    // console.log(Echo);
-
     Echo.private(`App.Models.User.${user.value.id}`)
-        .listen('FileProcessed', (e) => {
+        .listen('FileStatusUpdate', (e) => {
             console.log('file-processed event..');
-            // console.log(e);
 
             router.reload({ only: ['uploaded_files'] });
         });

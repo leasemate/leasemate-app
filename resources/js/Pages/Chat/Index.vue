@@ -207,14 +207,13 @@ onMounted(() => {
 
     scrollToBottom();
 
-    console.log('props');
-    console.log(page.props);
+    // console.log('props');
+    // console.log(page.props);
 
 });
 
-
-
 </script>
+
 
 <template>
 
@@ -223,6 +222,10 @@ onMounted(() => {
     <AuthenticatedLayout>
 
         <template #header>Chats</template>
+
+
+
+        <flowise-fullchatbot></flowise-fullchatbot>
 
         <div class="card">
 <!--            h-[52rem]-->

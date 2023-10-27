@@ -1,9 +1,21 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import {Link} from "@inertiajs/vue3";
+import {ref, onMounted, onBeforeUnmount, computed} from 'vue';
+import {Link, usePage, router } from "@inertiajs/vue3";
 import simplebar from "simplebar-vue";
+import moment from "moment";
+import { fileStatusClass } from "@/Composables/fileStatusClass.js";
+import axios from "axios";
+import toast from "@/Stores/toast";
+
+const page = usePage();
+
+const user = computed(() => page.props.auth.user);
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
+const { getFileStatusClass } = fileStatusClass();
+
+const localNotificationCount = ref(page.props.notification_count);
+const localNotifications = ref(page.props.my_notifications);
 
 const toggleMenu = (event) => {
     event.preventDefault();
@@ -57,14 +69,56 @@ const initModeSetting = () => {
     }
 }
 
+const markAsRead = (notification) => {
+
+    try {
+
+        const response = axios.post(route('notifications.mark-as-read', notification.id))
+            .then(response => {
+                if (response.status === 200) {
+                    notification.read_at = response.data.read_at;
+                    localNotificationCount.value = response.data.total_unread_notifications;
+                }
+            })
+            .catch(error => {
+                toast.error(error.response.status+": "+error.response.data.message);
+            });
+
+    } catch(error) {
+        toast.error(error);
+    }
+
+}
+
+
 onMounted(() => {
     // console.log('on mount top bar');
     initModeSetting();
 
+    Echo.private(`App.Models.User.${user.value.id}`)
+        .notification((notification) => {
+
+            axios.get(route('notifications.show', notification.id))
+                .then(response => {
+                    console.log(response.data);
+
+                    localNotificationCount.value = response.data.total_unread_notifications;
+                    localNotifications.value.unshift(response.data.notification);
+
+                    // toast.success("File Uploading"+response.data.notification.data.file_name);
+                })
+                .catch(error => {
+                    toast.error(error.response.status+": "+error.response.data.message);
+                });
+        });
+
+    console.log("local notif:");
+    console.log(localNotifications.value);
+
 });
 
 onBeforeUnmount(() => {
-    // console.log('on unmount top bar');
+    Echo.leaveChannel(`App.Models.User.${user.value.id}`);
 });
 
 
@@ -114,28 +168,6 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
 
-                <!--                <div class="dropdown relative language hidden sm:block">-->
-                <!--                    <button class="btn border-0 py-0 dropdown-toggle px-4 h-[70px]" type="button" aria-expanded="false" data-dropdown-toggle="navNotifications">-->
-                <!--                        <img src="@/../images/flags/us.jpg" alt="" class="h-4" id="header-lang-img">-->
-                <!--                    </button>-->
-                <!--                    <div class="dropdown-menu absolute -left-24 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="navNotifications">-->
-                <!--                        <ul class="border border-gray-50 dark:border-gray-700" aria-labelledby="navNotifications">-->
-                <!--                            <li>-->
-                <!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/us.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">English</span></a>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/spain.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Spanish</span></a>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/germany.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">German</span></a>-->
-                <!--                            </li>-->
-                <!--                            <li>-->
-                <!--                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50/50 dark:text-gray-200 dark:hover:bg-zinc-600/50 dark:hover:text-white"><img src="@/../images/flags/italy.jpg" alt="user-image" class="mr-1 inline-block h-3"> <span class="align-middle">Italian</span></a>-->
-                <!--                            </li>-->
-                <!--                        </ul>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-
                 <div>
                     <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block ">
                         <i data-feather="moon" class="h-5 w-5 block dark:hidden"></i>
@@ -148,7 +180,7 @@ onBeforeUnmount(() => {
                         <button type="button" class="btn border-0 h-[70px] text-xl px-4 dropdown-toggle dark:text-gray-100" data-bs-toggle="dropdown" id="dropdownMenuButton1">
                             <i data-feather="grid" class="h-5 w-5"></i>
                         </button>
-                        <div class="dropdown-menu absolute -left-40 z-50 hidden w-72 list-none border border-gray-50 rounded bg-white shadow dark:bg-zinc-800 dark:border-zinc-600 dark:text-gray-300" aria-labelledby="dropdownMenuButton1">
+                        <div class="dropdown-menu absolute z-50 hidden w-72 list-none border border-gray-50 rounded bg-white shadow dark:bg-zinc-800 dark:border-zinc-600 dark:text-gray-300" aria-labelledby="dropdownMenuButton1">
                             <div class="p-2">
                                 <div class="grid grid-cols-3">
                                     <a class="dropdown-item hover:bg-gray-50/50 py-4 text-center dark:hover:bg-zinc-700/50 dark:hover:text-gray-50" href="#">
@@ -190,7 +222,9 @@ onBeforeUnmount(() => {
                             <button type="button" class="btn border-0 h-[70px] dropdown-toggle px-4 text-gray-500 dark:text-gray-100" aria-expanded="false" data-dropdown-toggle="notification">
                                 <i data-feather="bell" class="h-5 w-5"></i>
                             </button>
-                            <span class="absolute text-xs px-1.5 bg-red-500 text-white font-medium rounded-full left-6 top-2.5">5</span>
+                            <span
+                                v-if="localNotificationCount"
+                                class="absolute text-xs px-1.5 bg-red-500 text-white font-medium rounded-full left-6 top-2.5 z-40">{{ localNotificationCount }}</span>
                         </div>
                         <div class="dropdown-menu absolute z-50 hidden w-80 list-none rounded bg-white shadow dark:bg-zinc-800 " id="notification">
                             <div class="border border-gray-50 dark:border-gray-700 rounded" aria-labelledby="notification">
@@ -199,77 +233,46 @@ onBeforeUnmount(() => {
                                         <h6 class="m-0 text-gray-700 dark:text-gray-100"> Notifications </h6>
                                     </div>
                                     <div class="col-span-6 justify-self-end">
-                                        <a href="#!" class="text-xs underline dark:text-gray-400"> Unread (3)</a>
+                                        <Link :href="route('notifications.index')" class="text-xs underline dark:text-gray-400"> Unread ({{ localNotificationCount }})</Link>
                                     </div>
                                 </div>
                                 <simplebar class="max-h-56" data-simplebar>
                                     <div>
-                                        <a href="#!" class="text-reset notification-item">
+                                        <a
+                                            v-for="notification in localNotifications"
+                                            class="text-reset notification-item cursor-pointer"
+                                            @click.stop="markAsRead(notification)"
+                                        >
                                             <div class="flex px-4 py-2 hover:bg-gray-50/50 dark:hover:bg-zinc-700/50">
-                                                <div class="flex-shrink-0 ltr:mr-3 rtl:ml-3">
-                                                    <img src="@/../images/users/avatar-3.jpg" class="rounded-full h-8 w-8" alt="user-pic">
+                                                <div class="flex-shrink-0 ltr:mr-3 rtl:ml-3 mt-2"
+                                                :class="notification.read_at ? 'w-2 h-2' : ''">
+                                                    <div v-if="!notification.read_at" class="h-2 w-2 bg-blue-500 rounded-full text-center"></div>
                                                 </div>
+
                                                 <div class="flex-grow">
-                                                    <h6 class="mb-1 text-gray-700 dark:text-gray-100">James Lemire</h6>
+                                                    <!-- Flex container for the <h6> and the status -->
+                                                    <div class="flex items-center justify-between">
+                                                        <h6 class="text-gray-700 dark:text-gray-100">{{ notification.data.notification_type_name }}</h6>
+                                                        <span
+                                                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ml-2"
+                                                            :class="getFileStatusClass(notification.data.file_status)"
+                                                        >{{ notification.data.file_status }}</span>
+                                                    </div>
                                                     <div class="text-13 text-gray-600">
-                                                        <p class="mb-1 dark:text-gray-400">It will seem like simplified English.</p>
-                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>1 hour ago</span></p>
+                                                        <p class="mb-1 dark:text-gray-400">{{  notification.data.file_name }}</p>
+                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>{{  moment(notification.data.file_updated_at).fromNow() }}</span></p>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </a>
-                                        <a href="#!" class="text-reset notification-item">
-                                            <div class="flex px-4 py-2 hover:bg-gray-50/50 dark:hover:bg-zinc-700/50">
-                                                <div class="flex-shrink-0 ltr:mr-3 rtl:ml-3">
-                                                    <div class="h-8 w-8 bg-violet-500 rounded-full text-center">
-                                                        <i class="bx bx-cart text-xl leading-relaxed text-white"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <h6 class="mb-1 text-gray-700 dark:text-gray-100">Your order is placed</h6>
-                                                    <div class="text-13 text-gray-600">
-                                                        <p class="mb-1 dark:text-gray-400">If several languages coalesce the grammar</p>
-                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>3 min ago</span></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#!" class="text-reset notification-item">
-                                            <div class="flex px-4 py-2 hover:bg-gray-50/50 dark:hover:bg-zinc-700/50">
-                                                <div class="flex-shrink-0 ltr:mr-3 rtl:ml-3">
-                                                    <div class="h-8 w-8 bg-green-500 rounded-full text-center">
-                                                        <i class="bx bx-badge-check text-xl leading-relaxed text-white"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <h6 class="mb-1 text-gray-700 dark:text-gray-100">Your item is shipped</h6>
-                                                    <div class="text-13 text-gray-600">
-                                                        <p class="mb-1 dark:text-gray-400">If several languages coalesce the grammar</p>
-                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>3 min ago</span></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="#!" class="text-reset notification-item">
-                                            <div class="flex px-4 py-2 hover:bg-gray-50/50 dark:hover:bg-zinc-700/50">
-                                                <div class="flex-shrink-0 ltr:mr-3 rtl:ml-3">
-                                                    <img src="@/../images/users/avatar-6.jpg" class="rounded-full h-8 w-8" alt="user-pic">
-                                                </div>
-                                                <div class="flex-grow">
-                                                    <h6 class="mb-1 text-gray-700 dark:text-gray-100">Salena Layfield</h6>
-                                                    <div class="text-13 text-gray-600">
-                                                        <p class="mb-1 dark:text-gray-400">As a skeptical Cambridge friend of mine occidental.</p>
-                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>1 hour ago</span></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
+
                                     </div>
                                 </simplebar>
                                 <div class="p-1 border-t grid border-gray-50 dark:border-zinc-600 justify-items-center">
-                                    <a class="btn border-0 text-violet-500" href="">
+                                    <Link class="btn border-0 text-violet-500" :href="route('notifications.index')">
                                         <i class="mdi mdi-arrow-right-circle mr-1"></i> <span>View More</span>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -293,16 +296,8 @@ onBeforeUnmount(() => {
                                         <i class="mdi mdi-shield-account-outline text-16 align-middle mr-1"></i> Profile
                                     </Link>
 
-                                    <!--                                    <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="apps-contacts-profile.html">-->
-                                    <!--                                        <i class="mdi mdi-face-man text-16 align-middle mr-1"></i> Profile-->
-                                    <!--                                    </a>-->
                                 </div>
 
-                                <!--                                <div class="dropdown-item dark:text-gray-100">-->
-                                <!--                                    <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="lock-screen.html">-->
-                                <!--                                        <i class="mdi mdi-lock text-16 align-middle mr-1"></i> Lock Screen-->
-                                <!--                                    </a>-->
-                                <!--                                </div>-->
                                 <hr class="border-gray-50 dark:border-gray-700">
                                 <div class="dropdown-item dark:text-gray-100">
                                     <Link
@@ -314,9 +309,6 @@ onBeforeUnmount(() => {
                                         <i class="mdi mdi-logout text-16 align-middle mr-1"></i> Logout
                                     </Link>
 
-                                    <!--                                    <a class="p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="logout.html">-->
-                                    <!--                                        <i class="mdi mdi-logout text-16 align-middle mr-1"></i> Logout-->
-                                    <!--                                    </a>-->
                                 </div>
                             </div>
                         </div>

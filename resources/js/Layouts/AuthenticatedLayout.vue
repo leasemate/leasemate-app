@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { usePage } from '@inertiajs/vue3'
+import {router, usePage} from '@inertiajs/vue3'
 
 import TopBar from "@/Components/Layout/TopBar.vue";
 import Nav from "@/Components/Layout/Nav.vue";
@@ -10,6 +10,7 @@ import Footer from "@/Components/Layout/Footer.vue";
 import feather from "feather-icons";
 import {createPopper} from "@popperjs/core";
 import GlobalValidation from "@/Components/Layout/GlobalValidation.vue";
+import ToastList from "@/Components/ToastList.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -115,6 +116,7 @@ onMounted(() => {
 
 });
 
+
 onBeforeUnmount(() => {
 
     window.removeEventListener('click', closeDropdownOutsideClick);
@@ -124,7 +126,7 @@ onBeforeUnmount(() => {
 
 <template>
 
-    <!---- top bar ---->
+    <ToastList />
 
     <TopBar />
 
@@ -135,7 +137,7 @@ onBeforeUnmount(() => {
 
             <div class="container-fluid px-[0.625rem]">
 
-                <GlobalValidation />
+<!--                <GlobalValidation />-->
 
                 <!--- page title --->
                 <SubHeader>

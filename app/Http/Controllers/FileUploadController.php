@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\FileProcessed;
+use App\Events\FileStatusUpdate;
 use App\Facades\ReaiProcessor;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
 use App\Jobs\ProcessFile;
 use App\Models\FileUpload;
 //use App\Services\ReaiProcessor;
+use App\Notifications\FileProcessingUpdate;
+use App\Notifications\FileProcessingStarted;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -25,6 +28,9 @@ class FileUploadController extends Controller
         $files = FileUpload::with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(5);
+
+//        $user = Auth::user();
+//        $user->notify(new FileProcessingComplete($files->first()));
 
         if(request()->has('page') && !$files->count()) {
             return redirect()->route('file-upload.index', ['page' => $files->lastPage()]);
@@ -87,9 +93,7 @@ class FileUploadController extends Controller
 
                 Log::info('Fire event: FileProcessed');
 
-                event(new FileProcessed(auth()->user()->id, $fileUpload));
-
-//                ProcessFile::dispatch($fileUpload);
+                event(new FileStatusUpdate(auth()->user()->id, $fileUpload));
 
                 return $fileUpload;
             }

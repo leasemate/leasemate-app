@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\FileProcessed;
+use App\Events\FileStatusUpdate;
 use App\Models\FileUpload;
 use App\Models\Scopes\UserScope;
+use App\Models\User;
+use App\Notifications\FileProcessingStarted;
+use App\Notifications\FileProcessingUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -33,7 +36,13 @@ class FileProcessingController extends Controller
 
             Log::info('Fire event: FileProcessed:'.$file);
 
-            event(new FileProcessed($file->user_id, $file));
+            event(new FileStatusUpdate($file->user_id, $file));
+
+            Log::info('Send notification: FileProcessingComplete:'.$file);
+
+            if(in_array($status, ['Extracting','Completed'])) {
+                $file->user->notify(new FileProcessingUpdate($file));
+            }
 
             return response()->json(['status' => 'success']);
 

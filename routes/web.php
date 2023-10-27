@@ -4,6 +4,7 @@ use App\Facades\ReaiProcessor;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Models\FileUpload;
 use Illuminate\Foundation\Application;
@@ -55,6 +56,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
     Route::delete('/chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
+
+    Route::resource('notifications', NotificationController::class);
+    Route::post('notifications/mark-as-read/{notification}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
 
 });
 

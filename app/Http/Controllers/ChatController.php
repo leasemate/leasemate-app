@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\FileProcessed;
+use App\Events\FileStatusUpdate;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Requests\UpdateChatRequest;
 use App\Http\Resources\ChatResource;
