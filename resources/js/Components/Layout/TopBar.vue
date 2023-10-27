@@ -98,16 +98,23 @@ onMounted(() => {
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
-            console.log(notification);
+            // console.log(notification);
 
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
                     // console.log(response.data);
+                    let notif = response.data.notification;
 
                     localNotificationCount.value = response.data.total_unread_notifications;
-                    localNotifications.value.unshift(response.data.notification);
+                    localNotifications.value.unshift(notif);
 
-                    toast.success(response.data.notification.data.file_name+": Finished processing!");
+                    const toastFunction =
+                        notif.data.file_status === 'Extracting'
+                            ? toast.info
+                            : toast.success;
+
+                    toastFunction(notif.data.file_name + ': ' + notif.data.file_status + '!');
+
                 })
                 .catch(error => {
                     toast.error(error.response.status+": "+error.response.data.message);

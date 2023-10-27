@@ -12,6 +12,7 @@ class FileProcessingUpdate extends Notification
 //    use Queueable;
 
     protected $file;
+    protected $type;
     /**
      * Create a new notification instance.
      */
@@ -38,7 +39,7 @@ class FileProcessingUpdate extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'notification_type_name'=>'Processing Complete',
+            'notification_type_name'=>'Processing Update',
             'file_name' => $this->file->original_name,
             'file_status' => $this->file->status,
             'file_updated_at' => $this->file->updated_at,

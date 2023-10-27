@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\FileStatusUpdate;
 use App\Http\Requests\StoreChatRequest;
-use App\Http\Requests\UpdateChatRequest;
 use App\Http\Resources\ChatResource;
 use App\Models\Chat;
-use App\Models\ChatMessage;
 use App\Facades\ReaiProcessor;
-use Aws\ElastiCache\Exception\ElastiCacheException;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
