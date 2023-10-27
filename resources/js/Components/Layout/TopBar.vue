@@ -117,7 +117,8 @@ onMounted(() => {
 
                 })
                 .catch(error => {
-                    toast.error(error.response.status+": "+error.response.data.message);
+                    console.log(error);
+                    toast.error("error....");
                 });
         });
     //
