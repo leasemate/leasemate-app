@@ -108,12 +108,11 @@ onMounted(() => {
                     localNotificationCount.value = response.data.total_unread_notifications;
                     localNotifications.value.unshift(notif);
 
-                    const toastFunction =
-                        notif.data.file_status === 'Extracting'
-                            ? toast.info
-                            : toast.success;
-
-                    toastFunction(notif.data.file_name + ': ' + notif.data.file_status + '!');
+                    if(notif.data.file_status === 'Extracting') {
+                        toast.info(notif.data.file_name + ': ' + notif.data.file_status);
+                    } else {
+                        toast.success(notif.data.file_name + ': ' + notif.data.file_status);
+                    }
 
                 })
                 .catch(error => {
