@@ -100,20 +100,20 @@ onMounted(() => {
 
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
 
                     localNotificationCount.value = response.data.total_unread_notifications;
                     localNotifications.value.unshift(response.data.notification);
 
-                    // toast.success("File Uploading"+response.data.notification.data.file_name);
+                    toast.success(response.data.notification.data.file_name+": Finished processing!");
                 })
                 .catch(error => {
                     toast.error(error.response.status+": "+error.response.data.message);
                 });
         });
-
-    console.log("local notif:");
-    console.log(localNotifications.value);
+    //
+    // console.log("local notif:");
+    // console.log(localNotifications.value);
 
 });
 
