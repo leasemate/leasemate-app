@@ -9,7 +9,7 @@ import toast from "@/Stores/toast";
 
 const page = usePage();
 
-const user = computed(() => page.props.auth.user);
+const user = ref(page.props.auth.user);
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 const { getFileStatusClass } = fileStatusClass();
@@ -127,7 +127,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    Echo.leaveChannel(`App.Models.User.${user.value.id}`);
+
+    if(user.value) {
+        Echo.leaveChannel(`App.Models.User.${user.value.id}`);
+    }
 });
 
 

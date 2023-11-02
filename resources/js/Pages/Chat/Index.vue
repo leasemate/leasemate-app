@@ -223,10 +223,6 @@ onMounted(() => {
 
         <template #header>Chats</template>
 
-
-
-        <flowise-fullchatbot></flowise-fullchatbot>
-
         <div class="card">
 <!--            h-[52rem]-->
             <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">

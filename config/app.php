@@ -170,6 +170,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\ReaiProcessorServiceProvider::class,
+        App\Providers\ZepApiServiceProvider::class,
+        App\Providers\FlowiseApiServiceProvider::class,
 
     ])->toArray(),
 

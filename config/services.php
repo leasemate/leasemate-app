@@ -34,5 +34,14 @@ return [
         'base_url' => env('REAI_API_BASE_URL'),
         'api_key' => env('REAI_API_KEY'),
     ],
+    'zep_api' => [
+        'base_url' => env('ZEP_API_BASE_URL'),
+        'api_key' => env('ZEP_API_KEY'),
+    ],
+    'flowise_api' => [
+        'base_url' => env('FLOWISE_API_BASE_URL'),
+        'api_key' => env('FLOWISE_API_KEY'),
+        'chat_app_id' => env('FLOWISE_API_CHAT_APP_ID'),
+    ]
 
 ];

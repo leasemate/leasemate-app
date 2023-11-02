@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\FlowiseApi;
+use App\Facades\ZepApi;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Resources\ChatResource;
 use App\Models\Chat;
@@ -36,33 +38,63 @@ class ChatController extends Controller
             // then save the message and response
             $validated = $request->validated();
 
+
             if(!$chat->exists) {
+
+                $chat_uuid = Str::uuid();
+
+                $zep_session_data= [
+                    'session_id' => (string) $chat_uuid,
+                    'user_id' => (string) auth()->user()->id,
+                ];
+
+                $zep_session = ZepApi::createSession($zep_session_data);
+
                 $chat = Chat::create([
                     'user_id' => auth()->user()->id,
-                    'chat_uuid' => Str::uuid(),
+                    'chat_uuid' => $chat_uuid,
                 ]);
             }
 
             $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
 
-            $reai_response = ReaiProcessor::chat($chat->chat_uuid, $validated['message']);
+//            $reai_response = ReaiProcessor::chat(config('services.flowise_api.chat_app_id'), $validated['message']);
 
-            if($reai_response->ok()) {
+            $flowise_data = [
+                "question"=>$validated['message'],
+//                "overrideConfig"=>[
+//                    "ZepMemory_0"=>[
+//                        "sessionId"=>$chat->chat_uuid,
+//                    ]
+//                ]
+            ];
 
-                $json = $reai_response->json();
+            $flowise_response = FlowiseApi::chat(config('services.flowise_api.chat_app_id'), $flowise_data);
 
-                $chat->messages()->create(['from'=> 'bot', 'message' => $json['bot_message']]);
+            $chat->messages()->create(['from'=> 'bot', 'message' => $flowise_response]);
 
-                $chat->load('last_message');
-                return redirect()->route('chats.show', $chat->chat_uuid);
+            $chat->load('last_message');
+            return redirect()->route('chats.show', $chat->chat_uuid);
 
-            } elseif($reai_response->serverError()) {
 
-                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Server Error: ".$reai_response->status()." ".$reai_response->reason());
-            } elseif($reai_response->clientError()) {
-
-                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Client Error: ".$reai_response->status()." ".$reai_response->reason());
-            }
+//            if($flowise_response->ok()) {
+//
+//                $json = $flowise_response->json();
+//
+//                dd($json);
+//
+//                $chat->messages()->create(['from'=> 'bot', 'message' => $json['bot_message']]);
+//
+//                $chat->load('last_message');
+//                return redirect()->route('chats.show', $chat->chat_uuid);
+//
+//            } elseif($flowise_response->serverError()) {
+//
+//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Server Error: ".$flowise_response->status()." ".$flowise_response->reason());
+//            } elseif($flowise_response->clientError()) {
+//
+//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Client Error: ".$flowise_response->status()." ".$flowise_response->reason());
+//            }
 
 
         } catch (\Exception $e) {
