@@ -62,11 +62,11 @@ class ChatController extends Controller
 
             $flowise_data = [
                 "question"=>$validated['message'],
-//                "overrideConfig"=>[
-//                    "ZepMemory_0"=>[
-//                        "sessionId"=>$chat->chat_uuid,
-//                    ]
-//                ]
+                "overrideConfig"=>[
+                    "ZepMemory_0"=>[
+                        "sessionId"=>$chat->chat_uuid,
+                    ]
+                ]
             ];
 
             $flowise_response = FlowiseApi::chat(config('services.flowise_api.chat_app_id'), $flowise_data);
