@@ -58,14 +58,12 @@ class ChatController extends Controller
 
             $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
 
-//            $reai_response = ReaiProcessor::chat(config('services.flowise_api.chat_app_id'), $validated['message']);
-
             $flowise_data = [
                 "question"=>$validated['message'],
                 "overrideConfig"=>[
-                    "ZepMemory_0"=>[
+//                    "ZepMemory_0"=>[
                         "sessionId"=>$chat->chat_uuid,
-                    ]
+//                    ]
                 ]
             ];
 
