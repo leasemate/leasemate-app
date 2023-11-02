@@ -60,7 +60,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('notifications', NotificationController::class);
     Route::post('notifications/mark-as-read/{notification}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
 
+    Route::get('/flowise-test', function () {
+        return Inertia::render('FlowiseTest');
+    });
+
 });
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
