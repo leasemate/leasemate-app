@@ -64,6 +64,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('FlowiseTest');
     });
 
+    Route::get('/node-websocket', function () {
+        return Inertia::render('FlowiseTest');
+    });
+
 });
 
 
