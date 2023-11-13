@@ -15,6 +15,11 @@ trait ApiRequestTrait
         $this->apiKey = $apiKey;
     }
 
+    public function get($endpoint, $data=[])
+    {
+        return $this->makeRequest()->get($this->getEndpoint($endpoint), $data);
+    }
+
     public function post($endpoint, $data=[])
     {
         return $this->makeRequest()->post($this->getEndpoint($endpoint), $data);

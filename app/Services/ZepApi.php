@@ -27,7 +27,8 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error creating user', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason());
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+
         }
     }
 
@@ -45,7 +46,7 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error updating user: '.$response->status()." - ".$response->reason());
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason());
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
         }
     }
 
@@ -61,9 +62,25 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error creating user', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason());
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
         }
 
+    }
+
+    public function getMessages(string $session_id, $data)
+    {
+        \Log::info('SERVICE: Getting messages', ['session_id:', $session_id]);
+
+        $response = $this->get('/sessions/'.$session_id.'/memory', $data);
+
+        if ($response->successful()) {
+
+            return $response->json();
+        } else {
+            \Log::error('SERVICE: Error getting messages', ['response' => $response]);
+
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+        }
     }
 
 }

@@ -45,7 +45,8 @@ class ChatController extends Controller
 
                 $zep_session_data= [
                     'session_id' => (string) $chat_uuid,
-                    'user_id' => (string) auth()->user()->id,
+//                    'user_id' => (string) auth()->user()->id,
+                    'user_id' => "12",
                 ];
 
                 $zep_session = ZepApi::createSession($zep_session_data);
@@ -58,21 +59,26 @@ class ChatController extends Controller
 
             $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
 
-            $flowise_data = [
-                "question"=>$validated['message'],
-                "overrideConfig"=>[
-//                    "ZepMemory_0"=>[
-                        "sessionId"=>$chat->chat_uuid,
-//                    ]
-                ]
-            ];
-
-            $flowise_response = FlowiseApi::chat(config('services.flowise_api.chat_app_id'), $flowise_data);
-
-            $chat->messages()->create(['from'=> 'bot', 'message' => $flowise_response]);
+//            $flowise_data = [
+//                "question"=>$validated['message'],
+//                "overrideConfig"=>[
+////                    "ZepMemory_0"=>[
+//                        "sessionId"=>$chat->chat_uuid,
+////                    ]
+//                ]
+//            ];
+//
+//            $flowise_response = FlowiseApi::chat(config('services.flowise_api.chat_app_id'), $flowise_data);
+//
+//            $chat->messages()->create(['from'=> 'bot', 'message' => $flowise_response]);
 
             $chat->load('last_message');
-            return redirect()->route('chats.show', $chat->chat_uuid);
+
+            return response()->json([
+                "chat" => new ChatResource($chat),
+            ]);
+
+//            return redirect()->route('chats.show', $chat->chat_uuid);
 
 
 //            if($flowise_response->ok()) {
@@ -97,7 +103,16 @@ class ChatController extends Controller
 
         } catch (\Exception $e) {
 
-            return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+
+//            if($chat->chat_uuid) {
+//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
+//            } else {
+//                return redirect()->route('chats.index')->with('error', $e->getMessage());
+//            }
+
         }
     }
 
@@ -106,6 +121,12 @@ class ChatController extends Controller
      */
     public function show(Chat $chat)
     {
+
+
+        $zep_messages = ZepApi::getMessages($chat->chat_uuid, ['lastn'=> 100]);
+
+        dd($zep_messages);
+
         $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
 
         $chat->load(['last_message', 'messages']);

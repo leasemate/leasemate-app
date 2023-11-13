@@ -8,7 +8,6 @@ import axios from "axios";
 import toast from "@/Stores/toast";
 
 const page = usePage();
-
 const user = ref(page.props.auth.user);
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));

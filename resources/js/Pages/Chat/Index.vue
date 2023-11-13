@@ -1,7 +1,8 @@
 <script setup>
 
-import {nextTick, onMounted, ref, toRef } from "vue";
+import {nextTick, onMounted, onUnmounted, ref, toRef} from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
+import axios  from "axios";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import MessageLoader from "@/Components/Chat/MessageLoader.vue";
@@ -10,11 +11,26 @@ import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 
+import socketIOClient from 'socket.io-client';
+
 const open = ref(true)
 const page = usePage();
+const user = ref(page.props.auth.user);
 
-const fullText = "This is the complete message.lakjsdflk jaslkflksdajf lksadjlfk sdlkf lkds lkds jlkf";
-const displayedText = ref("");
+//socket connection
+const socket = socketIOClient("https://flowise-3n4j.onrender.com");  // Replace with your Flowise URL
+const CHUNK_SIZE = 5;  // Set the chunk size as per your requirement
+let socketIOClientId = '';
+let chatSessionId = '';
+let accumulatedOutput = '';
+let lastMessage;
+
+socket.on('connect', () => {
+    socketIOClientId = socket.id;
+    console.log('Connected with id:', socketIOClientId);
+    // startAskingQuestions();
+
+});
 
 const initialTextareaHeight = 40;
 const textareaHeight = ref(initialTextareaHeight);
@@ -111,39 +127,111 @@ const sendMessage = async () => {
 
     if(validate()) {
 
+        isSending.value = true;
         errorMessage.value = null;
+        textareaHeight.value = initialTextareaHeight;
 
         const chat_id = (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null);
 
-        const create_chat_response = router.visit(route('chats.store', chat_id), {
-            method: 'post',
-            data: {
-              message: messageToSend.value
-            },
-            // only: ['chat'],
-            preserveScroll: true,
-            onStart: visit => {
-              isSending.value = true;
-              textareaHeight.value = initialTextareaHeight;
+        axios.post(route('chats.store', chat_id), {
+            message: messageToSend.value
+        })
+            .then(function (response) {
 
-              localChat.value.messages.push({
-                from: 'user',
-                message: messageToSend.value
-              });
+                console.log("Chat Response");
+                console.log(response);
 
-              messageToSend.value = '';
+                chatSessionId = response.data.chat.chat_uuid;
+                localChat.value.chat_uuid = chatSessionId;
 
-              nextTick( () => {
-                scrollToBottom();
-              });
-            }
-        });
+                console.log(chatSessionId);
+
+                localChat.value.messages.push({
+                    from: 'user',
+                    message: messageToSend.value
+                });
+
+                sendQuery(messageToSend.value);
+
+                messageToSend.value = '';
+                textareaHeight.value = initialTextareaHeight;
+
+                nextTick( () => {
+                    scrollToBottom();
+                });
+
+                // socket.disconnect();
+            })
+            .catch(function (error) {
+                console.log(error);
+                isSending.value = false;
+                errorMessage.value = error.response.data.error;
+            });
+
     }
 }
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
+
+async function sendQuery(question) {
+
+    // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
+    // let user_id = user.value.id;
+    let user_id = 24;
+
+    const data = {
+        question: question, // Use the provided question
+        socketIOClientId: socketIOClientId,
+        overrideConfig: {
+            sessionId: chatSessionId,
+            systemMessage: `You are a helpful assistant. You search for information contained in various sources using your available tools. If you do not know the answer, tell them. Do not guess. Pass the user_id ${user_id} to all custom tools.`
+        }
+    };
+
+    console.log(data);
+
+    try {
+
+        const post_url = import.meta.env.VITE_FLOWISE_API_BASE_URL + import.meta.env.VITE_FLOWISE_API_PREDICTION_ENDPOINT + "/" + import.meta.env.VITE_FLOWISE_API_CHAT_APP_ID;
+
+        await axios.post(post_url, data)
+            .then(function (response) {
+               console.log(response);
+            })
+            .catch(function (error) {
+                isSending.value = false;
+                errorMessage.value = error.message;
+            });
+
+
+        // const response = await fetch(
+        //     import.meta.env.VITE_FLOWISE_API_BASE_URL + import.meta.env.VITE_FLOWISE_API_PREDICTION_ENDPOINT + "/" + import.meta.env.VITE_FLOWISE_API_CHAT_APP_ID, // Replace <chatflow-id> with your Chatflow ID
+        //     {
+        //         method: "POST",
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(data),
+        //     }
+        // );
+        //
+        // if (!response.ok) {
+        //     console.error(`HTTP error! status: ${response.status}`);
+        //     const response_text = await response.text();
+        //     console.log('Response body:', text);
+        //
+        //     isSending.value = false;
+        //     errorMessage.value = response_text;
+        //
+        //     return;
+        // }
+        //
+        // const result = await response.json();
+
+    } catch (error) {
+        isSending.value = false;
+        errorMessage.value = error;
+        console.log(error);
+        console.error('Error sending query:', error);
+    }
 }
 
 const addNewChat = () => {
@@ -187,28 +275,78 @@ const truncatedMessage = (message) => {
 }
 
 
-const startTyping = () => {
-    let index = 0;
-
-    const typeCharacter = () => {
-        if (index < fullText.length) {
-            displayedText.value += fullText[index];
-            index = index+1;
-            setTimeout(typeCharacter, 100);  // Adjust the 100ms delay to speed up/slow down
-        }
-    }
-
-    typeCharacter();
-}
-
-
 onMounted(() => {
     messageField.value.focus();
 
     scrollToBottom();
 
-    // console.log('props');
-    // console.log(page.props);
+    localChat.value.messages.push({
+        from: 'bot',
+        message: "Hello! I am your personal assistant. How can I help you today?",
+    });
+
+    socket.on('start', () => {
+        console.log('START!!!');
+    });
+
+    socket.on('token', (token) => {
+
+        lastMessage = localChat.value.messages[localChat.value.messages.length - 1];
+
+        accumulatedOutput += token; // Accumulate the tokens
+        // Check if the accumulated output is at least as long as CHUNK_SIZE
+        if (accumulatedOutput.length >= CHUNK_SIZE) {
+
+            isSending.value = false;
+
+            // Find the last space to keep words intact
+            let lastSpaceIndex = accumulatedOutput.lastIndexOf(' ', CHUNK_SIZE);
+            if (lastSpaceIndex === -1) lastSpaceIndex = CHUNK_SIZE; // If no space found, just cut at CHUNK_SIZE
+            // Print up to the last complete word
+            const partToPrint = accumulatedOutput.slice(0, lastSpaceIndex + 1);
+
+            if (lastMessage) {
+                if(lastMessage.from == 'user') {
+                    localChat.value.messages.push({
+                        from: 'bot',
+                        message: partToPrint,
+                    });
+                } else {
+                    lastMessage.message += partToPrint;
+                }
+            }
+
+            scrollToBottom();
+
+            // Keep the remaining part
+            accumulatedOutput = accumulatedOutput.slice(lastSpaceIndex + 1);
+        }
+    });
+
+    socket.on('sourceDocuments', (sourceDocuments) => {
+        console.log('sourceDocuments:', sourceDocuments);
+    });
+
+    socket.on('end', () => {
+
+        console.log("END!!!");
+
+        // Print any remaining output when the stream ends
+        if (accumulatedOutput.trim().length > 0) {
+            lastMessage.message += accumulatedOutput;
+        }
+        // Reset the state for the next query
+        accumulatedOutput = '';
+    });
+
+
+});
+
+onUnmounted(() => {
+    console.log('Unmounted...disconnected');
+
+    socket.disconnect();
+
 
 });
 
