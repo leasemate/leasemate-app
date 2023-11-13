@@ -174,8 +174,8 @@ const sendMessage = async () => {
 async function sendQuery(question) {
 
     // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
-    // let user_id = user.value.id;
-    let user_id = 24;
+    let user_id = user.value.id;
+    // let user_id = 24;
 
     const data = {
         question: question, // Use the provided question
@@ -200,31 +200,6 @@ async function sendQuery(question) {
                 isSending.value = false;
                 errorMessage.value = error.message;
             });
-
-
-        // const response = await fetch(
-        //     import.meta.env.VITE_FLOWISE_API_BASE_URL + import.meta.env.VITE_FLOWISE_API_PREDICTION_ENDPOINT + "/" + import.meta.env.VITE_FLOWISE_API_CHAT_APP_ID, // Replace <chatflow-id> with your Chatflow ID
-        //     {
-        //         method: "POST",
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(data),
-        //     }
-        // );
-        //
-        // if (!response.ok) {
-        //     console.error(`HTTP error! status: ${response.status}`);
-        //     const response_text = await response.text();
-        //     console.log('Response body:', text);
-        //
-        //     isSending.value = false;
-        //     errorMessage.value = response_text;
-        //
-        //     return;
-        // }
-        //
-        // const result = await response.json();
 
     } catch (error) {
         isSending.value = false;
