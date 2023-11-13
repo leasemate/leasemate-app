@@ -57,6 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
     Route::delete('/chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
 
+    Route::resource('/chats/{chat}/messages', ChatMessageController::class);
+
     Route::resource('notifications', NotificationController::class);
     Route::post('notifications/mark-as-read/{notification}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
 

@@ -30,22 +30,15 @@ class ChatMessageController extends Controller
 
         $validated = $request->validated();
 
-        //send API request to back end with chat_id and message
-        // get back response save message and response to DB
+        $user_message = ['from'=> 'bot', 'message' => $validated['message']];
 
-        $messages = [];
+        $message = $chat->messages()->create($user_message);
 
-        $user_message = ['from'=> 'user', 'message' => $validated['message']];
-        $messages[] = $user_message;
+//        dd($messages);
+//        $latestMessage = $chat->messages()->orderBy('created_at')->first();
 
-        $bot_message = ['from'=> 'bot', 'message' => 'Hi there!!!!!!!! How can i help? this is my bot response'];
-        $messages[] = $bot_message;
-
-        $messages = $chat->messages()->createMany($messages);
-
-        $latestMessage = $messages->last();
-
-        return new ChatMessageResource($latestMessage);
+//        dd($latestMessage);
+        return new ChatMessageResource($message);
 
     }
 

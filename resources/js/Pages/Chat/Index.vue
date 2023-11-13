@@ -127,7 +127,7 @@ const sendMessage = async () => {
 
     if(validate()) {
 
-        isSending.value = true;
+
         errorMessage.value = null;
         textareaHeight.value = initialTextareaHeight;
 
@@ -173,6 +173,7 @@ const sendMessage = async () => {
 
 async function sendQuery(question) {
 
+    isSending.value = true;
     // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
     let user_id = user.value.id;
     // let user_id = 24;
@@ -194,7 +195,29 @@ async function sendQuery(question) {
 
         await axios.post(post_url, data)
             .then(function (response) {
-               console.log(response);
+                console.log('send query post response:');
+               console.log(response.data);
+
+               axios.post(route('messages.store', chatSessionId), {
+                    message: response.data
+                })
+                .then(function (response) {
+                    console.log("Message Response");
+                    console.log(response);
+
+                    if(chat===null) { //redirect to chat page
+                        router.visit(route('chats.show', chatSessionId), {
+                            preserveScroll: true,
+                        });
+                    }
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    isSending.value = false;
+                    errorMessage.value = error.response.data.error;
+                });
+
             })
             .catch(function (error) {
                 isSending.value = false;
@@ -225,7 +248,7 @@ const selectChat = async (conv_obj) => {
         router.visit(route('chats.show', conv_obj.chat_uuid), {
             preserveScroll: true,
         });
-
+        scrollToBottom();
     }
 };
 
@@ -255,7 +278,7 @@ onMounted(() => {
 
     scrollToBottom();
 
-    localChat.value.messages.push({
+    localChat.value.messages.unshift({
         from: 'bot',
         message: "Hello! I am your personal assistant. How can I help you today?",
     });
@@ -318,7 +341,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    console.log('Unmounted...disconnected');
+    console.log('Disconnected websocket: '+ socket.id);
 
     socket.disconnect();
 
@@ -359,7 +382,7 @@ onUnmounted(() => {
                     Chat
                 </button>
 
-                <hr class="mb-4" />
+<!--                <hr class="mb-4" />-->
 
                 <div class="max-h-[36rem] overflow-y-auto">
 

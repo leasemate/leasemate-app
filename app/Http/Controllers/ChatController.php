@@ -45,8 +45,8 @@ class ChatController extends Controller
 
                 $zep_session_data= [
                     'session_id' => (string) $chat_uuid,
-//                    'user_id' => (string) auth()->user()->id,
-                    'user_id' => "12",
+                    'user_id' => (string) auth()->user()->id,
+//                    'user_id' => "12",
                 ];
 
                 $zep_session = ZepApi::createSession($zep_session_data);
@@ -123,9 +123,9 @@ class ChatController extends Controller
     {
 
 
-        $zep_messages = ZepApi::getMessages($chat->chat_uuid, ['lastn'=> 100]);
-
-        dd($zep_messages);
+//        $zep_messages = ZepApi::getMessages($chat->chat_uuid, ['lastn'=> 100]);
+//
+//        dd($zep_messages);
 
         $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
 
