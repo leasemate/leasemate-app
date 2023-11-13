@@ -108,8 +108,10 @@ onMounted(() => {
                     localNotifications.value.unshift(notif);
 
                     if(notif.data.file_status === 'Extracting') {
+                        console.log("INFO:::"+notif.data.file_name + ': ' + notif.data.file_status);
                         toast.info(notif.data.file_name + ': ' + notif.data.file_status);
                     } else {
+                        console.log("SUCCESS:::"+notif.data.file_name + ': ' + notif.data.file_status);
                         toast.success(notif.data.file_name + ': ' + notif.data.file_status);
                     }
 
@@ -294,7 +296,7 @@ onBeforeUnmount(() => {
                     <div class="dropdown relative ltr:mr-4 rtl:ml-4">
                         <button type="button" class="flex items-center px-4 py-6 border-x border-gray-50 bg-gray-50/30 dropdown-toggle dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-100" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 <!--                            <img class="h-8 w-8 rounded-full ltr:xl:mr-2 rtl:xl:ml-2" src="@/../images/users/avatar-1.jpg" alt="Header Avatar">-->
-                            <span class="fw-medium hidden xl:block">{{ $page.props.auth.user.name }}</span>
+                            <span class="fw-medium hidden xl:block">{{ $page.props.auth.user.name }} {{ $page.props.auth.user.id}}</span>
                             <i class="mdi mdi-chevron-down align-bottom hidden xl:block"></i>
                         </button>
                         <div class="dropdown-menu absolute top-0 ltr:-left-3 rtl:-right-3 z-50 hidden w-40 list-none rounded bg-white shadow dark:bg-zinc-800" id="profile/log">

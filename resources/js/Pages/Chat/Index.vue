@@ -127,7 +127,6 @@ const sendMessage = async () => {
 
     if(validate()) {
 
-
         errorMessage.value = null;
         textareaHeight.value = initialTextareaHeight;
 
@@ -204,13 +203,9 @@ async function sendQuery(question) {
                 .then(function (response) {
                     console.log("Message Response");
                     console.log(response);
-
-                    // if(chat===null) { //redirect to chat page
-                        router.visit(route('chats.show', chatSessionId), {
-                            preserveScroll: true,
-                        });
-                    // }
-
+                    router.visit(route('chats.show', chatSessionId), {
+                        preserveScroll: true,
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);

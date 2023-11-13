@@ -7,6 +7,7 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Models\FileUpload;
+use App\Notifications\FileProcessingUpdate;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -23,17 +24,10 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/test-file-upload', function () {
 
-    $file = FileUpload::find(3);
+//Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
-    $resp = ReaiProcessor::processFile(Storage::path($file->stored_name));
-
-    dd($resp);
-
-})->name('test');
-
-Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -46,6 +40,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //        ]);
     });
 //
+
+    Route::get('/test-notify', function() {
+
+        $file = FileUpload::find(16);
+
+        $file->user->notify(new FileProcessingUpdate($file));
+
+    });
+
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
