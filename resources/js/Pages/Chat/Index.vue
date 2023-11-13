@@ -205,11 +205,11 @@ async function sendQuery(question) {
                     console.log("Message Response");
                     console.log(response);
 
-                    if(chat===null) { //redirect to chat page
+                    // if(chat===null) { //redirect to chat page
                         router.visit(route('chats.show', chatSessionId), {
                             preserveScroll: true,
                         });
-                    }
+                    // }
 
                 })
                 .catch(function (error) {
