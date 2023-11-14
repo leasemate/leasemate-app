@@ -67,25 +67,36 @@ setOptions({
     allowRevert: false,
     acceptedFileTypes: [
         'application/pdf',
-        'image/png',
-        'image/jpeg',
-        'image/jpg',
-        'image/gif',
+        // 'image/png',
+        // 'image/jpeg',
+        // 'image/jpg',
+        // 'image/gif',
     ],
     // files: files,
     server: {
         process: {
-            url: '/file-upload',
+            url: '/files',
             headers: {
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': page.props.csrf,
             },
             onerror: (response) => {
+                console.log("on error");
                 serverResponse = JSON.parse(response);
             },
+            // onload: (response) => {
+            //     console.log("on load");
+            //     console.log(JSON.parse(response));
+            //     console.log(files.value);
+            // },
         },
     },
-    // labelFileProcessingComplete: "Upload Complete! Processing File...",
+    // labelFileProcessingComplete: (resp) => {
+        // console.log("LABEL FILE PROCESS COMPLETE");
+        // console.log(resp);
+        // router.reload({ only: ['uploaded_files'] });
+        // return "Upload Complete! Processing File...";
+    // },
     labelFileProcessingError: (error) => {
         console.log(error);
         if (serverResponse.errors && serverResponse.errors.upload_file) {
@@ -113,18 +124,18 @@ onBeforeUnmount(() => {
     <Head title="File Upload" />
 
     <AuthenticatedLayout>
-        <template #header> File Upload </template>
+        <template #header> Files </template>
 
         <div class="py-6">
-            <div class="relative flex justify-end mb-4">
-                <Link
-                    :href="route('file-upload.create')"
-                    type="button"
-                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
-                >
-                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i> Upload
-                </Link>
-            </div>
+<!--            <div class="relative flex justify-end mb-4">-->
+<!--                <Link-->
+<!--                    :href="route('file-upload.create')"-->
+<!--                    type="button"-->
+<!--                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"-->
+<!--                >-->
+<!--                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i> Upload-->
+<!--                </Link>-->
+<!--            </div>-->
 
             <div class="py-6">
 
@@ -188,7 +199,7 @@ onBeforeUnmount(() => {
                                         </td>
                                         <td
                                             class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
-                                            <p>{{ moment(file.created_at,).format("MMM DD, YYYY h:mm a") }}</p>
+                                            <p>{{ moment(file.created_at,).format("MMM DD, YYYY h:mma") }}</p>
                                             <span class="text-xs">by {{ file.user.name }}</span
                                             >
                                         </td>
@@ -206,7 +217,7 @@ onBeforeUnmount(() => {
 
                                         <td class="p-3.5">
 
-                                            <button @click="confirmFileDeletion(file)">
+                                            <button v-if="file.status == 'Pending' || file.status == 'Completed'" @click="confirmFileDeletion(file)">
                                                 <i class="bx bx-trash text-lg hover:text-red-400"></i>
                                             </button>
 

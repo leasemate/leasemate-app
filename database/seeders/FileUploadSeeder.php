@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\FileUpload;
+use App\Models\File;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +13,6 @@ class FileUploadSeeder extends Seeder
      */
     public function run(): void
     {
-        FileUpload::factory(100)->create();
+        File::factory(100)->create();
     }
 }

@@ -140,23 +140,28 @@ onMounted(() => {
 
 
                     <li>
-                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+<!--                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+<!--                            <i data-feather="file-text"></i>-->
+<!--                            <span data-key="t-apps"> Files</span>-->
+<!--                        </a>-->
+
+                        <Link :href="route('files.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="file-text"></i>
-                            <span data-key="t-apps"> Files</span>
-                        </a>
+                            <span data-key="t-file-upload"> Files</span>
+                        </Link>
 
-                        <ul>
-                            <li>
-                                <Link :href="route('file-upload.index')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
-                                    <span data-key="t-file-upload"> Collection</span>
-                                </Link>
-                            </li>
+<!--                        <ul>-->
+<!--                            <li>-->
+<!--                                <Link :href="route('file-upload.index')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+<!--                                    <span data-key="t-file-upload"> Collection</span>-->
+<!--                                </Link>-->
+<!--                            </li>-->
 
-                            <li>
-                                <Link :href="route('file-upload.create')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
-                                    <span data-key="t-file-upload"> Upload</span>
-                                </Link>
-                            </li>
+<!--                            <li>-->
+<!--                                <Link :href="route('file-upload.create')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+<!--                                    <span data-key="t-file-upload"> Upload</span>-->
+<!--                                </Link>-->
+<!--                            </li>-->
 
 <!--                            <li>-->
 <!--                                <a :href="route('file-upload.index')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">Collection</a>-->
@@ -224,7 +229,7 @@ onMounted(() => {
 <!--                                    </li>-->
 <!--                                </ul>-->
 <!--                            </li>-->
-                        </ul>
+<!--                        </ul>-->
                     </li>
 
 

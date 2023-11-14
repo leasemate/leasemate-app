@@ -3,10 +3,10 @@
 use App\Facades\ReaiProcessor;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
-use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\FilesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
-use App\Models\FileUpload;
+use App\Models\File;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/test-notify', function() {
 
-        $file = FileUpload::find(16);
+        $file = File::find(16);
 
         $file->user->notify(new FileProcessingUpdate($file));
 
@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('file-upload', FileUploadController::class);
+    Route::resource('files', FilesController::class);
 
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');

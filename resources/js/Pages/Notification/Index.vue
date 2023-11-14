@@ -37,6 +37,7 @@ const { notifications } = defineProps({
                     <th scope="col" class="px-6 py-3">
                         Status
                     </th>
+                    <th>Date</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,9 +54,12 @@ const { notifications } = defineProps({
                     </td>
                     <td class="px-6 py-3.5 dark:text-zinc-100">
                         <span
-                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ml-2"
+                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
                             :class="getFileStatusClass(notification.data.file_status)"
                         >{{ notification.data.file_status }}</span>
+                    </td>
+                    <td>
+                        <p>{{ moment(notification.created_at,).format("MMM DD, YYYY h:mma") }}</p>
                     </td>
                 </tr>
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\UserScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FileUpload extends Model
+class File extends Model
 {
     use HasFactory, SoftDeletes;
 

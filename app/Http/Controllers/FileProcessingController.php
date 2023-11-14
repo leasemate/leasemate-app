@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\FileStatusUpdate;
-use App\Models\FileUpload;
+use App\Models\File;
 use App\Models\Scopes\UserScope;
-use App\Models\User;
 use App\Notifications\FileProcessingStarted;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class FileProcessingController extends Controller
 
 //            if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
 
-            $file = FileUpload::withoutGlobalScope(UserScope::class)->where('stored_name', $s3_object)->first();
+            $file = File::withoutGlobalScope(UserScope::class)->where('stored_name', $s3_object)->first();
 
             if(!$file) throw new \Exception('File not found');
 

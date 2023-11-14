@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileProcessingController;
-use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\FilesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

@@ -7,7 +7,7 @@ use App\Facades\ReaiProcessor;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
 use App\Jobs\ProcessFile;
-use App\Models\FileUpload;
+use App\Models\File;
 //use App\Services\ReaiProcessor;
 use App\Notifications\FileProcessingUpdate;
 use App\Notifications\FileProcessingStarted;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-class FileUploadController extends Controller
+class FilesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class FileUploadController extends Controller
     public function index()
     {
 
-        $files = FileUpload::with('user')
+        $files = File::with('user')
             ->orderBy('created_at', 'desc')
             ->paginate(5);
 
@@ -33,7 +33,7 @@ class FileUploadController extends Controller
 //        $user->notify(new FileProcessingComplete($files->first()));
 
         if(request()->has('page') && !$files->count()) {
-            return redirect()->route('file-upload.index', ['page' => $files->lastPage()]);
+            return redirect()->route('files.index', ['page' => $files->lastPage()]);
         }
 
         $transformed = $files->getCollection()->map(function ($file) {
@@ -44,17 +44,9 @@ class FileUploadController extends Controller
 
         $files->setCollection($transformed);
 
-        return Inertia::render('FileUpload/Index', [
+        return Inertia::render('Files/Index', [
             'uploaded_files' => $files
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return Inertia::render('FileUpload/Create');
     }
 
     /**
@@ -82,7 +74,7 @@ class FileUploadController extends Controller
                 Log::info('File uploaded:'.$file->getClientOriginalName());
                 Log::info('Save uploaded file to DB:'.$storedName);
 
-                $fileUpload = new FileUpload();
+                $fileUpload = new File();
                 $fileUpload->user_id = auth()->user()->id;
                 $fileUpload->original_name = $file->getClientOriginalName();
                 $fileUpload->stored_name = $storedName;
@@ -105,33 +97,9 @@ class FileUploadController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(FileUpload $fileUpload)
-    {
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FileUpload $fileUpload)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateFileUploadRequest $request, FileUpload $fileUpload)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FileUpload $fileUpload)
+    public function destroy(File $fileUpload)
     {
         try {
 
