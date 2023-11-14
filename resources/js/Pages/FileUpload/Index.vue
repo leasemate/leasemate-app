@@ -35,7 +35,7 @@ const closeModal = () => {
     fileToDelete.value = null;
 };
 
-const deleteFile = () => {
+const deleteFile = async () => {
 
     console.log(fileToDelete.value);
     if(fileToDelete.value) {
