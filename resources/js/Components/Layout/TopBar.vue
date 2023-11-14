@@ -94,8 +94,14 @@ onMounted(() => {
     // console.log('on mount top bar');
     initModeSetting();
 
+    console.log("onMount");
+    console.log(Echo.private('App.Models.User.' + user.value.id));
+
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
+
+            console.log("notification:");
+            console.log(notification);
 
             // console.log(notification);
 
@@ -121,17 +127,15 @@ onMounted(() => {
                     toast.error("error....");
                 });
         });
-    //
-    // console.log("local notif:");
-    // console.log(localNotifications.value);
-
 });
 
 onBeforeUnmount(() => {
 
     if(user.value) {
-        Echo.leaveChannel(`App.Models.User.${user.value.id}`);
+        console.log('LEAVE CHANNEL');
+        Echo.leave(`App.Models.User.${user.value.id}`);
     }
+
 });
 
 

@@ -114,12 +114,15 @@ onMounted(() => {
 
     feather.replace();
 
+
+
 });
 
 
 onBeforeUnmount(() => {
 
     window.removeEventListener('click', closeDropdownOutsideClick);
+
 });
 
 </script>
