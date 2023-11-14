@@ -83,4 +83,24 @@ class ZepApi
         }
     }
 
+    public function deleteMessages(string $session_id)
+    {
+        \Log::info('SERVICE: Deleting messages', ['session_id:', $session_id]);
+
+        $response = $this->delete('/sessions/'.$session_id.'/memory');
+
+        \Log::info('SERVICE: Deleting messages response', ['response' => $response]);
+
+        if($response->successful() || $response->notFound()) {
+            return $response->json();
+
+        } else {
+            \Log::error('SERVICE: Error deleting messages', ['response' => $response]);
+
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+        }
+
+
+    }
+
 }

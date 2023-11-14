@@ -14,11 +14,10 @@ const props = defineProps({
 })
 
 onMounted(() => {
-console.log(props.duration);
+    // console.log(props.duration);
     setTimeout(() => {
         emit('remove')
     }, props.duration);
-
 });
 
 const emit = defineEmits(['remove'])

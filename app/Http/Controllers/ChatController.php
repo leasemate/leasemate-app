@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\FlowiseApi;
 use App\Facades\ZepApi;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Resources\ChatResource;
 use App\Models\Chat;
-use App\Facades\ReaiProcessor;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -33,13 +32,9 @@ class ChatController extends Controller
 
         try {
 
-            //send API request to bot - get back Chat id and response
-            // create chat reocrd
-            // then save the message and response
             $validated = $request->validated();
 
-
-            if(!$chat->exists) {
+            if( ! $chat->exists) {
 
                 $chat_uuid = Str::uuid();
 
@@ -49,7 +44,7 @@ class ChatController extends Controller
 //                    'user_id' => "12",
                 ];
 
-                $zep_session = ZepApi::createSession($zep_session_data);
+                ZepApi::createSession($zep_session_data);
 
                 $chat = Chat::create([
                     'user_id' => auth()->user()->id,
@@ -59,59 +54,17 @@ class ChatController extends Controller
 
             $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
 
-//            $flowise_data = [
-//                "question"=>$validated['message'],
-//                "overrideConfig"=>[
-////                    "ZepMemory_0"=>[
-//                        "sessionId"=>$chat->chat_uuid,
-////                    ]
-//                ]
-//            ];
-//
-//            $flowise_response = FlowiseApi::chat(config('services.flowise_api.chat_app_id'), $flowise_data);
-//
-//            $chat->messages()->create(['from'=> 'bot', 'message' => $flowise_response]);
-
             $chat->load('last_message');
 
             return response()->json([
                 "chat" => new ChatResource($chat),
             ]);
 
-//            return redirect()->route('chats.show', $chat->chat_uuid);
-
-
-//            if($flowise_response->ok()) {
-//
-//                $json = $flowise_response->json();
-//
-//                dd($json);
-//
-//                $chat->messages()->create(['from'=> 'bot', 'message' => $json['bot_message']]);
-//
-//                $chat->load('last_message');
-//                return redirect()->route('chats.show', $chat->chat_uuid);
-//
-//            } elseif($flowise_response->serverError()) {
-//
-//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Server Error: ".$flowise_response->status()." ".$flowise_response->reason());
-//            } elseif($flowise_response->clientError()) {
-//
-//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', "Client Error: ".$flowise_response->status()." ".$flowise_response->reason());
-//            }
-
-
         } catch (\Exception $e) {
 
             return response()->json([
                 'error' => $e->getMessage(),
             ], $e->getCode());
-
-//            if($chat->chat_uuid) {
-//                return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
-//            } else {
-//                return redirect()->route('chats.index')->with('error', $e->getMessage());
-//            }
 
         }
     }
@@ -121,11 +74,6 @@ class ChatController extends Controller
      */
     public function show(Chat $chat)
     {
-
-
-//        $zep_messages = ZepApi::getMessages($chat->chat_uuid, ['lastn'=> 100]);
-//
-//        dd($zep_messages);
 
         $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
 
@@ -143,9 +91,24 @@ class ChatController extends Controller
      */
     public function destroy(Chat $chat)
     {
-        $chat->delete();
+        try {
 
-        return redirect()->route('chats.index');
+            DB::beginTransaction();
+
+            $chat->delete();
+
+            ZepApi::deleteMessages($chat->chat_uuid);
+
+            DB::commit();
+
+            return redirect()->route('chats.index');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
+        }
 
     }
 }

@@ -1,6 +1,6 @@
 <script setup>
 
-import {nextTick, onMounted, onUnmounted, ref, toRef} from "vue";
+import {nextTick, onMounted, onUnmounted, ref, toRef, watch} from "vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import axios  from "axios";
 
@@ -10,6 +10,7 @@ import MessageLoader from "@/Components/Chat/MessageLoader.vue";
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import toast from "@/Stores/toast";
 
 import socketIOClient from 'socket.io-client';
 
@@ -24,13 +25,6 @@ let socketIOClientId = '';
 let chatSessionId = '';
 let accumulatedOutput = '';
 let lastMessage;
-
-socket.on('connect', () => {
-    socketIOClientId = socket.id;
-    console.log('Connected with id:', socketIOClientId);
-    // startAskingQuestions();
-
-});
 
 const initialTextareaHeight = 40;
 const textareaHeight = ref(initialTextareaHeight);
@@ -53,14 +47,16 @@ const { chats, chat } = defineProps({
 
 const defaultChatState = () => {
   return {
-    chat_uuid: 0,
+    chat_uuid: null,
     messages: []
   }
 };
 
-const localChat = ref(defaultChatState());
-
+const chatList = toRef(chats, 'data');
 const chatProp = toRef(chat, 'data');
+
+const localChat = ref(defaultChatState());
+const localChatList = ref(chatList);
 
 if (chatProp.value) {
     localChat.value = chatProp.value;
@@ -68,17 +64,6 @@ if (chatProp.value) {
 
 const chatToDelete = ref(null);
 const confirmingChatDeletion = ref(false);
-
-const confirmChatDeletion = (chat_obj) => {
-  confirmingChatDeletion.value = true;
-  chatToDelete.value = chat_obj;
-};
-
-const closeModal = () => {
-  confirmingChatDeletion.value = false;
-  chatToDelete.value = null;
-};
-
 
 const handleKeyDown = (event) => {
 
@@ -130,9 +115,9 @@ const sendMessage = async () => {
         errorMessage.value = null;
         textareaHeight.value = initialTextareaHeight;
 
-        const chat_id = (localChat.value.chat_uuid != 0 ? localChat.value.chat_uuid : null);
+        // const chat_id = (!localChat.value.chat_uuid ? localChat.value.chat_uuid : null);
 
-        axios.post(route('chats.store', chat_id), {
+        axios.post(route('chats.store', localChat.value.chat_uuid), {
             message: messageToSend.value
         })
             .then(function (response) {
@@ -141,7 +126,6 @@ const sendMessage = async () => {
                 console.log(response);
 
                 chatSessionId = response.data.chat.chat_uuid;
-                localChat.value.chat_uuid = chatSessionId;
 
                 console.log(chatSessionId);
 
@@ -149,6 +133,14 @@ const sendMessage = async () => {
                     from: 'user',
                     message: messageToSend.value
                 });
+
+                if( ! localChat.value.chat_uuid) {
+                    const empty_chat = defaultChatState();
+                    empty_chat.last_message = {
+                        message: "New Chat"
+                    };
+                    localChatList.value.unshift(empty_chat);
+                }
 
                 sendQuery(messageToSend.value);
 
@@ -194,21 +186,25 @@ async function sendQuery(question) {
 
         await axios.post(post_url, data)
             .then(function (response) {
-                console.log('send query post response:');
-               console.log(response.data);
+               //  console.log('send query post response:');
+               // console.log(response.data);
 
                axios.post(route('messages.store', chatSessionId), {
                     message: response.data
                 })
                 .then(function (response) {
-                    console.log("Message Response");
-                    console.log(response);
-                    // router.visit(route('chats.show', chatSessionId), {
-                    //     preserveScroll: true,
-                    // });
+                    // console.log("Message Response");
+                    // console.log(response);
+
+                    if( ! localChat.value.chat_uuid) {
+                        router.visit(route('chats.show', chatSessionId), {
+                            preserveScroll: true,
+                        });
+                    }
+
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    // console.log(error);
                     isSending.value = false;
                     errorMessage.value = error.response.data.error;
                 });
@@ -222,8 +218,8 @@ async function sendQuery(question) {
     } catch (error) {
         isSending.value = false;
         errorMessage.value = error;
-        console.log(error);
-        console.error('Error sending query:', error);
+        // console.log(error);
+        // console.error('Error sending query:', error);
     }
 }
 
@@ -237,9 +233,7 @@ const scrollToBottom = () => {
 };
 
 const selectChat = async (conv_obj) => {
-
     if(conv_obj.chat_uuid) {
-
         router.visit(route('chats.show', conv_obj.chat_uuid), {
             preserveScroll: true,
         });
@@ -252,14 +246,31 @@ const deleteChat = () => {
   if(chatToDelete.value) {
       router.delete(route('chats.destroy', chatToDelete.value.chat_uuid), {
         preserveScroll: true,
-        onSuccess: () => {
-          localChat.value = defaultChatState();
-          chatToDelete.value = null;
-          closeModal();
+        onSuccess: (page) => {
+            if(page.props.flash.error) {
+                closeModal();
+            } else {
+                localChat.value = defaultChatState();
+                initEmptyChat();
+                localChatList.value = page.props.chats.data;
+                chatToDelete.value = null;
+                closeModal();
+                toast.success('Chat deleted successfully!');
+            }
         }
       });
   }
 }
+
+const confirmChatDeletion = (chat_obj) => {
+    confirmingChatDeletion.value = true;
+    chatToDelete.value = chat_obj;
+};
+
+const closeModal = () => {
+    confirmingChatDeletion.value = false;
+    chatToDelete.value = null;
+};
 
 const truncatedMessage = (message) => {
   if (!message) return null;
@@ -267,18 +278,31 @@ const truncatedMessage = (message) => {
   return message.length > maxLength ? message.slice(0, maxLength) + '...' : message;
 }
 
+const initEmptyChat = () => {
+    localChat.value.messages.unshift({
+        from: 'bot',
+        message: "Hello! I am your personal assistant. How can I help you today?",
+    });
+};
 
 onMounted(() => {
     messageField.value.focus();
 
     scrollToBottom();
 
-    console.log(localChat);
-    console.log(chatProp);
+    console.log('ON MOUNT');
+    // console.log(localChatList.value);
+    // console.log(localChat.value);
+    // console.log(chatProp);
 
-    localChat.value.messages.unshift({
-        from: 'bot',
-        message: "Hello! I am your personal assistant. How can I help you today?",
+
+    initEmptyChat();
+
+    socket.on('connect', () => {
+        socketIOClientId = socket.id;
+        console.log('Connected with id:', socketIOClientId);
+        // startAskingQuestions();
+
     });
 
     socket.on('start', () => {
@@ -339,10 +363,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    console.log('UN MOUNT');
     console.log('Disconnected websocket: '+ socket.id);
 
     socket.disconnect();
-
 
 });
 
@@ -385,9 +409,9 @@ onUnmounted(() => {
                 <div class="max-h-[36rem] overflow-y-auto">
 
                     <div
-                        v-for="(conv_obj, index) in chats.data"
+                        v-for="(conv_obj, index) in localChatList"
                         :key="conv_obj.id"
-                        :class="{ 'bg-slate-50': chat && chat.data.chat_uuid === conv_obj.chat_uuid }"
+                        :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
                         @click="selectChat(conv_obj)"
                         class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
                     >
