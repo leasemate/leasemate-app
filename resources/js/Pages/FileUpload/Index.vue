@@ -53,14 +53,12 @@ onMounted(() => {
 
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileStatusUpdate', (e) => {
-            console.log('file-processed event..');
-
             router.reload({ only: ['uploaded_files'] });
         });
 });
 
 onBeforeUnmount(() => {
-    Echo.leaveChannel(`App.Models.User.${user.value.id}`);
+    Echo.leave(`App.Models.User.${user.value.id}`);
 });
 
 </script>
