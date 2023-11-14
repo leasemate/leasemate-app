@@ -99,9 +99,7 @@ onMounted(() => {
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
-            console.log("notification:");
-            console.log(notification);
-
+            // console.log("notification:");
             // console.log(notification);
 
             axios.get(route('notifications.show', notification.id))
@@ -125,7 +123,7 @@ onMounted(() => {
                 })
                 .catch(error => {
                     console.log(error);
-                    toast.error("error....");
+                    toast.error("Error: "+error);
                 });
         });
 });
@@ -133,7 +131,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
 
     if(user.value) {
-        console.log('LEAVE CHANNEL');
+        // console.log('LEAVE CHANNEL');
         Echo.leave(`App.Models.User.${user.value.id}`);
     }
 

@@ -1,14 +1,11 @@
 <script setup>
+import { ref } from "vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref } from "vue";
 
 import VueFilePond, { setOptions } from "vue-filepond";
 
 import "filepond/dist/filepond.min.css";
-// import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
-
-// import FilePondPluginImagePreview from "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js";
 
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
 

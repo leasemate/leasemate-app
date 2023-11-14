@@ -3,6 +3,12 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
+
+import VueFilePond, { setOptions } from "vue-filepond";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
+
+import "filepond/dist/filepond.min.css";
+
 import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 
@@ -49,6 +55,46 @@ const deleteFile = async () => {
     }
 }
 
+const FilePond = VueFilePond(FilePondPluginFileValidateType);
+const files = ref([]);
+
+let serverResponse = '';
+
+setOptions({
+    credits: [],
+    required: true,
+    allowMultiple: true,
+    allowRevert: false,
+    acceptedFileTypes: [
+        'application/pdf',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/gif',
+    ],
+    // files: files,
+    server: {
+        process: {
+            url: '/file-upload',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': page.props.csrf,
+            },
+            onerror: (response) => {
+                serverResponse = JSON.parse(response);
+            },
+        },
+    },
+    // labelFileProcessingComplete: "Upload Complete! Processing File...",
+    labelFileProcessingError: (error) => {
+        console.log(error);
+        if (serverResponse.errors && serverResponse.errors.upload_file) {
+            return serverResponse.errors.upload_file.join(' ');
+        }
+        return serverResponse.message;
+    },
+});
+
 onMounted(() => {
 
     Echo.private(`App.Models.User.${user.value.id}`)
@@ -78,6 +124,18 @@ onBeforeUnmount(() => {
                 >
                     <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i> Upload
                 </Link>
+            </div>
+
+            <div class="py-6">
+
+                <FilePond
+                    name="upload_file"
+                    ref="pond"
+                    class-name="my-file-upload"
+                    label-idle="Drag & Drop your PDF files here or <span class='filepond--label-action'>Browse</span>"
+                    v-model="files"
+                />
+
             </div>
 
             <div class="flex flex-col">
