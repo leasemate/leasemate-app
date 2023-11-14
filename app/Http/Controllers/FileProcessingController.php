@@ -40,9 +40,9 @@ class FileProcessingController extends Controller
 
             Log::info('Send notification: FileProcessingComplete:'.$file);
 
-            if(in_array($status, ['Extracting','Completed'])) {
+//            if(in_array($status, ['Extracting','Completed'])) {
                 $file->user->notify(new FileProcessingUpdate($file));
-            }
+//            }
 
             return response()->json(['status' => 'success']);
 

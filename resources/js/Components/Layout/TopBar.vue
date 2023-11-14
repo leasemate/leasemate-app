@@ -112,12 +112,14 @@ onMounted(() => {
                     localNotificationCount.value = response.data.total_unread_notifications;
                     localNotifications.value.unshift(notif);
 
-                    if(notif.data.file_status === 'Extracting') {
-                        console.log("INFO:::"+notif.data.file_name + ': ' + notif.data.file_status);
-                        toast.info(notif.data.file_name + ': ' + notif.data.file_status);
-                    } else {
-                        console.log("SUCCESS:::"+notif.data.file_name + ': ' + notif.data.file_status);
+                    if(notif.data.file_status === 'Completed') {
+                        // console.log("SUCCESS:::" + notif.data.file_name + ': ' + notif.data.file_status);
                         toast.success(notif.data.file_name + ': ' + notif.data.file_status);
+                    } else if(notif.data.file_status === 'Failed') {
+                        toast.error(notif.data.file_name + ': ' + notif.data.file_status);
+                    } else {
+                        // console.log("INFO:::"+notif.data.file_name + ': ' + notif.data.file_status);
+                        toast.info(notif.data.file_name + ': ' + notif.data.file_status);
                     }
 
                 })
