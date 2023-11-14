@@ -203,9 +203,9 @@ async function sendQuery(question) {
                 .then(function (response) {
                     console.log("Message Response");
                     console.log(response);
-                    router.visit(route('chats.show', chatSessionId), {
-                        preserveScroll: true,
-                    });
+                    // router.visit(route('chats.show', chatSessionId), {
+                    //     preserveScroll: true,
+                    // });
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -272,6 +272,9 @@ onMounted(() => {
     messageField.value.focus();
 
     scrollToBottom();
+
+    console.log(localChat);
+    console.log(chatProp);
 
     localChat.value.messages.unshift({
         from: 'bot',

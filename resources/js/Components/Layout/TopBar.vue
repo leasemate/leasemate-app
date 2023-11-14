@@ -94,8 +94,7 @@ onMounted(() => {
     // console.log('on mount top bar');
     initModeSetting();
 
-    console.log("onMount");
-    console.log(Echo.private('App.Models.User.' + user.value.id));
+    // console.log("onMount");
 
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
