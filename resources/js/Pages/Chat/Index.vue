@@ -486,6 +486,7 @@ onUnmounted(() => {
                                 style="resize: none;"
                                 :style="{ height: textareaHeight + 'px'}"
                                 placeholder="Type a message..."
+                                autocomplete="off"
                                 rows="1"
                                 ref="messageField"
                                 @keydown="handleKeyDown"
