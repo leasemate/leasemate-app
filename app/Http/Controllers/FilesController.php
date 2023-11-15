@@ -33,7 +33,7 @@ class FilesController extends Controller
             $files->onlyTrashed();
         }
 
-        $files = $files->paginate(2)->withQueryString();;
+        $files = $files->paginate(20)->withQueryString();;
 
         if(request()->has('page') && !$files->count()) {
             return redirect()->route('files.index', ($files->lastPage() == 1 ? [] : ['page' => $files->lastPage()]));
