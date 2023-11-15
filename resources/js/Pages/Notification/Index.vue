@@ -8,10 +8,23 @@ import {fileStatusClass} from "@/Composables/fileStatusClass.js";
 
 const { getFileStatusClass } = fileStatusClass();
 
+const page = usePage();
+const user = ref(page.props.auth.user);
+
 const { notifications } = defineProps({
     notifications: {
         type: Object,
     },
+});
+
+onMounted(() => {
+
+    Echo.private(`App.Models.User.${user.value.id}`)
+        .notification((notification) => {
+
+            router.reload({ only: ['notifications'] });
+
+        });
 });
 
 </script>

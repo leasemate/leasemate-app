@@ -10,6 +10,9 @@ class NotificationController extends Controller
 {
     public function index()
     {
+
+        auth()->user()->notifications->markAsRead();
+
         $notifications = auth()->user()->notifications()->paginate(10);
 
 //        dd($notifications);

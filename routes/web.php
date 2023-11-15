@@ -43,10 +43,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/test-notify', function() {
 
-        $file = File::find(16);
+        $file = File::find(85);
 
         $file->user->notify(new FileProcessingUpdate($file));
 
+//        $file->user->notify();
     });
 
 

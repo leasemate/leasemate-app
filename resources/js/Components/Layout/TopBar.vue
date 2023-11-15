@@ -99,6 +99,7 @@ onMounted(() => {
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
+            console.log('listening from topbar');
             // console.log("notification:");
             // console.log(notification);
 
