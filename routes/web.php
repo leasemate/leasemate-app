@@ -56,6 +56,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('files', FilesController::class);
 
+    Route::post('/files/{file}/restore', [FilesController::class, 'restore'])->name('files.restore');
+    Route::post('/files/{file}/prune', [FilesController::class, 'restore'])->name('files.restore');
+
+    
+
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');

@@ -29,11 +29,11 @@ class FilesController extends Controller
 
         $files = File::with('user')->orderBy('created_at', 'desc');
 
-        if($trashed_file_count && request()->has('show_deleted') && request('show_deleted') ) {
+        if($trashed_file_count && request()->has('archived') && request('archived') ) {
             $files->onlyTrashed();
         }
 
-        $files = $files->paginate(2);
+        $files = $files->paginate(2)->withQueryString();;
 
         if(request()->has('page') && !$files->count()) {
             return redirect()->route('files.index', ($files->lastPage() == 1 ? [] : ['page' => $files->lastPage()]));
@@ -49,7 +49,7 @@ class FilesController extends Controller
 
         return Inertia::render('Files/Index', [
             'uploaded_files' => $files,
-            'show_deleted'=>(int) request('show_deleted'),
+            'archived'=>(int) request('archived'),
             'trashed_file_count'=>(int)$trashed_file_count
         ]);
     }

@@ -23,7 +23,7 @@ const { uploaded_files } = defineProps({
     uploaded_files: {
         type: Object,
     },
-    show_deleted: {
+    archived: {
         type: Number,
     },
     trashed_file_count: {
@@ -165,18 +165,18 @@ onBeforeUnmount(() => {
         <div class="py-6">
             <div v-if="trashed_file_count" class="relative flex justify-end mb-4">
                 <Link
-                    :href="route('files.index', {show_deleted: show_deleted ? false : true })"
+                    :href="route('files.index', {archived: archived ? false : true })"
                     type="button"
                     class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
                 >
-                    {{ show_deleted ? "Current" : "Deleted"}} Files
+                    {{ archived ? "Current" : "Archived"}} Files
                 </Link>
             </div>
 
             <div class="py-6">
 
                 <FilePond
-                    v-if="!show_deleted"
+                    v-if="!archived"
                     name="upload_file"
                     ref="pond"
                     class-name="my-file-upload"
