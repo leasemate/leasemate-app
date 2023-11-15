@@ -176,7 +176,7 @@ class FilesController extends Controller
                 }
 
             } else {
-
+                $response = ReaiProcessor::deleteFile($file->stored_name);
                 $file->status = 'Deleted';
                 $file->save();
                 $file->delete();
