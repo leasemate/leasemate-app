@@ -25,11 +25,12 @@ class FilesController extends Controller
      */
     public function index()
     {
+        $trashed_file_count = File::onlyTrashed()->count();
 
         $files = File::with('user')->orderBy('created_at', 'desc');
 
-        if(request()->has('show_deleted') && request('show_deleted') ) {
-            $files->withTrashed();
+        if($trashed_file_count && request()->has('show_deleted') && request('show_deleted') ) {
+            $files->onlyTrashed();
         }
 
         $files = $files->paginate(5);
@@ -52,7 +53,8 @@ class FilesController extends Controller
 
         return Inertia::render('Files/Index', [
             'uploaded_files' => $files,
-            'show_deleted'=>(int) request('show_deleted')
+            'show_deleted'=>(int) request('show_deleted'),
+            'trashed_file_count'=>(int)$trashed_file_count
         ]);
     }
 

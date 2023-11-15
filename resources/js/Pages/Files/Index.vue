@@ -25,6 +25,9 @@ const { uploaded_files } = defineProps({
     },
     show_deleted: {
         type: Number,
+    },
+    trashed_file_count: {
+        type: Number
     }
 });
 
@@ -66,7 +69,7 @@ const deleteFile = async () => {
 
                 router.delete(route('files.destroy', fileToDelete.value.id), {
                     preserveScroll: true,
-                    only: ['uploaded_files'],
+                    // only: ['uploaded_files'],
                     onSuccess: () => {
                         fileToDelete.value = null;
                         deletingFileId.value = null;
@@ -141,8 +144,6 @@ setOptions({
 
 onMounted(() => {
 
-    console.log(window.location);
-
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileStatusUpdate', (e) => {
             router.reload({ only: ['uploaded_files'] });
@@ -162,7 +163,7 @@ onBeforeUnmount(() => {
         <template #header> Files </template>
 
         <div class="py-6">
-            <div class="relative flex justify-end mb-4">
+            <div v-if="trashed_file_count" class="relative flex justify-end mb-4">
                 <Link
                     :href="route('files.index', {show_deleted: show_deleted ? false : true })"
                     type="button"
@@ -257,7 +258,7 @@ onBeforeUnmount(() => {
 
                                             <div v-if="file.status == 'Deleted'">
 
-                                                Restore | Delete Permantely
+                                                Restore | Permanently Delete
 
                                             </div>
 
