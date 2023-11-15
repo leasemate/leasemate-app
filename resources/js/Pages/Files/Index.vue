@@ -13,11 +13,15 @@ import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 
 import Modal from "@/Components/Modal.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+import DangerLink from "@/Components/DangerLink.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
 import toast from "@/Stores/toast.js";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import SuccessLink from "@/Components/SuccessLink.vue";
+import PrimaryLink from "@/Components/PrimaryLink.vue";
 
 const { uploaded_files } = defineProps({
     uploaded_files: {
@@ -71,6 +75,7 @@ const deleteFile = async () => {
                     preserveScroll: true,
                     // only: ['uploaded_files'],
                     onSuccess: () => {
+                        fileStatuses[fileToDelete.value.id] = '';
                         fileToDelete.value = null;
                         deletingFileId.value = null;
                         resolve();
@@ -164,13 +169,14 @@ onBeforeUnmount(() => {
 
         <div class="py-6">
             <div v-if="trashed_file_count" class="relative flex justify-end mb-4">
-                <Link
+
+                <PrimaryLink
                     :href="route('files.index', {archived: archived ? false : true })"
-                    type="button"
-                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
                 >
                     {{ archived ? "Current" : "Archived"}} Files
-                </Link>
+
+                </PrimaryLink>
+
             </div>
 
             <div class="py-6">
@@ -222,9 +228,7 @@ onBeforeUnmount(() => {
                                         <th
                                             scope="col"
                                             class="p-3.5 text-sm text-start font-semibold"
-                                        >
-                                            Action
-                                        </th>
+                                        ></th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
@@ -249,17 +253,41 @@ onBeforeUnmount(() => {
                                               :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status)">
                                             {{ fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status }}
                                           </span>
+
+                                            <div
+                                                v-if="fileStatuses[file.id] === 'Deleting'"
+                                                class="ml-2 spinner-border animate-spin inline-block w-3 h-3 border-[2px] border-l-transparent border-red-400 rounded-full">
+                                                <span class="hidden">Loading...</span>
+                                            </div>
                                         </td>
 
                                         <td class="p-3.5">
 
-                                            <button v-if="file.status == 'Pending' || file.status == 'Completed'" @click="confirmFileDeletion(file)">
-                                                <i class="bx bx-trash text-lg hover:text-red-400"></i>
-                                            </button>
+                                            <DangerButton
+                                                v-if="['Pending', 'Completed'].includes(file.status)"
+                                                @click="confirmFileDeletion(file)"
+                                                >
+                                                <i class="bx bx-trash text-lg"></i>
+                                            </DangerButton>
 
                                             <div v-if="file.status == 'Deleted'">
 
-                                                Restore | Permanently Delete
+                                                <SuccessLink
+                                                    :href="route('files.restore', file)"
+                                                    method="post"
+                                                    as="button"
+                                                >
+                                                    Restore
+                                                </SuccessLink>
+
+<!--                                                <DangerLink-->
+<!--                                                    :href="route('files.prune', file)"-->
+<!--                                                    method="post"-->
+<!--                                                    as="button"-->
+<!--                                                    class="ml-2"-->
+<!--                                                >-->
+<!--                                                    Permanently Delete-->
+<!--                                                </DangerLink>-->
 
                                             </div>
 
@@ -290,11 +318,12 @@ onBeforeUnmount(() => {
                             class="ml-3"
                             @click="deleteFile()"
                         >
-                            Delete File
+                            Delete
                         </DangerButton>
                     </div>
                 </div>
             </Modal>
+
 
         </div>
     </AuthenticatedLayout>

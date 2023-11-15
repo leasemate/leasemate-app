@@ -33,6 +33,10 @@ class FilesController extends Controller
             $files->onlyTrashed();
         }
 
+        if(!$trashed_file_count && request()->has('archived')) {
+            return redirect()->route('files.index');
+        }
+
         $files = $files->paginate(20)->withQueryString();;
 
         if(request()->has('page') && !$files->count()) {
@@ -101,6 +105,53 @@ class FilesController extends Controller
 
     }
 
+    public function restore(File $file)
+    {
+
+        try {
+
+            $file->status = 'Completed';
+//            $file->save();
+            $file->restore();
+
+            return redirect()->back()->with('success', "File restored");
+
+        } catch(\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+
+        }
+
+    }
+
+    public function prune(File $file)
+    {
+
+            try {
+                Storage::disk('s3')->delete($file->stored_name);
+                $response = ReaiProcessor::deleteFile($file->stored_name);
+
+                if($response->ok()) {
+
+                    $file->forceDelete();
+
+                    return redirect()->back()->with('success', "File deleted");
+
+                } elseif($response->serverError() || $response->clientError()) {
+
+                    return redirect()->back()->with('error', $response->status().": ".$response->reason());
+                } else {
+
+                    return redirect()->back()->with('error', "Error deleting file");
+                }
+
+            } catch(\Exception $e) {
+
+                return redirect()->back()->with('error', $e->getMessage());
+
+            }
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -119,33 +170,19 @@ class FilesController extends Controller
             if(in_array($file->status, ['Pending','Failed'])) {
 
                 if(Storage::disk('s3')->exists($file->stored_name)) {
+
                     Storage::disk('s3')->delete($file->stored_name);
                     $file->forceDelete();
-
-                    return redirect()->back()->with('success', "File deleted");
                 }
 
             } else {
 
-                $response = ReaiProcessor::deleteFile($file->stored_name);
-
-                if($response->ok()) {
-
-                    $file->status = 'Deleted';
-                    $file->save();
-                    $file->delete();
-
-                    return redirect()->back()->with('success', "File deleted");
-
-                } elseif($response->serverError() || $response->clientError()) {
-
-                    return redirect()->back()->with('error', $response->status().": ".$response->reason());
-                } else {
-
-                    return redirect()->back()->with('error', "Error deleting file");
-                }
-
+                $file->status = 'Deleted';
+                $file->save();
+                $file->delete();
             }
+
+            return redirect()->back()->with('success', "File deleted");
 
         } catch(\Exception $e) {
 
