@@ -178,7 +178,7 @@ async function sendQuery(question) {
         }
     };
 
-    console.log(data);
+    // console.log(data);
 
     try {
 
@@ -187,10 +187,9 @@ async function sendQuery(question) {
         await axios.post(post_url, data)
             .then(function (response) {
                //  console.log('send query post response:');
-               // console.log(response.data);
 
                axios.post(route('messages.store', chatSessionId), {
-                    message: response.data
+                    message: response.data.text
                 })
                 .then(function (response) {
                     // console.log("Message Response");
@@ -290,7 +289,7 @@ onMounted(() => {
 
     scrollToBottom();
 
-    console.log('ON MOUNT');
+    // console.log('ON MOUNT');
     // console.log(localChatList.value);
     // console.log(localChat.value);
     // console.log(chatProp);
@@ -300,13 +299,13 @@ onMounted(() => {
 
     socket.on('connect', () => {
         socketIOClientId = socket.id;
-        console.log('Connected with id:', socketIOClientId);
+        // console.log('Connected with id:', socketIOClientId);
         // startAskingQuestions();
 
     });
 
     socket.on('start', () => {
-        console.log('START!!!');
+        // console.log('START!!!');
     });
 
     socket.on('token', (token) => {
@@ -344,12 +343,12 @@ onMounted(() => {
     });
 
     socket.on('sourceDocuments', (sourceDocuments) => {
-        console.log('sourceDocuments:', sourceDocuments);
+        // console.log('sourceDocuments:', sourceDocuments);
     });
 
     socket.on('end', () => {
 
-        console.log("END!!!");
+        // console.log("END!!!");
 
         // Print any remaining output when the stream ends
         if (accumulatedOutput.trim().length > 0) {
@@ -363,8 +362,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    console.log('UN MOUNT');
-    console.log('Disconnected websocket: '+ socket.id);
+    // console.log('UN MOUNT');
+    // console.log('Disconnected websocket: '+ socket.id);
 
     socket.disconnect();
 
