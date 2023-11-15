@@ -11,6 +11,7 @@ use App\Models\File;
 //use App\Services\ReaiProcessor;
 use App\Notifications\FileProcessingUpdate;
 use App\Notifications\FileProcessingStarted;
+use App\Services\ZepApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -99,31 +100,45 @@ class FilesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(File $fileUpload)
+    public function destroy(File $file)
     {
         try {
 
-            \Log::info($fileUpload);
-
+            \Log::info($file);
             \Log::info("stored name");
-            \Log::info($fileUpload->stored_name);
+            \Log::info($file->stored_name);
 
-            $response = ReaiProcessor::deleteFile($fileUpload->stored_name);
+            if( ! in_array($file->status, ['Pending', 'Completed'])) {
+                throw new \Exception("File cannot be deleted");
+            }
 
-            \Log::info($response);
+            if(in_array($file->status, ['Pending','Failed'])) {
 
-            if($response->ok()) {
+                if(Storage::disk('s3')->exists($file->stored_name)) {
+                    Storage::disk('s3')->delete($file->stored_name);
+                    $file->forceDelete();
 
-                $fileUpload->delete();
+                    return redirect()->back()->with('success', "File deleted");
+                }
 
-                return redirect()->back()->with('success', "File deleted");
-
-            } elseif($response->serverError() || $response->clientError()) {
-
-                return redirect()->back()->with('error', $response->status().": ".$response->reason());
             } else {
 
-                return redirect()->back()->with('error', "Error deleting file");
+                $response = ReaiProcessor::deleteFile($file->stored_name);
+
+                if($response->ok()) {
+
+                    $file->delete();
+
+                    return redirect()->back()->with('success', "File deleted");
+
+                } elseif($response->serverError() || $response->clientError()) {
+
+                    return redirect()->back()->with('error', $response->status().": ".$response->reason());
+                } else {
+
+                    return redirect()->back()->with('error', "Error deleting file");
+                }
+
             }
 
         } catch(\Exception $e) {

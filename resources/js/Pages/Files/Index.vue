@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 
@@ -17,6 +17,7 @@ import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
+import toast from "@/Stores/toast.js";
 
 const { uploaded_files } = defineProps({
     uploaded_files: {
@@ -38,22 +39,50 @@ const confirmFileDeletion = (file_obj) => {
 
 const closeModal = () => {
     confirmingFileDeletion.value = false;
-    fileToDelete.value = null;
+    // fileToDelete.value = null;
 };
+
+const deletingFileId = ref(null);
+const fileStatuses = reactive({});
 
 const deleteFile = async () => {
 
-    console.log(fileToDelete.value);
+    // console.log(fileToDelete.value);
+    // console.log(fileToDelete.value.id);
+
     if(fileToDelete.value) {
-        router.delete(route('file-upload.destroy', fileToDelete.value.id), {
-            preserveScroll: true,
-            onSuccess: () => {
-                fileToDelete.value = null;
-                closeModal();
-            }
-        });
+
+        deletingFileId.value = fileToDelete.value.id;
+        fileStatuses[fileToDelete.value.id] = 'Deleting';
+
+        closeModal();
+
+        try {
+
+            await new Promise((resolve, reject) => {
+
+                router.delete(route('files.destroy', fileToDelete.value.id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        fileToDelete.value = null;
+                        deletingFileId.value = null;
+                        resolve();
+                    },
+                    onError: () => {
+                        reject(new Error("Failed to delete file"));
+                    }
+                });
+            });
+
+        } catch (error) {
+            toast.error(error);
+            console.log(error);
+        }
+
     }
 }
+
+
 
 const FilePond = VueFilePond(FilePondPluginFileValidateType);
 const files = ref([]);
@@ -149,7 +178,7 @@ onBeforeUnmount(() => {
 
             </div>
 
-            <div class="flex flex-col">
+            <div v-if="uploaded_files.data.length" class="flex flex-col">
                 <div class="overflow-x-auto">
                     <div class="inline-block min-w-full align-middle">
                         <div class="overflow-visible">
@@ -207,11 +236,10 @@ onBeforeUnmount(() => {
                                             {{ file.size_readable }}
                                         </td>
                                         <td class="p-3.5 text-sm text-gray-700 dark:text-gray-400">
-
                                           <span
                                               class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                                              :class="getFileStatusClass(file.status)">
-                                            {{file.status }}
+                                              :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status)">
+                                            {{ fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status }}
                                           </span>
                                         </td>
 
@@ -220,7 +248,6 @@ onBeforeUnmount(() => {
                                             <button v-if="file.status == 'Pending' || file.status == 'Completed'" @click="confirmFileDeletion(file)">
                                                 <i class="bx bx-trash text-lg hover:text-red-400"></i>
                                             </button>
-
 
                                         </td>
                                     </tr>

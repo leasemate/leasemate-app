@@ -27,7 +27,7 @@ class FileProcessingController extends Controller
 
             $file = File::withoutGlobalScope(UserScope::class)->where('stored_name', $s3_object)->first();
 
-            if(!$file) throw new \Exception('File not found');
+            if(!$file) throw new \Exception('File not found', 404);
 
             $file->bot_doc_id = $document_id;
             $file->status = $status;
