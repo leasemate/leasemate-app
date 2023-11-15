@@ -63,6 +63,7 @@ const deleteFile = async () => {
 
                 router.delete(route('files.destroy', fileToDelete.value.id), {
                     preserveScroll: true,
+                    only: ['uploaded_files'],
                     onSuccess: () => {
                         fileToDelete.value = null;
                         deletingFileId.value = null;
@@ -139,6 +140,7 @@ onMounted(() => {
 
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileStatusUpdate', (e) => {
+            console.log("LISten.... FileStatusUpdate");
             router.reload({ only: ['uploaded_files'] });
         });
 });
