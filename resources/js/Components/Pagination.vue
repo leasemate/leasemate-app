@@ -14,7 +14,7 @@ defineProps({
 
     <div>
 
-        <div v-if="dataset.links.length > 3" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <div v-if="dataset.total > 0" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
 
             <div class="flex flex-1 justify-between sm:hidden">
                 <div>
@@ -63,7 +63,7 @@ defineProps({
                         results
                     </p>
                 </div>
-                <div>
+                <div v-if="dataset.links.length > 3">
                     <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 
                         <Link

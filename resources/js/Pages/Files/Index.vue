@@ -169,13 +169,14 @@ onBeforeUnmount(() => {
                     type="button"
                     class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
                 >
-                    {{ show_deleted ? "Hide" : "Show"}} Deleted Files
+                    {{ show_deleted ? "Current" : "Deleted"}} Files
                 </Link>
             </div>
 
             <div class="py-6">
 
                 <FilePond
+                    v-if="!show_deleted"
                     name="upload_file"
                     ref="pond"
                     class-name="my-file-upload"

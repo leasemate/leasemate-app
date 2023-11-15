@@ -33,14 +33,10 @@ class FilesController extends Controller
             $files->onlyTrashed();
         }
 
-        $files = $files->paginate(5);
-
-
-//        $user = Auth::user();
-//        $user->notify(new FileProcessingComplete($files->first()));
+        $files = $files->paginate(2);
 
         if(request()->has('page') && !$files->count()) {
-            return redirect()->route('files.index', ['page' => $files->lastPage()]);
+            return redirect()->route('files.index', ($files->lastPage() == 1 ? [] : ['page' => $files->lastPage()]));
         }
 
         $transformed = $files->getCollection()->map(function ($file) {

@@ -382,7 +382,7 @@ onUnmounted(() => {
 
         <div class="card">
 <!--            h-[52rem]-->
-            <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto bg-gray-100 rounded-lg bg-white">
+            <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto rounded-lg">
 
             <!-- Left column for list of chats -->
             <div class=" w-1/3 p-4">
