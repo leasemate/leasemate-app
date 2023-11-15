@@ -26,9 +26,14 @@ class FilesController extends Controller
     public function index()
     {
 
-        $files = File::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $files = File::with('user')->orderBy('created_at', 'desc');
+
+        if(request()->has('show_deleted') && request('show_deleted') ) {
+            $files->withTrashed();
+        }
+
+        $files = $files->paginate(5);
+
 
 //        $user = Auth::user();
 //        $user->notify(new FileProcessingComplete($files->first()));
@@ -46,7 +51,8 @@ class FilesController extends Controller
         $files->setCollection($transformed);
 
         return Inertia::render('Files/Index', [
-            'uploaded_files' => $files
+            'uploaded_files' => $files,
+            'show_deleted'=>(int) request('show_deleted')
         ]);
     }
 
@@ -127,6 +133,8 @@ class FilesController extends Controller
 
                 if($response->ok()) {
 
+                    $file->status = 'Deleted';
+                    $file->save();
                     $file->delete();
 
                     return redirect()->back()->with('success', "File deleted");

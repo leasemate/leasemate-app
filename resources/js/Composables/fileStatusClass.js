@@ -9,6 +9,7 @@ export function fileStatusClass() {
         'Completed': 'bg-green-50 text-green-700 ring-green-600/20',
         'Failed': 'bg-red-50 text-red-800 ring-red-600/20',
         'Deleting': 'bg-red-50 text-red-800 ring-red-600/20',
+        'Deleted': 'bg-red-50 text-red-800 ring-red-600/20',
     };
 
     function getFileStatusClass(fileStatus) {

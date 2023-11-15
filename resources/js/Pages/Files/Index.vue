@@ -23,6 +23,9 @@ const { uploaded_files } = defineProps({
     uploaded_files: {
         type: Object,
     },
+    show_deleted: {
+        type: Number,
+    }
 });
 
 const page = usePage();
@@ -138,9 +141,10 @@ setOptions({
 
 onMounted(() => {
 
+    console.log(window.location);
+
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileStatusUpdate', (e) => {
-            console.log("LISten.... FileStatusUpdate");
             router.reload({ only: ['uploaded_files'] });
         });
 });
@@ -158,15 +162,15 @@ onBeforeUnmount(() => {
         <template #header> Files </template>
 
         <div class="py-6">
-<!--            <div class="relative flex justify-end mb-4">-->
-<!--                <Link-->
-<!--                    :href="route('file-upload.create')"-->
-<!--                    type="button"-->
-<!--                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"-->
-<!--                >-->
-<!--                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i> Upload-->
-<!--                </Link>-->
-<!--            </div>-->
+            <div class="relative flex justify-end mb-4">
+                <Link
+                    :href="route('files.index', {show_deleted: show_deleted ? false : true })"
+                    type="button"
+                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
+                >
+                    {{ show_deleted ? "Hide" : "Show"}} Deleted Files
+                </Link>
+            </div>
 
             <div class="py-6">
 
@@ -250,6 +254,12 @@ onBeforeUnmount(() => {
                                             <button v-if="file.status == 'Pending' || file.status == 'Completed'" @click="confirmFileDeletion(file)">
                                                 <i class="bx bx-trash text-lg hover:text-red-400"></i>
                                             </button>
+
+                                            <div v-if="file.status == 'Deleted'">
+
+                                                Restore | Delete Permantely
+
+                                            </div>
 
                                         </td>
                                     </tr>
