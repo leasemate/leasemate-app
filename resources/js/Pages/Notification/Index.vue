@@ -6,6 +6,8 @@ import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 import {fileStatusClass} from "@/Composables/fileStatusClass.js";
 
+import { EventBus } from "@/Services/event-bus.js";
+
 const { getFileStatusClass } = fileStatusClass();
 
 const page = usePage();
@@ -19,12 +21,16 @@ const { notifications } = defineProps({
 
 onMounted(() => {
 
-    Echo.private(`App.Models.User.${user.value.id}`)
-        .notification((notification) => {
+    EventBus.on('new-notification', (notification) => {
 
-            router.reload({ only: ['notifications'] });
+        router.reload({ only: ['notifications'] });
 
-        });
+    });
+
+});
+
+onBeforeUnmount(() => {
+    EventBus.off('new-notification', () => {});
 });
 
 </script>

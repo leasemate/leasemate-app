@@ -7,6 +7,8 @@ import { fileStatusClass } from "@/Composables/fileStatusClass.js";
 import axios from "axios";
 import toast from "@/Stores/toast";
 
+import { EventBus } from "@/Services/event-bus.js";
+
 const page = usePage();
 const user = ref(page.props.auth.user);
 
@@ -99,7 +101,6 @@ onMounted(() => {
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
-            console.log('listening from topbar');
             // console.log("notification:");
             // console.log(notification);
 
@@ -108,6 +109,7 @@ onMounted(() => {
                     // console.log(response.data);
                     let notif = response.data.notification;
 
+                    console.log(response.data.total_unread_notifications);
                     localNotificationCount.value = response.data.total_unread_notifications;
                     localNotifications.value.unshift(notif);
 
@@ -126,6 +128,9 @@ onMounted(() => {
                     console.log(error);
                     toast.error("Error: "+error);
                 });
+
+            EventBus.emit('new-notification', notification);
+
         });
 });
 

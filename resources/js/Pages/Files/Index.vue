@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
                                         <td class="p-3.5">
 
                                             <DangerButton
-                                                v-if="['Pending', 'Completed'].includes(file.status)"
+                                                v-if="['Pending', 'Completed', 'Failed'].includes(file.status)"
                                                 @click="confirmFileDeletion(file)"
                                                 >
                                                 <i class="bx bx-trash text-lg"></i>
