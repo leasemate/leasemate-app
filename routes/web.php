@@ -24,6 +24,13 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/test-postgres', function() {
+    
+    $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');
+
+    dd($postgres);
+
+});
 
 //Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth'])->group(function () {
@@ -49,7 +56,6 @@ Route::middleware(['auth'])->group(function () {
 
 //        $file->user->notify();
     });
-
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
