@@ -112,11 +112,7 @@ Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
 const notificationStore = useNotificationStore();
 
 onBeforeMount(() => {
-
-    console.log('AuthenticatedLayout.vue before mount');
-
     notificationStore.setInitialData(page.props.my_notifications, page.props.notification_count);
-
 });
 
 onMounted(() => {
@@ -129,17 +125,11 @@ onMounted(() => {
     window.addEventListener('click', closeDropdownOutsideClick);
 
     feather.replace();
-
-    console.log('AuthenticatedLayout.vue mounted');
-    console.log(notificationStore.count);
-
 });
 
 
 onBeforeUnmount(() => {
-
     window.removeEventListener('click', closeDropdownOutsideClick);
-
 });
 
 </script>
