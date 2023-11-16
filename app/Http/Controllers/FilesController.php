@@ -163,7 +163,7 @@ class FilesController extends Controller
             \Log::info("stored name");
             \Log::info($file->stored_name);
 
-            if( ! in_array($file->status, ['Pending', 'Completed'])) {
+            if( ! in_array($file->status, ['Pending', 'Completed', 'Failed'])) {
                 throw new \Exception("File cannot be deleted");
             }
 
