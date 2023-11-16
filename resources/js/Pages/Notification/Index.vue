@@ -7,6 +7,7 @@ import Pagination from "@/Components/Pagination.vue";
 import {fileStatusClass} from "@/Composables/fileStatusClass.js";
 
 import { EventBus } from "@/Services/event-bus.js";
+import { useNotificationStore } from "@/Stores/notificationStore.js";
 
 const { getFileStatusClass } = fileStatusClass();
 
@@ -19,18 +20,22 @@ const { notifications } = defineProps({
     },
 });
 
-onMounted(() => {
-
-    EventBus.on('new-notification', (notification) => {
-
-        router.reload({ only: ['notifications'] });
-
+const notificationStore = useNotificationStore();
+const handleNewNotification = (notification) => {
+    router.reload({
+        only: ['notifications'],
+        onSuccess: (page) => {
+            notificationStore.count = page.props.notification_count;
+        }
     });
+}
 
+onMounted(() => {
+   EventBus.on('new-notification', handleNewNotification);
 });
 
 onBeforeUnmount(() => {
-    EventBus.off('new-notification', () => {});
+    EventBus.off('new-notification', handleNewNotification);
 });
 
 </script>

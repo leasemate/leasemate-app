@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import {ref, computed, onMounted, onBeforeUnmount, nextTick, onBeforeMount} from 'vue';
 import {router, usePage} from '@inertiajs/vue3'
 
 import TopBar from "@/Components/Layout/TopBar.vue";
@@ -11,6 +11,8 @@ import feather from "feather-icons";
 import {createPopper} from "@popperjs/core";
 import GlobalValidation from "@/Components/Layout/GlobalValidation.vue";
 import ToastList from "@/Components/ToastList.vue";
+
+import { useNotificationStore } from "@/Stores/notificationStore.js";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -31,13 +33,17 @@ const dropdownEvent = (elem, place) => {
                 });
 
                 if (subitem.classList.contains("show") != true) {
-                    item.querySelector(".dropdown-menu").classList.remove("block")
-                    item.querySelector(".dropdown-menu").classList.add("hidden")
+                    if(item.querySelector(".dropdown-menu")) {
+                        item.querySelector(".dropdown-menu").classList.remove("block")
+                        item.querySelector(".dropdown-menu").classList.add("hidden")
+                    }
                 } else {
                     dismissDropdownMenu()
-                    item.querySelector(".dropdown-menu").classList.add("block")
-                    item.querySelector(".dropdown-menu").classList.remove("hidden")
-                    if (item.querySelector(".dropdown-menu").classList.contains("block")) {
+                    if(item.querySelector(".dropdown-menu")) {
+                        item.querySelector(".dropdown-menu").classList.add("block")
+                        item.querySelector(".dropdown-menu").classList.remove("hidden")
+                    }
+                    if (item.querySelector(".dropdown-menu") && item.querySelector(".dropdown-menu").classList.contains("block")) {
                         subitem.classList.add("show")
                     } else {
                         subitem.classList.remove("show")
@@ -103,6 +109,16 @@ Array.from(document.querySelectorAll(".dropdown-toggle")).forEach( item => {
     }
 });
 
+const notificationStore = useNotificationStore();
+
+onBeforeMount(() => {
+
+    console.log('AuthenticatedLayout.vue before mount');
+
+    notificationStore.setInitialData(page.props.my_notifications, page.props.notification_count);
+
+});
+
 onMounted(() => {
 
     dropdownEvent('.dropdown', 'bottom-start');
@@ -114,7 +130,8 @@ onMounted(() => {
 
     feather.replace();
 
-
+    console.log('AuthenticatedLayout.vue mounted');
+    console.log(notificationStore.count);
 
 });
 

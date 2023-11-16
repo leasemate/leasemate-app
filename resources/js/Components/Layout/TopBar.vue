@@ -8,15 +8,17 @@ import axios from "axios";
 import toast from "@/Stores/toast";
 
 import { EventBus } from "@/Services/event-bus.js";
+import { useNotificationStore } from "@/Stores/notificationStore.js";
 
 const page = usePage();
 const user = ref(page.props.auth.user);
+const notificationStore = useNotificationStore();
 
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 const { getFileStatusClass } = fileStatusClass();
 
-const localNotificationCount = ref(page.props.notification_count);
-const localNotifications = ref(page.props.my_notifications);
+// const localNotificationCount = ref(page.props.notification_count);
+// const localNotifications = ref(page.props.my_notifications);
 
 const toggleMenu = (event) => {
     event.preventDefault();
@@ -78,7 +80,7 @@ const markAsRead = (notification) => {
             .then(response => {
                 if (response.status === 200) {
                     notification.read_at = response.data.read_at;
-                    localNotificationCount.value = response.data.total_unread_notifications;
+                    notificationStore.count = response.data.total_unread_notifications;
                 }
             })
             .catch(error => {
@@ -96,36 +98,27 @@ onMounted(() => {
     // console.log('on mount top bar');
     initModeSetting();
 
-    // console.log("onMount");
-
     Echo.private(`App.Models.User.${user.value.id}`)
         .notification((notification) => {
 
-            // console.log("notification:");
-            // console.log(notification);
-
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
-                    // console.log(response.data);
-                    let notif = response.data.notification;
 
-                    console.log(response.data.total_unread_notifications);
-                    localNotificationCount.value = response.data.total_unread_notifications;
-                    localNotifications.value.unshift(notif);
+                    const notif = response.data.notification;
+
+                    notificationStore.count = response.data.total_unread_notifications;
+                    notificationStore.add(notif);
 
                     if(notif.data.file_status === 'Completed') {
-                        // console.log("SUCCESS:::" + notif.data.file_name + ': ' + notif.data.file_status);
                         toast.success(notif.data.file_name + ': ' + notif.data.file_status);
                     } else if(notif.data.file_status === 'Failed') {
                         toast.error(notif.data.file_name + ': ' + notif.data.file_status);
                     } else {
-                        // console.log("INFO:::"+notif.data.file_name + ': ' + notif.data.file_status);
                         toast.info(notif.data.file_name + ': ' + notif.data.file_status);
                     }
 
                 })
                 .catch(error => {
-                    console.log(error);
                     toast.error("Error: "+error);
                 });
 
@@ -135,12 +128,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-
     if(user.value) {
-        // console.log('LEAVE CHANNEL');
         Echo.leave(`App.Models.User.${user.value.id}`);
     }
-
 });
 
 
@@ -245,23 +235,23 @@ onBeforeUnmount(() => {
                                 <i data-feather="bell" class="h-5 w-5"></i>
                             </button>
                             <span
-                                v-if="localNotificationCount"
-                                class="absolute text-xs px-1.5 bg-red-500 text-white font-medium rounded-full left-6 top-2.5 z-40">{{ localNotificationCount }}</span>
+                                v-if="notificationStore.count"
+                                class="absolute text-xs px-1.5 bg-red-500 text-white font-medium rounded-full left-6 top-2.5 z-40">{{ notificationStore.count }}</span>
                         </div>
-                        <div class="dropdown-menu absolute z-50 hidden w-80 list-none rounded bg-white shadow dark:bg-zinc-800 " id="notification">
+                        <div v-if="notificationStore.notifications.length" class="dropdown-menu absolute z-50 hidden w-80 list-none rounded bg-white shadow dark:bg-zinc-800 " id="notification">
                             <div class="border border-gray-50 dark:border-gray-700 rounded" aria-labelledby="notification">
                                 <div class="grid grid-cols-12 p-4">
                                     <div class="col-span-6">
                                         <h6 class="m-0 text-gray-700 dark:text-gray-100"> Notifications </h6>
                                     </div>
                                     <div class="col-span-6 justify-self-end">
-                                        <Link :href="route('notifications.index')" class="text-xs underline dark:text-gray-400"> Unread ({{ localNotificationCount }})</Link>
+                                        <Link :href="route('notifications.index')" class="text-xs underline dark:text-gray-400"> Unread ({{ notificationStore.count }})</Link>
                                     </div>
                                 </div>
                                 <simplebar class="max-h-56" data-simplebar>
                                     <div>
                                         <a
-                                            v-for="notification in localNotifications"
+                                            v-for="notification in notificationStore.notifications"
                                             class="text-reset notification-item cursor-pointer"
                                             @click.stop="markAsRead(notification)"
                                         >

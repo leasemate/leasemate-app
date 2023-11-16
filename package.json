@@ -84,6 +84,7 @@
         "nice-select2": "^2.1.0",
         "nouislider": "^15.6.1",
         "pdfmake": "^0.1.65",
+        "pinia": "^2.1.7",
         "plyr": "^3.7.8",
         "postcss-import": "^14.1.0",
         "postcss-nested": "^5.0.6",
