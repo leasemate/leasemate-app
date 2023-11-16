@@ -109,7 +109,7 @@ onMounted(() => {
 
                     <li>
 
-                        <Link :href="route('dashboard')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 hover:bg-violet-50 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                        <Link :href="route('dashboard')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 hover:bg-indigo-50 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="home"></i>
                             <span data-key="t-dashboard"> Dashboard</span>
                         </Link>
@@ -132,7 +132,7 @@ onMounted(() => {
                         <!--                        </ul>-->
 <!--                    </li>-->
                     <li>
-                        <Link :href="route('chats.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                        <Link :href="route('chats.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 hover:bg-indigo-50 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="message-circle"></i>
                             <span data-key="t-chat"> Chat</span>
                         </Link>
@@ -145,7 +145,7 @@ onMounted(() => {
 <!--                            <span data-key="t-apps"> Files</span>-->
 <!--                        </a>-->
 
-                        <Link :href="route('files.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                        <Link :href="route('files.index')" class="pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 hover:bg-indigo-50 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="file-text"></i>
                             <span data-key="t-file-upload"> Files</span>
                         </Link>

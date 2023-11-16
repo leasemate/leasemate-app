@@ -1,6 +1,5 @@
 <script setup>
-
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 
@@ -147,6 +146,17 @@ setOptions({
     },
 });
 
+const userWatcher = watch(
+    user,
+    (newUser, oldUser) => {
+        if (oldUser) {
+            // Leave the channel when the user changes or becomes null/undefined
+            Echo.leave(`App.Models.User.${oldUser.id}`);
+        }
+    },
+    { immediate: false } // Set to true if you want to leave on component mount
+);
+
 onMounted(() => {
 
     Echo.private(`App.Models.User.${user.value.id}`)
@@ -156,7 +166,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    Echo.leave(`App.Models.User.${user.value.id}`);
+    if(user.value) {
+        Echo.leave(`App.Models.User.${user.value.id}`);
+    }
 });
 
 </script>
