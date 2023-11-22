@@ -173,6 +173,7 @@ return [
         App\Providers\ZepApiServiceProvider::class,
         App\Providers\FlowiseApiServiceProvider::class,
 
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -187,7 +188,10 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-         'ReaiProcessor' => App\Facades\ReaiProcessor::class
+        'ReaiProcessor' => App\Facades\ReaiProcessor::class,
+        'Jwt' => Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
     ])->toArray(),
 
 ];

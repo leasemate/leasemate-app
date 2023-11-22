@@ -74,6 +74,7 @@
         "inputmask": "^5.0.7",
         "jquery-knob": "^1.2.11",
         "jquery-sparkline": "^2.4.0",
+        "jsonwebtoken": "^9.0.2",
         "jsvectormap": "1.4.2",
         "jszip": "^3.2.2",
         "laravel-vue-pagination": "^4.1.1",

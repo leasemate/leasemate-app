@@ -41,7 +41,6 @@ class ChatController extends Controller
                 $zep_session_data= [
                     'session_id' => (string) $chat_uuid,
                     'user_id' => (string) auth()->user()->id,
-//                    'user_id' => "12",
                 ];
 
                 ZepApi::createSession($zep_session_data);
@@ -64,7 +63,7 @@ class ChatController extends Controller
 
             return response()->json([
                 'error' => $e->getMessage(),
-            ], $e->getCode());
+            ], ($e->getCode()?: 500));
 
         }
     }

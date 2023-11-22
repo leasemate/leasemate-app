@@ -19,7 +19,7 @@ const page = usePage();
 const user = ref(page.props.auth.user);
 
 //socket connection
-const socket = socketIOClient("https://flowise-3n4j.onrender.com");  // Replace with your Flowise URL
+const socket = socketIOClient(import.meta.env.VITE_WEBSOCKET_CHAT_API_BASE_URL);
 const CHUNK_SIZE = 5;  // Set the chunk size as per your requirement
 let socketIOClientId = '';
 let chatSessionId = '';
@@ -122,12 +122,12 @@ const sendMessage = async () => {
         })
             .then(function (response) {
 
-                console.log("Chat Response");
-                console.log(response);
+                // console.log("Chat Response");
+                // console.log(response);
 
                 chatSessionId = response.data.chat.chat_uuid;
 
-                console.log(chatSessionId);
+                // console.log(chatSessionId);
 
                 localChat.value.messages.push({
                     from: 'user',
@@ -155,16 +155,20 @@ const sendMessage = async () => {
             })
             .catch(function (error) {
                 console.log(error);
+                toast.error(error.message);
+
                 isSending.value = false;
-                errorMessage.value = error.response.data.error;
+                errorMessage.value = (error.response.data.error?error.response.data.error:error.message);
             });
 
     }
 }
 
-async function sendQuery(question) {
+const sendQuery = async (question) => {
 
     isSending.value = true;
+    errorMessage.value = '';
+
     // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
     let user_id = user.value.id;
     // let user_id = 24;
@@ -172,19 +176,27 @@ async function sendQuery(question) {
     const data = {
         question: question, // Use the provided question
         socketIOClientId: socketIOClientId,
-        overrideConfig: {
-            sessionId: chatSessionId,
-            systemMessage: `You are a helpful assistant. You search for information contained in various sources using your available tools. If you do not know the answer, tell them. Do not guess. Pass the user_id ${user_id} to all custom tools.`
-        }
+        chatSessionId: chatSessionId,
     };
 
     // console.log(data);
 
     try {
 
-        const post_url = import.meta.env.VITE_FLOWISE_API_BASE_URL + import.meta.env.VITE_FLOWISE_API_PREDICTION_ENDPOINT + "/" + import.meta.env.VITE_FLOWISE_API_CHAT_APP_ID;
+        const post_url = import.meta.env.VITE_WEBSOCKET_CHAT_API_BASE_URL + import.meta.env.VITE_WEBSOCKET_CHAT_API_CHAT_ENDPOINT;
 
-        await axios.post(post_url, data)
+        // console.log('jwt token');
+        // console.log(user.value.jwt_token);
+
+        if( ! user.value.jwt_token) {
+            await refreshToken();
+        }
+
+        await axios.post(post_url, data, {
+                headers: {
+                    'Authorization': 'Bearer '+user.value.jwt_token,
+                },
+            })
             .then(function (response) {
                //  console.log('send query post response:');
 
@@ -203,23 +215,47 @@ async function sendQuery(question) {
 
                 })
                 .catch(function (error) {
-                    // console.log(error);
                     isSending.value = false;
                     errorMessage.value = error.response.data.error;
                 });
 
             })
-            .catch(function (error) {
-                isSending.value = false;
-                errorMessage.value = error.message;
+            .catch(async function (error) {
+
+                if(error.response.data.error_name == "TokenExpiredError") {
+
+                    // console.log('TokenExpiredError.. axios POST');
+
+                    await refreshToken();
+
+                    sendQuery(question);
+
+                } else {
+                    isSending.value = false;
+                    errorMessage.value = error.message;
+                }
+
             });
 
     } catch (error) {
         isSending.value = false;
         errorMessage.value = error;
         // console.log(error);
-        // console.error('Error sending query:', error);
+        console.error('Error sending query:', error);
     }
+}
+
+const refreshToken = async () => {
+
+    await axios.post(route('refresh-token'))
+        .then(function (response) {
+            // console.log('axios post response:', response.data);
+            user.value.jwt_token = response.data.token;
+        })
+        .catch(function (error) {
+            console.log(error);
+            // console.log('TokenExpiredError');
+        })
 }
 
 const addNewChat = () => {

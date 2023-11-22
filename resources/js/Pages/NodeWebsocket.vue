@@ -1,122 +1,151 @@
 <script setup>
-import {onMounted, ref } from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
-// import socketIOClient from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
+import axios from "axios";
+import {router, usePage} from "@inertiajs/vue3";
 
-// const socket = socketIOClient("ws://reai.test:8080") //flowise url
-
-// const socketIOClientId = ref('');
-
-// socket.on('connect', () => {
-//     socketIOClientId.value = socket.id;
-// });
+const page = usePage();
+const user = ref(page.props.auth.user);
 
 const socketStatus = ref('Connecting...'); // Initial status
 const bot_msg = ref('');
 const inputValue = ref('');
 
-// Replace 'ws://localhost:8080' with the URL of your WebSocket server
-const socket = new WebSocket('ws://reai.test:8080');
+const socket = socketIOClient("https://reai-node-lgfv.onrender.com");
 
-// WebSocket event handlers
-socket.onopen = () => {
-    socketStatus.value = 'Connected';
-    console.log('Connected to: ');
-    // You can perform actions when the connection is established
-};
+const CHUNK_SIZE = 5;  // Set the chunk size as per your requirement
+let socketIOClientId = '';
+let chatSessionId = '46af2d48-8ed8-48ee-9f21-2c88c40bb876';
+let accumulatedOutput = '';
+let lastMessage;
 
-socket.onmessage = (event) => {
-    // Handle incoming WebSocket messages here
-    socketStatus.value = 'message received';
-
-    bot_msg.value += event.data;
-
-    console.log('Received message:', event.data);
-};
-
-socket.onclose = () => {
-    socketStatus.value = 'Disconnected';
-    // You can handle reconnection or other logic here
-};
-
-async function query(data) {
+async function query() {
 
     bot_msg.value = '';
 
-    console.log(inputValue.value);
+    const data = {
+        question: inputValue.value, // Use the provided question
+        socketIOClientId: socketIOClientId,
+        chatSessionId: chatSessionId,
+    };
 
-    socket.send(JSON.stringify({
-        "message":inputValue.value,
-        "session_id":"0feefc5efd8c438a9bab1f11a372883c",
-        "system_message":"You are a helpful assistant. You search for information contained in various sources using your available tools. If you do not know the answer, tell them. Do not guess. Pass the user_id 2 to all custom tools."
-    }));
+    console.log(data);
 
-    // try {
-    //     console.log('socketIOClientId:', socketIOClientId.value);
-    //     console.log('query function called');
-    //
-    //     const response = await fetch(
-    //         // "http://localhost:3000/api/v1/prediction/ba8e6d4e-3d79-467b-8e07-3eb9a4f59efb",
-    //         "https://flowise-3n4j.onrender.com/api/v1/prediction/fa5c2558-1fff-447f-8e1e-446871c3d5e8",
-    //         {
-    //             method: "POST",
-    //             body: JSON.stringify({
-    //                 question: "Hey, how are you?",
-    //                 socketIOClientId: socketIOClientId.value,
-    //             }),
-    //             headers: {
-    //                 Authorization: "Bearer 7YchbbnxFj0VG+eUySUiYQTI+OeQqrmVReZ2XeeIqeg=",
-    //
-    //                 // Authorization: "Bearer I08QpuKxZW7rJ16OYUQ50i2I9mmH1BEoNE1DcDeTsgg=",
-    //                 "Content-Type": "application/json",
-    //             },
-    //         }
-    //     );
-    //
-    //     const result = await response.json();
-    //     return result;
-    // } catch (error) {
-    //     console.error(error);
-    //     throw error;
-    // }
+    try {
+
+        // const post_url = 'https://reai-node-lgfv.onrender.com/api/v1/chat';
+        const post_url = 'http://localhost:3000/api/v1/chat';
+        const headers = {
+            'Authorization': 'Bearer '+user.value.jwt_token,
+        };
+        const options = {
+            headers: headers,
+        };
+
+        await axios.post(post_url, data, options)
+            .then(function (response) {
+
+                 console.log('axios post response:', response.data);
+
+            })
+            .catch(async function (error) {
+                console.log(error);
+                if(error.response.data.error_type == "TokenExpiredError") {
+
+                    await axios.post(route('refreshToken'))
+                        .then(function (response) {
+                            console.log('axios post response:', response.data);
+                            user.value.jwt_token = response.data.token;
+                            query();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            console.log('TokenExpiredError');
+
+                        })
+                        .then(function () {
+                            // always executed
+                        });
+
+                }
+                // isSending.value = false;
+                // errorMessage.value = error.message;
+            });
+
+    } catch (error) {
+        // isSending.value = false;
+        // errorMessage.value = error;
+        // console.log(error);
+        // console.error('Error sending query:', error);
+    }
 }
-
 
 onMounted(async () => {
 
-    console.log(socket);
-    // console.log(page.props);
+    console.log(user.value);
 
-    // try {
-    //     const response = await query({
-    //         question: "Hey, how are you?",
-    //         socketIOClientId: socketIOClientId.value,
-    //     });
-    //     console.log(response);
-    // } catch (error) {
-    //     console.error(error);
-    // }
-
-    // socket.on('start', () => {
-    //     console.log('start');
-    // });
-    //
-    // socket.on('token', (token) => {
-    //     console.log('token:', token);
-    // });
-    //
-    // socket.on('sourceDocuments', (sourceDocuments) => {
-    //     console.log('sourceDocuments:', sourceDocuments);
-    // });
-    //
-    // socket.on('end', () => {
-    //     console.log('end');
+    // jwt.sign(user.value, import.meta.env.JWT_SECRET, (err, token) => {
+    //     console.log(token);
+    //     const auth_token = token;
     // });
 
+    socket.on('connect', () => {
+        socketIOClientId = socket.id;
+        console.log('Connected with id:', socketIOClientId);
+        // startAskingQuestions();
+
+    });
+
+    socket.on('start', () => {
+        console.log('START!!!');
+    });
+
+    socket.on('token', (token) => {
+
+        // lastMessage = localChat.value.messages[localChat.value.messages.length - 1];
+
+        accumulatedOutput += token; // Accumulate the tokens
+        // Check if the accumulated output is at least as long as CHUNK_SIZE
+        if (accumulatedOutput.length >= CHUNK_SIZE) {
+
+            // isSending.value = false;
+
+            // Find the last space to keep words intact
+            let lastSpaceIndex = accumulatedOutput.lastIndexOf(' ', CHUNK_SIZE);
+            if (lastSpaceIndex === -1) lastSpaceIndex = CHUNK_SIZE; // If no space found, just cut at CHUNK_SIZE
+            // Print up to the last complete word
+            const partToPrint = accumulatedOutput.slice(0, lastSpaceIndex + 1);
+
+            bot_msg.value += partToPrint;
+
+            // Keep the remaining part
+            accumulatedOutput = accumulatedOutput.slice(lastSpaceIndex + 1);
+        }
+    });
+
+    socket.on('end', () => {
+
+        console.log("END!!!");
+        console.log(accumulatedOutput);
+
+        // Print any remaining output when the stream ends
+        if (accumulatedOutput.trim().length > 0) {
+            bot_msg.value += accumulatedOutput;
+        }
+        // Reset the state for the next query
+        accumulatedOutput = '';
+    });
 });
 
+onUnmounted(() => {
+    // console.log('UN MOUNT');
+    // console.log('Disconnected websocket: '+ socket.id);
 
+    socket.disconnect();
+
+});
 </script>
 
 <template>

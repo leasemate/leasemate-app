@@ -25,12 +25,14 @@ use Inertia\Inertia;
 */
 
 Route::get('/test-postgres', function() {
-    
+
     $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');
 
     dd($postgres);
 
 });
+
+
 
 //Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth'])->group(function () {
@@ -39,14 +41,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return redirect()->route('dashboard');
 
-//        return Inertia::render('Dashboard', [
-//            'canLogin' => Route::has('login'),
-//            'canRegister' => Route::has('register'),
-//            'laravelVersion' => Application::VERSION,
-//            'phpVersion' => PHP_VERSION,
-//        ]);
     });
-//
+
+    Route::post('/refresh-token', function() {
+
+        if(auth() && auth()->user()) {
+            auth()->user()->jwt_token = JWTAuth::fromUser(auth()->user());
+            auth()->user()->save();
+            return response()->json(['token' => auth()->user()->jwt_token]);
+        }
+    })->name('refresh-token');
+
+
+    Route::get('/websocket-test', function () {
+        return Inertia::render('NodeWebsocket');
+    });
 
     Route::get('/test-notify', function() {
 
