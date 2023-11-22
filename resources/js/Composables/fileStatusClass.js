@@ -14,10 +14,12 @@ export function fileStatusClass() {
             'Deleted': 'bg-red-50 text-red-800 ring-red-600/20',
         },
         'PROCESS_CLASSES': {
-            'Extracting': 'bg-blue-500',
-            'Processing': 'bg-yellow-500',
-            'Pre-Processing': 'bg-yellow-500',
-            'Deleting': 'bg-red-500',
+            'Pending': 'bg-gray-400',
+            'Extracting': 'bg-blue-400',
+            'Processing': 'bg-yellow-600',
+            'Pre-Processing': 'bg-yellow-400',
+            'Deleting': 'bg-red-400',
+            'Completed': 'bg-green-400',
         }
     }
 

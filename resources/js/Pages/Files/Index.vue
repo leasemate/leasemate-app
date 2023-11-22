@@ -265,22 +265,24 @@ onBeforeUnmount(() => {
                                               class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
                                               :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status)">
 
+                                              <span class="relative mr-1.5 flex h-2.5 w-2.5">
+
+                                                  <span v-if="file.status != 'Completed'">
+                                                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                                            :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>
+                                                      <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                            :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>
+                                                  </span>
+
+                                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                        :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>
+
+                                              </span>
+
                                               <span>{{ fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status }}</span>
 
                                           </span>
 
-                                            <div v-if="file.status != 'completed'" class="animate-pulse inline-block ml-2">
-                                                <div
-                                                    class="rounded-full h-3 w-3"
-                                                    :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"
-                                                ></div>
-                                            </div>
-
-<!--                                            <div-->
-<!--                                                v-if="fileStatuses[file.id] === 'Deleting'"-->
-<!--                                                class="ml-2 spinner-border animate-spin inline-block w-3 h-3 border-[2px] border-l-transparent border-red-400 rounded-full">-->
-<!--                                                <span class="hidden">Loading...</span>-->
-<!--                                            </div>-->
                                         </td>
 
                                         <td class="p-3.5">
