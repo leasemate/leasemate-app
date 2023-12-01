@@ -1,0 +1,1 @@
+import{o as a,c as o,w as e,f as t,a as r}from"./app-44bf7975.js";import{_ as s}from"./AuthenticatedLayout-d0fbc085.js";import"./_plugin-vue_export-helper-c27b6911.js";import"./feather-3e670bb2.js";const c=r("div",null," Welcome ",-1),f={__name:"Dashboard",setup(_){return(m,n)=>(a(),o(s,null,{header:e(()=>[t(" Dashboard ")]),default:e(()=>[c]),_:1}))}};export{f as default};
