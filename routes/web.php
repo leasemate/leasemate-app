@@ -29,14 +29,22 @@ Route::get('/test-postgres', function() {
     $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');
 
     dd($postgres);
-
 });
 
+//Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//});
 
-
-//Route::middleware(['auth', 'verified'])->group(function () {
-Route::middleware(['auth'])->group(function () {
-
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -66,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
 //        $file->user->notify();
     });
 
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
@@ -94,13 +103,3 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
-
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';

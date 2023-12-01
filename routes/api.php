@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->post('/file-processing/status-update', [FileProcessingController::class, 'statusUpdate']);
+//Route::middleware('auth:sanctum')->post('/file-processing/status-update', [FileProcessingController::class, 'statusUpdate']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

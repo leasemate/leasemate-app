@@ -1,19 +1,17 @@
 <script setup>
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+    canResetPassword: Boolean,
+    status: String,
 });
 
 const form = useForm({
@@ -23,40 +21,45 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('login'), {
+    form.transform(data => ({
+        ...data,
+        remember: form.remember ? 'on' : '',
+    })).post(route('login'), {
         onFinish: () => form.reset('password'),
     });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+    <Head title="Log in" />
 
-        <div class="text-center">
-            <h5 class="text-gray-600 dark:text-gray-100">Welcome Back !</h5>
+    <GuestLayout>
+        <template #logo>
+            <AuthenticationCardLogo />
+        </template>
+
+        <div class="text-center mb-8">
+            <h5 class="text-gray-600 dark:text-gray-100">Welcome!</h5>
             <p class="text-gray-500 dark:text-gray-100/60 mt-1">Sign in to continue to REAI.</p>
         </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
-
                 <TextInput
                     id="email"
+                    v-model="form.email"
                     type="email"
                     class="mt-1 block w-full"
-                    v-model="form.email"
                     required
                     autofocus
                     autocomplete="username"
                     tabindex="1"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
@@ -77,31 +80,29 @@ const submit = () => {
                 </div>
                 <TextInput
                     id="password"
+                    v-model="form.password"
                     type="password"
                     class="mt-1 block w-full"
-                    v-model="form.password"
                     required
                     autocomplete="current-password"
                     tabindex="2"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="block mt-4">
                 <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    <Checkbox v-model:checked="form.remember" name="remember" />
+                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" tabindex="3">
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" tabindex="3">
                     Log in
                 </PrimaryButton>
             </div>
         </form>
-
 <!--        <div class="mt-4 pt-2 text-center">-->
 <!--            <div>-->
 <!--                <h6 class="text-14 mb-3 text-gray-500 dark:text-gray-100 font-medium">- Sign in with -</h6>-->

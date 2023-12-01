@@ -3,17 +3,20 @@ import forms from '@tailwindcss/forms';
 
 const { bottom } = require('@popperjs/core')
 const plugin = require('tailwindcss/plugin')
+import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/**/*.js',
         './resources/js/**/*.vue',
     ],
     darkMode: ['class', '[data-mode="dark"]'],
+
     theme: {
         screens: {
             xs: "100%",
@@ -153,8 +156,9 @@ export default {
             }
         },
     },
-
     plugins: [
+        forms,
+        typography,
         require('@tailwindcss/forms'),
         plugin(function ({ addBase, theme }) {
             addBase({

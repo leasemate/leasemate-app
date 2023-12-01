@@ -102,7 +102,9 @@ onMounted(() => {
 
         <simplebar data-simplebar class="h-full">
             <!--- Sidemenu -->
-            <div id="sidebar-menu">
+            <div
+                v-if="$page.props.auth.user.email_verified_at"
+                id="sidebar-menu">
                 <!-- Left Menu Start -->
                 <ul class="metismenu" id="side-menu">
                     <li class="menu-heading px-4 py-3.5 text-xs font-medium text-gray-500 cursor-default" data-key="t-menu">Menu</li>

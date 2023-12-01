@@ -14,17 +14,11 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         @routes
-        @vite([
-            'resources/js/app.js',
-            "resources/js/Pages/{$page['component']}.vue"
-            ])
+        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
-
     </head>
 
-    <body data-mode="light" data-sidebar-size="lg">
-
+    <body class="font-sans antialiased" data-mode="light" data-sidebar-size="lg">
         @inertia
-
     </body>
 </html>

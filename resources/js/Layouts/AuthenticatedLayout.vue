@@ -147,9 +147,6 @@ onBeforeUnmount(() => {
 
             <div class="container-fluid px-[0.625rem]">
 
-<!--                <GlobalValidation />-->
-
-                <!--- page title --->
                 <SubHeader>
                     <template #header>
                         <slot name="header" />

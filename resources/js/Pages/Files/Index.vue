@@ -267,12 +267,12 @@ onBeforeUnmount(() => {
 
                                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                                  <span v-if="file.status != 'Completed'">
+                                                  <template v-if="file.status != 'Completed'">
                                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
                                                             :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>
                                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                                             :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>
-                                                  </span>
+                                                  </template>
 
                                                   <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                                         :class="getFileStatusClass(fileStatuses[file.id] === 'Deleting' ? 'Deleting' : file.status, 'PROCESS_CLASSES')"></span>

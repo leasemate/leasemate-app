@@ -414,7 +414,9 @@ onUnmounted(() => {
 
     <AuthenticatedLayout>
 
-        <template #header>Chats</template>
+        <template #header>
+            Chats
+        </template>
 
         <div class="card">
 <!--            h-[52rem]-->
