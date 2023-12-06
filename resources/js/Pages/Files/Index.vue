@@ -161,6 +161,7 @@ onMounted(() => {
 
     Echo.private(`App.Models.User.${user.value.id}`)
         .listen('FileStatusUpdate', (e) => {
+            console.log('teslkjslkdf');
             router.reload({ only: ['uploaded_files'] });
         });
 });

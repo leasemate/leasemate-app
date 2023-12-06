@@ -34,7 +34,7 @@ class FileStatusUpdate implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        Log::info('Broadcast On: '.'App.Models.User.'.$this->user_id);
+        Log::info('Broadcast On: App.Models.User.'.$this->user_id);
 
         return [
             new PrivateChannel('App.Models.User.'.$this->user_id),

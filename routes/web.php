@@ -1,17 +1,9 @@
 <?php
 
-use App\Facades\ReaiProcessor;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\ChatMessageController;
-use App\Http\Controllers\FilesController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProfileController;
-use App\Models\File;
-use App\Notifications\FileProcessingUpdate;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,82 +16,21 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/test-postgres', function() {
 
-    $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');
 
-    dd($postgres);
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => false,
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-//Route::get('/', function () {
-//    return Inertia::render('Welcome', [
-//        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-//        'laravelVersion' => Application::VERSION,
-//        'phpVersion' => PHP_VERSION,
-//    ]);
-//});
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])
+                ->name('register');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-
-    Route::get('/', function () {
-        return redirect()->route('dashboard');
-
-    });
-
-    Route::post('/refresh-token', function() {
-
-        if(auth() && auth()->user()) {
-            auth()->user()->jwt_token = JWTAuth::fromUser(auth()->user());
-            auth()->user()->save();
-            return response()->json(['token' => auth()->user()->jwt_token]);
-        }
-    })->name('refresh-token');
-
-
-    Route::get('/websocket-test', function () {
-        return Inertia::render('NodeWebsocket');
-    });
-
-    Route::get('/test-notify', function() {
-
-        $file = File::find(85);
-
-        $file->user->notify(new FileProcessingUpdate($file));
-
-//        $file->user->notify();
-    });
-
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
-    Route::resource('files', FilesController::class);
-
-    Route::post('/files/{file}/restore', [FilesController::class, 'restore'])->name('files.restore')->withTrashed();
-    Route::post('/files/{file}/prune', [FilesController::class, 'prune'])->name('files.prune')->withTrashed();
-
-    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
-    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
-    Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
-    Route::delete('/chats/{chat}', [ChatController::class, 'destroy'])->name('chats.destroy');
-
-    Route::resource('/chats/{chat}/messages', ChatMessageController::class);
-
-    Route::resource('notifications', NotificationController::class);
-    Route::post('notifications/mark-as-read/{notification}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
-
-    Route::get('/flowise-test', function () {
-        return Inertia::render('FlowiseTest');
-    });
-
-    Route::get('/node-websocket', function () {
-        return Inertia::render('FlowiseTest');
-    });
+    Route::post('register', [RegisteredUserController::class, 'store']);
 
 });
