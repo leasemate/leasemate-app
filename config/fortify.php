@@ -106,8 +106,7 @@ return [
 
     'middleware' => [
         'web',
-        InitializeTenancyByDomain::class,
-        PreventAccessFromCentralDomains::class,
+        'tenant',
     ],
 
     /*

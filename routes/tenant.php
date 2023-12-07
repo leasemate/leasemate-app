@@ -72,19 +72,24 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
+    'tenant',
+//    InitializeTenancyByDomain::class,
+//    PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
     Route::get('/notify', function() {
-        $user = User::find(1);
+        $user = User::find(2);
+
+//        dd($user->broadcastChannel());
 //        dump($user);
         $file = \App\Models\File::find(1);
 //        dd($file);
 
-//        event(new FileStatusUpdate($user->id, $file));
+
+        event(new FileStatusUpdate($user->id, $file));
 
         $user->notify(new FileProcessingUpdate($file));
+
         return 'done';
     });
 

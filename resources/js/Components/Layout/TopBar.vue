@@ -105,12 +105,11 @@ const switchToTeam = (team) => {
 
 onMounted(() => {
     // console.log('on mount top bar');
+
     initModeSetting();
 
-    Echo.private(`App.Models.User.${user.value.id}`)
+    Echo.private(`${page.props.tenant_id}.App.Model.User.${user.value.id}`)
         .notification((notification) => {
-
-            console.log('new notification');
 
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
@@ -140,7 +139,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     if(user.value) {
-        Echo.leave(`App.Models.User.${user.value.id}`);
+        Echo.leave(`${page.props.tenant_id}.App.Model.User.${user.value.id}`);
     }
 });
 

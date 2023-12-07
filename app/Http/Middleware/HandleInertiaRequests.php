@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
 //                'user' => $request->user(),
 //            ],
             'env' => config('app.env'),
-            'tenant_id' => tenant('id'),
+            'tenant_id' => tenant('tenancy_db_name'),
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class BroadcastServiceProvider extends ServiceProvider
 {
@@ -16,9 +14,9 @@ class BroadcastServiceProvider extends ServiceProvider
     {
         Broadcast::routes([
             'middleware' => [
+                'web',
                 'auth',
-                InitializeTenancyByDomain::class,
-                PreventAccessFromCentralDomains::class,
+                'tenant',
             ],
         ]);
 

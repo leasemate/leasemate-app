@@ -45,6 +45,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'tenant' => [
+            \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+            \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+        ],
     ];
 
     /**

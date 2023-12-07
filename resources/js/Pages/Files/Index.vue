@@ -151,7 +151,7 @@ const userWatcher = watch(
     (newUser, oldUser) => {
         if (oldUser) {
             // Leave the channel when the user changes or becomes null/undefined
-            Echo.leave(`App.Models.User.${oldUser.id}`);
+            Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
         }
     },
     { immediate: false } // Set to true if you want to leave on component mount
@@ -159,16 +159,16 @@ const userWatcher = watch(
 
 onMounted(() => {
 
-    Echo.private(`App.Models.User.${user.value.id}`)
+    Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('FileStatusUpdate', (e) => {
-            console.log('teslkjslkdf');
             router.reload({ only: ['uploaded_files'] });
         });
+
 });
 
 onBeforeUnmount(() => {
     if(user.value) {
-        Echo.leave(`App.Models.User.${user.value.id}`);
+        Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
     }
 });
 

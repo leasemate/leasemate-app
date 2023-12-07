@@ -26,6 +26,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    protected $appends = [
+        'profile_photo_url',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -65,12 +69,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return [];
     }
+
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return tenant('tenancy_db_name').'.App.Model.User.'.$this->id;
+    }
+
     /**
      * The accessors to append to the model's array form.
      *
      * @var array<int, string>
      */
-    protected $appends = [
-        'profile_photo_url',
-    ];
 }
