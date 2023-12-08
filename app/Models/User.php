@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Notifications\Auth\VerifyEmailQueued;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -75,9 +76,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return tenant('tenancy_db_name').'.App.Model.User.'.$this->id;
     }
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailQueued);
+    }
+
 }
