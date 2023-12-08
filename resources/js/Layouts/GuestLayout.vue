@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import feather from "feather-icons";
+import ToastList from "@/Components/ToastList.vue";
 
 onMounted(() => {
     feather.replace();
@@ -9,6 +10,8 @@ onMounted(() => {
 </script>
 
 <template>
+
+    <ToastList />
 
     <div class="container-fluid">
         <div class="h-screen md:overflow-hidden">
@@ -22,7 +25,7 @@ onMounted(() => {
                                     <span class="text-xl align-middle font-medium ltr:ml-2 rtl:mr-2 dark:text-white">REAI</span>
                                 </a>
                             </div>
-
+                            <span class="text-xl text-center font-medium dark:text-white mt-6">{{ $page.props.tenant_name }}</span>
                             <div class="my-auto">
 
                                 <slot />

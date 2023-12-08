@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Tenant\RegisteredTenantController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +28,11 @@ Route::get('/', function () {
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
+
+    Route::get('register', [RegisteredTenantController::class, 'create'])
                 ->name('register');
 
-    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('register', [RegisteredTenantController::class, 'store'])
+            ->name('register.store');
 
 });

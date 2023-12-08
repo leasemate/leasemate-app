@@ -150,6 +150,7 @@ onBeforeUnmount(() => {
     <nav class="border-b border-slate-100 dark:bg-zinc-800 print:hidden flex items-center fixed top-0 right-0 left-0 bg-white z-10 dark:border-zinc-700">
 
         <div class="flex items-center justify-between w-full">
+
             <div class="topbar-brand flex items-center">
                 <div class="navbar-brand flex items-center justify-between shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                     <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
@@ -168,6 +169,9 @@ onBeforeUnmount(() => {
 <!--                    </div>-->
 <!--                </form>-->
             </div>
+
+            <div class=" text-lg text-center font-medium dark:text-white">{{ $page.props.tenant_name }}</div>
+
             <div class="flex items-center">
 
                 <div>

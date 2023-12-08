@@ -14,4 +14,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
+    public static function booted()
+    {
+        static::creating(function ($tenant) {
+//            $tenant->id = explode(".", $tenant->domain)[0];
+            $tenant->password = bcrypt($tenant->password);
+        });
+    }
+
 }

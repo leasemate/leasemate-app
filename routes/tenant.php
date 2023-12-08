@@ -35,22 +35,24 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
-Route::middleware([
-    'web',
-    'guest',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
+Route::group([
+    'as' => 'tenant.',
+    'middleware' => [
+        'web',
+        'guest',
+        'tenant',
+    ]
+], function () {
 
     Route::get('/', function () {
         return redirect('login');
-    });
-
+    })->name('home');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])
+        ->name('login.store');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
@@ -63,28 +65,55 @@ Route::middleware([
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
 });
-
-
 
 Route::middleware([
     'web',
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified',
     'tenant',
-//    InitializeTenancyByDomain::class,
-//    PreventAccessFromCentralDomains::class,
+])->group(function () {
+
+    Route::get('verify-email', EmailVerificationPromptController::class)
+        ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+        ->middleware(['signed:relative', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+        ->name('password.confirm');
+
+    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+
+});
+
+Route::middleware([
+    'web',
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'tenant',
+    'verified',
 ])->group(function () {
 
     Route::get('/notify', function() {
-        $user = User::find(2);
+        $user = User::find(1);
 
 //        dd($user->broadcastChannel());
 //        dump($user);
         $file = \App\Models\File::find(1);
 //        dd($file);
-
+//        $file = new \App\Models\File();
 
         event(new FileStatusUpdate($user->id, $file));
 
@@ -107,27 +136,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
-
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
-
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
-
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
-
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
 
 
     Route::resource('files', FilesController::class);

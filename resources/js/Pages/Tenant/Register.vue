@@ -8,8 +8,11 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
+import toast from "@/Stores/toast";
 
 const form = useForm({
+    company_name: '',
+    domain: '',
     name: '',
     email: '',
     password: '',
@@ -19,8 +22,18 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onError: (errors) => {
+            console.log(errors);
+            toast.error('There was an error creating your account.');
+        },
+        onFinish: (visit) => {
+            console.log(visit);
+            form.reset('password', 'password_confirmation');
+
+        }
     });
+    console.log('form...');
+    console.log(form);
 };
 </script>
 
@@ -34,6 +47,35 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
+                <InputLabel for="company_name" value="Company Name" />
+                <TextInput
+                    id="company_name"
+                    v-model="form.company_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                />
+                <InputError class="mt-2" :message="form.errors.company_name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="domain_name" value="Domain" />
+                <div class="flex items-baseline">
+
+
+                <TextInput
+                    id="domain_name"
+                    v-model="form.domain"
+                    type="text"
+                    class="mt-1 block w-full mr-2"
+                    required
+                />
+                    <span class="text-19">.reai.test</span>
+                </div>
+                <InputError class="mt-2" :message="form.errors.domain" />
+            </div>
+
+            <div class="mt-4">
                 <InputLabel for="name" value="Name" />
                 <TextInput
                     id="name"
@@ -41,8 +83,6 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     required
-                    autofocus
-                    autocomplete="name"
                 />
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
