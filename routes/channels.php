@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('{tenant_id}.App.Model.User.{id}', function (User $user, $tenant_id, $user_id) {
 
-    if (tenant('tenancy_db_name') == $tenant_id && $user->id == $user_id) {
+    if (tenant('id') == $tenant_id && $user->id == $user_id) {
         return true;
     }
     return false;
@@ -25,9 +25,8 @@ Broadcast::channel('{tenant_id}.App.Model.User.{id}', function (User $user, $ten
 
 Broadcast::channel('tenant-global-channel.{tenant_id}', function ($user, $tenant_id) {
 
-    if (tenant('tenancy_db_name') == $tenant_id) {
+    if (tenant('id') == $tenant_id) {
         return true;
     }
-
     return false;
 });

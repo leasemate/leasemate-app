@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Notifications\Auth\VerifyEmailQueued;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -73,12 +74,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return tenant('tenancy_db_name').'.App.Model.User.'.$this->id;
+        return tenant('id').'.App.Model.User.'.$this->id;
     }
 
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmailQueued);
+        $this->notify(new VerifyEmail());
     }
 
 }

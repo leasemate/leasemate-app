@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\FileStatusUpdate;
+use App\Models\Domain;
 use App\Models\File;
 use App\Models\Scopes\UserScope;
 use App\Notifications\FileProcessingStarted;
@@ -22,6 +23,11 @@ class FileProcessingController extends Controller
             $s3_object = $request->get('s3_object');
             $document_id = $request->get('document_id');
             $status = $request->get('status');
+
+            $tenant_domain = explode("/", $s3_object)[0];
+            $domain = Domain::where('domain', $tenant_domain)->first();
+
+            tenancy()->initialize($domain->tenant);
 
 //            if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
 

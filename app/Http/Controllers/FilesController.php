@@ -72,7 +72,7 @@ class FilesController extends Controller
 
 //                $storedName = $file->getBasename();
 //                $file->store(auth()->user()->id.'/pdfs');
-                $storedName = $file->store(tenant('tenancy_db_name')."/".auth()->user()->id, ['disk'=>'s3', 'visibility'=>'public']);
+                $storedName = $file->store(tenant('domain')."/".auth()->user()->id, ['disk'=>'s3', 'visibility'=>'public']);
 
 //                $fullPath = Storage::path($storedName);
 

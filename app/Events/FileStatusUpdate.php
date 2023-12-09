@@ -35,7 +35,7 @@ class FileStatusUpdate implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('tenant-global-channel.'.tenant('tenancy_db_name')),
+            new PrivateChannel('tenant-global-channel.'.tenant('id')),
         ];
     }
 }

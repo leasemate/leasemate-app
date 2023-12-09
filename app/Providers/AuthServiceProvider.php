@@ -3,9 +3,8 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
-use App\Notifications\Auth\VerifyEmailQueued;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
@@ -26,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        VerifyEmailQueued::createUrlUsing(function ($notifiable) {
+        VerifyEmail::createUrlUsing(function ($notifiable) {
 
             $verifyUrl = URL::temporarySignedRoute(
                 'verification.verify',

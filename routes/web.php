@@ -29,6 +29,13 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
 
+    Route::get('s3', function () {
+
+        $s3Client = new \Aws\S3\S3Client(config());
+
+
+    })->name('s3');
+
     Route::get('register', [RegisteredTenantController::class, 'create'])
                 ->name('register');
 
