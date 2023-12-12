@@ -122,6 +122,11 @@ Route::middleware([
         return 'done';
     });
 
+    Route::get('/delete-s3', function() {
+
+
+    });
+
     //Route::get('/test-postgres', function() {
     //
     //    $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');

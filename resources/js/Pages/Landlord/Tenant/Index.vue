@@ -1,0 +1,103 @@
+<script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+import { defineProps } from 'vue';
+import DangerButton from "@/Components/DangerButton.vue";
+import { Link, router } from '@inertiajs/vue3';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import PrimaryLink from "@/Components/PrimaryLink.vue";
+
+defineProps({
+    tenants: {
+        type: Object,
+    },
+});
+
+const deleteTenant = (tenant) => {
+
+    if(confirm('Are you sure you want to delete this tenant?') === false) return;
+
+    router.delete(route('tenants.destroy', tenant), {
+            preserveState: false,
+        });
+
+}
+
+</script>
+
+<template>
+    <AppLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Tenants
+            </h2>
+        </template>
+
+        <div class="py-12">
+
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+
+                <div class="flex justify-end">
+                    <PrimaryLink as="button" class="" :href="route('tenants.create')">
+                        Create Tenant
+                    </PrimaryLink>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+
+                    <div>
+                        <table class="w-full text-sm text-left text-gray-500 ">
+                            <thead class="text-sm text-gray-700 dark:text-gray-100 bg-gray-50 dark:bg-zinc-600">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    #
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Domain
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Email
+                                </th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="tenant in tenants" class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    {{ tenant.id }}
+                                </th>
+                                <td class="px-6 py-3.5 dark:text-zinc-100">
+                                    <a :href="`http://${tenant.domain}`" target="_blank">
+                                        {{ tenant.domain }}
+                                        <i class="mdi mdi-arrow-top-right-bold-box-outline"></i>
+                                    </a>
+                                </td>
+                                <td class="px-6 py-3.5 dark:text-zinc-100">
+                                    {{ tenant.name }}
+                                </td>
+                                <td class="px-6 py-3.5 dark:text-zinc-100">
+                                    {{ tenant.email }}
+                                </td>
+                                <td class="px-6 py-3.5 dark:text-zinc-100 flex justify-end">
+
+                                    <DangerButton class="justify-end" @click="deleteTenant(tenant)">
+                                        Delete
+                                    </DangerButton>
+
+
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </AppLayout>
+</template>

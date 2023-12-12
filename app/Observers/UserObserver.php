@@ -33,7 +33,7 @@ class UserObserver
             }
 
         } catch(\Exception $e) {
-            \Log::error('OBSERVER: Error updating user: '.$e->getMessage());
+            \Log::error('OBSERVER: Error creating user: '.$e->getMessage());
         }
 
     }

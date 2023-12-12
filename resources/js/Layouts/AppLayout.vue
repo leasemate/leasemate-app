@@ -23,7 +23,7 @@ const switchToTeam = (team) => {
 };
 
 const logout = () => {
-    router.post(route('logout'));
+    router.post(route('landlord.logout'));
 };
 </script>
 
@@ -49,8 +49,12 @@ const logout = () => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+<!--                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">-->
+<!--                                    Dashboard-->
+<!--                                </NavLink>-->
+
+                                <NavLink :href="route('tenants')" :active="route().current('tenants')">
+                                    Tenants
                                 </NavLink>
                             </div>
                         </div>
@@ -135,17 +139,17 @@ const logout = () => {
 
                                     <template #content>
                                         <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
-                                        </div>
+<!--                                        <div class="block px-4 py-2 text-xs text-gray-400">-->
+<!--                                            Manage Account-->
+<!--                                        </div>-->
 
-                                        <DropdownLink :href="route('profile.show')">
-                                            Profile
-                                        </DropdownLink>
+<!--                                        <DropdownLink :href="route('profile.show')">-->
+<!--                                            Profile-->
+<!--                                        </DropdownLink>-->
 
-                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-                                            API Tokens
-                                        </DropdownLink>
+<!--                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">-->
+<!--                                            API Tokens-->
+<!--                                        </DropdownLink>-->
 
                                         <div class="border-t border-gray-200 dark:border-gray-600" />
 
@@ -215,13 +219,13 @@ const logout = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
-                                Profile
-                            </ResponsiveNavLink>
+<!--                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">-->
+<!--                                Profile-->
+<!--                            </ResponsiveNavLink>-->
 
-                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
-                                API Tokens
-                            </ResponsiveNavLink>
+<!--                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">-->
+<!--                                API Tokens-->
+<!--                            </ResponsiveNavLink>-->
 
                             <!-- Authentication -->
                             <form method="POST" @submit.prevent="logout">

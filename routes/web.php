@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Landlord\TenantController;
 use App\Http\Controllers\Tenant\RegisteredTenantController;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,19 +31,50 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware('guest')->group(function () {
+Route::get('register', [RegisteredTenantController::class, 'create'])
+    ->name('register');
 
-    Route::get('s3', function () {
+Route::post('register', [RegisteredTenantController::class, 'store'])
+    ->name('register.store');
 
-        $s3Client = new \Aws\S3\S3Client(config());
+Route::middleware([
+    'web',
+    'guest'
+])->group(function () {
+
+    Route::get('/landlord-login', function () {
+
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => true,
+            'status' => session('status'),
+        ]);
+
+    })->name('landlord.login');
 
 
-    })->name('s3');
+    Route::post('/landlord-login', function (LoginRequest $request) {
 
-    Route::get('register', [RegisteredTenantController::class, 'create'])
-                ->name('register');
+        $request->authenticate();
 
-    Route::post('register', [RegisteredTenantController::class, 'store'])
-            ->name('register.store');
+        $request->session()->regenerate();
 
+        return redirect()->intended(route('tenants'));
+
+    })->name('landlord.login.store');
+
+});
+
+
+Route::middleware([
+    'web',
+    'auth'
+])->group(function () {
+
+    Route::get('/tenants', [TenantController::class, 'index'])->name('tenants');
+    Route::get('/tenants/create', [TenantController::class, 'create'])->name('tenants.create');
+    Route::post('/tenants', [TenantController::class, 'store'])->name('tenants.store');
+    Route::delete('/tenants/{tenant}', [TenantController::class, 'destroy'])->name('tenants.destroy');
+
+    Route::post('/landlord-logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('landlord.logout');
 });

@@ -18,6 +18,7 @@ return [
      */
     'central_domains' => [
         'reai.test',
+//        'reai.us-1.sharedwithexpose.com',
     ],
 
     /**
