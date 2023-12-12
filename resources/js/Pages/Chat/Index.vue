@@ -170,7 +170,7 @@ const sendQuery = async (question) => {
     errorMessage.value = '';
 
     // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
-    let user_id = user.value.id;
+    // let user_id = user.value.id;
     // let user_id = 24;
 
     const data = {

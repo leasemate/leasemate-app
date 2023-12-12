@@ -42,7 +42,6 @@ const submit = () => {
         <template #logo>
             <AuthenticationCardLogo />
         </template>
-
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="company_name" value="Company Name" />

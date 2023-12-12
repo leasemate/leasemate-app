@@ -82,4 +82,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         $this->notify(new VerifyEmail());
     }
 
+    public function getZepUserIdAttribute()
+    {
+        return tenant('id')."-".$this->id;
+    }
+
 }

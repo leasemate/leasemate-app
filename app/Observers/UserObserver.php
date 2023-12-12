@@ -22,7 +22,11 @@ class UserObserver
             $user_data = [
                 'email' => (string) $user->email,
                 'first_name' => (string) $user->name,
-                'user_id' => (string) $user->id
+                'user_id' => (string) $user->zep_user_id,
+                'metadata' => [
+                    'tenant_id' => (string) tenant('id'),
+                    'tenant_domain' => (string) tenant('domain'),
+                ],
             ];
 
             $zep_user = ZepApi::createUser($user_data);
@@ -54,6 +58,11 @@ class UserObserver
 
             if(Arr::has($updates, 'email')) $user_data['email'] = (string) $updates['email'];
             if(Arr::has($updates, 'name')) $user_data['first_name'] = (string) $updates['name'];
+
+            $user_data['metadata'] = [
+                'tenant_id' => (string) tenant('id'),
+                'tenant_domain' => (string) tenant('domain'),
+            ];
 
             if(!empty($user_data)) {
                 ZepApi::updateUser($user->id, $user_data);
