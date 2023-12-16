@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
+
 return [
 
     /*
@@ -179,6 +180,9 @@ return [
         App\Providers\FlowiseApiServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
+        Spatie\Permission\PermissionServiceProvider::class
+
     ])->toArray(),
 
     /*

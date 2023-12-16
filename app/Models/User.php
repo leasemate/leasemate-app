@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-
-use App\Notifications\Auth\VerifyEmailQueued;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,13 +11,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    // removed implements MustVerifyEmail
-    // we don't want to verify email for now
-    // implements MustVerifyEmail
 
     use HasApiTokens;
     use HasFactory;
@@ -27,6 +23,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRoles;
 
     protected $appends = [
         'profile_photo_url',
@@ -38,7 +35,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'email',
+        'email_verified_at',
+        'name',
+        'password',
+        'is_super_admin',
     ];
 
     /**
@@ -77,6 +78,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return tenant('id').'.App.Model.User.'.$this->id;
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_super_admin;
+    }
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail());
@@ -85,6 +91,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function getZepUserIdAttribute()
     {
         return tenant('id')."-".$this->id;
+    }
+
+    public function chats()
+    {
+        return $this->hasMany(Chat::class);
     }
 
 }

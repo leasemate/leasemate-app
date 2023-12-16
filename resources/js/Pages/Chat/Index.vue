@@ -14,6 +14,10 @@ import toast from "@/Stores/toast";
 
 import socketIOClient from 'socket.io-client';
 
+import Markdown from 'vue3-markdown-it';
+import 'highlight.js/styles/monokai.css';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+
 const open = ref(true)
 const page = usePage();
 const user = ref(page.props.auth.user);
@@ -418,7 +422,7 @@ onUnmounted(() => {
             Chats
         </template>
 
-        <div class="card">
+        <div class="border rounded dark:border-gray-600">
 <!--            h-[52rem]-->
             <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto rounded-lg">
 
@@ -432,14 +436,19 @@ onUnmounted(() => {
 <!--                    <span class="font-bold">Chat</span>-->
 <!--                </button>-->
 
-                <button
-                    @click="addNewChat"
-                    type="button"
-                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-600 hover:border-violet-600 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"
-                >
+                <PrimaryButton @click="addNewChat" class="mb-4">
                     <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
                     Chat
-                </button>
+                </PrimaryButton>
+
+<!--                <button-->
+<!--                    @click="addNewChat"-->
+<!--                    type="button"-->
+<!--                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-400 hover:border-violet-500 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"-->
+<!--                >-->
+<!--                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>-->
+<!--                    Chat-->
+<!--                </button>-->
 
 <!--                <hr class="mb-4" />-->
 
@@ -477,7 +486,7 @@ onUnmounted(() => {
             </div>
 
             <!-- Right column for the chat prompt and conversation -->
-            <div class="flex flex-col w-2/3 p-4 border-l">
+            <div class="flex flex-col w-2/3 p-4 border-l dark:border-l-gray-600">
                 <!-- Chat content area -->
                 <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
                     <!-- Example of a message item -->
@@ -497,7 +506,7 @@ onUnmounted(() => {
                                 'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
                                 'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
                             }">
-                                {{ entry.message }}
+                                <Markdown :source="entry.message" :breaks="true" />
                             </div>
                         </div>
                         </div>
@@ -514,13 +523,13 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Chat input area -->
-                <div class="border-t pt-4">
+                <div class="border-t pt-4 dark:border-t-gray-600">
 
                         <div class="relative">
 
                             <textarea
                                 v-model="messageToSend"
-                                class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200"
+                                class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-50"
                                 style="resize: none;"
                                 :style="{ height: textareaHeight + 'px'}"
                                 placeholder="Type a message..."

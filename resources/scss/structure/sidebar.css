@@ -61,6 +61,7 @@
 
 [data-mode=dark] .metismenu .mm-active .active {
     @apply text-white !important;
+    @apply bg-violet-700 !important;
 }
 
 .mm-active>a {

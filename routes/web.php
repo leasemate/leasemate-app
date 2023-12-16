@@ -25,17 +25,17 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => false,
-        'canRegister' => Route::has('register'),
+        'canRegister' => true,
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
 
-Route::get('register', [RegisteredTenantController::class, 'create'])
-    ->name('register');
+Route::get('registration', [RegisteredTenantController::class, 'create'])
+    ->name('tenant.registration');
 
-Route::post('register', [RegisteredTenantController::class, 'store'])
-    ->name('register.store');
+Route::post('registration', [RegisteredTenantController::class, 'store'])
+    ->name('tenant.registration.store');
 
 Route::middleware([
     'web',
@@ -44,7 +44,7 @@ Route::middleware([
 
     Route::get('/landlord-login', function () {
 
-        return Inertia::render('Auth/Login', [
+        return Inertia::render('Landlord/Login', [
             'canResetPassword' => true,
             'status' => session('status'),
         ]);

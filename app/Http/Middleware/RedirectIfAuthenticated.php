@@ -19,6 +19,13 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
+        // Before we redirect to any intended url,
+        // check if an earlier request to remove it was made.
+        if ($request->session()->has('removeUrlIntended')) {
+            $request->session()->forget('url.intended');
+            $request->session()->forget('removeUrlIntended');
+        }
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(tenant()?RouteServiceProvider::HOME:RouteServiceProvider::LANDLORD_TENANTS);

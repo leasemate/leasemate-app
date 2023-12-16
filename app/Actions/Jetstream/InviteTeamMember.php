@@ -23,6 +23,7 @@ class InviteTeamMember implements InvitesTeamMembers
      */
     public function invite(User $user, Team $team, string $email, string $role = null): void
     {
+
         Gate::forUser($user)->authorize('addTeamMember', $team);
 
         $this->validate($team, $email, $role);
@@ -33,6 +34,8 @@ class InviteTeamMember implements InvitesTeamMembers
             'email' => $email,
             'role' => $role,
         ]);
+
+
 
         Mail::to($email)->send(new TeamInvitation($invitation));
     }

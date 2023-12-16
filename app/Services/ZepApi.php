@@ -32,7 +32,7 @@ class ZepApi
         }
     }
 
-    public function updateUser(int $user_id, array $user_data)
+    public function updateUser(string $user_id, array $user_data)
     {
         \Log::info('SERVICE: Updating user', ['user_data:', $user_data]);
 

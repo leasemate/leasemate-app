@@ -25,7 +25,7 @@ onMounted(() => {
                                     <span class="text-xl align-middle font-medium ltr:ml-2 rtl:mr-2 dark:text-white">REAI</span>
                                 </a>
                             </div>
-                            <span class="text-xl text-center font-medium dark:text-white mt-6">{{ $page.props.tenant_name }}</span>
+                            <span v-if="$page.props.tenant_name" class="text-xl text-center font-medium dark:text-white mt-6">{{ $page.props.tenant_name }}</span>
                             <div class="my-auto">
 
                                 <slot />

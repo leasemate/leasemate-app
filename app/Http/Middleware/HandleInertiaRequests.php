@@ -39,10 +39,8 @@ class HandleInertiaRequests extends Middleware
     {
 
         return array_merge(parent::share($request), [
-//            'auth' => [
-//                'user' => $request->user(),
-//            ],
             'env' => config('app.env'),
+            'session' => fn () => $request->session()->all(),
             'tenant_id' => tenant('id'),
             'tenant_name' => tenant('company_name'),
             'tenant_domain' => tenant('domain'),
@@ -60,24 +58,5 @@ class HandleInertiaRequests extends Middleware
             'my_notifications' => fn () => auth()->check() ? $request->user()->notifications()->limit(5)->get(): [],
             'notification_count' => fn () => auth()->check() ? ($request->user()->unreadNotifications()->count()??0) : 0,
         ]);
-//        return [
-//            ...parent::share($request),
-//            'auth' => [
-//                'user' => $request->user(),
-//            ],
-//            'ziggy' => fn () => [
-//                ...(new Ziggy)->toArray(),
-//                'location' => $request->url(),
-//            ],
-//            'csrf' => csrf_token(),
-//            'flash' => [
-//                'success' => fn () => $request->session()->get('success'),
-//                'warning' => fn () => $request->session()->get('warning'),
-//                'error' => fn () => $request->session()->get('error'),
-//                'info' => fn () => $request->session()->get('info'),
-//            ],
-//            'my_notifications' => fn () => auth()->check() ? $request->user()->notifications()->limit(5)->get(): [],
-//            'notification_count' => fn () => auth()->check() ? ($request->user()->unreadNotifications()->count()??0) : 0,
-//        ];
     }
 }

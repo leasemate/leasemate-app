@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
+import { watch } from 'vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
@@ -20,8 +20,13 @@ const form = useForm({
     terms: false,
 });
 
+//watch the form company name for changes and then update the domain name field with the same value, lower case, remove spaces
+watch(() => form.company_name, (value) => {
+    form.domain = value.toLowerCase().replace(/[^a-z0-9]/g, '');
+});
+
 const submit = () => {
-    form.post(route('register'), {
+    form.post(route('tenant.registration'), {
         onError: (errors) => {
             console.log(errors);
             toast.error('There was an error creating your account.');

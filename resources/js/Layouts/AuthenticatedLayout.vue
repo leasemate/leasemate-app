@@ -143,7 +143,7 @@ onBeforeUnmount(() => {
     <Nav />
 
     <div class="main-content">
-        <div class="page-content dark:bg-zinc-700 min-h-screen">
+        <div class="page-content dark:bg-zinc-700 min-h-screen dark:text-gray-50">
 
             <div class="container-fluid px-[0.625rem]">
 

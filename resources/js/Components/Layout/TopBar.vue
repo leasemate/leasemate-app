@@ -244,14 +244,19 @@ onBeforeUnmount(() => {
                 <div>
                     <div class="dropdown relative ">
                         <div class="relative">
-                            <button type="button" class="btn border-0 h-[70px] dropdown-toggle px-4 text-gray-500 dark:text-gray-100" aria-expanded="false" data-dropdown-toggle="notification">
+                            <button type="button" class="btn border-0 h-[70px] dropdown-toggle px-4 text-gray-500 dark:text-gray-400
+
+                                        focus:bg-gray-50
+                                        dark:focus:bg-gray-700
+                            active:bg-gray-50
+                                        dark:active:bg-gray-700 " aria-expanded="false" data-dropdown-toggle="notification">
                                 <i data-feather="bell" class="h-5 w-5"></i>
                             </button>
                             <span
                                 v-if="notificationStore.count"
                                 class="absolute text-xs px-1.5 bg-red-500 text-white font-medium rounded-full left-6 top-2.5 z-40">{{ notificationStore.count }}</span>
                         </div>
-                        <div v-if="notificationStore.notifications.length" class="dropdown-menu absolute z-50 hidden w-80 list-none rounded bg-white shadow dark:bg-zinc-800 " id="notification">
+                        <div class="dropdown-menu absolute z-50 hidden w-80 list-none rounded bg-white shadow dark:bg-gray-700" id="notification">
                             <div class="border border-gray-50 dark:border-gray-700 rounded" aria-labelledby="notification">
                                 <div class="grid grid-cols-12 p-4">
                                     <div class="col-span-6">
@@ -262,7 +267,7 @@ onBeforeUnmount(() => {
                                     </div>
                                 </div>
                                 <simplebar class="max-h-56" data-simplebar>
-                                    <div>
+                                    <div v-if="notificationStore.notifications.length">
                                         <a
                                             v-for="notification in notificationStore.notifications"
                                             class="text-reset notification-item cursor-pointer"
@@ -292,11 +297,32 @@ onBeforeUnmount(() => {
                                             </div>
                                         </a>
 
+                                        text-gray-500
+                                        dark:text-gray-400
+
+                                        bg-white
+                                        dark:bg-gray-800
+
+                                        hover:text-gray-700
+                                        dark:hover:text-gray-300
+
+                                        focus:outline-none
+                                        focus:bg-gray-50
+                                        dark:focus:bg-gray-700
+
+                                        active:bg-gray-50
+                                        dark:active:bg-gray-700
+
                                     </div>
+
+                                    <div v-else>
+                                        <div class="text-center mt-2 mb-4 dark:text-gray-100">- No New Notifications -</div>
+                                    </div>
+
                                 </simplebar>
-                                <div class="p-1 border-t grid border-gray-50 dark:border-zinc-600 justify-items-center">
+                                <div class="p-1 border-t grid border-gray-50 dark:border-gray-600 justify-items-center">
                                     <Link class="btn border-0 text-violet-500" :href="route('notifications.index')">
-                                        <i class="mdi mdi-arrow-right-circle mr-1"></i> <span>View More</span>
+                                        <i class="mdi mdi-arrow-right-circle mr-1 dark:text-gray-100"></i> <span class="dark:text-gray-100">View More</span>
                                     </Link>
                                 </div>
                             </div>
@@ -312,9 +338,10 @@ onBeforeUnmount(() => {
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150 bg-violet-50"
+                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-100 bg-violet-50 dark:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150 bg-violet-50"
                                             >
                                                 {{ $page.props.auth.user.current_team.name }}
+<!--                                                My Team-->
 
                                                 <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
@@ -346,7 +373,6 @@ onBeforeUnmount(() => {
                                         <div class="block px-4 py-2 text-xs text-gray-400">
                                             Switch Teams
                                         </div>
-
                                         <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
                                             <form @submit.prevent="switchToTeam(team)">
                                                 <DropdownLink as="button">

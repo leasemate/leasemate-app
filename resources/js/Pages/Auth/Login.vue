@@ -39,8 +39,15 @@ const submit = () => {
         </template>
 
         <div class="text-center mb-8">
-            <h5 class="text-gray-600 dark:text-gray-100">Welcome!</h5>
-            <p class="text-gray-500 dark:text-gray-100/60 mt-1">Sign in to continue to REAI.</p>
+            <h5 class="text-gray-600 dark:text-gray-100">Welcome! Login
+                <template v-if="$page.props.session.teamInvitation">
+                    to {{ $page.props.session.teamInvitation }}
+                </template>
+            </h5>
+
+            <div v-if="$page.props.jetstream.hasTeamFeatures" class="mt-4 text-center">
+                <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register')" class="text-violet-500 font-semibold"> Register </Link> </p>
+            </div>
         </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
@@ -119,10 +126,6 @@ const submit = () => {
 <!--                    <i class="mdi mdi-google text-lg text-white"></i>-->
 <!--                </a>-->
 <!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="mt-12 text-center">-->
-<!--            <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register')" class="text-violet-500 font-semibold"> Signup now </Link> </p>-->
 <!--        </div>-->
 
     </GuestLayout>

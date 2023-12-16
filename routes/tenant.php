@@ -16,6 +16,8 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Models\User;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Support\Facades\Route;
@@ -70,7 +72,7 @@ Route::group([
 
 Route::middleware([
     'web',
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'tenant',
 ])->group(function () {
@@ -100,7 +102,7 @@ Route::middleware([
 
 Route::middleware([
     'web',
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'tenant',
     'verified',
@@ -127,16 +129,12 @@ Route::middleware([
 
     });
 
-    //Route::get('/test-postgres', function() {
-    //
-    //    $postgres = \Illuminate\Support\Facades\DB::connection('pgsql')->select('select * from users');
-    //
-    //    dd($postgres);
-    //});
-
     Route::get('/', function () {
         return redirect('dashboard');
     });
+
+    Route::resource('users', UserController::class);
+    Route::resource('roles', RoleController::class);
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

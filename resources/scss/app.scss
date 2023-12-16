@@ -163,12 +163,12 @@
 select{
     font-size: 14px !important;
 }
-.nav-tabs ul li a{
+.nav-tabs ul li a {
     @apply dark:text-gray-100;
 }
 
 .nav-tabs.border-tab ul li .active{
-    @apply border border-b-0 rounded-md border-violet-300 rounded-b-none text-violet-300 dark:text-violet-300;
+    @apply border border-b-0 rounded-md border-violet-300 rounded-b-none text-violet-300 dark:text-violet-300 ;
 }
 
 .nav-tabs.border-b-tabs ul li .active{
