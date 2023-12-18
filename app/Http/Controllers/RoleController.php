@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -58,7 +59,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         return inertia()->render('Roles/Edit', [
-            'role' => $role,
+            'role' => new RoleResource($role),
             'role_permissions' => $role->permissions->pluck('name'),
             'permissions' => $this->getAllPermissions()
         ]);

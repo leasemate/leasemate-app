@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,24 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$this->route('user')->id,
+            'user_roles' => [
+                'required_if:is_super_admin,true', // Required if is_active is true
+                'array', // Must be an array
+            ],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'email.email' => 'A valid email is required',
+            'email.unique' => 'A user with that email already exists',
+            'user_roles.required' => 'At least one role is required',
+        ];
+    }
+
 }

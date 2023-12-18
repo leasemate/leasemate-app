@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -14,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         return inertia()->render('Users/Index', [
-            'users' => User::all()
+            'users' => User::with('roles')->get(),
         ]);
     }
 
@@ -23,7 +24,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return inertia()->render('Users/Create');
+        return inertia()->render('Users/Create', [
+            'roles' => $this->getRoles(),
+        ]);
     }
 
     /**
@@ -31,7 +34,23 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        //
+        try {
+
+            $user = User::create([
+                ...$request->validated(),
+                'password' => bcrypt('password'),
+            ]);
+
+            $user->syncRoles($request->user_roles);
+
+            session()->flash('success', $user->name.' User created successfully');
+
+        } catch(\Exception $e) {
+            session()->flash('error', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -48,7 +67,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return inertia()->render('Users/Edit', [
-            'user' => $user
+            'user' => $user,
+            'user_roles' => $user->roles->pluck('name')->toArray(),
+            'roles' => $this->getRoles(),
         ]);
     }
 
@@ -57,7 +78,20 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        try {
 
+            $user->update($request->validated());
+
+            $user->syncRoles($request->user_roles);
+
+            session()->flash('success', $user->name.' User updated successfully');
+
+        } catch(\Exception $e) {
+            session()->flash('error', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -65,6 +99,21 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        try {
+
+            $user->delete();
+
+            session()->flash('success', $user->name.' User deleted successfully');
+
+        } catch(\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
+
+        return redirect()->route('users.index');
+    }
+
+    protected function getRoles()
+    {
+        return Role::all();
     }
 }

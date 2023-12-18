@@ -50,6 +50,24 @@ class ZepApi
         }
     }
 
+    public function deleteUser(string $user_id)
+    {
+        \Log::info('SERVICE: Deleting user', ['user_id:', $user_id]);
+
+        $response = $this->delete('/user/'.$user_id);
+
+        \Log::info('SERVICE: Deleting response', ['response' => $response]);
+
+        if ($response->successful()) {
+
+            return $response->json();
+        } else {
+            \Log::error('SERVICE: Error deleting user: '.$response->status()." - ".$response->reason());
+
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+        }
+    }
+
     public function createSession(array $session_data)
     {
         \Log::info('SERVICE: Creating session', ['post_data:', $session_data]);

@@ -70,7 +70,9 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        //
+        \Log::info('OBSERVER: User deleted', ['user' => $user]);
+
+        ZepApi::deleteUser($user->zep_user_id);
     }
 
     /**

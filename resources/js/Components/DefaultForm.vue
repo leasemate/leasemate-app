@@ -17,17 +17,12 @@ const hasActions = computed(() => !! useSlots().actions);
             <div class="shadow overflow-hidden sm:rounded-md">
                 <div class="px-4 py-5 bg-white sm:p-6 dark:bg-zinc-700 dark:border-zinc-600">
                     <div class="grid grid-cols-6 gap-6">
-
                         <slot name="form" />
-
                     </div>
-
                 </div>
 
-                <div v-if="hasActions" class="px-4 py-3 bg-slate-50 text-right sm:px-6 dark:bg-slate-50 dark:border-zinc-600">
-
+                <div v-if="hasActions" class="px-4 py-3 bg-slate-50 text-right sm:px-6 dark:bg-slate-800 dark:border-zinc-600">
                     <slot name="actions" />
-
                 </div>
             </div>
         </form>

@@ -9,6 +9,7 @@ import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Button from "@/Components/Button.vue";
+import Table from "@/Components/Table.vue";
 
 const props = defineProps({
     roles: Array,
@@ -52,9 +53,9 @@ const closeModal = () => {
             <PrimaryLink :href="route('roles.create')" class="mb-4">Create Role</PrimaryLink>
         </div>
 
-        <div class="relative overflow-x-auto rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50">
+        <Table>
+
+            <template #head>
                 <tr>
                     <th scope="col" class="px-6 py-3">
                         Role
@@ -67,9 +68,10 @@ const closeModal = () => {
                         Action
                     </th>
                 </tr>
-                </thead>
+            </template>
 
-                <tbody>
+            <template #body>
+
                 <tr v-for="role in roles" class="bg-white border-b border-gray-100 dark:bg-zinc-700 dark:border-zinc-600">
 
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -100,34 +102,30 @@ const closeModal = () => {
 
                 </tr>
 
-                </tbody>
-            </table>
+            </template>
 
-            <Modal :show="confirmingDeletion" @close="closeModal">
-                <div class="p-6">
-                    <h2 class="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete this role?
-                    </h2>
+        </Table>
 
-                    <div class="mt-6 flex justify-end">
-                        <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+        <Modal :show="confirmingDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete this role?
+                </h2>
 
-                        <DangerButton
-                            class="ml-3"
-                            @click="destroyRole()"
-                        >
-                            Delete
-                        </DangerButton>
-                    </div>
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        @click="destroyRole()"
+                    >
+                        Delete
+                    </DangerButton>
                 </div>
-            </Modal>
-        </div>
-
-
+            </div>
+        </Modal>
 
     </AuthenticatedLayout>
-
-
 
 </template>
 

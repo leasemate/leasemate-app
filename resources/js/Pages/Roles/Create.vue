@@ -10,7 +10,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from "@/Components/Checkbox.vue";
 import DefaultForm from "@/Components/DefaultForm.vue";
-import RoleForm from "./Partials/RoleForm.vue";
+import Form from "@/Pages/Roles/Form.vue";
 
 const props = defineProps({
     permissions: Object
@@ -24,7 +24,7 @@ const props = defineProps({
 
         <template #header> Create Role </template>
 
-        <RoleForm
+        <Form
             :permissions="props.permissions"
         />
 
