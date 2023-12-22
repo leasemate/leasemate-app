@@ -37,7 +37,7 @@ class FilesController extends Controller
             return redirect()->route('files.index');
         }
 
-        $files = $files->paginate(20)->withQueryString();;
+        $files = $files->paginate(20)->withQueryString();
 
         if(request()->has('page') && !$files->count()) {
             return redirect()->route('files.index', ($files->lastPage() == 1 ? [] : ['page' => $files->lastPage()]));

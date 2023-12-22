@@ -4,11 +4,15 @@ namespace App\Observers;
 
 use App\Facades\ZepApi;
 use App\Models\User;
+use App\Notifications\CreatePassword;
+use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Response;
 
 class UserObserver
 {
+    public $tokens;
     /**
      * Handle the User "created" event.
      */
@@ -34,6 +38,8 @@ class UserObserver
             $user->zep_uuid = $zep_user['uuid'];
             $user->save();
         }
+
+        $user->notify(new CreatePassword(Password::broker()->createToken($user)));
 
     }
 
@@ -71,6 +77,8 @@ class UserObserver
     public function deleted(User $user): void
     {
         \Log::info('OBSERVER: User deleted', ['user' => $user]);
+
+        $user->ownedTeams()->delete();
 
         ZepApi::deleteUser($user->zep_user_id);
     }

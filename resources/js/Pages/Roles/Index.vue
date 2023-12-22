@@ -95,7 +95,7 @@ const closeModal = () => {
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
 
                         <Button
-                            v-if="role.name != 'Admin'"
+                            v-if="role.can_delete"
                             @click="confirmDeletion(role)"
                             class="font-medium text-red-600 dark:text-blue-500 hover:underline">Delete</Button>
                     </td>

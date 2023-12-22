@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -17,7 +18,7 @@ class RoleController extends Controller
     public function index()
     {
         return inertia()->render('Roles/Index', [
-            'roles' => Role::with('permissions')->orderBy('name')->get()
+            'roles' => RoleResource::collection(Role::with(['permissions','users'])->orderBy('name')->get())
         ]);
     }
 

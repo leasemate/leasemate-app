@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Team;
 use App\Models\User;
+use Illuminate\Auth\Passwords\TokenRepositoryInterface;
+use Illuminate\Contracts\Auth\PasswordBroker;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -14,6 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
+//        $this->authorize('user read');
+
         return inertia()->render('Users/Index', [
             'users' => User::with('roles')->get(),
         ]);
@@ -32,7 +38,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request, PasswordBroker $passwordBroker)
     {
         try {
 
@@ -42,6 +48,12 @@ class UserController extends Controller
             ]);
 
             $user->syncRoles($request->user_roles);
+
+            $user->ownedTeams()->save(Team::forceCreate([
+                'user_id' => $user->id,
+                'name' => explode(' ', $user->name, 2)[0]."'s Team",
+                'personal_team' => true,
+            ]));
 
             session()->flash('success', $user->name.' User created successfully');
 

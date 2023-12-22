@@ -1,8 +1,8 @@
 <script setup>
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {Head, Link, router} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {Head, Link, router, } from "@inertiajs/vue3";
+import {ref, watch, nextTick} from "vue";
 import PrimaryLink from "@/Components/PrimaryLink.vue";
 import Button from "@/Components/Button.vue";
 import DangerButton from "@/Components/DangerButton.vue";
@@ -31,6 +31,7 @@ const destroyUser = () => {
     router.delete(route('users.destroy', userToDelete.value), {
         preserveScroll: true,
         onError: (error) => {
+            console.log(error);
             toast.error(error);
         }
     });
