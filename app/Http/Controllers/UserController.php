@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -42,6 +43,8 @@ class UserController extends Controller
     {
         try {
 
+            DB::beginTransaction();
+
             $user = User::create([
                 ...$request->validated(),
                 'password' => bcrypt('password'),
@@ -55,9 +58,12 @@ class UserController extends Controller
                 'personal_team' => true,
             ]));
 
+            DB::commit();
+
             session()->flash('success', $user->name.' User created successfully');
 
         } catch(\Exception $e) {
+            DB::rollBack();
             session()->flash('error', $e->getMessage());
             return redirect()->back()->withInput();
         }

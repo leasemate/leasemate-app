@@ -4,40 +4,28 @@ return [
 
     'permissions' => [
         'user' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
         'role' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
         'asset' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
         'lease' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
         'document' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
         'chat' => [
-            'create',
-            'read',
-            'update',
-            'delete',
+            'read-only',
+            'manage',
         ],
     ],
 

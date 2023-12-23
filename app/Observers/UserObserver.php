@@ -39,7 +39,9 @@ class UserObserver
             $user->save();
         }
 
-        $user->notify(new CreatePassword(Password::broker()->createToken($user)));
+        if( ! $user->is_super_admin) {
+            $user->notify(new CreatePassword(Password::broker()->createToken($user)));
+        }
 
     }
 

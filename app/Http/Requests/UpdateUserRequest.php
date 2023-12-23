@@ -25,10 +25,8 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->route('user')->id,
-            'user_roles' => [
-                'required_if:is_super_admin,true', // Required if is_active is true
-                'array', // Must be an array
-            ],
+            'position' => 'nullable',
+            'user_roles' => 'array',
         ];
     }
 

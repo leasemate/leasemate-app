@@ -10,6 +10,7 @@ import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import AutoComplete from "primevue/autocomplete";
 
 const props = defineProps({
     user: {
@@ -110,7 +111,7 @@ const saveUser = () => {
                 <InputError :message="form.errors.position" class="mt-2" />
             </div>
 
-            <div v-if=" ! props.user.is_super_admin" class="col-span-6 xs:col-span-3">
+            <div v-if=" ! props.user.is_super_admin && roles.length" class="col-span-6 xs:col-span-3">
 
                 <div class="block font-medium text-sm text-gray-700 dark:text-gray-300">Roles</div>
 

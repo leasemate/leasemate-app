@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Events\FileStatusUpdate;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -87,8 +88,8 @@ Route::group([
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.create');
+//    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+//        ->name('password.create');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
@@ -158,6 +159,7 @@ Route::middleware([
         return redirect('dashboard');
     });
 
+    Route::resource('assets', AssetController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
 

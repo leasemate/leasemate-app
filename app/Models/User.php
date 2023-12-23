@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email',
         'email_verified_at',
         'name',
+        'position',
         'password',
         'is_super_admin',
     ];
@@ -96,6 +97,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function chats()
     {
         return $this->hasMany(Chat::class);
+    }
+
+    public function assets()
+    {
+        return $this->hasMany(Asset::class);
     }
 
 }
