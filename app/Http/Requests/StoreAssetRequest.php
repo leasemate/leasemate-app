@@ -25,6 +25,7 @@ class StoreAssetRequest extends FormRequest
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'gross_leasable_area' => 'required|numeric',
+            'users'=> 'required|array',
         ];
     }
 }

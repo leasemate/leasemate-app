@@ -6,6 +6,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 import Form from "@/Pages/Assets/Form.vue";
 
+const props = defineProps({
+    asset: Object,
+    associates: Array,
+});
+
 </script>
 
 <template>
@@ -14,9 +19,12 @@ import Form from "@/Pages/Assets/Form.vue";
 
     <AuthenticatedLayout>
 
-        <template #header> Create Asset </template>
+        <template #header> Edit Asset </template>
 
-        <Form />
+        <Form
+            :asset="asset"
+            :associates="associates"
+        />
 
     </AuthenticatedLayout>
 

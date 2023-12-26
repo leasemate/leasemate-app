@@ -40,7 +40,7 @@ class CreateTenantAdmin implements ShouldQueue
 
             $this->createTeam($user);
 
-            event(new Registered($user));
+//            event(new Registered($user));
         });
 
     }

@@ -115,14 +115,14 @@ onMounted(() => {
                     <li>
 
                         <SideNavLink :href="route('dashboard')">
-                            <i data-feather="home"></i>
+                            <i data-feather="trending-up"></i>
                             <span data-key="t-dashboard"> Dashboard</span>
                         </SideNavLink>
                     </li>
 
                     <li>
                         <SideNavLink :href="route('assets.index')">
-                            <i data-feather="message-circle"></i>
+                            <i data-feather="home"></i>
                             <span data-key="t-chat"> Assets</span>
                         </SideNavLink>
                     </li>
@@ -134,19 +134,12 @@ onMounted(() => {
                         </SideNavLink>
                     </li>
 
-
-
-                    <li>
-<!--                        <a href="javascript: void(0);" aria-expanded="false" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+<!--                    <li>-->
+<!--                        <SideNavLink :href="route('files.index')">-->
 <!--                            <i data-feather="file-text"></i>-->
-<!--                            <span data-key="t-apps"> Files</span>-->
-<!--                        </a>-->
-
-                        <SideNavLink :href="route('files.index')">
-                            <i data-feather="file-text"></i>
-                            <span data-key="t-file-upload"> Files</span>
-                        </SideNavLink>
-                    </li>
+<!--                            <span data-key="t-file-upload"> Files</span>-->
+<!--                        </SideNavLink>-->
+<!--                    </li>-->
 
                     <li>
                         <a href="javascript:void();" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">

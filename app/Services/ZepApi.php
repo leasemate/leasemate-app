@@ -14,6 +14,18 @@ class ZepApi
         $this->setApiConfig($apiBaseUrl);
     }
 
+    public function getAllUsers()
+    {
+        $response = $this->get('/user');
+        if($response->successful()) {
+            return $response->json();
+        } else {
+            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+        }
+    }
+
+
+
     public function createUser(array $user_data)
     {
 

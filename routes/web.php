@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\ZepApi;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Landlord\TenantController;
 use App\Http\Controllers\Tenant\RegisteredTenantController;
@@ -37,15 +38,18 @@ Route::get('registration', [RegisteredTenantController::class, 'create'])
 Route::post('registration', [RegisteredTenantController::class, 'store'])
     ->name('tenant.registration.store');
 
+
 Route::middleware([
     'web',
     'guest'
 ])->group(function () {
 
+
+
     Route::get('/landlord-login', function () {
 
         return Inertia::render('Landlord/Login', [
-            'canResetPassword' => true,
+            'canResetPassword' => false,
             'status' => session('status'),
         ]);
 

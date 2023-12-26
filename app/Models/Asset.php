@@ -16,19 +16,14 @@ class Asset extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function asset_mgr()
+    public function associates()
     {
-        return $this->belongsTo(User::class, 'asset_mgr_id');
+        return $this->belongsToMany(User::class, 'asset_user', 'asset_id', 'user_id')->withTimestamps();
     }
 
-    public function property_mgr()
+    public function leases()
     {
-        return $this->belongsTo(User::class, 'property_mgr_id');
-    }
-
-    public function leasing_agent()
-    {
-        return $this->belongsTo(User::class, 'leasing_agent_id');
+        return $this->hasMany(Lease::class);
     }
 
 }

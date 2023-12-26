@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
+use App\Http\Resources\AssetResource;
+use App\Http\Resources\LeaseResource;
+use App\Http\Resources\UserAssetResource;
 use App\Models\Asset;
+use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
 {
@@ -14,7 +18,7 @@ class AssetController extends Controller
     public function index()
     {
         return inertia()->render('Assets/Index', [
-            'assets' => Asset::all(),
+            'assets' => AssetResource::collection(Asset::latest()->get()),
         ]);
     }
 
@@ -33,22 +37,20 @@ class AssetController extends Controller
     {
         try {
 
-            $mgr_ids = [
-                "asset_mgr_id"=>23,
-                "property_mgr_id"=>23,
-                "leasing_agent_id"=>23,
-            ];
+            DB::beginTransaction();
 
-            $asset = auth()->user()->assets()->create([
-                ...$request->validated(),
-                ...$mgr_ids,
-            ]);
+            $asset = auth()->user()->asset()->create($request->safe()->only('name', 'address', 'gross_leasable_area'));
+
+            $asset->associates()->attach(collect($request->get('users'))->pluck('id'));
+
+            DB::commit();
 
             session()->flash('success', 'Asset created successfully.');
-            return redirect()->route('assets.edit', $asset);
+
+            return redirect()->route('assets.show', $asset);
 
         } catch (\Exception $e) {
-
+            DB::rollBack();
             session()->flash('error', $e->getMessage());
             return redirect()->back()->withInput();
         }
@@ -59,8 +61,14 @@ class AssetController extends Controller
      */
     public function show(Asset $asset)
     {
+        $asset->load(['leases' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }]);
+
         return inertia()->render('Assets/Show', [
-            'asset' => $asset,
+            'asset' => new AssetResource($asset),
+            'associates' => UserAssetResource::collection($asset->associates),
+            'leases' => LeaseResource::collection($asset->leases),
         ]);
     }
 
@@ -70,7 +78,8 @@ class AssetController extends Controller
     public function edit(Asset $asset)
     {
         return inertia()->render('Assets/Edit', [
-            'asset' => $asset,
+            'asset' => new AssetResource($asset),
+            'associates' => UserAssetResource::collection($asset->associates),
         ]);
     }
 
@@ -79,7 +88,26 @@ class AssetController extends Controller
      */
     public function update(UpdateAssetRequest $request, Asset $asset)
     {
-        //
+        try {
+
+            DB::beginTransaction();
+
+            $asset->update($request->safe()->only('name', 'address', 'gross_leasable_area'));
+
+            $asset->associates()->sync(collect($request->get('users'))->pluck('id'));
+
+            DB::commit();
+
+            session()->flash('success', 'Asset updated successfully.');
+
+            return redirect()->route('assets.show', $asset);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+
     }
 
     /**

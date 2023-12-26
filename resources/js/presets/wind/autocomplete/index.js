@@ -30,8 +30,8 @@ export default {
             // Spacing
             'm-0 list-none',
             'mt-1',
-            'px-3 py-2',
-            { 'px-3 py-1.5': !props.multiple, 'px-3 py-1': props.multiple },
+            // 'px-3 py-2',
+            // { 'px-3 py-1.5': !props.multiple, 'px-3 py-1': props.multiple },
             // Size
             'w-full',
 
@@ -46,18 +46,17 @@ export default {
 
             // States
             'focus:outline-none focus:outline-offset-0',
-            { 'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 ring-offset-0': !state.focused, 'ring-2 ring-indigo-500 dark:ring-indigo-400': state.focused },
+            { 'ring-1 ring-inset ring-surface-300 dark:ring-surface-700 ring-offset-0': !state.focused, 'ring-2 ring-primary-500 dark:ring-primary-400': state.focused },
 
             // Transition
             'transition duration-200 ease-in-out',
 
             // Misc
-            'cursor-text overflow-hidden',
-            // 'border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm',
+            'cursor-text overflow-hidden'
         ]
     }),
     inputtoken: ({ props }) => ({
-        class: [{ 'py-1.5 px-0': !props.multiple, 'p-0.5': props.multiple }, , 'inline-flex flex-auto']
+        class: [{ 'py-1.5 px-0': !props.multiple, 'p0': props.multiple }, , 'inline-flex flex-auto']
     }),
     input: ({ props }) => ({
         class: [
@@ -74,7 +73,7 @@ export default {
 
             // Spacing
             'm-0',
-            { 'py-1.5 px-3': !props.multiple, 'p-0': props.multiple },
+            { 'py-2.5 px-3': !props.multiple, 'py-2.5 px-3': props.multiple },
 
             // Colors
             'text-surface-700 dark:text-white/80',
@@ -85,12 +84,11 @@ export default {
             },
 
             // States
-            // { 'focus:outline-none focus:outline-offset-0 focus:ring-inset focus:ring-0 focus:ring dark:focus:ring-primary-400': !props.multiple },
-            'focus:ring-1 focus:ring-white dark:focus:ring-primary-400',
+            { 'focus:outline-none focus:outline-offset-0 focus:ring-inset focus:ring-1 focus:ring-surface-0 dark:focus:ring-primary-400': !props.multiple },
+            'focus:ring-2 focus:ring-surface-0 dark:focus:ring-primary-400',
 
             // Transition
-            'transition-colors duration-200',
-
+            'transition-colors duration-200'
         ]
     }),
     token: {
@@ -100,7 +98,7 @@ export default {
 
             // Spacing
             'py-0.5 px-3',
-
+            'ml-3',
             // Shape
             'rounded-[1.14rem]',
 

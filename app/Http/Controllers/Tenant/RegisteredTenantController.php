@@ -26,6 +26,6 @@ class RegisteredTenantController extends Controller
         $tenant->password = null;
         $tenant->save();
 
-        return Inertia::location(tenant_route($tenant->domains->first()->domain, 'tenant.login'));
+        return Inertia::location(tenant_route($tenant->domains->first()->domain, 'login'));
     }
 }

@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'position' => 'nullable',
-            'user_roles' => 'array',
+            'user_roles' => 'required|array',
         ];
     }
 
@@ -34,6 +34,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name.required' => 'Name is required',
             'email.required' => 'Email is required',
+            'user_roles.required' => 'You must assign a role to this user.',
         ];
     }
 

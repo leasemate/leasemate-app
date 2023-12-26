@@ -51,7 +51,7 @@ const submit = () => {
             </h5>
 
             <div class="mt-4 text-center">
-                <p class="text-gray-500 dark:text-gray-100">Already have an account? <Link :href="route('tenant.login')" class="text-violet-500 font-semibold"> Login </Link> </p>
+                <p class="text-gray-500 dark:text-gray-100">Already have an account? <Link :href="route('login')" class="text-violet-500 font-semibold"> Login </Link> </p>
             </div>
         </div>
 

@@ -54,7 +54,7 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <Link
-                    :href="route('tenant.login')"
+                    :href="route('login')"
                     class="underline mr-4 text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Login

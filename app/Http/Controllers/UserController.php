@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserAssetResource;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
@@ -134,4 +135,12 @@ class UserController extends Controller
     {
         return Role::all();
     }
+
+    public function searchUsers()
+    {
+        $users = User::search(request('q'))->get();
+
+        return response()->json(UserAssetResource::collection($users));
+    }
+
 }

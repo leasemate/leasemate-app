@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('leases', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('asset_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('parent_id')->constrained('leases')->cascadeOnDelete();
-            $table->string('tenant_name');
-            $table->string('suite_number');
-            $table->string('gross_leaseable_area');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('rent_per_sqft');
+            $table->foreignId('parent_id')->nullable()->constrained('leases')->cascadeOnDelete();
+            $table->string('tenant_name')->nullable();
+            $table->string('suite_number')->nullable();;
+            $table->string('gross_leasable_area')->nullable();;
+            $table->date('start_date')->nullable();;
+            $table->date('end_date')->nullable();;
+            $table->integer('rent_per_sqft')->nullable();
+            $table->string('status')->default('Pending');
             $table->json('abstract_data')->nullable();
             $table->timestamps();
             $table->softDeletesDatetime();

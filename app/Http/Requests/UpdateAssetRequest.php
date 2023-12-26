@@ -11,7 +11,7 @@ class UpdateAssetRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class UpdateAssetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'gross_leasable_area' => 'required|numeric',
+            'users'=> 'required|array',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'users.required' => 'You must assign a user to this asset.',
+        ];
+    }
+
 }

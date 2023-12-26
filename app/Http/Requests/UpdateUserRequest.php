@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->route('user')->id,
             'position' => 'nullable',
-            'user_roles' => 'array',
+            'user_roles' => 'required|array',
         ];
     }
 
@@ -37,7 +37,7 @@ class UpdateUserRequest extends FormRequest
             'email.required' => 'Email is required',
             'email.email' => 'A valid email is required',
             'email.unique' => 'A user with that email already exists',
-            'user_roles.required' => 'At least one role is required',
+            'user_roles.required' => 'You must assign a role to this user.',
         ];
     }
 

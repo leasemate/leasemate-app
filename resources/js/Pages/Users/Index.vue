@@ -107,9 +107,6 @@ const closeModal = () => {
                         <div v-else-if="user.roles.length" class="flex justify-start space-x-2">
                             <span v-for="role in user.roles" class="badge font-medium bg-blue-50 text-blue-500 text-11 px-1.5 py-[1.5px] rounded dark:bg-blue-500/20">{{ role.name }}</span>
                         </div>
-                        <div v-else>
-                            <span class="badge font-medium bg-blue-50 text-blue-500 text-11 px-1.5 py-[1.5px] rounded dark:bg-blue-500/20">Admin</span>
-                        </div>
                     </td>
                     <td class="px-6 py-4 space-x-2">
 

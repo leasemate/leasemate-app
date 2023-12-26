@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -89,19 +92,39 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         $this->notify(new VerifyEmail());
     }
 
+    public function displayNameWithRoles(): Attribute
+    {
+        return Attribute::get(function (): string {
+            $roles = $this->getRoleNames()->isNotEmpty() ? " (".$this->getRoleNames()->implode(', ').")": '';
+
+            return $this->name.$roles;
+        });
+    }
+
     public function getZepUserIdAttribute()
     {
         return tenant('id')."-".$this->id;
+    }
+
+    public function asset()
+    {
+        return $this->hasOne(Asset::class);
+    }
+
+    public function assets()
+    {
+        return $this->belongsToMany(Asset::class)->withTimestamps();
+    }
+
+    public static function search($search = ''): Builder
+    {
+        return self::with('roles')
+            ->where('name', 'like', '%'.$search.'%')
+            ->orWhere('email', 'like', '%'.$search."%");
     }
 
     public function chats()
     {
         return $this->hasMany(Chat::class);
     }
-
-    public function assets()
-    {
-        return $this->hasMany(Asset::class);
-    }
-
 }

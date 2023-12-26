@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Facades\ZepApi;
 use App\Jobs\CreateTenantAdmin;
 use App\Jobs\DeleteTenantS3Files;
+use App\Jobs\DeleteZepUsers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
+use Stancl\Tenancy\Events\DeletingDatabase;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
@@ -45,12 +48,15 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantSaved::class => [],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],
-            Events\DeletingTenant::class => [],
+            Events\DeletingTenant::class => [
+
+            ],
             Events\TenantDeleted::class => [
                 JobPipeline::make([
 
                     Jobs\DeleteDatabase::class,
                     DeleteTenantS3Files::class,
+                    DeleteZepUsers::class,
 
                 ])->send(function (Events\TenantDeleted $event) {
                     return $event->tenant;
@@ -73,6 +79,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\DatabaseSeeded::class => [],
             Events\DatabaseRolledBack::class => [],
             Events\DatabaseDeleted::class => [],
+            Events\DeletingDatabase::class => [],
 
             // Tenancy events
             Events\InitializingTenancy::class => [],

@@ -24,7 +24,7 @@ const submit = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
-    })).post(route((usePage().props.tenant_id ? 'tenant.login': 'landlord.login')), {
+    })).post(route((usePage().props.tenant_id ? 'login': 'landlord.login')), {
         onFinish: () => form.reset('password'),
     });
 };

@@ -2,14 +2,14 @@ export default {
     root: ({ props }) => ({
         class: [
             // Display
-            'inline-flex',
+            'mt-1 block w-full',
 
             { 'flex-col': props.showButtons && props.buttonLayout == 'vertical' },
 
             //Sizing
             { '!w-16': props.showButtons && props.buttonLayout == 'vertical' },
 
-            'ring-1 ring-surface-300 dark:ring-surface-700 ring-offset-0',
+            // 'ring-1 ring-inset ring-surface-300 dark:ring-surface-700 ring-offset-0',
             'shadow-sm',
             'rounded-md'
         ]
@@ -18,12 +18,13 @@ export default {
         root: ({ parent }) => ({
             class: [
                 //Text
-                'sm:text-sm',
+                'text-normal text-surface-900 dark:text-surface-0',
                 { 'text-center': parent.props.showButtons && parent.props.buttonLayout == 'vertical' },
 
+                'mt-1 block w-full',
                 // Spacing
                 'm-0',
-                'py-1.5 px-3',
+                'py-2 px-3',
 
                 // Shape
                 'rounded-md',
@@ -35,13 +36,15 @@ export default {
                 'text-surface-900 dark:text-surface-0',
                 'placeholder:text-surface-400 dark:placeholder:text-surface-500',
                 'bg-surface-0 dark:bg-surface-900',
+                'border-gray-300 dark:border-surface-700',
+
                 { 'border-r border-surface-300 dark:border-surface-700': parent.props.showButtons && parent.props.buttonLayout == 'stacked' },
                 { 'border-x border-surface-300 dark:border-surface-700': parent.props.showButtons && parent.props.buttonLayout == 'horizontal' },
                 { 'border-y border-surface-300 dark:border-surface-700': parent.props.showButtons && parent.props.buttonLayout == 'vertical' },
 
                 // States
-                'outline-none focus:ring-primary-600 dark:focus:ring-primary-500',
-                'focus:outline-none focus:outline-offset-0 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-500',
+                // 'outline-none focus:ring-primary-600 dark:focus:ring-primary-500',
+                // 'focus:outline-none focus:outline-offset-0 focus:ring-2 focus:ring-inset focus:ring-primary-600 dark:focus:ring-primary-500',
 
                 //Position
                 { 'order-2': parent.props.buttonLayout == 'horizontal' || parent.props.buttonLayout == 'vertical' }

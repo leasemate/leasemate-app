@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -39,7 +40,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 */
 
 Route::group([
-    'as' => 'tenant.',
+//    'as' => 'tenant.',
     'middleware' => [
         'web',
         'guest',
@@ -150,17 +151,16 @@ Route::middleware([
         return 'done';
     });
 
-    Route::get('/delete-s3', function() {
-
-
-    });
-
     Route::get('/', function () {
         return redirect('dashboard');
     });
 
     Route::resource('assets', AssetController::class);
+
+    Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
     Route::resource('users', UserController::class);
+    Route::resource('leases', LeaseController::class);
+
     Route::resource('roles', RoleController::class);
 
     Route::get('/dashboard', function () {
