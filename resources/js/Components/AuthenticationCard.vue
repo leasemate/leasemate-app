@@ -1,11 +1,23 @@
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <div>
-            <slot name="logo" />
-        </div>
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-            <slot />
+    <div class="grid grid-cols-12 justify-center">
+        <div class="col-span-4 col-start-5">
+
+            <div class="text-center mb-5">
+                <div>
+                    <slot name="logo" />
+                    <h2>REAI</h2>
+                </div>
+
+                <span v-if="$page.props.tenant_name" class="text-xl text-center font-medium dark:text-white mt-6">{{ $page.props.tenant_name }}</span>
+            </div>
+
+            <div class="p-8 bg-slate-50 rounded-2xl border-2 border-slate-300">
+
+                <slot />
+
+            </div>
         </div>
     </div>
+
 </template>

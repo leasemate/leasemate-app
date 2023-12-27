@@ -13,7 +13,9 @@ class RegisteredTenantController extends Controller
 {
     public function create(Request $request)
     {
-        return Inertia::render('Tenant/Register');
+        return Inertia::render('Tenant/Register', [
+            'recentlyRegistered' => session('recentlyRegistered'),
+        ]);
     }
 
     public function store(RegisterTenantRequest $request)
@@ -26,6 +28,8 @@ class RegisteredTenantController extends Controller
         $tenant->password = null;
         $tenant->save();
 
-        return Inertia::location(tenant_route($tenant->domains->first()->domain, 'login'));
+        return back()->with('recentlyRegistered', true);
+
+//        return Inertia::location(tenant_route($tenant->domains->first()->domain, 'login'));
     }
 }

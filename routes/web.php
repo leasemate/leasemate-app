@@ -2,6 +2,7 @@
 
 use App\Facades\ZepApi;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Landlord\TenantController;
 use App\Http\Controllers\Tenant\RegisteredTenantController;
 use App\Http\Requests\Auth\LoginRequest;
@@ -23,14 +24,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => false,
-        'canRegister' => true,
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', HomeController::class);
 
 Route::get('registration', [RegisteredTenantController::class, 'create'])
     ->name('tenant.registration');
