@@ -160,10 +160,9 @@ onMounted(() => {
 
         <DefaultForm @submitted="saveRole">
 
-
             <template #form>
 
-                <div class="col-span-6 sm:col-span-4">
+                <div class="col-span-6">
                     <InputLabel for="name" value="Name" />
                     <TextInput
                         id="name"
@@ -179,7 +178,6 @@ onMounted(() => {
                 </div>
 
                 <div class="col-span-6">
-                    <div class="col-span-6 sm:col-span-4">
 
                         <div class="flex justify-start items-center space-x-4 p-1">
 
@@ -234,7 +232,6 @@ onMounted(() => {
                         <div v-if="form.errors.role_permissions" class="font-normal text-sm mt-2 mb-2 text-red-600 dark:text-red-400">{{form.errors.role_permissions}}</div>
 
                     </div>
-                </div>
 
             </template>
 

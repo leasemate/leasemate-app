@@ -69,6 +69,9 @@ const closeModal = () => {
                         Position
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Role(s)
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -98,6 +101,16 @@ const closeModal = () => {
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ user.position ?? '--' }}
+                    </td>
+                    <td class="px-6 py-4 dark:text-zinc-100/80">
+                        <span
+                            class="badge font-medium text-11 px-1.5 py-[1.5px] rounded"
+                            :class="user.email_verified_at
+                            ? 'bg-green-50 text-green-500 dark:bg-green-500/20'
+                            : 'bg-yellow-50 text-yellow-500 dark:bg-yellow-500/20'"
+                        >
+                        {{ user.email_verified_at ? 'Verified' : 'Pending' }}
+                        </span>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
 

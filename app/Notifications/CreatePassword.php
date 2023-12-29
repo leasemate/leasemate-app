@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 
 class CreatePassword extends Notification
 {
@@ -36,7 +37,9 @@ class CreatePassword extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return $this->buildMailMessage($this->resetUrl($notifiable));
+        Log::info('URL: '. $this->createPasswordUrl($notifiable));
+
+        return $this->buildMailMessage($this->createPasswordUrl($notifiable));
     }
 
     protected function buildMailMessage($url)
@@ -55,9 +58,9 @@ class CreatePassword extends Notification
      * @param  mixed  $notifiable
      * @return string
      */
-    protected function resetUrl($notifiable)
+    protected function createPasswordUrl($notifiable)
     {
-        return url(route('password.reset', [
+        return url(route('new-user-password.create', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));

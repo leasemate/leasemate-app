@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -48,7 +49,7 @@ class UserController extends Controller
 
             $user = User::create([
                 ...$request->validated(),
-                'password' => bcrypt('password'),
+                'password' => bcrypt(Str::random()),
             ]);
 
             $user->syncRoles($request->user_roles);

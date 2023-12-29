@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\NewUserPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -89,11 +90,14 @@ Route::group([
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
 
-//    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-//        ->name('password.create');
-
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('create-password/{token}', [NewUserPasswordController::class, 'create'])
+        ->name('new-user-password.create');
+
+    Route::post('create-password', [NewUserPasswordController::class, 'store'])
+        ->name('new-user-password.store');
 
 });
 
@@ -153,7 +157,7 @@ Route::middleware([
 
     Route::get('/', function () {
         return redirect('dashboard');
-    });
+    })->name('dashboard');
 
     Route::resource('assets', AssetController::class);
 

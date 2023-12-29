@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\CreatePassword;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Response;
 
@@ -40,7 +41,10 @@ class UserObserver
         }
 
         if( ! $user->is_super_admin) {
-            $user->notify(new CreatePassword(Password::broker()->createToken($user)));
+            $password_token = Password::broker()->createToken($user);
+            Log::info('PASSWORD TOKEN: '. $password_token);
+
+//            $user->notify(new CreatePassword($password_token));
         }
 
     }

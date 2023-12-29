@@ -67,7 +67,7 @@ const saveUser = () => {
 
         <template #form>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6">
                 <InputLabel for="name" value="Name" />
                 <TextInput
                     id="name"
@@ -82,7 +82,7 @@ const saveUser = () => {
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6">
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
@@ -97,7 +97,7 @@ const saveUser = () => {
                 <InputError :message="form.errors.email" class="mt-2" />
             </div>
 
-            <div class="col-span-6 sm:col-span-4">
+            <div class="col-span-6">
                 <InputLabel for="position" value="Position" />
                 <TextInput
                     id="position"
@@ -111,7 +111,7 @@ const saveUser = () => {
                 <InputError :message="form.errors.position" class="mt-2" />
             </div>
 
-            <div v-if=" ! props.user.is_super_admin && roles.length" class="col-span-6 xs:col-span-3">
+            <div v-if=" ! props.user.is_super_admin && roles.length" class="col-span-6">
 
                 <div class="block font-medium text-sm text-gray-700 dark:text-gray-300">Roles</div>
 

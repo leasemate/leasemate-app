@@ -16,7 +16,7 @@ class RoleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => ucwords($this->name),
             'can_delete' => (bool)( ! $this->users->count() && $this->name != 'Admin'),
             'permissions' => PermissionResource::collection($this->permissions),
         ];

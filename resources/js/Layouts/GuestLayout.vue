@@ -8,10 +8,10 @@ import ToastList from "@/Components/ToastList.vue";
     <ToastList />
 
     <div class="container-fluid">
-        <div class="min-h-screen">
+        <div class="max-h-screen">
 <!--            <div class="swiper-wrapper">-->
 <!--                <div class="swiper-slide">-->
-                    <img src="/images/bg-1.jpg" class="" alt="">
+                    <img src="/images/bg-1.jpg" alt="">
                     <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>
 <!--                </div>-->
 <!--            </div>-->
@@ -23,11 +23,7 @@ import ToastList from "@/Components/ToastList.vue";
 <!--            </div>-->
         </div>
 
-        <div class="container fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50">
-
-            <slot />
-
-        </div>
+        <slot />
     </div>
 
 </template>

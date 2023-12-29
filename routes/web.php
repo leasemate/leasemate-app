@@ -22,23 +22,33 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 |
 */
 
+Route::middleware([
+    'web',
+])->group(function() {
+
+    Route::get('/', HomeController::class);
+
+//    Route::get('/terms-of-service', function ()  {
+//        dd('test');
+////        return Inertia::render('TermsOfService');
+//    });
+
+    Route::get('registration', [RegisteredTenantController::class, 'create'])
+        ->name('tenant.registration');
+
+    Route::post('registration', [RegisteredTenantController::class, 'store'])
+        ->name('tenant.registration.store');
+
+});
 
 
-Route::get('/', HomeController::class);
 
-Route::get('registration', [RegisteredTenantController::class, 'create'])
-    ->name('tenant.registration');
-
-Route::post('registration', [RegisteredTenantController::class, 'store'])
-    ->name('tenant.registration.store');
 
 
 Route::middleware([
     'web',
     'guest'
 ])->group(function () {
-
-
 
     Route::get('/landlord-login', function () {
 
