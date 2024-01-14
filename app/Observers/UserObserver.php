@@ -43,8 +43,9 @@ class UserObserver
         if( ! $user->is_super_admin) {
             $password_token = Password::broker()->createToken($user);
             Log::info('PASSWORD TOKEN: '. $password_token);
+            Log::info('Tenant: '. tenant());
 
-//            $user->notify(new CreatePassword($password_token));
+            $user->notify(new CreatePassword($password_token));
         }
 
     }

@@ -19,7 +19,7 @@ class LeaseResource extends JsonResource
             'tenant_name' => $this->tenant_name,
             'suite_number' => $this->suite_number,
             'gross_leasable_area' => $this->gross_leasable_area,
-            'gross_leasable_area_display' => number_format($this->gross_leasable_area)." sq ft",
+            'gross_leasable_area_display' => $this->gross_leasable_area." sq ft",
             'start_date' => $this->start_date?$this->start_date->format('m/d/Y'):null,
             'end_date' => $this->end_date?$this->end_date->format('m/d/Y'):null,
             'rent_per_sqft' => $this->rent_per_sqft,

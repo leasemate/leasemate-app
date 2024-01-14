@@ -8,9 +8,11 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserAssetResource;
 use App\Models\Team;
 use App\Models\User;
+use App\Notifications\CreatePassword;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
@@ -124,6 +126,21 @@ class UserController extends Controller
             $user->delete();
 
             session()->flash('success', $user->name.' User deleted successfully');
+
+        } catch(\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
+
+        return redirect()->route('users.index');
+    }
+
+    public function resendInvitation(User $user)
+    {
+        try {
+            $password_token = Password::broker()->createToken($user);
+            $user->notify(new CreatePassword($password_token));
+
+            session()->flash('success', 'Invitation resent successfully');
 
         } catch(\Exception $e) {
             session()->flash('error', $e->getMessage());

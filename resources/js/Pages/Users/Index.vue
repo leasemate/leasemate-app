@@ -111,6 +111,13 @@ const closeModal = () => {
                         >
                         {{ user.email_verified_at ? 'Verified' : 'Pending' }}
                         </span>
+                        <div>
+                        <Link
+                            v-if="!user.email_verified_at"
+                            :href="route('users.resendInvitation', user)"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline text-xs"
+                            >Resend Invite</Link>
+                        </div>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
 

@@ -39,7 +39,7 @@ class LeaseController extends Controller
                 $lease_document = $request->file('lease_document');
 
                 $disk = 's3';
-                $storedName = $lease_document->store(tenant('domain')."/".auth()->user()->id, ['disk'=>$disk, 'visibility'=>'public']);
+                $storedName = $lease_document->store(tenant('id')."/".$request->asset_id."/".auth()->user()->id, ['disk'=>$disk, 'visibility'=>'public']);
 
                 $asset = Asset::find($request->asset_id);
 

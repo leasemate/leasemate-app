@@ -8,8 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 
-class CreatePassword extends Notification
+class CreatePassword extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -37,9 +38,11 @@ class CreatePassword extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        Log::info('URL: '. $this->createPasswordUrl($notifiable));
+        $url = $this->createPasswordUrl($notifiable);
 
-        return $this->buildMailMessage($this->createPasswordUrl($notifiable));
+        Log::info('URL to MAIL: '. $url);
+
+        return $this->buildMailMessage($url);
     }
 
     protected function buildMailMessage($url)
@@ -60,9 +63,11 @@ class CreatePassword extends Notification
      */
     protected function createPasswordUrl($notifiable)
     {
-        return url(route('new-user-password.create', [
+        Log::info('DOMAIN:'.tenant('domain'));
+
+        return URL::formatScheme().tenant('domain').route('new-user-password.create', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
+        ], false);
     }
 }
