@@ -17,9 +17,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        'reai.test',
-        'reai-dev.com',
-//        'reai.us-1.sharedwithexpose.com',
+        env('APP_URL'),
     ],
 
     /**
