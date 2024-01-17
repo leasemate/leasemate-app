@@ -21,7 +21,7 @@ class UserObserver
     {
 
         \Log::info('OBSERVER: User created', ['user' => $user]);
-        
+
         if(tenant()) {
             $user_data = [
                 'email' => (string) $user->email,
