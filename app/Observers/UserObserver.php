@@ -21,31 +21,34 @@ class UserObserver
     {
 
         \Log::info('OBSERVER: User created', ['user' => $user]);
+        
+        if(tenant()) {
+            $user_data = [
+                'email' => (string) $user->email,
+                'first_name' => (string) $user->name,
+                'user_id' => (string) $user->zep_user_id,
+                'metadata' => [
+                    'user_id' => (int) $user->id,
+                    'tenant_id' => (string) tenant('id'),
+                    'tenant_domain' => (string) tenant('domain'),
+                ],
+            ];
 
-        $user_data = [
-            'email' => (string) $user->email,
-            'first_name' => (string) $user->name,
-            'user_id' => (string) $user->zep_user_id,
-            'metadata' => [
-                'user_id' => (int) $user->id,
-                'tenant_id' => (string) tenant('id'),
-                'tenant_domain' => (string) tenant('domain'),
-            ],
-        ];
+            $zep_user = ZepApi::createUser($user_data);
 
-        $zep_user = ZepApi::createUser($user_data);
+            if($zep_user) {
+                $user->zep_uuid = $zep_user['uuid'];
+                $user->save();
+            }
 
-        if($zep_user) {
-            $user->zep_uuid = $zep_user['uuid'];
-            $user->save();
-        }
 
-        if( ! $user->is_super_admin) {
-            $password_token = Password::broker()->createToken($user);
-            Log::info('PASSWORD TOKEN: '. $password_token);
-            Log::info('Tenant: '. tenant());
+            if(! $user->is_super_admin) {
+                $password_token = Password::broker()->createToken($user);
+                Log::info('PASSWORD TOKEN: '. $password_token);
+                Log::info('Tenant: '. tenant());
 
-            $user->notify(new CreatePassword($password_token));
+                $user->notify(new CreatePassword($password_token));
+            }
         }
 
     }
