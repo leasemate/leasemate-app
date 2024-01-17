@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
@@ -12,6 +13,8 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Log::info('Running PermissionSeeder');
 
         $current_permissions = Permission::pluck('name');
         $new_permissions = collect();
