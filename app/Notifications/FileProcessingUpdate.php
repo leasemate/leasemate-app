@@ -40,9 +40,9 @@ class FileProcessingUpdate extends Notification
     {
         return [
             'notification_type_name'=>'File Processing',
-            'file_name' => $this->file->name,
-            'file_status' => $this->file->documentable->status,
-            'file_updated_at' => $this->file->documentable->updated_at,
+            'file_name' => $this->file->og_filename,
+            'file_status' => $this->file->status,
+            'file_updated_at' => $this->file->updated_at,
         ];
     }
 }

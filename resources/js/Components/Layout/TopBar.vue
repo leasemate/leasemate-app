@@ -297,22 +297,6 @@ onBeforeUnmount(() => {
                                             </div>
                                         </a>
 
-                                        text-gray-500
-                                        dark:text-gray-400
-
-                                        bg-white
-                                        dark:bg-gray-800
-
-                                        hover:text-gray-700
-                                        dark:hover:text-gray-300
-
-                                        focus:outline-none
-                                        focus:bg-gray-50
-                                        dark:focus:bg-gray-700
-
-                                        active:bg-gray-50
-                                        dark:active:bg-gray-700
-
                                     </div>
 
                                     <div v-else>

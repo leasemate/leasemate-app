@@ -35,6 +35,32 @@ class ReaiProcessor
         return $this->post("/chat", $post_data);
     }
 
+    public function registerLeaseUpload($asset_id, $lease_id, $storedName)
+    {
+
+        $post_data =[
+            'classification' => 'lease',
+            'sub_classification' => 'original',
+            'tenant_id' => tenant('id'),
+            'user_id' => auth()->user()->id,
+            'asset_id' => $asset_id,
+            'document_id' => $lease_id,
+            's3_object' => $storedName,
+        ];
+
+        Log::info('SERVICE: Registering lease upload', ['post_data:', $post_data]);
+
+        return $this->post("/register_document_upload", $post_data);
+    }
+
+public function registerAmendmentUpload($post_data)
+    {
+
+        Log::info('SERVICE: Registering amendment upload', ['post_data:', $post_data]);
+
+        return $this->post("/register_amendment_upload", $post_data);
+    }
+
     public function deleteFile($s3_object)
     {
         $post_data = [

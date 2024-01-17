@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\UniqueFileName;
+
+use App\Rules\UniqueLeaseFilename;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLeaseRequest extends FormRequest
@@ -26,9 +27,9 @@ class StoreLeaseRequest extends FormRequest
             'lease_document' => [
                 'required',
                 'file',
-                'mimes:pdf,jpg,jpeg,png,xls,xlsx',
+                'mimes:pdf',
                 'max:51200',
-                new UniqueFileName
+                new UniqueLeaseFilename()
             ]
         ];
     }

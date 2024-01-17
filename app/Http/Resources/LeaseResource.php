@@ -14,16 +14,19 @@ class LeaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+//dd($this->extracted_data);
         return [
             'id' => $this->id,
+            'asset_id' => $this->asset_id,
             'tenant_name' => $this->tenant_name,
-            'suite_number' => $this->suite_number,
-            'gross_leasable_area' => $this->gross_leasable_area,
-            'gross_leasable_area_display' => $this->gross_leasable_area." sq ft",
+            'og_filename' => $this->og_filename,
+            'address' => $this->address,
+            'gla' => $this->gla,
+            'gla_display' => $this->gla." sq ft",
             'start_date' => $this->start_date?$this->start_date->format('m/d/Y'):null,
             'end_date' => $this->end_date?$this->end_date->format('m/d/Y'):null,
             'rent_per_sqft' => $this->rent_per_sqft,
-            'abstract_data' => $this->abstract_data,
+            'extracted_data' => $this->extracted_data,
             'status' => $this->status,
         ];
     }

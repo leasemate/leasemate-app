@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryLink from "@/Components/PrimaryLink.vue";
@@ -13,8 +13,11 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/d
 import "filepond/dist/filepond.min.css";
 
 import moment from "moment";
+import Hero from "@/Components/Lease/Hero.vue";
+import Associates from "@/Components/Lease/Associates.vue";
 
 const page = usePage();
+const user = computed(() => page.props.auth.user);
 const props = defineProps({
     asset: Object,
     associates: Array,
@@ -43,15 +46,15 @@ setOptions({
     // files: files,
     server: {
         process: {
-            url: '/leases',
+            url: route('assets.leases.store', props.asset),
             headers: {
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': page.props.csrf,
             },
-            ondata: (formData) => {
-                formData.append('asset_id', props.asset.id);
-                return formData;
-            },
+            // ondata: (formData) => {
+            //     formData.append('asset_id', props.asset.id);
+            //     return formData;
+            // },
             onerror: (response) => {
                 console.log("on error");
                 serverResponse = JSON.parse(response);
@@ -78,6 +81,20 @@ const handleInit = () => {
     console.log("handle init");
 }
 
+onMounted(() => {
+
+    Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
+        .listen('FileStatusUpdate', (e) => {
+            router.reload({ only: ['leases'] });
+        });
+
+});
+
+onBeforeUnmount(() => {
+    if(user.value) {
+        Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
+    }
+});
 
 </script>
 
@@ -94,30 +111,9 @@ const handleInit = () => {
                 :href="route('assets.edit', asset)">Edit Asset</PrimaryLink>
         </div>
 
-        <div class="relative mt-4">
-            <img src="/images/Commercial-real-estate.webp" alt="Property" class="w-full h-auto object-cover max-h-72 rounded-lg shadow-lg" />
+        <Hero :asset="asset" />
 
-            <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
-                <div class="text-center text-white p-4">
-                    <h1 class="text-4xl font-bold mb-2">{{ asset.name }}</h1>
-                    <p class="text-xl">{{ asset.address }}</p>
-                    <p class="text-lg">GLA: {{ filters.formatNumberSqFt(asset.gross_leasable_area)??'--' }}</p>
-                    <!-- Additional property details here -->
-                </div>
-            </div>
-        </div>
-
-        <div class="border rounded-lg px-4 py-4 my-8 shadow-lg">
-
-            <h4>Associates:</h4>
-
-            <ul>
-                <li v-for="associate in associates" :key="associate.id">
-                    {{ associate.display_name_with_roles }} - {{ associate.email }}
-                </li>
-            </ul>
-
-        </div>
+        <Associates :associates="associates" />
 
         <FilePond
             name="lease_document"
@@ -132,14 +128,15 @@ const handleInit = () => {
 
             <template #head>
                 <tr>
+                    <th scope="col" class="px-6 py-3"></th>
                     <th scope="col" class="px-6 py-3">
                         Tenant Name
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Suite#
+                        Address
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        GLA
+                        GLA (SQFT)
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Start Date
@@ -150,9 +147,6 @@ const handleInit = () => {
                     <th scope="col" class="px-6 py-3">
                         Rent / Sq Ft
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Status
-                    </th>
                 </tr>
             </template>
 
@@ -160,25 +154,7 @@ const handleInit = () => {
             <template #body>
                 <tr v-for="lease in props.leases" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
-                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-                        {{ lease.tenant_name }}
-                    </th>
-                    <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ lease.suite_number??'--' }}
-                    </td>
-                    <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ filters.formatNumberSqFt(lease.gross_leasable_area)??'--' }}
-                    </td>
-                    <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ lease.start_date??'--' }}
-                    </td>
-                    <td class="px-6 py-4 space-x-2">
-                        {{ lease.end_date??'--' }}
-                    </td>
-                    <td class="px-6 py-4 space-x-2">
-                        {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
-                    </td>
-                    <td class="px-6 py-4 space-x-2">
+                    <th scope="row" class="px-6 py-4 space-x-2">
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
@@ -186,7 +162,7 @@ const handleInit = () => {
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="lease.status != 'Completed'">
+                                  <template v-if="lease.status != 'Ready'">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
                                             :class="getFileStatusClass(fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
@@ -201,7 +177,36 @@ const handleInit = () => {
                               <span>{{ fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status }}</span>
 
                           </span>
+                    </th>
+                    <td class="px-6 py-4 text-gray-900 ">
+                        <Link
+                            v-if="lease.status == 'Ready'"
+                            :href="route('assets.leases.show', [lease.asset_id, lease.id])"
+                            >
+                            <strong>{{ lease.tenant_name }}</strong>
+                        </Link>
+
+                        <template v-else>
+                            {{ lease.og_filename }}
+                        </template>
+
                     </td>
+                    <td class="px-6 py-4 dark:text-zinc-100/80">
+                        {{ lease.address??'--' }}
+                    </td>
+                    <td class="px-6 py-4 dark:text-zinc-100/80">
+                        {{ filters.formatNumber(lease.gla)??'--' }}
+                    </td>
+                    <td class="px-6 py-4 dark:text-zinc-100/80">
+                        {{ lease.start_date??'--' }}
+                    </td>
+                    <td class="px-6 py-4 space-x-2">
+                        {{ lease.end_date??'--' }}
+                    </td>
+                    <td class="px-6 py-4 space-x-2">
+                        {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
+                    </td>
+
                 </tr>
             </template>
         </Table>

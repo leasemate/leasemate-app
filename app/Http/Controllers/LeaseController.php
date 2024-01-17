@@ -32,42 +32,6 @@ class LeaseController extends Controller
      */
     public function store(StoreLeaseRequest $request)
     {
-        try {
-
-            if ($request->hasFile('lease_document')) {
-
-                $lease_document = $request->file('lease_document');
-
-                $disk = 's3';
-                $storedName = $lease_document->store(tenant('id')."/".$request->asset_id."/".auth()->user()->id, ['disk'=>$disk, 'visibility'=>'public']);
-
-                $asset = Asset::find($request->asset_id);
-
-                $lease = $asset->leases()->create([
-                    'user_id' => auth()->user()->id,
-                    'tenant_name'=>$lease_document->getClientOriginalName(),
-                ])->documents()->create([
-                    'uuid' => (string) Str::uuid(),
-                    'collection_name' => 'lease_documents',
-                    'name' => $lease_document->getClientOriginalName(),
-                    'file_name' => $storedName,
-                    'mime_type' => $lease_document->getMimeType(),
-                    'disk' => $disk, // 'public
-                    'size' => $lease_document->getSize(),
-                    'extension' => $lease_document->getClientOriginalExtension(),
-                ]);
-
-                //To-do:
-                //send API request with lease data to REAI API backend.
-
-            }
-
-        } catch(\Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            return response()->json(['errors' => $e->getMessage()], 422);
-        }
 
     }
 

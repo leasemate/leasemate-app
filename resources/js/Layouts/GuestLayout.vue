@@ -7,23 +7,29 @@ import ToastList from "@/Components/ToastList.vue";
 
     <ToastList />
 
-    <div class="container-fluid">
-        <div class="max-h-screen">
-<!--            <div class="swiper-wrapper">-->
-<!--                <div class="swiper-slide">-->
-                    <img src="/images/bg-1.jpg" alt="">
-                    <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">-->
-<!--                <div class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" aria-current="true">-->
-<!--                </div>-->
-<!--                <div class="swiper-pagination-bullet" tabindex="1">2</div>-->
-<!--                <div class="swiper-pagination-bullet" tabindex="2">3</div>-->
-<!--            </div>-->
-        </div>
+<!--    <div class="container-fluid">-->
+<!--        <div class="max-h-screen">-->
 
-        <slot />
+<!--            <img src="/images/bg-1.jpg" alt="">-->
+<!--            <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>-->
+<!--        </div>-->
+
+<!--        <slot />-->
+<!--    </div>-->
+
+    <div class="flex min-h-screen">
+        <div class="relative w-full">
+            <!-- Background image container -->
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/bg-1.jpg');">
+                <!-- Overlay -->
+                <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>
+            </div>
+
+            <!-- Content (slot) -->
+            <div class="relative z-10">
+                <slot />
+            </div>
+        </div>
     </div>
 
 </template>

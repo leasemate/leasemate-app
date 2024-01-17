@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Events\FileStatusUpdate;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\AssetLeaseController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -146,13 +147,18 @@ Route::middleware([
         return redirect('dashboard');
     })->name('dashboard');
 
-    Route::resource('assets', AssetController::class);
+
 
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
     Route::get('/users/{user}/resendInvitation', [UserController::class, 'resendInvitation'])->name('users.resendInvitation');
     Route::resource('users', UserController::class);
 
-    Route::resource('leases', LeaseController::class);
+    Route::resource('assets', AssetController::class);
+
+    Route::scopeBindings()->group(function () {
+        Route::resource('assets.leases', AssetLeaseController::class);
+    });
+
 
     Route::resource('roles', RoleController::class);
 

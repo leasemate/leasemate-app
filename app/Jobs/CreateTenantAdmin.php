@@ -34,15 +34,14 @@ class CreateTenantAdmin implements ShouldQueue
         $this->tenant->run(function ($tenant) {
 
             $user = User::create([
-                ...$tenant->only('name','email','password'),
-                'is_super_admin'=>true
+                ...$tenant->only('name', 'email', 'password'),
+                'is_super_admin' => true
             ]);
 
             $this->createTeam($user);
 
-//            event(new Registered($user));
+            event(new Registered($user));
         });
-
     }
 
     /**

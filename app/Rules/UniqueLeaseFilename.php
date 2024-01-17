@@ -3,10 +3,11 @@
 namespace App\Rules;
 
 use App\Models\File;
+use App\Models\Lease;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class UniqueFileName implements ValidationRule
+class UniqueLeaseFilename implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -15,12 +16,12 @@ class UniqueFileName implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $file_uploads = File::where('original_name', $value->getClientOriginalName())
-            ->where('user_id', auth()->user()->id)
+        $lease_uploads = Lease::where('og_filename', $value->getClientOriginalName())
+            ->where('asset_id', request()->asset->id)
             ->count();
 
-        if ($file_uploads > 0) {
-            $fail('This file already exists.');
+        if ($lease_uploads > 0) {
+            $fail('This lease already exists!');
         }
     }
 }

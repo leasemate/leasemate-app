@@ -1,8 +1,8 @@
 <template>
 
     <div class="container fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50">
-        <div class="grid grid-cols-12 justify-center">
-            <div class="col-span-4 col-start-5">
+        <div class="flex justify-center">
+            <div class="w-full lg:w-[40%]">
 
                 <div class="text-center mb-5">
                     <div>
