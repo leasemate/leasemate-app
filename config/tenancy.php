@@ -17,7 +17,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        env('APP_URL'),
+        env('APP_CENTRAL_DOMAIN', 'localhost'),
     ],
 
     /**
@@ -193,6 +193,6 @@ return [
      */
     'seeder_parameters' => [
         '--class' => 'DatabaseSeeder', // root seeder class
-        // '--force' => true,
+         '--force' => true,
     ],
 ];
