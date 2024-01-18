@@ -18,7 +18,7 @@ class ApiTokenFactory extends Factory
     public function definition(): array
     {
         return [
-            'api_token' => Str::uuid()->toString(),
+            'api_token' => hash('sha256', Str::uuid()->toString()),
         ];
     }
 }
