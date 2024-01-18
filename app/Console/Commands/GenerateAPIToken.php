@@ -13,7 +13,7 @@ class GenerateAPIToken extends Command
      *
      * @var string
      */
-    protected $signature = 'auth:generate-api-token';
+    protected $signature = 'auth:generate-api-token {--fresh : Delete all existing tokens}';
 
     /**
      * The console command description.
@@ -27,6 +27,20 @@ class GenerateAPIToken extends Command
      */
     public function handle()
     {
-        $this->info('API token created: ' . ApiToken::factory()->create()->api_token);
+        $this->info('Create API token:');
+
+        $fresh = $this->option('fresh');
+
+        if($fresh) {
+            $this->info('Deleting all existing tokens...');
+            ApiToken::truncate();
+        }
+
+        $apiToken = ApiToken::create([
+            'api_token' => hash('sha256', Str::uuid()->toString()),
+        ]);
+
+        $this->info('API token: ' . $apiToken->api_token);
+
     }
 }
