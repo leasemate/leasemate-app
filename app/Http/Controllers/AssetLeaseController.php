@@ -57,7 +57,9 @@ class AssetLeaseController extends Controller
                 //To-do:
                 //send API request with lease data to REAI API backend.
 
-                ReaiProcessor::registerLeaseUpload($asset->id, $lease->id, $storedName);
+                $registerLeaseUploadResponse = ReaiProcessor::registerLeaseUpload($asset->id, $lease->id, $storedName);
+
+                \Log::info('registerLeaseUploadResponse', ['registerLeaseUploadResponse' => $registerLeaseUploadResponse]);
 
                 return response()->json(['success' => 1]);
             }
