@@ -26,7 +26,7 @@ class FileProcessingController extends Controller
 
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
-            $status_msg = $request->get('status_message');
+            $status_msg = $request->get('message');
             $extracted_data = $request->get('extracted_data');
 
             $tenant_id = explode("/", $s3_object)[0];
@@ -45,7 +45,7 @@ class FileProcessingController extends Controller
             $lease->status = $status;
             $lease->status_msg = $status_msg??null;
 
-            if( ! is_null($extracted_data['classification'])) {
+            if($extracted_data && !empty($extracted_data['classification'])) {
                 $lease->tenant_name = $extracted_data['lessee_tenant'];
                 $lease->address = $extracted_data['property_address'];
                 $lease->gla = $extracted_data['square_feet'];
