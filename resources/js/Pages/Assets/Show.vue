@@ -19,6 +19,9 @@ import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import toast from "@/Stores/toast.js";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryLink from "@/Components/SecondaryLink.vue";
+import BoxIcon from "@/Components/BoxIcon.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -291,7 +294,14 @@ onBeforeUnmount(() => {
                     <td class="px-6 py-4 space-x-2">
                         {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
                     </td>
-                    <td class="px-6 py-4 space-x-2">
+                    <td class="px-6 py-4 space-x-2 flex items-center">
+                        <SecondaryLink
+                            :href="lease.filename"
+                            type="external"
+                            >
+                            <BoxIcon class="bx-cloud-download" />
+                        </SecondaryLink>
+
                         <DangerButton
                             :href="route('assets.leases.edit', [lease.asset_id, lease.id])"
                             class="text-sm"
