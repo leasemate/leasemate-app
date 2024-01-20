@@ -279,7 +279,8 @@ onBeforeUnmount(() => {
                         {{ lease.address??'--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ filters.formatNumber(lease.gla)??'--' }}
+                        <!-- {{ filters.formatNumber(lease.gla)??'--' }} -->
+                        {{ lease.gla??'--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ lease.start_date??'--' }}
