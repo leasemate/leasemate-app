@@ -34,11 +34,7 @@ class FileProcessingController extends Controller
 
             tenancy()->initialize($tenant);
 
-//            if(in_array($status, ['Extracting','Processing', 'Completed', 'Failed']) === false) throw new \Exception('Invalid status');
-
             $lease = Lease::where('filename', $s3_object)->first();
-//            dd($document);
-//            $file = File::withoutGlobalScope(UserScope::class)->where('stored_name', $s3_object)->first();
 
             if(!$lease) throw new \Exception('File not found', 404);
 
@@ -46,12 +42,13 @@ class FileProcessingController extends Controller
             $lease->status_msg = $status_msg??null;
 
             if($extracted_data && !empty($extracted_data['classification'])) {
-                $lease->tenant_name = $extracted_data['lessee_tenant'];
-                $lease->address = $extracted_data['property_address'];
-                $lease->gla = $extracted_data['square_feet'];
-                $lease->start_date = Carbon::parse($extracted_data['commencement_date']);
-                $lease->end_date = Carbon::parse($extracted_data['expiration_date']);
-                $lease->rent_per_sqft = $extracted_data['rent_per_sqft'];
+
+                $lease->tenant_name = !empty($extracted_data['lessee_tenant']) ? $extracted_data['lessee_tenant'] : null;
+                $lease->address = !empty($extracted_data['property_address']) ? $extracted_data['property_address'] : null;
+                $lease->gla = !empty($extracted_data['square_feet']) ? $extracted_data['square_feet'] : null;
+                $lease->start_date = !empty($extracted_data['commencement_date']) ? Carbon::parse($extracted_data['commencement_date']) : null;
+                $lease->end_date = !empty($extracted_data['expiration_date']) ? Carbon::parse($extracted_data['expiration_date']) : null;
+                $lease->rent_per_sqft = !empty($extracted_data['expiration_date']) ? $extracted_data['rent_per_sqft'] : null;
                 $lease->extracted_data = $extracted_data;
             }
 
