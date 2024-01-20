@@ -58,8 +58,15 @@ class ReaiProcessor
         return $this->send("post", "/register_document_upload", $post_data);
     }
 
-    public function registerTenant()
+    public function registerTenant($tenant_id, $tenant_domain)
     {
+        $post_data =[
+            'tenant_id' => $tenant_id,
+            'tenant_domain' => $tenant_domain,
+        ];
+
+        Log::info('SERVICE: Registering tenant', ['post_data:', $post_data]);
+
         return $this->send('post',"/register_tenant");
     }
 
