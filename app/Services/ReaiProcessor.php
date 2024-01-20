@@ -67,7 +67,7 @@ class ReaiProcessor
 
         Log::info('SERVICE: Registering tenant', ['post_data:', $post_data]);
 
-        return $this->send('post',"/register_tenant");
+        return $this->send('post',"/register_tenant", $post_data);
     }
 
     public function deleteFile($s3_object)
