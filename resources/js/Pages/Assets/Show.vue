@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryLink from "@/Components/PrimaryLink.vue";
@@ -15,6 +15,10 @@ import "filepond/dist/filepond.min.css";
 import moment from "moment";
 import Hero from "@/Components/Lease/Hero.vue";
 import Associates from "@/Components/Lease/Associates.vue";
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import toast from "@/Stores/toast.js";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -24,11 +28,71 @@ const props = defineProps({
     leases: Array,
 });
 
+const leases = ref(props.leases);
+
+// Watch for changes in the local ref
+watch(props.leases, (newLeases, oldLeases) => {
+    // Do something when props.leases changes
+    console.log('props.leases has changed:', newLeases);
+}, { deep: true });
+
 const { getFileStatusClass } = fileStatusClass();
-const fileStatuses = reactive({});
+const localLeaseStatuses = reactive({});
+
+const leaseToDelete = ref(null);
+const confirmingLeaseDeletion = ref(false);
+
+const confirmLeaseDeletion = (lease) => {
+    confirmingLeaseDeletion.value = true;
+    leaseToDelete.value = lease;
+};
+
+const closeModal = () => {
+    confirmingLeaseDeletion.value = false;
+};
+
+
+const deleteLease = async () => {
+
+    // console.log(fileToDelete.value);
+    // console.log(fileToDelete.value.id);
+
+    if(leaseToDelete.value) {
+
+        localLeaseStatuses[leaseToDelete.value.id] = 'Deleting';
+
+        closeModal();
+
+        try {
+
+            await new Promise((resolve, reject) => {
+
+                router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
+                    preserveScroll: true,
+                    // only: ['uploaded_files'],
+                    onSuccess: () => {
+
+                        localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
+                        leaseToDelete.value = null;
+                        resolve();
+                    },
+                    onError: () => {
+                        localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
+                        router.reload({ only: ['leases'] });
+                        reject(new Error("Failed to delete lease"));
+                    }
+                });
+            });
+
+        } catch (error) {
+            toast.error(error);
+            console.log(error);
+        }
+
+    }
+}
 
 const FilePond = VueFilePond(FilePondPluginFileValidateType);
-
 let serverResponse = '';
 
 setOptions({
@@ -55,6 +119,11 @@ setOptions({
             //     formData.append('asset_id', props.asset.id);
             //     return formData;
             // },
+            onsuccess: (response) => {
+                console.log("on success");
+                console.log(response);
+                // serverResponse = JSON.parse(response);
+            },
             onerror: (response) => {
                 console.log("on error");
                 serverResponse = JSON.parse(response);
@@ -63,8 +132,9 @@ setOptions({
     },
     labelFileProcessingError: (error) => {
         console.log(error);
-        if (serverResponse.errors && serverResponse.errors.upload_file) {
-            return serverResponse.errors.upload_file.join(' ');
+        console.log(serverResponse);
+        if (serverResponse.errors && serverResponse.errors.lease_document) {
+            return serverResponse.errors.lease_document.join(' ');
         }
         return serverResponse.message;
     },
@@ -83,6 +153,10 @@ const handleInit = () => {
 
 onMounted(() => {
 
+    props.leases.forEach((lease) => {
+        localLeaseStatuses[lease.id] = lease.status;
+    });
+
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('FileStatusUpdate', (e) => {
             router.reload({ only: ['leases'] });
@@ -94,6 +168,15 @@ onBeforeUnmount(() => {
     if(user.value) {
         Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
     }
+});
+
+watch(props.leases, (newLeases, oldLeases) => {
+    localLeaseStatuses.value = {};
+    console.log("watch leases");
+    console.log(newLeases);
+    newLeases.forEach((lease) => {
+        localLeaseStatuses.value[lease.id] = lease.status;
+    });
 });
 
 </script>
@@ -129,8 +212,9 @@ onBeforeUnmount(() => {
             <template #head>
                 <tr>
                     <th scope="col" class="px-6 py-3"></th>
+                    <th scope="col" class="px-6 py-3"></th>
                     <th scope="col" class="px-6 py-3">
-                        Tenant Name
+                        Name
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Address
@@ -147,6 +231,7 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3">
                         Rent / Sq Ft
                     </th>
+                    <th></th>
                 </tr>
             </template>
 
@@ -158,37 +243,44 @@ onBeforeUnmount(() => {
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status)">
+                            :class="getFileStatusClass(localLeaseStatuses[lease.id])">
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="lease.status != 'Ready'">
+                                  <template v-if="!['Ready', 'Failed'].includes(localLeaseStatuses[lease.id])">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                            :class="getFileStatusClass(fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
                                   </template>
 
                                   <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status, 'PROCESS_CLASSES')"></span>
+                                        :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
 
                               </span>
 
-                              <span>{{ fileStatuses[lease.id] === 'Deleting' ? 'Deleting' : lease.status }}</span>
+                              <span>{{ localLeaseStatuses[lease.id] }}</span>
 
                           </span>
                     </th>
+                    <td class="px-6 py-4 space-x-2">
+
+                    </td>
                     <td class="px-6 py-4 text-gray-900 ">
                         <Link
-                            v-if="lease.status == 'Ready'"
+                            v-if="lease.tenant_name"
                             :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                             >
                             <strong>{{ lease.tenant_name }}</strong>
                         </Link>
 
-                        <template v-else>
+                        <a
+                            v-else
+                            :href="lease.filename"
+                            target="_blank" rel="noopener noreferrer" class="font-medium"
+                        >
                             {{ lease.og_filename }}
-                        </template>
+                        </a>
 
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
@@ -206,11 +298,38 @@ onBeforeUnmount(() => {
                     <td class="px-6 py-4 space-x-2">
                         {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
                     </td>
+                    <td class="px-6 py-4 space-x-2">
+                        <DangerButton
+                            :href="route('assets.leases.edit', [lease.asset_id, lease.id])"
+                            class="text-sm"
+                            @click="confirmLeaseDeletion(lease)"
+                        >
+                            Delete
+                        </DangerButton>
+                    </td>
 
                 </tr>
             </template>
         </Table>
 
+        <Modal :show="confirmingLeaseDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete this lease?
+                </h2>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        @click="deleteLease()"
+                    >
+                        Delete
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
 
     </AuthenticatedLayout>
 

@@ -35,13 +35,14 @@ class ReaiProcessor
         return $this->post("/chat", $post_data);
     }
 
-    public function registerLeaseUpload($asset_id, $lease_id, $storedName)
+    public function registerDocumentUpload($asset_id, $lease_id, $storedName)
     {
 
         $post_data =[
             'classification' => 'lease',
             'sub_classification' => 'original',
             'tenant_id' => tenant('id'),
+            'tenant_domain' => explode(".", tenant('domain'))[0],
             'user_id' => auth()->user()->id,
             'asset_id' => $asset_id,
             'document_id' => $lease_id,

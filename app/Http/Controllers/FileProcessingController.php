@@ -43,7 +43,7 @@ class FileProcessingController extends Controller
 
             $lease->status = $status;
 
-            if($extracted_data) {
+            if( ! is_null($extracted_data['classification'])) {
                 $lease->tenant_name = $extracted_data['lessee_tenant'];
                 $lease->address = $extracted_data['property_address'];
                 $lease->gla = $extracted_data['square_feet'];
@@ -72,8 +72,4 @@ class FileProcessingController extends Controller
         }
 
     }
-
-
-
-
 }

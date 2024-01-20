@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class LeaseResource extends JsonResource
 {
@@ -19,6 +20,7 @@ class LeaseResource extends JsonResource
             'id' => $this->id,
             'asset_id' => $this->asset_id,
             'tenant_name' => $this->tenant_name,
+            'filename' => Storage::disk('s3')->url($this->filename),
             'og_filename' => $this->og_filename,
             'address' => $this->address,
             'gla' => $this->gla,

@@ -20,6 +20,7 @@ export function fileStatusClass() {
             'Processing': 'bg-yellow-600',
             'Pre-Processing': 'bg-yellow-400',
             'Deleting': 'bg-red-400',
+            'Failed': 'bg-red-400',
             'Completed': 'bg-green-400',
             'Ready': 'bg-green-400',
         }

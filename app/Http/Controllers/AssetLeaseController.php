@@ -11,6 +11,8 @@ use App\Models\Lease;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLeaseRequest;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Fortify\Rules\Password;
 
 class AssetLeaseController extends Controller
 {
@@ -57,18 +59,28 @@ class AssetLeaseController extends Controller
                 //To-do:
                 //send API request with lease data to REAI API backend.
 
-                $registerLeaseUploadResponse = ReaiProcessor::registerLeaseUpload($asset->id, $lease->id, $storedName);
+                $registerLeaseUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName);
 
-                \Log::info('registerLeaseUploadResponse', ['registerLeaseUploadResponse' => $registerLeaseUploadResponse]);
+                \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
-                return response()->json(['success' => 1]);
+                if( ! $registerLeaseUploadResponse->successful()) {
+
+                    if(Storage::disk('s3')->exists($lease->filename)) {
+                        Storage::disk('s3')->delete($lease->filename);
+                    }
+                    $lease->forceDelete();
+
+                    throw new \Exception('Failed to register lease upload.');
+                }
+
+                return response()->json(['success' => 1, 'lease' => $lease]);
             }
 
         } catch(\Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            \Log::error($e->getMessage());
+            \Log::error($e->getTraceAsString());
 
-            return response()->json(['errors' => $e->getMessage()], 422);
+            return response()->json(['message' => $e->getMessage()], 422);
         }
     }
 
@@ -105,6 +117,20 @@ class AssetLeaseController extends Controller
      */
     public function destroy(Asset $asset, Lease $lease)
     {
-        //
+        try {
+
+            if(Storage::disk('s3')->exists($lease->filename)) {
+                Storage::disk('s3')->delete($lease->filename);
+                $lease->forceDelete();
+            }
+
+            return redirect()->back()->with('success', "Lease deleted");
+
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            \Log::error($e->getTraceAsString());
+
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
     }
 }
