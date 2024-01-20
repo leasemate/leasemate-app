@@ -38,7 +38,7 @@ class FileProcessingController extends Controller
 
             if(!$lease) throw new \Exception('File not found', 404);
 
-            $lease->status = $status;
+            $lease->status = ($status == 'Completed' ? 'Ready' : $status);
             $lease->status_msg = $status_msg??null;
 
             if($extracted_data && !empty($extracted_data['classification'])) {
