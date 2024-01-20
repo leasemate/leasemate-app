@@ -6,6 +6,7 @@ use App\Facades\ReaiProcessor;
 use App\Http\Resources\AssetResource;
 use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
+use App\Jobs\DeleteLeaseFile;
 use App\Models\Asset;
 use App\Models\Lease;
 
@@ -78,7 +79,7 @@ class AssetLeaseController extends Controller
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());
-            \Log::error($e->getTraceAsString());
+//            \Log::error($e->getTraceAsString());
 
             return response()->json(['message' => $e->getMessage()], 422);
         }
@@ -119,12 +120,12 @@ class AssetLeaseController extends Controller
     {
         try {
 
-            if(Storage::disk('s3')->exists($lease->filename)) {
-                Storage::disk('s3')->delete($lease->filename);
-                $lease->forceDelete();
-            }
+            $lease->status = 'Deleting';
+            $lease->save();
 
-            return redirect()->back()->with('success', "Lease deleted");
+            DeleteLeaseFile::dispatch($lease);
+
+            return redirect()->back()->with('success', "Deleting lease");
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());

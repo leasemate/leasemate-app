@@ -52,37 +52,35 @@ const closeModal = () => {
 };
 
 
-const deleteLease = async () => {
-
-    // console.log(fileToDelete.value);
-    // console.log(fileToDelete.value.id);
+const deleteLease = () => {
 
     if(leaseToDelete.value) {
-
-        localLeaseStatuses[leaseToDelete.value.id] = 'Deleting';
 
         closeModal();
 
         try {
 
-            await new Promise((resolve, reject) => {
+            // new Promise((resolve, reject) => {
 
-                router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
+            router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
                     preserveScroll: true,
                     // only: ['uploaded_files'],
                     onSuccess: () => {
-
-                        localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
-                        leaseToDelete.value = null;
-                        resolve();
+                        // console.log('success');
+                        // localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
+                        // leaseToDelete.value = null;
+                        // resolve();
+                        // router.reload({ only: ['leases'] });
                     },
                     onError: () => {
-                        localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
-                        router.reload({ only: ['leases'] });
-                        reject(new Error("Failed to delete lease"));
+                        // console.log('error');
+                        // localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
+                        // reject(new Error("Failed to delete lease"));
                     }
                 });
-            });
+            // });
+
+            // console.log('Lease deleted successfully');
 
         } catch (error) {
             toast.error(error);
@@ -148,18 +146,19 @@ const handleOnProcessFile = (error, file) => {
 }
 
 const handleInit = () => {
-    console.log("handle init");
+    // console.log("handle init");
 }
 
 onMounted(() => {
 
-    props.leases.forEach((lease) => {
-        localLeaseStatuses[lease.id] = lease.status;
-    });
-
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen('FileStatusUpdate', (e) => {
-            router.reload({ only: ['leases'] });
+        .listen('LeaseFileDeleted', (e) => {
+            // console.log('EVENT LISTENER: LeaseFileDeleted!!');
+            // console.log(e);
+            toast.success(e.lease_deleted.og_filename + ': Deleted successfully');
+            router.reload({
+                'preserveScroll': true,
+            });
         });
 
 });
@@ -168,15 +167,6 @@ onBeforeUnmount(() => {
     if(user.value) {
         Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
     }
-});
-
-watch(props.leases, (newLeases, oldLeases) => {
-    localLeaseStatuses.value = {};
-    console.log("watch leases");
-    console.log(newLeases);
-    newLeases.forEach((lease) => {
-        localLeaseStatuses.value[lease.id] = lease.status;
-    });
 });
 
 </script>
@@ -243,23 +233,23 @@ watch(props.leases, (newLeases, oldLeases) => {
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(localLeaseStatuses[lease.id])">
+                            :class="getFileStatusClass(lease.status)">
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="!['Ready', 'Failed'].includes(localLeaseStatuses[lease.id])">
+                                  <template v-if="!['Ready', 'Failed'].includes(lease.status)">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                            :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
                                   </template>
 
                                   <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(localLeaseStatuses[lease.id], 'PROCESS_CLASSES')"></span>
+                                        :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
 
                               </span>
 
-                              <span>{{ localLeaseStatuses[lease.id] }}</span>
+                              <span>{{ lease.status }}</span>
 
                           </span>
                     </th>
