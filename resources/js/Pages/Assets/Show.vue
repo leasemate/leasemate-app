@@ -153,14 +153,16 @@ onMounted(() => {
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('LeaseFileDeleted', (e) => {
-            // console.log('EVENT LISTENER: LeaseFileDeleted!!');
-            // console.log(e);
             toast.success(e.lease_deleted.og_filename + ': Deleted successfully');
             router.reload({
                 'preserveScroll': true,
             });
+        })
+        .listen('FileStatusUpdate', (e) => {
+            router.reload({
+                'preserveScroll': true,
+            });
         });
-
 });
 
 onBeforeUnmount(() => {
