@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Facades\ReaiProcessor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Log;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -19,6 +21,18 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         static::creating(function ($tenant) {
 //            $tenant->id = explode(".", $tenant->domain)[0];
             $tenant->password = bcrypt($tenant->password);
+        });
+
+        static::created(function ($tenant) {
+
+            Log::info('Tenant created', ['tenant' => $tenant]);
+
+            Log::info('Send tenant domain to REAI API');
+
+            $registerTenantResponse = ReaiProcessor::registerTenant($tenant->id, explode(".", $tenant->domain)[0]);
+
+            Log::info('registerTenantResponse', ['registerTenantResponse' => $registerTenantResponse]);
+
         });
     }
 

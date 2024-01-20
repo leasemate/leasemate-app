@@ -53,12 +53,16 @@ class ReaiProcessor
         return $this->post("/register_document_upload", $post_data);
     }
 
-public function registerAmendmentUpload($post_data)
+    public function registerTenant($tenant_id, $tenant_domain)
     {
+        $post_data =[
+            'tenant_id' => $tenant_id,
+            'tenant_domain' => $tenant_domain,
+        ];
 
-        Log::info('SERVICE: Registering amendment upload', ['post_data:', $post_data]);
+        Log::info('SERVICE: Registering tenant', ['post_data:', $post_data]);
 
-        return $this->post("/register_amendment_upload", $post_data);
+        return $this->post("/register_tenant", $post_data);
     }
 
     public function deleteFile($s3_object)
