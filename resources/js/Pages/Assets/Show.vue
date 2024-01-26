@@ -6,6 +6,9 @@ import PrimaryLink from "@/Components/PrimaryLink.vue";
 import Button from "@/Components/Button.vue";
 import Table from "@/Components/Table.vue";
 
+import Tooltip from 'primevue/tooltip';
+// import Menu from 'primevue/menu';
+
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
 
 import VueFilePond, { setOptions } from "vue-filepond";
@@ -141,6 +144,25 @@ setOptions({
     },
 });
 
+const toolTipOptions = (lease) => {
+    if(lease.status == 'Failed') {
+        return {
+            value: lease.status_msg,
+            pt: {
+                arrow: {
+                    style: {
+                        borderRightColor: 'var(--primary-color)', // Customize the arrow color
+                    },
+                },
+                text: 'rounded-md px-2 py-1 text-xs ring-1 ring-inset bg-red-50 text-red-800 ring-red-600/20'
+            }
+        };
+    } else {
+        return null;
+    }
+
+};
+
 const handleOnProcessFile = (error, file) => {
     // console.log("handle on process file");
     // console.log(error);
@@ -174,6 +196,29 @@ onBeforeUnmount(() => {
     }
 });
 
+
+// const menu = ref();
+// const items = ref([
+//   {
+//     label: 'Options',
+//     items: [
+//       {
+//         label: 'Refresh',
+//         icon: 'pi pi-refresh'
+//       },
+//       {
+//         label: 'Export',
+//         icon: 'pi pi-upload'
+//       }
+//     ]
+//   }
+// ]);
+//
+// const toggle = (event) => {
+//   console.log('asdf');
+//   menu.value.toggle(event);
+// };
+
 </script>
 
 <template>
@@ -202,11 +247,11 @@ onBeforeUnmount(() => {
             label-idle="Lease Drop or <span class='filepond--label-action'>Browse</span>"
         />
 
+
         <Table>
 
             <template #head>
                 <tr>
-                    <th scope="col" class="px-6 py-3"></th>
                     <th scope="col" class="px-6 py-3"></th>
                     <th scope="col" class="px-6 py-3">
                         Name
@@ -226,7 +271,12 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3">
                         Rent / Sq Ft
                     </th>
-                    <th></th>
+                    <th>
+<!--                      <div class="flex justify-center">-->
+<!--                        <Button type="button" icon="bx bx-menu-alt-right" class="relative items-center inline-flex text-center align-bottom justify-center leading-[normal] w-12 p-0 py-3 rounded-md text-white bg-gray-500 border border-gray-500 focus:outline-none focus:outline-offset-0 focus:ring hover:bg-gray-600 hover:border-gray-600 focus:ring-primary-400/50 dark:focus:ring-primary-300/50 transition duration-200 ease-in-out cursor-pointer overflow-hidden select-none" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />-->
+<!--                        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />-->
+<!--                      </div>-->
+                    </th>
                 </tr>
             </template>
 
@@ -238,7 +288,9 @@ onBeforeUnmount(() => {
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(lease.status)">
+                            :class="getFileStatusClass(lease.status)"
+                            v-tooltip="toolTipOptions(lease)">
+
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
@@ -257,10 +309,13 @@ onBeforeUnmount(() => {
                               <span>{{ lease.status }}</span>
 
                           </span>
-                    </th>
-                    <td class="px-6 py-4 space-x-2">
 
-                    </td>
+<!--                        <span class="badge font-medium rounded-full bg-gray-50 text-gray-500 text-10 pt-0.5 px-0.5 ">-->
+<!--                            <i class=" bx bx-question-mark"></i>-->
+<!--                        </span>-->
+
+
+                    </th>
                     <td class="px-6 py-4 text-gray-900 ">
                         <Link
                             v-if="lease.tenant_name"

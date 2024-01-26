@@ -53,6 +53,16 @@ class Lease extends Model
         return $this->belongsTo(Lease::class, 'parent_id');
     }
 
+    public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
+
+    public function chatsWithLastMessage()
+    {
+        return $this->hasMany(Chat::class)->with('last_message')->orderBy('updated_at', 'desc');
+    }
+
     public function documents()
     {
         return $this->morphMany(Document::class, 'documentable');

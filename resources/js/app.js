@@ -12,7 +12,9 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import { createPinia } from "pinia";
+
 import PrimeVue from "primevue/config";
+import Tooltip from 'primevue/tooltip';
 
 import Wind from "./presets/wind";
 import filters from "./filters";
@@ -28,12 +30,13 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
 
         app.config.globalProperties.filters = filters;
+        // app.directive('tooltip', Tooltip);
 
         return app.use(plugin)
             .use(pinia)
             .use(ZiggyVue, Ziggy)
             .use(PrimeVue, {
-                unstyled: true,
+                unstyled: false,
                 pt: Wind
             })
             .mount(el);

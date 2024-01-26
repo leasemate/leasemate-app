@@ -147,30 +147,37 @@ Route::middleware([
         return redirect('dashboard');
     })->name('dashboard');
 
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
 
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
     Route::get('/users/{user}/resendInvitation', [UserController::class, 'resendInvitation'])->name('users.resendInvitation');
     Route::resource('users', UserController::class);
 
+
     Route::resource('assets', AssetController::class);
+    Route::resource('assets.leases', AssetLeaseController::class)->scoped();
+//    Route::resource('assets.leases.chats', AssetLeaseController::class);
 
     Route::scopeBindings()->group(function () {
-        Route::resource('assets.leases', AssetLeaseController::class);
+        Route::post('/assets/{asset}/leases/{lease}/archive', [AssetLeaseController::class, 'archive'])->name('assets.leases.archive');
+        Route::post('/assets/{asset}/leases/{lease}/restore', [AssetLeaseController::class, 'restore'])->withTrashed()->name('assets.leases.restore');
+
+        Route::get('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'show'])->name('assets.leases.chats.show');
+        Route::post('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'storeChat'])->name('assets.leases.chats.store');
     });
 
 
+
     Route::resource('roles', RoleController::class);
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
 
     Route::resource('files', FilesController::class);
 
     Route::post('/files/{file}/restore', [FilesController::class, 'restore'])->name('files.restore')->withTrashed();
     Route::post('/files/{file}/prune', [FilesController::class, 'prune'])->name('files.prune')->withTrashed();
+
 
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
@@ -190,7 +197,6 @@ Route::middleware([
             return response()->json(['token' => auth()->user()->jwt_token]);
         }
     })->name('refresh-token');
-
 
 });
 
