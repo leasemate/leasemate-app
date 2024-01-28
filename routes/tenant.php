@@ -166,7 +166,8 @@ Route::middleware([
         Route::post('/assets/{asset}/leases/{lease}/restore', [AssetLeaseController::class, 'restore'])->withTrashed()->name('assets.leases.restore');
 
         Route::get('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'show'])->name('assets.leases.chats.show');
-        Route::post('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'storeChat'])->name('assets.leases.chats.store');
+        Route::post('/assets/{asset}/leases/{lease}/chats/{chat?}', [AssetLeaseController::class, 'sendMessage'])->name('assets.leases.chats.send-message');
+        Route::delete('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'destroyChat'])->name('assets.leases.chats.destroy-chat');
     });
 
 

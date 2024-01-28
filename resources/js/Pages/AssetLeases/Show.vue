@@ -28,6 +28,9 @@ import toast from "@/Stores/toast.js";
 import socketIOClient from 'socket.io-client';
 
 import 'highlight.js/styles/monokai.css';
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -114,7 +117,7 @@ const handlePaste = (event) => {
 };
 
 const addNewChat = () => {
-  router.visit(route('chats.index'));
+  router.visit(route('assets.leases.show', [props.asset.id, props.lease.id]));
 };
 
 const scrollToBottom = () => {
@@ -136,7 +139,7 @@ const selectChat = async (conv_obj) => {
 const deleteChat = () => {
 
   if(chatToDelete.value) {
-    router.delete(route('chats.destroy', chatToDelete.value.chat_uuid), {
+    router.delete(route('assets.leases.chats.destroy-chat', [props.asset, props.lease, chatToDelete.value.chat_uuid]), {
       preserveScroll: true,
       onSuccess: (page) => {
         if(page.props.flash.error) {
@@ -144,7 +147,7 @@ const deleteChat = () => {
         } else {
           localChat.value = defaultChatState();
           initEmptyChat();
-          localChatList.value = page.props.chats.data;
+          localChatList.value = page.props.chats;
           chatToDelete.value = null;
           closeModal();
           toast.success('Chat deleted successfully!');
@@ -198,8 +201,13 @@ const sendMessage = async () => {
 
         // const chat_id = (!localChat.value.chat_uuid ? localChat.value.chat_uuid : null);
 
-        axios.post(route('chats.store', localChat.value.chat_uuid), {
-                message: messageToSend.value
+        axios.post(route('assets.leases.chats.send-message', [
+                props.asset.id,
+                props.lease.id,
+                localChat.value.chat_uuid??null
+            ]), {
+                from: 'user',
+                message: messageToSend.value,
             })
             .then(function (response) {
 
@@ -239,7 +247,7 @@ const sendMessage = async () => {
                 toast.error(error.message);
 
                 isSending.value = false;
-                errorMessage.value = (error.response.data.error?error.response.data.error:error.message);
+                errorMessage.value = (error.response?error.response.data.error:error.message);
             });
 
     }
@@ -258,6 +266,9 @@ const sendQuery = async (question) => {
         question: question, // Use the provided question
         socketIOClientId: socketIOClientId,
         chatSessionId: chatSessionId,
+        tenant_domain: page.props.tenant_domain,
+        asset_id: props.asset.id,
+        lease_id: props.lease.id,
     };
 
     // console.log(data);
@@ -279,17 +290,29 @@ const sendQuery = async (question) => {
                 },
             })
             .then(function (response) {
-                //  console.log('send query post response:');
 
-                axios.post(route('messages.store', chatSessionId), {
-                        message: response.data.text
+                /*
+                *
+                * */
+
+                axios.post(route('assets.leases.chats.send-message', [
+                        props.asset.id,
+                        props.lease.id,
+                        chatSessionId
+                    ]), {
+                        from: 'bot',
+                        message: response.data.text,
                     })
                     .then(function (response) {
                         // console.log("Message Response");
                         // console.log(response);
 
                         if( ! localChat.value.chat_uuid) {
-                            router.visit(route('chats.show', chatSessionId), {
+                            router.visit(route('assets.leases.chats.show', [
+                                props.asset.id,
+                                props.lease.id,
+                                chatSessionId
+                            ]), {
                                 preserveScroll: true,
                             });
                         }
@@ -499,8 +522,8 @@ onBeforeUnmount(() => {
 
                         <!-- Left column for list of chats -->
                         <div class=" w-1/3 p-4">
-<!--                            @click="addNewChat"-->
-                            <PrimaryButton  class="mb-4">
+
+                            <PrimaryButton class="mb-4" @click="addNewChat">
                                 <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
                                 Chat
                             </PrimaryButton>
@@ -557,8 +580,8 @@ onBeforeUnmount(() => {
                                                         'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
                                                         'bg-indigo-100 text-violet-900 rounded-2xl rounded-br-none': entry.from === 'user'
                                                     }">
-                                                    <Markdown :source="entry.message" :breaks="true" />
-<!--                                                  {{ entry.message}}-->
+<!--                                                    <Markdown :source="entry.message" :breaks="true" />-->
+                                                  {{ entry.message}}
                                                 </div>
                                             </div>
                                         </div>
@@ -700,6 +723,24 @@ onBeforeUnmount(() => {
             </div>
         </div>
 
+        <Modal :show="confirmingChatDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete this chat?
+                </h2>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        @click="deleteChat(localChat)"
+                    >
+                        Delete Chat
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
 
 <!--        <FilePond-->
 <!--            name="lease_document"-->

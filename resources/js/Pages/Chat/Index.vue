@@ -232,7 +232,7 @@ const sendQuery = async (question) => {
 
                     await refreshToken();
 
-                    sendQuery(question);
+                    await sendQuery(question);
 
                 } else {
                     isSending.value = false;
