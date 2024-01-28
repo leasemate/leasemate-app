@@ -48,8 +48,8 @@ class ReaiProcessor
         $post_data =[
             'classification' => 'lease',
             'sub_classification' => 'original',
-            'asset_id' => $asset_id,
-            'document_id' => $lease_id,
+            'asset_id' => (int) $asset_id,
+            'document_id' => (int) $lease_id,
             's3_object' => $storedName,
         ];
 

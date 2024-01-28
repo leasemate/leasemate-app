@@ -127,12 +127,12 @@ onMounted(() => {
                         </SideNavLink>
                     </li>
 
-                    <li>
-                        <SideNavLink :href="route('chats.index')">
-                            <i data-feather="message-circle"></i>
-                            <span data-key="t-chat"> Chat</span>
-                        </SideNavLink>
-                    </li>
+<!--                    <li>-->
+<!--                        <SideNavLink :href="route('chats.index')">-->
+<!--                            <i data-feather="message-circle"></i>-->
+<!--                            <span data-key="t-chat"> Chat</span>-->
+<!--                        </SideNavLink>-->
+<!--                    </li>-->
 
 <!--                    <li>-->
 <!--                        <SideNavLink :href="route('files.index')">-->

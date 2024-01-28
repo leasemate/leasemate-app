@@ -19,12 +19,17 @@ class Chat extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope(new UserScope());
+//        static::addGlobalScope(new UserScope());
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lease()
+    {
+        return $this->belongsTo(Lease::class);
     }
 
     public function messages()

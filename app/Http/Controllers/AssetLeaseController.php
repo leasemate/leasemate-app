@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Facades\ReaiProcessor;
+use App\Http\Requests\SendMessageRequest;
 use App\Http\Resources\AssetResource;
+use App\Http\Resources\ChatResource;
 use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Jobs\DeleteLeaseFile;
 use App\Models\Asset;
+use App\Models\Chat;
 use App\Models\Lease;
 
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLeaseRequest;
 use Illuminate\Support\Facades\Storage;
@@ -88,12 +92,21 @@ class AssetLeaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Asset $asset, Lease $lease)
+    public function show(Asset $asset, Lease $lease, Chat $chat)
     {
+
+        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
+
+        if($chat->exists) {
+            $chat->load(['last_message', 'messages']);
+        }
+
         return inertia()->render('AssetLeases/Show', [
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
+            'chats' => ChatResource::collection($lease->chatsWithLastMessage),
+            'chat' => $chat->exists?new ChatResource($chat):null
         ]);
     }
 
@@ -124,14 +137,54 @@ class AssetLeaseController extends Controller
             $lease->save();
 
             DeleteLeaseFile::dispatch($lease);
-
-            return redirect()->back()->with('success', "Deleting lease");
+            return redirect()->back();
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());
-            \Log::error($e->getTraceAsString());
-
-            return response()->json(['message' => $e->getMessage()], 422);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function sendMessage(SendMessageRequest $sendMessageRequest, Asset $asset, Lease $lease, Chat $chat)
+    {
+        $validated = $sendMessageRequest->validated();
+
+        try {
+            $chatService = new ChatService($chat, $lease->id);
+
+            $chatService->sendMessage($validated['from'], $validated['message']);
+
+            return response()->json([
+                "chat" => new ChatResource($chatService->getChat()),
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::info($e);
+            \Log::info($e->getMessage());
+            \Log::info($e->getCode());
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], ((int)$e->getCode()?: 500));
+
+        }
+
+    }
+
+    public function destroyChat(Asset $asset, Lease $lease, Chat $chat)
+    {
+        try {
+
+            $chatService = new ChatService($chat);
+            if( ! $chatService->destroy()) {
+                throw new \Exception('Failed to delete chat.');
+            }
+
+            return redirect()->route('assets.leases.show', [$asset, $lease]);
+
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 }

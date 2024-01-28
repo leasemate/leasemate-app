@@ -34,34 +34,43 @@ class ChatController extends Controller
 
             $validated = $request->validated();
 
-            if( ! $chat->exists) {
+            $chatService = new ChatService($chat, $validated['lease_id']);
 
-                $chat_uuid = Str::uuid();
+//            if( ! $chat->exists) {
+//
+//                $chatService->createChat($validated['lease_id']);
+//                $chat_uuid = Str::uuid();
+//
+//                $zep_session_data= [
+//                    'session_id' => (string) $chat_uuid,
+//                    'user_id' => (string) auth()->user()->zep_user_id,
+//                ];
+//
+//                ZepApi::createSession($zep_session_data);
+//
+//                $chat = auth()->user()->chats()->create([
+//                    'chat_uuid' => $chat_uuid,
+//                    'lease_id' => $validated['lease_id'],
+//                ]);
+//            }
 
-                $zep_session_data= [
-                    'session_id' => (string) $chat_uuid,
-                    'user_id' => (string) auth()->user()->zep_user_id,
-                ];
+            $chatService->sendMessage('user', $validated['message']);
 
-                ZepApi::createSession($zep_session_data);
+//            $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
 
-                $chat = auth()->user()->chats()->create([
-                    'chat_uuid' => $chat_uuid,
-                ]);
-            }
-
-            $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
-
-            $chat->load('last_message');
+//            $chat->load('last_message');
 
             return response()->json([
-                "chat" => new ChatResource($chat),
+                "chat" => new ChatResource($chatService->getChat()),
             ]);
 
         } catch (\Exception $e) {
+            \Log::info($e);
+            \Log::info($e->getMessage());
+            \Log::info($e->getCode());
             return response()->json([
                 'error' => $e->getMessage(),
-            ], ($e->getCode()?: 500));
+            ], ((int)$e->getCode()?: 500));
 
         }
     }

@@ -34,7 +34,7 @@ const initialTextareaHeight = 40;
 const textareaHeight = ref(initialTextareaHeight);
 const messageToSend = ref('');
 const messageField = ref(null);
-const isSending = ref(false);
+const isSending = ref(true);
 const errorMessage = ref(null);
 const messagesPanel = ref(null);
 
@@ -232,7 +232,7 @@ const sendQuery = async (question) => {
 
                     await refreshToken();
 
-                    sendQuery(question);
+                    await sendQuery(question);
 
                 } else {
                     isSending.value = false;
@@ -427,159 +427,152 @@ onUnmounted(() => {
             <div class="flex max-h-[42rem] min-h-[32rem] mt-auto mb-auto rounded-lg">
 
             <!-- Left column for list of chats -->
-            <div class=" w-1/3 p-4">
+                <div class=" w-1/3 p-4">
 
-<!--                <button-->
-<!--                    @click="addNewChat"-->
-<!--                    class="flex items-center mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">-->
-<!--                    <i class="mgc_add_line text-base mr-2"></i>-->
-<!--                    <span class="font-bold">Chat</span>-->
-<!--                </button>-->
+                    <PrimaryButton @click="addNewChat" class="mb-4">
+                        <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
+                        Chat
+                    </PrimaryButton>
 
-                <PrimaryButton @click="addNewChat" class="mb-4">
-                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
-                    Chat
-                </PrimaryButton>
+    <!--                <button-->
+    <!--                    @click="addNewChat"-->
+    <!--                    type="button"-->
+    <!--                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-400 hover:border-violet-500 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"-->
+    <!--                >-->
+    <!--                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>-->
+    <!--                    Chat-->
+    <!--                </button>-->
 
-<!--                <button-->
-<!--                    @click="addNewChat"-->
-<!--                    type="button"-->
-<!--                    class="mb-4 btn text-white bg-violet-500 border-violet-500 hover:bg-violet-400 hover:border-violet-500 focus:bg-violet-600 focus:border-violet-600 focus:ring focus:ring-violet-500/30 active:bg-violet-600 active:border-violet-600"-->
-<!--                >-->
-<!--                    <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>-->
-<!--                    Chat-->
-<!--                </button>-->
+    <!--                <hr class="mb-4" />-->
 
-<!--                <hr class="mb-4" />-->
-
-                <div class="max-h-[36rem] overflow-y-auto">
-
-                    <div
-                        v-for="(conv_obj, index) in localChatList"
-                        :key="conv_obj.id"
-                        :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
-                        @click="selectChat(conv_obj)"
-                        class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
-                    >
-
-                        <!-- Favicon or User Icon -->
-                        <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
-                        <!-- Conversation details -->
-                        <div class="flex-1 mr-3">
-                            <p class="text-sm text-gray-500">{{ truncatedMessage(conv_obj?.last_message?.message) || null }}</p>
-                        </div>
-
-                        <!-- Date/Time -->
-                        <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">
-                          {{ conv_obj.updated_at }}
-                        </div>
-
-                        <i
-                            @click.stop="confirmChatDeletion(conv_obj)"
-                            class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"
-                        ></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Right column for the chat prompt and conversation -->
-            <div class="flex flex-col w-2/3 p-4 border-l dark:border-l-gray-600">
-                <!-- Chat content area -->
-                <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
-                    <!-- Example of a message item -->
-                  <div v-if="localChat && localChat.messages">
-                    <div v-for="(entry, index) in localChat.messages" :key="index" class="my-1 sm:my-1.5">
+                    <div class="max-h-[36rem] overflow-y-auto">
 
                         <div
-                            class="flex flex-row"
-                            :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
+                            v-for="(conv_obj, index) in localChatList"
+                            :key="conv_obj.id"
+                            :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
+                            @click="selectChat(conv_obj)"
+                            class="transition duration-300 flex justify-between  items-center mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
                         >
 
-                        <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
-                             :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
+                            <!-- Favicon or User Icon -->
+                            <i class="mgc_chat_2_line text-2xl mr-3 text-gray-400" />
+                            <!-- Conversation details -->
+                            <div class="flex-1 mr-3">
+                                <p class="text-sm text-gray-500">{{ truncatedMessage(conv_obj?.last_message?.message) || null }}</p>
+                            </div>
+
+                            <!-- Date/Time -->
+                            <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">
+                              {{ conv_obj.updated_at }}
+                            </div>
+
+                            <i
+                                @click.stop="confirmChatDeletion(conv_obj)"
+                                class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"
+                            ></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Right column for the chat prompt and conversation -->
+                <div class="flex flex-col w-2/3 p-4 border-l dark:border-l-gray-600">
+                    <!-- Chat content area -->
+                    <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
+                        <!-- Example of a message item -->
+                      <div v-if="localChat && localChat.messages">
+                        <div v-for="(entry, index) in localChat.messages" :key="index" class="my-1 sm:my-1.5">
+
                             <div
-                                class="flex items-center px-3 py-2 whitespace-pre-wrap"
-                                :class="{
-                                'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
-                                'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
-                            }">
-                                <Markdown :source="entry.message" :breaks="true" />
+                                class="flex flex-row"
+                                :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
+                            >
+
+                            <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
+                                 :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
+                                <div
+                                    class="flex items-center px-3 py-2 whitespace-pre-wrap"
+                                    :class="{
+                                    'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
+                                    'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
+                                }">
+                                    <Markdown :source="entry.message" :breaks="true" />
+                                </div>
+                            </div>
                             </div>
                         </div>
+                      </div>
+
+                        <div class="my-1 sm:my-1.5" v-if="isSending">
+                            <div class="flex flex-col items-start">
+                                <MessageLoader />
+                            </div>
                         </div>
-                    </div>
-                  </div>
 
-                    <div class="my-1 sm:my-1.5" v-if="isSending">
-                        <div class="flex flex-col items-start">
-                            <MessageLoader />
-                        </div>
+                        <!-- ... add more messages ... -->
                     </div>
 
-                    <!-- ... add more messages ... -->
-                </div>
+                    <!-- Chat input area -->
+                    <div class="border-t pt-4 dark:border-t-gray-600">
 
-                <!-- Chat input area -->
-                <div class="border-t pt-4 dark:border-t-gray-600">
+                            <div class="relative">
 
-                        <div class="relative">
+                                <textarea
+                                    v-model="messageToSend"
+                                    class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-50"
+                                    style="resize: none;"
+                                    :style="{ height: textareaHeight + 'px'}"
+                                    placeholder="Type a message..."
+                                    autocomplete="off"
+                                    rows="1"
+                                    ref="messageField"
+                                    @keydown="handleKeyDown"
+                                    @paste="handlePaste"></textarea>
 
-                            <textarea
-                                v-model="messageToSend"
-                                class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-50"
-                                style="resize: none;"
-                                :style="{ height: textareaHeight + 'px'}"
-                                placeholder="Type a message..."
-                                autocomplete="off"
-                                rows="1"
-                                ref="messageField"
-                                @keydown="handleKeyDown"
-                                @paste="handlePaste"></textarea>
+                                 <button :disabled="isSending" @click="sendMessage">
+                                     <svg
+                                         v-show="!isSending"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         width="24"
+                                         height="24"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80">
 
-                             <button :disabled="isSending" @click="sendMessage">
-                                 <svg
-                                     v-show="!isSending"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     width="24"
-                                     height="24"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="2"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80">
+                                         <path d="M12 5l0 14"></path>
+                                         <path d="M18 11l-6 -6"></path>
+                                         <path d="M6 11l6 -6"></path>
+                                     </svg>
 
-                                     <path d="M12 5l0 14"></path>
-                                     <path d="M18 11l-6 -6"></path>
-                                     <path d="M6 11l6 -6"></path>
-                                 </svg>
+                                   <svg v-show="isSending" aria-hidden="true" role="status"
+                                        class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80"
+                                        viewBox="0 0 100 101"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                                   </svg>
 
-                               <svg v-show="isSending" aria-hidden="true" role="status"
-                                    class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80"
-                                    viewBox="0 0 100 101"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-                                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-                               </svg>
-
-                             </button>
+                                 </button>
 
 
-                         </div>
-                </div>
+                             </div>
+                    </div>
 
-                <div v-if="errorMessage" class="text-red-700" role="alert">
-                    <span class="block sm:inline">{{ errorMessage }}</span>
+                    <div v-if="errorMessage" class="text-red-700" role="alert">
+                        <span class="block sm:inline">{{ errorMessage }}</span>
+                    </div>
+
                 </div>
 
             </div>
-
-        </div>
         </div>
 
         <Modal :show="confirmingChatDeletion" @close="closeModal">
