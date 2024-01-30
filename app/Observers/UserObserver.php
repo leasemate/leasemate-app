@@ -23,26 +23,25 @@ class UserObserver
         \Log::info('OBSERVER: User created', ['user' => $user]);
 
         if(tenant()) {
-            $user_data = [
-                'email' => (string) $user->email,
-                'first_name' => (string) $user->name,
-                'user_id' => (string) $user->zep_user_id,
-                'metadata' => [
-                    'user_id' => (int) $user->id,
-                    'tenant_id' => (string) tenant('id'),
-                    'tenant_domain' => (string) tenant('domain'),
-                ],
-            ];
+//            $user_data = [
+//                'email' => (string) $user->email,
+//                'first_name' => (string) $user->name,
+//                'user_id' => (string) $user->zep_user_id,
+//                'metadata' => [
+//                    'user_id' => (int) $user->id,
+//                    'tenant_id' => (string) tenant('id'),
+//                    'tenant_domain' => (string) tenant('domain'),
+//                ],
+//            ];
 
-            $zep_user = ZepApi::createUser($user_data);
+//            $zep_user = ZepApi::createUser($user_data);
+//
+//            if($zep_user) {
+//                $user->zep_uuid = $zep_user['uuid'];
+//                $user->save();
+//            }
 
-            if($zep_user) {
-                $user->zep_uuid = $zep_user['uuid'];
-                $user->save();
-            }
-
-
-            if(! $user->is_super_admin) {
+            if( ! $user->is_super_admin) {
                 $password_token = Password::broker()->createToken($user);
                 Log::info('PASSWORD TOKEN: '. $password_token);
                 Log::info('Tenant: '. tenant());
@@ -59,25 +58,25 @@ class UserObserver
     public function updated(User $user): void
     {
 
-        \Log::info('OBSERVER: User updated', ['user' => $user]);
-
-        $updates = $user->getChanges();
-
-        $user_data = [];
-
-        if(Arr::has($updates, 'email')) $user_data['email'] = (string) $updates['email'];
-        if(Arr::has($updates, 'name')) $user_data['first_name'] = (string) $updates['name'];
-
-        if(!empty($user_data)) {
-
-            $user_data['metadata'] = [
-                'user_id' => (int) $user->id,
-                'tenant_id' => (string) tenant('id'),
-                'tenant_domain' => (string) tenant('domain'),
-            ];
-
-            ZepApi::updateUser($user->zep_user_id, $user_data);
-        }
+//        \Log::info('OBSERVER: User updated', ['user' => $user]);
+//
+//        $updates = $user->getChanges();
+//
+//        $user_data = [];
+//
+//        if(Arr::has($updates, 'email')) $user_data['email'] = (string) $updates['email'];
+//        if(Arr::has($updates, 'name')) $user_data['first_name'] = (string) $updates['name'];
+//
+//        if(!empty($user_data)) {
+//
+//            $user_data['metadata'] = [
+//                'user_id' => (int) $user->id,
+//                'tenant_id' => (string) tenant('id'),
+//                'tenant_domain' => (string) tenant('domain'),
+//            ];
+//
+//            ZepApi::updateUser($user->zep_user_id, $user_data);
+//        }
 
     }
 
@@ -90,7 +89,7 @@ class UserObserver
 
         $user->ownedTeams()->delete();
 
-        ZepApi::deleteUser($user->zep_user_id);
+//        ZepApi::deleteUser($user->zep_user_id);
     }
 
     /**

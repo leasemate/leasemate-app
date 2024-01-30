@@ -56,7 +56,7 @@ class TenancyServiceProvider extends ServiceProvider
 
                     Jobs\DeleteDatabase::class,
                     DeleteTenantS3Files::class,
-                    DeleteZepUsers::class,
+//                    DeleteZepUsers::class,
 
                 ])->send(function (Events\TenantDeleted $event) {
                     return $event->tenant;

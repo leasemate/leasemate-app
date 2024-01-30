@@ -89,7 +89,7 @@ class ChatService
 
         $zep_session_data= [
             'session_id' => $this->session_id,
-            'user_id' => (string) auth()->user()->zep_user_id,
+//            'user_id' => (string) auth()->user()->zep_user_id,
         ];
 
         ZepApi::createSession($zep_session_data);
