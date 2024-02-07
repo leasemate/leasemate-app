@@ -27,7 +27,9 @@ class FileProcessingController extends Controller
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
             $status_msg = $request->get('message');
-            $extracted_data = $request->get('extracted_data');
+            $status_progress = $request->get('progress');
+            $extracted_data = $request->get('basic_extracted_data');
+            $detailed_extracted_data = $request->get('detailed_extracted_data');
 
             $tenant_id = explode("/", $s3_object)[0];
             $tenant = Tenant::find($tenant_id);
@@ -40,6 +42,7 @@ class FileProcessingController extends Controller
 
             $lease->status = ($status == 'Completed' ? 'Ready' : $status);
             $lease->status_msg = $status_msg??null;
+            $lease->status_progress = $status_progress??0;
 
             if($extracted_data && !empty($extracted_data['classification'])) {
 
@@ -50,6 +53,10 @@ class FileProcessingController extends Controller
                 $lease->end_date = !empty($extracted_data['expiration_date']) ? Carbon::parse($extracted_data['expiration_date']) : null;
                 $lease->rent_per_sqft = !empty($extracted_data['expiration_date']) ? $extracted_data['rent_per_sqft'] : null;
                 $lease->extracted_data = $extracted_data;
+            }
+
+            if($detailed_extracted_data) {
+                $lease->detailed_extracted_data = $detailed_extracted_data;
             }
 
             $lease->save();

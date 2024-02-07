@@ -18,6 +18,7 @@ class Lease extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'extracted_data' => 'json',
+        'detailed_extracted_data' => 'json',
     ];
 
     protected $dates = [
