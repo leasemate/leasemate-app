@@ -7,7 +7,7 @@
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <meta
-            content="LeaseMate - Property Management Software"
+            content="Leasemate - Property Management Software"
             name="description"
         />
 

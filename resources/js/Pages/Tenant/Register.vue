@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import {onMounted, watch} from 'vue';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
@@ -80,7 +80,7 @@ const submit = () => {
                                 class="mt-1 block w-full mr-2"
                                 required
                             />
-                            <span class="text-19">.reai.test</span>
+                            <span class="text-19 whitespace-nowrap">.{{ usePage().props.central_domain }}</span>
                         </div>
                         <InputError class="mt-2" :message="form.errors.domain" />
                     </div>

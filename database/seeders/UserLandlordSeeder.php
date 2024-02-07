@@ -14,8 +14,8 @@ class UserLandlordSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Dan Schultz',
-            'email' => 'dan@reai-dev.com',
+            'name' => 'Leasemate Admin',
+            'email' => 'admin@leasemate-app.test',
             'password' => '$2y$10$iz/MLHElX4VB3c36ra6IjeO8ZJ.Bt.yPpQkViaXrsYGSrPZGB9/3q',
             'email_verified_at' => now(),
         ]);

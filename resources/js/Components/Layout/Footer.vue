@@ -3,7 +3,7 @@
     <footer class="footer absolute bottom-0 right-0 left-0 border-t border-gray-50 py-5 px-5 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-200">
         <div class="flex justify-between items-center">
             <div class="grow">
-                &copy; 2023 REAI
+                &copy; 2024 Leasemate
             </div>
             <div class=" md:inline-block text-end">
 

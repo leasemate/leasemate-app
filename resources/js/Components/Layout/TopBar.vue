@@ -155,8 +155,8 @@ onBeforeUnmount(() => {
                 <div class="navbar-brand flex items-center justify-between shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                     <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
 <!--                        <img src="@/../images/logo-sm.svg" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />-->
-                        <i data-feather="anchor" class="h-9 w-9 mr-2"></i>
-                        <span class="hidden xl:block align-middle">REAI</span>
+<!--                        <i data-feather="anchor" class="h-9 w-9 mr-2"></i>-->
+                        <span class="hidden xl:block align-middle">Leasemate</span>
                     </a>
                 </div>
                 <button @click="toggleMenu" type="button" class="text-gray-600 dark:text-white h-[70px] ltr:-ml-10 ltr:mr-6 rtl:-mr-10 rtl:ml-10 vertical-menu-btn" id="vertical-menu-btn">

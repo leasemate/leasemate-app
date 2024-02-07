@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'env' => config('app.env'),
             'session' => fn () => $request->session()->all(),
+            'central_domain' => config('tenancy.central_domains')[0],
             'tenant_id' => tenant('id'),
             'tenant_name' => tenant('company_name'),
             'tenant_domain' => tenant('domain'),
