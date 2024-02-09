@@ -30,6 +30,7 @@ class LeaseResource extends JsonResource
             'rent_per_sqft' => $this->rent_per_sqft,
             'extracted_data' => $this->extracted_data,
             'status' => $this->status,
+            'status_progress' => ($this->status_progress && $this->status == 'Processing' ? $this->status_progress."%" : null),
             'status_msg' => $this->status_msg,
         ];
     }

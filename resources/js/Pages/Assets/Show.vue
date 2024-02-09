@@ -197,28 +197,6 @@ onBeforeUnmount(() => {
 });
 
 
-// const menu = ref();
-// const items = ref([
-//   {
-//     label: 'Options',
-//     items: [
-//       {
-//         label: 'Refresh',
-//         icon: 'pi pi-refresh'
-//       },
-//       {
-//         label: 'Export',
-//         icon: 'pi pi-upload'
-//       }
-//     ]
-//   }
-// ]);
-//
-// const toggle = (event) => {
-//   console.log('asdf');
-//   menu.value.toggle(event);
-// };
-
 </script>
 
 <template>
@@ -306,7 +284,7 @@ onBeforeUnmount(() => {
 
                               </span>
 
-                              <span>{{ lease.status }}</span>
+                              <span class="whitespace-nowrap">{{ lease.status }} {{ lease.status_progress }}</span>
 
                           </span>
 
