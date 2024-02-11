@@ -18,6 +18,7 @@ return [
      */
     'central_domains' => [
         env('APP_CENTRAL_DOMAIN', 'localhost'),
+        'https://leasemate-app.us-1.sharedwithexpose.com'
     ],
 
     /**

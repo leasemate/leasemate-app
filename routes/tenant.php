@@ -170,8 +170,6 @@ Route::middleware([
         Route::delete('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'destroyChat'])->name('assets.leases.chats.destroy-chat');
     });
 
-
-
     Route::resource('roles', RoleController::class);
 
     Route::resource('files', FilesController::class);

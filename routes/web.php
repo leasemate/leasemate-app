@@ -42,9 +42,6 @@ Route::middleware([
 });
 
 
-
-
-
 Route::middleware([
     'web',
     'guest'

@@ -50,6 +50,7 @@ class ReaiProcessor
             'sub_classification' => 'original',
             'asset_id' => (int) $asset_id,
             'document_id' => (int) $lease_id,
+            's3_bucket' => config('filesystems.disks.s3.bucket'),
             's3_object' => $storedName,
         ];
 
