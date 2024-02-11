@@ -70,24 +70,7 @@ const deleteLease = () => {
 
             router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
                     preserveScroll: true,
-                    // only: ['uploaded_files'],
-                    onSuccess: () => {
-                        // console.log('success');
-                        // localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
-                        // leaseToDelete.value = null;
-                        // resolve();
-                        // router.reload({ only: ['leases'] });
-                    },
-                    onError: () => {
-                        // console.log('error');
-                        // localLeaseStatuses[leaseToDelete.value.id] = leaseToDelete.value.status;
-                        // reject(new Error("Failed to delete lease"));
-                    }
                 });
-            // });
-
-            // console.log('Lease deleted successfully');
-
         } catch (error) {
             toast.error(error);
             console.log(error);
@@ -341,6 +324,7 @@ onBeforeUnmount(() => {
                                 :href="route('assets.leases.edit', [lease.asset_id, lease.id])"
                                 class="text-sm"
                                 @click="confirmLeaseDeletion(lease)"
+                                :disabled="lease.is_deleting"
                             >
                                 Delete
                             </DangerButton>
