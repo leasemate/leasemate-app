@@ -24,7 +24,6 @@ class FileProcessingController extends Controller
             \Log::info("start status update");
             \Log::info($request->all());
 
-            $tenant_id = $request->get('tenant_id');
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
             $status_msg = $request->get('message');
@@ -32,6 +31,7 @@ class FileProcessingController extends Controller
             $extracted_data = $request->get('basic_extracted_data');
             $detailed_extracted_data = $request->get('detailed_extracted_data');
 
+            $tenant_id = explode("/", $s3_object)[0];
             $tenant = Tenant::find($tenant_id);
 
             tenancy()->initialize($tenant);
