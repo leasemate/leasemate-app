@@ -43,6 +43,7 @@ class FileProcessingController extends Controller
             $lease = Lease::where('filename', $s3_object)->first();
 
             if( ! $lease) {
+                \Log::info('File not found:', $s3_object);
                 return response()->json(['status' => 'error', 'message' => 'File not found'], 404);
             }
 
