@@ -46,7 +46,7 @@ class FileProcessingController extends Controller
 
             if($extracted_data && !empty($extracted_data['classification'])) {
 
-                $lease->tenant_name = !empty($extracted_data['lessee_tenant']) ? $extracted_data['lessee_tenant'] : null;
+                $lease->tenant_name = !empty($extracted_data['lessee_tenant']) ? $extracted_data['lessee_tenant'] : 'Unknown';
                 $lease->address = !empty($extracted_data['property_address']) ? $extracted_data['property_address'] : null;
                 $lease->gla = !empty($extracted_data['square_feet']) ? $extracted_data['square_feet'] : null;
                 $lease->start_date = !empty($extracted_data['commencement_date']) ? Carbon::parse($extracted_data['commencement_date']) : null;
