@@ -73,7 +73,7 @@ class FileProcessingController extends Controller
                 'updated_at',
             ]);
 
-            Log::info('Fire event: FileProcessed:'.$lease_payload);
+            Log::info('Fire event: FileProcessed:', $lease_payload);
             event(new FileStatusUpdate($lease->user_id, $lease_payload));
 
             if(in_array($status, ['Ready', 'Failed'])) {
