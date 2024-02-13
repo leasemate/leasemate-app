@@ -285,14 +285,15 @@ onBeforeUnmount(() => {
                             <strong>{{ lease.tenant_name }}</strong>
                         </Link>
 
-                        <Link
+                        <a
                             v-else
                             :href="lease.filename"
                             type="external"
+                            target="_blank"
                             class="text-gray-500"
                         >
                             {{ lease.og_filename }}
-                        </Link>
+                        </a>
 
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">

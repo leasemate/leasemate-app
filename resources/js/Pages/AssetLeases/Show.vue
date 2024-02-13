@@ -12,7 +12,6 @@ import Panel from 'primevue/panel';
 
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
 
-
 import VueFilePond, { setOptions } from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
 import "filepond/dist/filepond.min.css";
@@ -512,22 +511,158 @@ onBeforeUnmount(() => {
             <h4>{{ lease.address }}</h4>
         </div>
 
+        <div class="grid grid-cols-12 gap-12">
+            <div class="col-span-7">
+                <div class="card">
+                    <Panel header="Upload Amendments" toggleable :collapsed="true">
+                        <p class="m-0">
+                            <FilePond
+                                name="lease_amendment"
+                                ref="pond"
+                                class-name="my-file-upload"
+                                label-idle="Amendment Drop or <span class='filepond--label-action'>Browse</span>"
+                            />
+                        </p>
+                    </Panel>
+                </div>
+
+            </div>
+            <div class="col-span-5">
+
+                    <PrimaryButton class="mb-4" @click="addNewChat">
+                        <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
+                        Chat
+                    </PrimaryButton>
+
+            </div>
+        </div>
+
 
         <div class="grid grid-cols-12 gap-12">
             <div class="col-span-7">
-<!--              border border-indigo-200 rounded-lg dark:border-gray-600 shadow-->
+
+                <TabView :scrollable="true">
+                    <TabPanel header="Original Lease Abstract" class="pt-0">
+
+                        <div class="p-4 bg-white shadow-md rounded-md">
+
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Tenant</div>
+                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lessee_tenant }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Landlord</div>
+                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lessor_landlord }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Property Address</div>
+                                    <div class="text-lg font-semibold">{{ lease.extracted_data.property_address }}</div>
+                                </div>
+
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Lease Term</div>
+                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lease_term }}</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Usable Sq. Ft.</div>
+                                    <div class="text-lg font-semibold">{{ filters.formatNumber(lease.extracted_data.usable_square_feet) }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-600">Rentable Sq. Ft.</div>
+                                    <div class="text-lg font-semibold">{{ filters.formatNumber(lease.extracted_data.rentable_square_feet) }}</div>
+                                </div>
+
+                            </div>
+
+                            <hr />
+
+                            <Table :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
+
+                                <template #head>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Start Date</th>
+                                        <th scope="col" class="px-6 py-3">End Date</th>
+                                        <th scope="col" class="px-6 py-3">Amount</th>
+                                        <th scope="col" class="px-6 py-3">Rent / sqft</th>
+                                    </tr>
+
+                                </template>
+
+                                <template #body>
+
+                                    <tr v-for="base_rent in lease.monthly_base_rent" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+                                        <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
+                                        <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
+                                        <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total) }}</td>
+                                        <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_per_square_foot) }}</td>
+                                    </tr>
+                                </template>
+
+                            </Table>
+
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                                <div v-for="(value, key) in lease.extracted_data" :key="key">
+                                    <div class="text-sm font-medium text-gray-600">{{ key }}</div>
+                                    <div class="text-lg font-semibold">{{ value }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <dl class="divide-y divide-gray-200">
+                            <div v-for="(value, key) in lease.extracted_data" class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+                                <dt class="text-sm font-medium text-gray-500">
+                                    {{ key }}
+                                </dt>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    {{ value }}
+                                </dd>
+                            </div>
+                        </dl>
+                    </TabPanel>
+<!--                    <TabPanel header="Amendment I">-->
+<!--                        <p class="m-0">-->
+<!--                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim-->
+<!--                            ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.-->
+<!--                        </p>-->
+<!--                    </TabPanel>-->
+<!--                    <TabPanel header="Amendment II">-->
+<!--                        <p class="m-0">-->
+<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
+<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
+<!--                        </p>-->
+<!--                    </TabPanel>-->
+<!--                    <TabPanel header="Amendment II">-->
+<!--                        <p class="m-0">-->
+<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
+<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
+<!--                        </p>-->
+<!--                    </TabPanel>-->
+<!--                    <TabPanel header="Amendment II">-->
+<!--                        <p class="m-0">-->
+<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
+<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
+<!--                        </p>-->
+<!--                    </TabPanel>-->
+<!--                    <TabPanel header="Amendment II">-->
+<!--                        <p class="m-0">-->
+<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
+<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
+<!--                        </p>-->
+<!--                    </TabPanel>-->
+                </TabView>
+            </div>
+            <div class="col-span-5">
+
                 <div class="">
                     <!--            h-[52rem]-->
                     <div class="flex max-h-[52rem] min-h-[32rem] mt-auto mb-auto rounded-lg">
 
                         <!-- Left column for list of chats -->
                         <div class=" w-1/3 p-4">
-
-                            <PrimaryButton class="mb-4" @click="addNewChat">
-                                <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
-                                Chat
-                            </PrimaryButton>
-
                             <div class="max-h-[36rem] overflow-y-auto">
 
                                 <div
@@ -560,7 +695,7 @@ onBeforeUnmount(() => {
                         </div>
 
                         <!-- Right column for the chat prompt and conversation -->
-                        <div class="flex flex-col w-2/3 p-4 dark:border-l-gray-600">
+                        <div class="flex flex-col w-full p-4 dark:border-l-gray-600">
                             <!-- Chat content area -->
                             <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
                                 <!-- Example of a message item -->
@@ -658,69 +793,7 @@ onBeforeUnmount(() => {
                 </div>
 
             </div>
-            <div class="col-span-5">
 
-
-                <div class="card">
-                  <Panel header="Upload Amendments" toggleable :collapsed="true">
-                    <p class="m-0">
-                      <FilePond
-                          name="lease_amendment"
-                          ref="pond"
-                          class-name="my-file-upload"
-                          label-idle="Amendment Drop or <span class='filepond--label-action'>Browse</span>"
-                      />
-                    </p>
-                  </Panel>
-                </div>
-
-
-
-                <TabView :scrollable="true">
-                    <TabPanel header="Original Lease Abstract">
-                        <dl class="divide-y divide-gray-200">
-                            <div v-for="(value, key) in lease.extracted_data" class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    {{ key }}
-                                </dt>
-                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {{ value }}
-                                </dd>
-                            </div>
-                        </dl>
-                    </TabPanel>
-                    <TabPanel header="Amendment I">
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-                            ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </TabPanel>
-                    <TabPanel header="Amendment II">
-                        <p class="m-0">
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                        </p>
-                    </TabPanel>
-                    <TabPanel header="Amendment II">
-                        <p class="m-0">
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                        </p>
-                    </TabPanel>
-                    <TabPanel header="Amendment II">
-                        <p class="m-0">
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                        </p>
-                    </TabPanel>
-                    <TabPanel header="Amendment II">
-                        <p class="m-0">
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
-                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                        </p>
-                    </TabPanel>
-                </TabView>
-            </div>
         </div>
 
         <Modal :show="confirmingChatDeletion" @close="closeModal">
