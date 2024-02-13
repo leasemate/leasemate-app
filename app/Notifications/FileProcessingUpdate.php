@@ -11,14 +11,14 @@ class FileProcessingUpdate extends Notification
 {
 //    use Queueable;
 
-    protected $file;
+    protected $data;
     protected $type;
     /**
      * Create a new notification instance.
      */
-    public function __construct($file)
+    public function __construct($data)
     {
-        $this->file = $file;
+        $this->data = $data;
     }
 
     /**
@@ -40,9 +40,9 @@ class FileProcessingUpdate extends Notification
     {
         return [
             'notification_type_name'=>'File Processing',
-            'file_name' => $this->file->og_filename,
-            'file_status' => $this->file->status,
-            'file_updated_at' => $this->file->updated_at,
+            'file_name' => $this->data['og_filename'],
+            'file_status' => $this->data['status'],
+            'file_updated_at' => $this->data['updated_at'],
         ];
     }
 }
