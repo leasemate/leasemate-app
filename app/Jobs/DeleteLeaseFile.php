@@ -30,7 +30,7 @@ class DeleteLeaseFile implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::info('JOB: Deleting lease file', ['lease_id' => $this->lease]);
+        \Log::info('JOB: Deleting lease file', ['lease_id' => $this->lease->id]);
 
         $lease_data = $this->lease->only([
             'id',
@@ -41,15 +41,16 @@ class DeleteLeaseFile implements ShouldQueue
 
         if(Storage::disk('s3')->exists($this->lease->filename)) {
             Storage::disk('s3')->delete($this->lease->filename);
-            $this->lease->forceDelete();
         }
 
-        $delete_vectors_response = ReaiProcessor::deleteFile($this->lease->filename);
-
+        $delete_vectors_response = ReaiProcessor::deleteFile($this->lease->id);
         \Log::info('deleteFile', ['delete_vectors_response' => $delete_vectors_response]);
 
-        \Log::info('Fire event LeaseFileDeleted');
+        \Log::info($delete_vectors_response->status());
 
+        $this->lease->forceDelete();
+
+        \Log::info('Fire event LeaseFileDeleted');
         event(new LeaseFileDeleted($lease_data));
     }
 }

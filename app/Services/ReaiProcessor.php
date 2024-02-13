@@ -71,41 +71,20 @@ class ReaiProcessor
         return $this->send('post',"/register_tenant", $post_data);
     }
 
-    public function deleteFile($s3_object)
+    public function archiveFile($lease_id)
     {
-        $post_data = [
-            's3_object' => $s3_object
-        ];
+        Log::info('REAI SERVICE: Archiving file', ['lease_id:', $lease_id]);
 
-        Log::info('REAI SERVICE: Deleting file', ['post_data:', $post_data]);
-
-        return $this->send("delete", "/document", $post_data);
+        return $this->send("delete", "/document/delete/".explode(".", tenant('domain'))[0]."/".$lease_id);
     }
 
-//    public function processFile($file_path)
-//    {
-//        Log::info("SERVICE: Processing file', ['file_path:', $file_path]);
-//
-//        $post_data = [
-//            'file_path' => $file_path,
-//            'delete_original' => true
-//        ];
-//
-//        $response = Http::post(
-//            $this->getEndpoint('/process_upload'),
-//            $post_data
-//        );
-//
-//        Log::info('response: '. $response->status());
-//        Log::error('Error processing file', ['response' => $response]);
-//
-//        if($response->failed() && $response->status() === 500) {
-//
-//            return json_encode(['status' => 500, 'message'=> 'Server Error']);
-//        }
-//
-//        return $response->json();
-//    }
+
+    public function deleteFile($lease_id)
+    {
+        Log::info('REAI SERVICE: Deleting file', ['lease_id:', $lease_id]);
+
+        return $this->send("delete", "/document/permanent_delete/".explode(".", tenant('domain'))[0]."/".$lease_id);
+    }
 
     public function send($method='get', $endpoint, $data=[])
     {
