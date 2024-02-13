@@ -22,7 +22,7 @@ class FileProcessingController extends Controller
         try {
 
             \Log::info("start status update");
-            \Log::info($request->all());
+//            \Log::info($request->all());
 
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
@@ -30,6 +30,8 @@ class FileProcessingController extends Controller
             $status_progress = $request->get('progress');
             $extracted_data = $request->get('basic_extracted_data');
             $detailed_extracted_data = $request->get('detailed_extracted_data');
+
+            \Log::info($s3_object, [$status, $status_progress]);
 
             $tenant_id = explode("/", $s3_object)[0];
             $tenant = Tenant::find($tenant_id);
@@ -71,12 +73,13 @@ class FileProcessingController extends Controller
                 'updated_at',
             ]);
 
-            Log::info('Fire event: FileProcessed:'.$lease);
+            Log::info('Fire event: FileProcessed:'.$lease_payload);
             event(new FileStatusUpdate($lease->user_id, $lease_payload));
 
-            Log::info('Send notification: FileProcessingComplete:');
-
-            $lease->user->notify(new FileProcessingUpdate($lease_payload));
+            if(in_array($status, ['Ready', 'Failed'])) {
+                Log::info('Send notification: FileProcessingComplete:');
+                $lease->user->notify(new FileProcessingUpdate($lease_payload));
+            }
 
             return response()->json(['status' => 'success']);
 
