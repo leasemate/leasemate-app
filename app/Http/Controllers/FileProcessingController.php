@@ -31,12 +31,14 @@ class FileProcessingController extends Controller
             $extracted_data = $request->get('basic_extracted_data');
             $detailed_extracted_data = $request->get('detailed_extracted_data');
 
-            \Log::info($s3_object, [$status, $status_progress]);
 
             $tenant_id = explode("/", $s3_object)[0];
             $tenant = Tenant::find($tenant_id);
 
             tenancy()->initialize($tenant);
+
+            \Log::info('Domain:', [tenant('domain')]);
+            \Log::info($s3_object, [$status, $status_progress]);
 
             $lease = Lease::where('filename', $s3_object)->first();
 
