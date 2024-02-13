@@ -24,6 +24,7 @@ class FileProcessingController extends Controller
             \Log::info("start status update");
             \Log::info($request->all());
 
+            $tenant_id = $request->get('tenant_id');
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
             $status_msg = $request->get('message');
@@ -31,14 +32,13 @@ class FileProcessingController extends Controller
             $extracted_data = $request->get('basic_extracted_data');
             $detailed_extracted_data = $request->get('detailed_extracted_data');
 
-            $tenant_id = explode("/", $s3_object)[0];
             $tenant = Tenant::find($tenant_id);
 
             tenancy()->initialize($tenant);
 
             $lease = Lease::where('filename', $s3_object)->first();
 
-            if(!$lease) throw new \Exception('File not found', 404);
+            if( ! $lease) throw new \Exception('File not found', 404);
 
             $lease->status = ($status == 'Completed' ? 'Ready' : $status);
             $lease->status_msg = $status_msg??null;
