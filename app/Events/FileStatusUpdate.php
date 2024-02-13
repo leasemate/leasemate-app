@@ -16,8 +16,8 @@ class FileStatusUpdate implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $payload;
     private $user_id;
+    public $payload;
     /**
      * Create a new event instance.
      */

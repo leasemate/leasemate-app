@@ -119,12 +119,12 @@ onMounted(() => {
                     notificationStore.count = response.data.total_unread_notifications;
                     notificationStore.add(notif);
 
-                    if(notif.data.file_status === 'Completed') {
+                    if(notif.data.file_status === 'Ready') {
                         toast.success(notif.data.file_name + ': ' + notif.data.file_status);
                     } else if(notif.data.file_status === 'Failed') {
                         toast.error(notif.data.file_name + ': ' + notif.data.file_status);
                     } else {
-                        toast.info(notif.data.file_name + ': ' + notif.data.file_status);
+                        // toast.info(notif.data.file_name + ': ' + notif.data.file_status);
                     }
 
                 })
