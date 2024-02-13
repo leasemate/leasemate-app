@@ -61,12 +61,21 @@ class FileProcessingController extends Controller
 
             $lease->save();
 
+            $lease_payload = $lease->only([
+                'id',
+                'asset_id',
+                'og_filename',
+                'status',
+                'status_msg',
+                'status_progress',
+            ]);
+
             Log::info('Fire event: FileProcessed:'.$lease);
-            event(new FileStatusUpdate($lease->user_id, $lease));
+            event(new FileStatusUpdate($lease->user_id, $lease_payload));
 
-            Log::info('Send notification: FileProcessingComplete:'.$lease);
+            Log::info('Send notification: FileProcessingComplete:');
 
-            $lease->user->notify(new FileProcessingUpdate($lease));
+            $lease->user->notify(new FileProcessingUpdate($lease_payload));
 
             return response()->json(['status' => 'success']);
 
