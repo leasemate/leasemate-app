@@ -68,6 +68,7 @@ class FileProcessingController extends Controller
                 'status',
                 'status_msg',
                 'status_progress',
+                'updated_at',
             ]);
 
             Log::info('Fire event: FileProcessed:'.$lease);
