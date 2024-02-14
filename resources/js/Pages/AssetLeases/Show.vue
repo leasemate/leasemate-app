@@ -538,13 +538,13 @@ onBeforeUnmount(() => {
         </div>
 
 
-        <div class="grid grid-cols-12 gap-12">
-            <div class="col-span-7">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-6">
 
                 <TabView :scrollable="true">
-                    <TabPanel header="Original Lease Abstract" class="pt-0">
+                    <TabPanel header="Original Lease Abstract">
 
-                        <div class="p-4 bg-white shadow-md rounded-md">
+                        <div class="p-4 bg-white">
 
                             <div class="grid grid-cols-2 gap-x-4 gap-y-2">
                                 <div>
@@ -578,9 +578,8 @@ onBeforeUnmount(() => {
 
                             </div>
 
-                            <hr />
 
-                            <Table :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
+                            <Table class="mt-8" :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
 
                                 <template #head>
                                     <tr>
@@ -604,24 +603,24 @@ onBeforeUnmount(() => {
 
                             </Table>
 
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                                <div v-for="(value, key) in lease.extracted_data" :key="key">
-                                    <div class="text-sm font-medium text-gray-600">{{ key }}</div>
-                                    <div class="text-lg font-semibold">{{ value }}</div>
-                                </div>
-                            </div>
+<!--                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">-->
+<!--                                <div v-for="(value, key) in lease.extracted_data" :key="key">-->
+<!--                                    <div class="text-sm font-medium text-gray-600">{{ key }}</div>-->
+<!--                                    <div class="text-lg font-semibold">{{ value }}</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
 
-                        <dl class="divide-y divide-gray-200">
-                            <div v-for="(value, key) in lease.extracted_data" class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    {{ key }}
-                                </dt>
-                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {{ value }}
-                                </dd>
-                            </div>
-                        </dl>
+<!--                        <dl class="divide-y divide-gray-200">-->
+<!--                            <div v-for="(value, key) in lease.extracted_data" class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">-->
+<!--                                <dt class="text-sm font-medium text-gray-500">-->
+<!--                                    {{ key }}-->
+<!--                                </dt>-->
+<!--                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-->
+<!--                                    {{ value }}-->
+<!--                                </dd>-->
+<!--                            </div>-->
+<!--                        </dl>-->
                     </TabPanel>
 <!--                    <TabPanel header="Amendment I">-->
 <!--                        <p class="m-0">-->
@@ -655,44 +654,44 @@ onBeforeUnmount(() => {
 <!--                    </TabPanel>-->
                 </TabView>
             </div>
-            <div class="col-span-5">
+            <div class="col-span-6">
 
                 <div class="">
                     <!--            h-[52rem]-->
-                    <div class="flex max-h-[52rem] min-h-[32rem] mt-auto mb-auto rounded-lg">
+                    <div class="flex max-h-[52rem] min-h-[32rem] mt-auto mb-auto rounded-lg shadow-md">
 
                         <!-- Left column for list of chats -->
-                        <div class=" w-1/3 p-4">
-                            <div class="max-h-[36rem] overflow-y-auto">
+<!--                        <div class=" w-1/3 p-4">-->
+<!--                            <div class="max-h-[36rem] overflow-y-auto">-->
 
-                                <div
-                                    v-for="(conv_obj, index) in localChatList"
-                                    :key="conv_obj.id"
-                                    @click="selectChat(conv_obj)"
-                                    :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
-                                    class="transition duration-300 mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
-                                >
+<!--                                <div-->
+<!--                                    v-for="(conv_obj, index) in localChatList"-->
+<!--                                    :key="conv_obj.id"-->
+<!--                                    @click="selectChat(conv_obj)"-->
+<!--                                    :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"-->
+<!--                                    class="transition duration-300 mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"-->
+<!--                                >-->
 
-                                  <div class="flex items-center justify-between space-x-2">
+<!--                                  <div class="flex items-center justify-between space-x-2">-->
 
-                                    <div class="relative grow overflow-hidden whitespace-nowrap text-sm text-gray-500">
-                                      {{ truncatedMessage(conv_obj?.last_message?.message) || null }}
-                                      <div class="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent w-8 from-white from-0% group-hover:w-20 group-hover:from-token-surface-primary group-hover:from-80%"></div>
-                                    </div>
+<!--                                    <div class="relative grow overflow-hidden whitespace-nowrap text-sm text-gray-500">-->
+<!--                                      {{ truncatedMessage(conv_obj?.last_message?.message) || null }}-->
+<!--                                      <div class="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent w-8 from-white from-0% group-hover:w-20 group-hover:from-token-surface-primary group-hover:from-80%"></div>-->
+<!--                                    </div>-->
 
-                                      <i
-                                          @click.stop="confirmChatDeletion(conv_obj)"
-                                          class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"
-                                      ></i>
-                                  </div>
-
-<!--                                  <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">-->
-<!--                                    {{ conv_obj.updated_at }}-->
+<!--                                      <i-->
+<!--                                          @click.stop="confirmChatDeletion(conv_obj)"-->
+<!--                                          class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"-->
+<!--                                      ></i>-->
 <!--                                  </div>-->
 
-                                </div>
-                            </div>
-                        </div>
+<!--&lt;!&ndash;                                  <div class="text-xs text-gray-400 mr-3 whitespace-nowrap">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    {{ conv_obj.updated_at }}&ndash;&gt;-->
+<!--&lt;!&ndash;                                  </div>&ndash;&gt;-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <!-- Right column for the chat prompt and conversation -->
                         <div class="flex flex-col w-full p-4 dark:border-l-gray-600">
