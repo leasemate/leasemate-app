@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
                     </template>
                 </SubHeader>
 
-                <div class="max-w-7xl mx-auto">
+                <div class="max-w-8xl mx-auto">
 
                     <div class="max-w-full mx-auto mt-6 mb-6">
 
