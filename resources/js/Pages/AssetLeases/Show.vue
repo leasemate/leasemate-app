@@ -31,6 +31,8 @@ import 'highlight.js/styles/monokai.css';
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import ChatBot from "@/Components/ChatBot.vue";
+
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -506,6 +508,8 @@ onBeforeUnmount(() => {
         <Hero :asset="asset" />
 
         <Associates :associates="associates" />
+
+        <ChatBot />
 
         <div class="mb-4">
             <h3>{{ lease.tenant_name }}</h3>

@@ -28,6 +28,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@chat-ui/vue3": "^1.0.11",
         "@ckeditor/ckeditor5-build-classic": "^27.1.0",
         "@curiosityx/bootstrap-session-timeout": "^1.0.0",
         "@fortawesome/fontawesome-svg-core": "^6.4.2",

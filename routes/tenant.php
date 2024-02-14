@@ -17,6 +17,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\NotificationController;
@@ -147,9 +148,7 @@ Route::middleware([
         return redirect('dashboard');
     })->name('dashboard');
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
 
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
