@@ -1,5 +1,0 @@
-<<<<<<<< HEAD:public/build/assets/Table-f8bd260f.js
-import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{o as a,d as r,a as e,j as s}from"./app-a1efc8dc.js";const c={},l={class:"relative overflow-x-auto rounded-lg"},d={class:"w-full text-sm text-left text-gray-500"},n={class:"text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50"};function _(t,i){return a(),r("div",l,[e("table",d,[e("thead",n,[s(t.$slots,"head")]),e("tbody",null,[s(t.$slots,"body")])])])}const g=o(c,[["render",_]]);export{g as T};
-========
-import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{o as a,d as r,a as e,j as s}from"./app-824aa810.js";const c={},l={class:"relative overflow-x-auto rounded-lg"},d={class:"w-full text-sm text-left text-gray-500"},n={class:"text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50"};function _(t,i){return a(),r("div",l,[e("table",d,[e("thead",n,[s(t.$slots,"head")]),e("tbody",null,[s(t.$slots,"body")])])])}const g=o(c,[["render",_]]);export{g as T};
->>>>>>>> LMAP-19-Restructure-lease-show-page-with-lease-data:public/build/assets/Table-e7feeb5f.js
