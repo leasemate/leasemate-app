@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +16,7 @@ class LeaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//dd($this->extracted_data);
+
         return [
             'id' => $this->id,
             'asset_id' => $this->asset_id,
@@ -33,6 +34,25 @@ class LeaseResource extends JsonResource
             'status' => $this->status,
             'status_progress' => ($this->status_progress && $this->status == 'Processing' ? $this->status_progress."%" : null),
             'status_msg' => $this->status_msg,
+            'monthly_base_rent' => $this->getMonthlyBaseRent()
         ];
+    }
+
+    private function getMonthlyBaseRent(): array
+    {
+        $monthly_base_rent = [];
+
+        if (isset($this->extracted_data['monthly_base_rent'])) {
+
+            foreach($this->extracted_data['monthly_base_rent'] as $key => $value) {
+                $monthly_base_rent[$key] = [
+                    'start_date' => Carbon::parse($value['start_date'])->format('m/d/Y'),
+                    'end_date' => Carbon::parse($value['end_date'])->format('m/d/Y'),
+                    'amount_total' => $value['amount_total'],
+                    'amount_per_square_foot' => $value['amount_per_square_foot'],
+                ];
+            }
+        }
+        return $monthly_base_rent;
     }
 }
