@@ -511,8 +511,8 @@ onBeforeUnmount(() => {
             <h4>{{ lease.address }}</h4>
         </div>
 
-        <div class="grid grid-cols-12 gap-12">
-            <div class="col-span-7">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-6">
                 <div class="card">
                     <Panel header="Upload Amendments" toggleable :collapsed="true">
                         <p class="m-0">
@@ -527,7 +527,7 @@ onBeforeUnmount(() => {
                 </div>
 
             </div>
-            <div class="col-span-5">
+            <div class="col-span-6">
 
                     <PrimaryButton class="mb-4" @click="addNewChat">
                         <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
