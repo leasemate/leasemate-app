@@ -51,7 +51,7 @@ class RoleController extends Controller
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index', $page.props.tenant_domain);
     }
 
     /**
@@ -86,7 +86,7 @@ class RoleController extends Controller
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index', $page.props.tenant_domain);
     }
 
     /**
@@ -102,7 +102,7 @@ class RoleController extends Controller
         } catch(\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index', $page.props.tenant_domain);
     }
 
     protected function getAllPermissions()

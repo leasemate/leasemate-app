@@ -63,7 +63,7 @@ Route::middleware([
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('tenants'));
+        return redirect()->intended(route('tenants', $page.props.tenant_domain));
 
     })->name('landlord.login.store');
 

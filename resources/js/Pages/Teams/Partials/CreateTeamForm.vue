@@ -11,7 +11,7 @@ const form = useForm({
 });
 
 const createTeam = () => {
-    form.post(route('teams.store'), {
+    form.post(route('teams.store', $page.props.tenant_domain), {
         errorBag: 'createTeam',
         preserveScroll: true,
     });

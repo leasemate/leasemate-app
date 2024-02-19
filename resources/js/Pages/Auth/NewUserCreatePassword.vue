@@ -21,7 +21,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('new-user-password.store'), {
+    form.post(route('new-user-password.store', $page.props.tenant_domain), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };

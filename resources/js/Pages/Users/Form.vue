@@ -39,7 +39,7 @@ const form = useForm({
 
 const saveUser = () => {
     if( ! form.id) {
-        form.post(route('users.store'), {
+        form.post(route('users.store', $page.props.tenant_domain), {
             errorBag: 'createUser',
             preserveScroll: true,
             onSuccess: () => {
@@ -146,7 +146,7 @@ const saveUser = () => {
         <template #actions>
 
             <Link
-                :href="route('users.index')"
+                :href="route('users.index', $page.props.tenant_domain)"
                 class="mr-4">Cancel
             </Link>
 

@@ -15,7 +15,7 @@ defineProps({
 const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
-    router.put(route('current-team.update'), {
+    router.put(route('current-team.update', $page.props.tenant_domain), {
         team_id: team.id,
     }, {
         preserveState: false,
@@ -23,7 +23,7 @@ const switchToTeam = (team) => {
 };
 
 const logout = () => {
-    router.post(route('landlord.logout'));
+    router.post(route('landlord.logout', $page.props.tenant_domain));
 };
 </script>
 
@@ -42,18 +42,18 @@ const logout = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('dashboard', $page.props.tenant_domain)">
                                     <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-<!--                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">-->
+<!--                                <NavLink :href="route('dashboard')" :active="route().current('dashboard', $page.props.tenant_domain)">-->
 <!--                                    Dashboard-->
 <!--                                </NavLink>-->
 
-                                <NavLink :href="route('tenants')" :active="route().current('tenants')">
+                                <NavLink :href="route('tenants')" :active="route().current('tenants', $page.props.tenant_domain)">
                                     Tenants
                                 </NavLink>
                             </div>
@@ -87,11 +87,11 @@ const logout = () => {
 <!--                                            Manage Account-->
 <!--                                        </div>-->
 
-<!--                                        <DropdownLink :href="route('profile.show')">-->
+<!--                                        <DropdownLink :href="route('profile.show', $page.props.tenant_domain)">-->
 <!--                                            Profile-->
 <!--                                        </DropdownLink>-->
 
-<!--                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">-->
+<!--                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index', $page.props.tenant_domain)">-->
 <!--                                            API Tokens-->
 <!--                                        </DropdownLink>-->
 
@@ -140,7 +140,7 @@ const logout = () => {
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard', $page.props.tenant_domain)">
                             Dashboard
                         </ResponsiveNavLink>
                     </div>
@@ -163,11 +163,11 @@ const logout = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-<!--                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">-->
+<!--                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show', $page.props.tenant_domain)">-->
 <!--                                Profile-->
 <!--                            </ResponsiveNavLink>-->
 
-<!--                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">-->
+<!--                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index', $page.props.tenant_domain)">-->
 <!--                                API Tokens-->
 <!--                            </ResponsiveNavLink>-->
 
@@ -187,11 +187,11 @@ const logout = () => {
 <!--                                </div>-->
 
 <!--                                &lt;!&ndash; Team Settings &ndash;&gt;-->
-<!--                                <ResponsiveNavLink :href="route('teams.show', $page.props.auth.user.current_team)" :active="route().current('teams.show')">-->
+<!--                                <ResponsiveNavLink :href="route('teams.show', $page.props.auth.user.current_team)" :active="route().current('teams.show', $page.props.tenant_domain)">-->
 <!--                                    Team Settings-->
 <!--                                </ResponsiveNavLink>-->
 
-<!--                                <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create')">-->
+<!--                                <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create', $page.props.tenant_domain)">-->
 <!--                                    Create New Team-->
 <!--                                </ResponsiveNavLink>-->
 

@@ -43,7 +43,7 @@ const warningMessage = () => {
 }
 
 const logoutUser = async () => {
-    await Inertia.post(route('logout'));
+    await Inertia.post(route('logout', $page.props.tenant_domain));
 }
 
 const resetTimer = () => {

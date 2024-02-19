@@ -72,7 +72,7 @@ class UserController extends Controller
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index', $page.props.tenant_domain);
     }
 
     /**
@@ -113,7 +113,7 @@ class UserController extends Controller
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index', $page.props.tenant_domain);
     }
 
     /**
@@ -131,7 +131,7 @@ class UserController extends Controller
             session()->flash('error', $e->getMessage());
         }
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index', $page.props.tenant_domain);
     }
 
     public function resendInvitation(User $user)
@@ -146,7 +146,7 @@ class UserController extends Controller
             session()->flash('error', $e->getMessage());
         }
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index', $page.props.tenant_domain);
     }
 
     protected function getRoles()

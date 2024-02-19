@@ -31,7 +31,7 @@ class TenantController extends Controller
         $tenant->password = null;
         $tenant->save();
 
-        return redirect()->route('tenants');
+        return redirect()->route('tenants', $page.props.tenant_domain);
     }
 
     public function destroy(Tenant $tenant)
@@ -39,7 +39,7 @@ class TenantController extends Controller
 
         $tenant->delete();
 
-        return redirect()->route('tenants');
+        return redirect()->route('tenants', $page.props.tenant_domain);
     }
 
 }

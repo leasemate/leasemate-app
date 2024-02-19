@@ -89,7 +89,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => '{domain}',
 
     'domain' => null,
 

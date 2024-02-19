@@ -17,7 +17,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+    form.post(route('password.email', $page.props.tenant_domain));
 };
 </script>
 
@@ -57,7 +57,7 @@ const submit = () => {
 
                 <div class="flex items-center justify-end mt-4">
                     <Link
-                        :href="route('login')"
+                        :href="route('login', $page.props.tenant_domain)"
                         class="underline mr-4 text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Login

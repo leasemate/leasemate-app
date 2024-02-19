@@ -34,7 +34,7 @@ const form = reactive({
 const passwordInput = ref(null);
 
 const startConfirmingPassword = () => {
-    axios.get(route('password.confirmation')).then(response => {
+    axios.get(route('password.confirmation', $page.props.tenant_domain)).then(response => {
         if (response.data.confirmed) {
             emit('confirmed');
         } else {
@@ -48,7 +48,7 @@ const startConfirmingPassword = () => {
 const confirmPassword = () => {
     form.processing = true;
 
-    axios.post(route('password.confirm'), {
+    axios.post(route('password.confirm', $page.props.tenant_domain), {
         password: form.password,
     }).then(() => {
         form.processing = false;

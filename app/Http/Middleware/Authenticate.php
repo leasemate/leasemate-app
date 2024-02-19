@@ -19,7 +19,7 @@ class Authenticate extends Middleware
         // Before we forward to login page, see if this is a valid team invite
         // and use info to show to User.
         if ($request->hasValidSignature() && $request->routeIs('team-invitations.accept')) {
-            $invitationId = $request->route('invitation');
+            $invitationId = $request->route('invitation', $page.props.tenant_domain);
             /** @var TeamInvitation $teamInvitation */
             $teamInvitation = TeamInvitation::query()->find($invitationId);
             $teamName = $teamInvitation->team->name ?? null;

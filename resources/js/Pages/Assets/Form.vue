@@ -41,7 +41,7 @@ const items = ref([]);
 
 const search = (event) => {
 
-    axios.get(route('users.search'), {
+    axios.get(route('users.search', $page.props.tenant_domain), {
         params: {
             q: event.query
         }
@@ -55,7 +55,7 @@ const search = (event) => {
 
 const submit = () => {
     if( ! form.id) {
-        form.post(route('assets.store'), {
+        form.post(route('assets.store', $page.props.tenant_domain), {
             errorBag: 'createAsset',
             preserveScroll: true,
             onSuccess: () => {
@@ -150,7 +150,7 @@ onMounted(() => {
 
         <template #actions>
             <div class="space-x-2">
-                <Link :href="route('assets.index')">Cancel</Link>
+                <Link :href="route('assets.index', $page.props.tenant_domain)">Cancel</Link>
                 <PrimaryButton
                     type="submit"
                 >Save</PrimaryButton>

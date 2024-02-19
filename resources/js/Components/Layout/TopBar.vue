@@ -96,7 +96,7 @@ const markAsRead = (notification) => {
 }
 
 const switchToTeam = (team) => {
-    router.put(route('current-team.update'), {
+    router.put(route('current-team.update', $page.props.tenant_domain), {
         team_id: team.id,
     }, {
         preserveState: false,
@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
                                         <h6 class="m-0 text-gray-700 dark:text-gray-100"> Notifications </h6>
                                     </div>
                                     <div class="col-span-6 justify-self-end">
-                                        <Link :href="route('notifications.index')" class="text-xs underline dark:text-gray-400"> Unread ({{ notificationStore.count }})</Link>
+                                        <Link :href="route('notifications.index', $page.props.tenant_domain)" class="text-xs underline dark:text-gray-400"> Unread ({{ notificationStore.count }})</Link>
                                     </div>
                                 </div>
                                 <simplebar class="max-h-56" data-simplebar>
@@ -305,7 +305,7 @@ onBeforeUnmount(() => {
 
                                 </simplebar>
                                 <div class="p-1 border-t grid border-gray-50 dark:border-gray-600 justify-items-center">
-                                    <Link class="btn border-0 text-violet-500" :href="route('notifications.index')">
+                                    <Link class="btn border-0 text-violet-500" :href="route('notifications.index', $page.props.tenant_domain)">
                                         <i class="mdi mdi-arrow-right-circle mr-1 dark:text-gray-100"></i> <span class="dark:text-gray-100">View More</span>
                                     </Link>
                                 </div>
@@ -346,7 +346,7 @@ onBeforeUnmount(() => {
                                         Team Settings
                                     </DropdownLink>
 
-                                    <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
+                                    <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create', $page.props.tenant_domain)">
                                         Create New Team
                                     </DropdownLink>
 
@@ -401,11 +401,11 @@ onBeforeUnmount(() => {
 <!--                                    Manage Account-->
 <!--                                </div>-->
 
-<!--                                <DropdownLink :href="route('profile.show')">-->
+<!--                                <DropdownLink :href="route('profile.show', $page.props.tenant_domain)">-->
 <!--                                    Profile-->
 <!--                                </DropdownLink>-->
 
-<!--                                <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">-->
+<!--                                <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index', $page.props.tenant_domain)">-->
 <!--                                    API Tokens-->
 <!--                                </DropdownLink>-->
 
@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
                             <div class="border border-gray-50 dark:border-zinc-600" aria-labelledby="navNotifications">
                                 <div class="dropdown-item dark:text-gray-100">
                                     <Link
-                                        :href="route('profile.show')"
+                                        :href="route('profile.show', $page.props.tenant_domain)"
                                         class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50">
 
                                         <i class="mdi mdi-shield-account-outline text-16 align-middle mr-1"></i> Profile
@@ -452,7 +452,7 @@ onBeforeUnmount(() => {
 
                                 <div v-if="$page.props.jetstream.hasApiFeatures" class="dropdown-item dark:text-gray-100">
                                     <Link
-                                        :href="route('api-tokens.index')"
+                                        :href="route('api-tokens.index', $page.props.tenant_domain)"
                                         class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50">
 <!--                                        <i class="mdi mdi-shield-account-outline text-16 align-middle mr-1"></i>-->
                                         API Tokens
@@ -462,7 +462,7 @@ onBeforeUnmount(() => {
                                 <hr class="border-gray-50 dark:border-gray-700">
                                 <div class="dropdown-item dark:text-gray-100">
                                     <Link
-                                        :href="route('logout')"
+                                        :href="route('logout', $page.props.tenant_domain)"
                                         class=" w-full flex p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50"
                                         method="post"
                                         as="button"

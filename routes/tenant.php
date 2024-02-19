@@ -43,6 +43,7 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 Route::group([
 //    'as' => 'tenant.',
+    'prefix' => '/{domain}',
     'middleware' => [
         'web',
         'guest',
@@ -51,17 +52,18 @@ Route::group([
 ], function () {
 
     Route::get('/', function () {
-        return redirect('login');
+        return redirect(route('tenant.login', tenant('id', $page.props.tenant_domain)));
     })->name('home');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+        ->name('tenant.login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
         ->name('login.store');
 });
 
 Route::group([
+    'prefix' => '/{domain}',
     'middleware' => [
         'web',
         'guest',
@@ -89,12 +91,23 @@ Route::group([
 
 });
 
-Route::middleware([
-    'web',
-    'auth',
-    config('jetstream.auth_session'),
-    'tenant',
-])->group(function () {
+//Route::middleware([
+//    'prefix' => '/{domain}',
+//    'web',
+//    'auth',
+//    config('jetstream.auth_session'),
+//    'tenant',
+//])->group(function () {
+
+Route::group([
+        'prefix' => '/{domain}',
+        'middleware' => [
+            'web',
+            'auth',
+            config('jetstream.auth_session'),
+            'tenant',
+        ]
+], function () {
 
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
@@ -119,15 +132,26 @@ Route::middleware([
 
 });
 
-Route::middleware([
-    'web',
-    'auth',
-    config('jetstream.auth_session'),
-    'tenant',
-    'verified',
-])->group(function () {
+//Route::middleware([
+//    'prefix' => '/{domain}',
+//    'web',
+//    'auth',
+//    config('jetstream.auth_session'),
+//    'tenant',
+//    'verified',
+//])->group(function () {
 
-    Route::get('/notify', function() {
+Route::group([
+    'prefix' => '/{domain}',
+    'middleware' => [
+        'web',
+        'auth',
+        config('jetstream.auth_session'),
+        'tenant',
+    ]
+], function () {
+
+        Route::get('/notify', function() {
         $user = User::find(1);
 
 //        dd($user->broadcastChannel());

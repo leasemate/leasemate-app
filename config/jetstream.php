@@ -31,6 +31,8 @@ return [
      |
      */
 
+    'prefix' => '{domain}',
+
     'middleware' => [
         'web',
         'tenant',

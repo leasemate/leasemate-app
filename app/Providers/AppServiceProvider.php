@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Stancl\Tenancy\Resolvers\PathTenantResolver;
+use App\Tenancy\CustomPathTenantResolver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->app->singleton(PathTenantResolver::class, function () {
+            return new CustomPathTenantResolver(Cache::getFacadeRoot());
+        });
+
+
         JsonResource::withoutWrapping();
     }
 }

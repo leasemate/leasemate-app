@@ -114,28 +114,28 @@ onMounted(() => {
 
                     <li>
 
-                        <SideNavLink :href="route('dashboard')">
+                        <SideNavLink :href="route('dashboard', $page.props.tenant_domain)">
                             <i data-feather="trending-up"></i>
                             <span data-key="t-dashboard"> Dashboard</span>
                         </SideNavLink>
                     </li>
 
                     <li>
-                        <SideNavLink :href="route('assets.index')">
+                        <SideNavLink :href="route('assets.index', $page.props.tenant_domain)">
                             <i data-feather="home"></i>
                             <span data-key="t-chat"> Assets</span>
                         </SideNavLink>
                     </li>
 
 <!--                    <li>-->
-<!--                        <SideNavLink :href="route('chats.index')">-->
+<!--                        <SideNavLink :href="route('chats.index', $page.props.tenant_domain)">-->
 <!--                            <i data-feather="message-circle"></i>-->
 <!--                            <span data-key="t-chat"> Chat</span>-->
 <!--                        </SideNavLink>-->
 <!--                    </li>-->
 
 <!--                    <li>-->
-<!--                        <SideNavLink :href="route('files.index')">-->
+<!--                        <SideNavLink :href="route('files.index', $page.props.tenant_domain)">-->
 <!--                            <i data-feather="file-text"></i>-->
 <!--                            <span data-key="t-file-upload"> Files</span>-->
 <!--                        </SideNavLink>-->
@@ -149,14 +149,14 @@ onMounted(() => {
                         <ul class="mm-collapse">
                             <li>
                                 <!--                                <a href="/app-calendar.html" class="">Calendar</a>-->
-                                <Link :href="route('users.index')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                <Link :href="route('users.index', $page.props.tenant_domain)" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
 <!--                                    <i data-feather="users"></i>-->
                                     <span data-key="t-dashboard"> Users</span>
                                 </Link>
                             </li>
                             <li>
                                 <!--                                <a href="/app-calendar.html" class="">Calendar</a>-->
-                                <Link :href="route('roles.index')" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                                <Link :href="route('roles.index', $page.props.tenant_domain)" class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
 <!--                                    <i data-feather="lock"></i>-->
                                     <span data-key="t-dashboard"> Roles</span>
                                 </Link>

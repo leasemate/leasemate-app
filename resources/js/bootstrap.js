@@ -20,6 +20,10 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
+const pathname = window.location.pathname;
+const parts = pathname.split('/');
+const tenantIdentifier = parts[1];
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -29,4 +33,5 @@ window.Echo = new Echo({
     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
+    authEndpoint: `/${tenantIdentifier}/broadcasting/auth`,
 });

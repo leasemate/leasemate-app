@@ -54,7 +54,7 @@ async function query() {
                 console.log(error);
                 if(error.response.data.error_type == "TokenExpiredError") {
 
-                    await axios.post(route('refreshToken'))
+                    await axios.post(route('refreshToken', $page.props.tenant_domain))
                         .then(function (response) {
                             console.log('axios post response:', response.data);
                             user.value.jwt_token = response.data.token;

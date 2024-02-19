@@ -350,7 +350,7 @@ const sendQuery = async (question) => {
 
 const refreshToken = async () => {
 
-    await axios.post(route('refresh-token'))
+    await axios.post(route('refresh-token', $page.props.tenant_domain))
         .then(function (response) {
             // console.log('axios post response:', response.data);
             user.value.jwt_token = response.data.token;

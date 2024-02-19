@@ -37,7 +37,7 @@ const deleteTenant = (tenant) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
 
                 <div class="flex justify-end">
-                    <PrimaryLink as="button" class="" :href="route('tenants.create')">
+                    <PrimaryLink as="button" class="" :href="route('tenants.create', $page.props.tenant_domain)">
                         Create Tenant
                     </PrimaryLink>
                 </div>

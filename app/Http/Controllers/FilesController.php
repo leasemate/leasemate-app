@@ -34,7 +34,7 @@ class FilesController extends Controller
         }
 
         if(!$trashed_file_count && request()->has('archived')) {
-            return redirect()->route('files.index');
+            return redirect()->route('files.index', $page.props.tenant_domain);
         }
 
         $files = $files->paginate(20)->withQueryString();

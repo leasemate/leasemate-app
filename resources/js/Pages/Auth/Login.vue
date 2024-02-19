@@ -24,7 +24,7 @@ const submit = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
-    })).post(route((usePage().props.tenant_id ? 'login': 'landlord.login')), {
+    })).post(route((usePage().props.tenant_domain ? 'tenant.login': 'landlord.login'), usePage().props.tenant_domain??null), {
         onFinish: () => form.reset('password'),
     });
 };
@@ -45,7 +45,7 @@ const submit = () => {
                 </h5>
 
                 <div v-if="$page.props.jetstream.hasTeamFeatures" class="mt-4 text-center">
-                    <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register')" class="text-violet-500 font-semibold"> Register </Link> </p>
+                    <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register', $page.props.tenant_domain)" class="text-violet-500 font-semibold"> Register </Link> </p>
                 </div>
             </div>
 
@@ -77,7 +77,7 @@ const submit = () => {
                         <div class="ltr:ml-auto rtl:mr-auto">
                             <Link
                                 v-if="canResetPassword"
-                                :href="route('password.request')"
+                                :href="route('password.request', $page.props.tenant_domain)"
                                 class="text-sm text-gray-500 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:text-gray-100"
                             >
                                 Forgot password?

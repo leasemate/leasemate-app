@@ -21,7 +21,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.update'), {
+    form.post(route('password.update', $page.props.tenant_domain), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };

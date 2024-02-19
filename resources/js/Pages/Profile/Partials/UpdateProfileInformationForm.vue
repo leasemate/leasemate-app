@@ -29,7 +29,7 @@ const updateProfileInformation = () => {
         form.photo = photoInput.value.files[0];
     }
 
-    form.post(route('user-profile-information.update'), {
+    form.post(route('user-profile-information.update', $page.props.tenant_domain), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
         onSuccess: () => clearPhotoFileInput(),
@@ -59,7 +59,7 @@ const updatePhotoPreview = () => {
 };
 
 const deletePhoto = () => {
-    router.delete(route('current-user-photo.destroy'), {
+    router.delete(route('current-user-photo.destroy', $page.props.tenant_domain), {
         preserveScroll: true,
         onSuccess: () => {
             photoPreview.value = null;
@@ -160,7 +160,7 @@ const clearPhotoFileInput = () => {
                         Your email address is unverified.
 
                         <Link
-                            :href="route('verification.send')"
+                            :href="route('verification.send', $page.props.tenant_domain)"
                             method="post"
                             as="button"
                             class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"

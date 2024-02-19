@@ -107,7 +107,7 @@ class ChatController extends Controller
 
             DB::commit();
 
-            return redirect()->route('chats.index');
+            return redirect()->route('chats.index', $page.props.tenant_domain);
 
         } catch (\Exception $e) {
 

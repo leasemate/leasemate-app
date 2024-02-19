@@ -65,7 +65,7 @@ const saveRole = () => {
 };
 
 const createRole = () => {
-    form.post(route('roles.store'), {
+    form.post(route('roles.store', $page.props.tenant_domain), {
         errorBag: 'roleCreate',
         preserveScroll: true,
     });
@@ -238,7 +238,7 @@ onMounted(() => {
             <template #actions>
 
                 <Link
-                    :href="route('roles.index')"
+                    :href="route('roles.index', $page.props.tenant_domain)"
                     class="mr-4">Cancel
                 </Link>
 

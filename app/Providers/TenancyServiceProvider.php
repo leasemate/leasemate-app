@@ -8,6 +8,7 @@ use App\Facades\ZepApi;
 use App\Jobs\CreateTenantAdmin;
 use App\Jobs\DeleteTenantS3Files;
 use App\Jobs\DeleteZepUsers;
+use App\Tenancy\CustomPathTenantResolver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -125,6 +126,8 @@ class TenancyServiceProvider extends ServiceProvider
     {
         $this->bootEvents();
         $this->mapRoutes();
+
+        CustomPathTenantResolver::$tenantParameterName = 'domain';
 
         $this->makeTenancyMiddlewareHighestPriority();
     }

@@ -47,8 +47,9 @@ class Kernel extends HttpKernel
         ],
 
         'tenant' => [
-            \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-            \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+//            \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+            \Stancl\Tenancy\Middleware\InitializeTenancyByPath::class,
+//            \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
         ],
     ];
 

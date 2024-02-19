@@ -21,7 +21,7 @@ const props = defineProps({
 
             <div class="flex justify-end">
                 <PrimaryLink
-                    :href="route('assets.create')"
+                    :href="route('assets.create', $page.props.tenant_domain??null)"
                 >Create Asset</PrimaryLink>
             </div>
 
@@ -29,7 +29,7 @@ const props = defineProps({
 
                 <!-- Repeat this block for each asset -->
                 <div  v-for="asset in assets" class="border border-gray-200 rounded-lg shadow-md overflow-hidden">
-                    <Link :href="route('assets.show', asset)">
+                    <Link :href="route('assets.show', [$page.props.tenant_domain, asset])">
                         <img src="/images/Commercial-real-estate.webp" alt="Asset Photo" class="w-full h-48 object-cover" />
 
                         <div class="p-4">

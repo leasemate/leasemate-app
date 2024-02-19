@@ -25,7 +25,7 @@ class NewUserPasswordController extends Controller
     {
         return Inertia::render('Auth/NewUserCreatePassword', [
             'email' => $request->email,
-            'token' => $request->route('token'),
+            'token' => $request->route('token', $page.props.tenant_domain),
         ]);
     }
 
@@ -67,7 +67,7 @@ class NewUserPasswordController extends Controller
 
             //redirect to dashboard
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard', $page.props.tenant_domain);
         }
 
         throw ValidationException::withMessages([
