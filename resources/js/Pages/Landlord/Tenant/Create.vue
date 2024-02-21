@@ -1,12 +1,13 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import toast from "@/Stores/toast.js";
+import { watch } from "vue";
 
 const form = useForm({
     company_name: '',
@@ -15,6 +16,10 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+});
+
+watch(() => form.company_name, (value) => {
+    form.domain = value.toLowerCase().replace(/[^a-z0-9]/g, '');
 });
 
 const submit = () => {
@@ -76,7 +81,7 @@ const submit = () => {
                                         class="mt-1 block w-full mr-2"
                                         required
                                     />
-                                    <span class="text-19">.reai.test</span>
+                                    <span class="text-19">.{{ usePage().props.base_domain }}</span>
                                 </div>
                                 <InputError class="mt-2" :message="form.errors.domain" />
                             </div>

@@ -111,6 +111,7 @@ Route::middleware([
     Route::get('/tenants', [TenantController::class, 'index'])->name('tenants');
     Route::get('/tenants/create', [TenantController::class, 'create'])->name('tenants.create');
     Route::post('/tenants', [TenantController::class, 'store'])->name('tenants.store');
+    Route::post('/tenants/{tenant}/force-login', [TenantController::class, 'forceLogin'])->name('tenants.force-login');
     Route::delete('/tenants/{tenant}', [TenantController::class, 'destroy'])->name('tenants.destroy');
 
     Route::post('/landlord-logout', [AuthenticatedSessionController::class, 'destroy'])

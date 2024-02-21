@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { defineProps } from 'vue';
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import { Link, router } from '@inertiajs/vue3';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -20,6 +21,12 @@ const deleteTenant = (tenant) => {
             preserveState: false,
         });
 
+}
+
+const forceLoginTenant = (tenant) => {
+    router.post(route('tenants.force-login', tenant), {
+        preserveState: false,
+    });
 }
 
 </script>
@@ -60,6 +67,9 @@ const deleteTenant = (tenant) => {
                                 <th scope="col" class="px-6 py-3">
                                     Email
                                 </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Login
+                                </th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -79,6 +89,11 @@ const deleteTenant = (tenant) => {
                                 </td>
                                 <td class="px-6 py-3.5 dark:text-zinc-100">
                                     {{ tenant.email }}
+                                </td>
+                                <td class="px-6 py-3.5 dark:text-zinc-100">
+                                    <SecondaryButton @click="forceLoginTenant(tenant)">
+                                        Login
+                                    </SecondaryButton>
                                 </td>
                                 <td class="px-6 py-3.5 dark:text-zinc-100 flex justify-end">
 
