@@ -21,12 +21,11 @@ import Hero from "@/Components/Lease/Hero.vue";
 import Associates from "@/Components/Lease/Associates.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import MessageLoader from "@/Components/Chat/MessageLoader.vue";
-import Markdown from "vue3-markdown-it";
+
 import axios from "axios";
 import toast from "@/Stores/toast.js";
 import socketIOClient from 'socket.io-client';
 
-import 'highlight.js/styles/monokai.css';
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";

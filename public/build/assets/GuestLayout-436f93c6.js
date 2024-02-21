@@ -1,0 +1,1 @@
+import{_ as a}from"./ToastList-bd914a6d.js";import{o as t,d as o,b as r,a as e,j as c,F as n}from"./app-3b8f223d.js";const _={class:"flex min-h-screen"},l={class:"relative w-full"},f={__name:"GuestLayout",setup(i){return(s,m)=>(t(),o(n,null,[r(a),e("div",_,[e("div",l,[c(s.$slots,"default")])])],64))}};export{f as _};
