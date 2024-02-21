@@ -3,6 +3,7 @@
 namespace App\Http\Responses;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\PasswordUpdateResponse as PasswordUpdateResponseContract;
 use Inertia\Inertia;
 
@@ -12,7 +13,7 @@ class PasswordUpdateResponse implements PasswordUpdateResponseContract
     {
         // Here you can customize the response after a successful password update
         // For example, redirecting with Inertia:
-        dd(auth()->user());
+        Auth::logout();
         return $request->wantsJson()
             ? new Response('', 200)
             : Inertia::location(route('dashboard'));
