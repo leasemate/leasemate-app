@@ -52,6 +52,7 @@ class UserController extends Controller
             $user = User::create([
                 ...$request->validated(),
                 'password' => bcrypt(Str::random()),
+                'global_id' => explode('.', tenant('domain'))[0],
             ]);
 
             $user->syncRoles($request->user_roles);

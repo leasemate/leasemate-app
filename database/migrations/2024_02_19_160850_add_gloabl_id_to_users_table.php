@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('zep_uuid')->nullable()->after('remember_token');
+            $table->string('global_id')->nullable()->unique()->after('id');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('zep_uuid');
+            $table->dropColumn('global_id');
         });
     }
 };

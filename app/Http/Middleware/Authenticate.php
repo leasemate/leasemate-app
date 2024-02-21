@@ -41,6 +41,6 @@ class Authenticate extends Middleware
             }
         }
 
-        return $request->expectsJson() ? null : route(tenant()?'login':'landlord.login');
+        return $request->expectsJson() ? null : route('login');
     }
 }

@@ -19,7 +19,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public static function booted()
     {
         static::creating(function ($tenant) {
-//            $tenant->id = explode(".", $tenant->domain)[0];
             $tenant->password = bcrypt($tenant->password);
         });
 
@@ -36,6 +35,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         });
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(CentralUser::class, 'tenant_users', 'tenant_id', 'global_user_id', 'id', 'global_id')
+            ->using(TenantPivot::class);
+    }
 
 
 }

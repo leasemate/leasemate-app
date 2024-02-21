@@ -57,8 +57,8 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
                 'info' => fn () => $request->session()->get('info'),
             ],
-            'my_notifications' => fn () => auth()->check() ? $request->user()->notifications()->limit(5)->get(): [],
-            'notification_count' => fn () => auth()->check() ? ($request->user()->unreadNotifications()->count()??0) : 0,
+            'my_notifications' => fn () => auth()->check() && tenant('id') ? $request->user()->notifications()->limit(5)->get(): [],
+            'notification_count' => fn () => auth()->check() && tenant('id') ? ($request->user()->unreadNotifications()->count()??0) : 0,
         ]);
     }
 }

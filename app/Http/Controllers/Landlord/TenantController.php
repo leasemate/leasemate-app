@@ -36,6 +36,7 @@ class TenantController extends Controller
 
     public function destroy(Tenant $tenant)
     {
+        $tenant->users->each->delete();
 
         $tenant->delete();
 

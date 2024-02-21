@@ -93,6 +93,10 @@ return [
 
     'domain' => null,
 
+    'paths' => [
+        'login' => '/admin/login'
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Fortify Routes Middleware
@@ -150,8 +154,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
+//        Features::registration(),
+//        Features::resetPasswords(),
         Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),

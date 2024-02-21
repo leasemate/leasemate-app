@@ -9,11 +9,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\NewUserPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
@@ -26,8 +22,7 @@ use App\Models\User;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use routes\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +37,6 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 */
 
 Route::group([
-//    'as' => 'tenant.',
     'middleware' => [
         'web',
         'guest',
@@ -54,11 +48,14 @@ Route::group([
         return redirect('login');
     })->name('home');
 
+    Route::get('force-login', [AuthenticatedSessionController::class, 'forceLogin'])
+        ->name('tenant.force.login');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+        ->name('tenant.login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
-        ->name('login.store');
+        ->name('tenant.login.store');
 });
 
 Route::group([
@@ -69,18 +66,18 @@ Route::group([
     ]
 ], function () {
 
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-        ->name('password.request');
-
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
-
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-        ->name('password.reset');
-
-    Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
-
+//    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+//        ->name('password.request');
+//
+//    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+//        ->name('password.email');
+//
+//    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+//        ->name('password.reset');
+//
+//    Route::post('reset-password', [NewPasswordController::class, 'store'])
+//        ->name('password.store');
+//
     Route::get('create-password/{token}', [NewUserPasswordController::class, 'create'])
         ->name('new-user-password.create');
 
