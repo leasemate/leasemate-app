@@ -12,7 +12,6 @@ const closeVerticalMenu = () => {
 };
 
 const initMenuItemScroll = () => {
-    // console.log('init menu scroll');
 
     setTimeout(function () {
         var sidebarMenu = document.getElementById("side-menu");
@@ -90,8 +89,22 @@ onMounted(() => {
     }
 
     if (document.getElementById("side-menu")) {
-        new MetisMenu('#side-menu');
+        const menuElement = document.querySelector('#side-menu');
+
+        const metis = new MetisMenu(menuElement);
+
+
+        document.addEventListener('show.metisMenu', (event) => {
+            console.log('MetisMenu show event:', event);
+            // EventBus.emit('metis-menu-show', event);
+        });
+
+        // menuElement.addEventListener('show.metisMenu', (event) => {
+        //     console.log('MetisMenu show event:', event);
+        //     // Your logic here
+        // });
     }
+
 
 });
 

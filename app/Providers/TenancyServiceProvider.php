@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Facades\ZepApi;
-use App\Jobs\CreateTenantAdmin;
+use App\Jobs\CreateTenantAdminUser;
 use App\Jobs\DeleteTenantS3Files;
 use App\Jobs\DeleteZepUsers;
 use Illuminate\Support\Facades\Event;
@@ -34,7 +34,7 @@ class TenancyServiceProvider extends ServiceProvider
                     Jobs\MigrateDatabase::class,
                     Jobs\SeedDatabase::class,
 
-                    CreateTenantAdmin::class,
+                    CreateTenantAdminUser::class,
 
                     // Provision API keys, create S3 buckets, anything you want!
                     // Your own jobs to prepare the tenant.

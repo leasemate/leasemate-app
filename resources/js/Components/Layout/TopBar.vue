@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, onBeforeUnmount, computed} from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, onUnmounted } from "vue";
 import {Link, usePage, router } from "@inertiajs/vue3";
 import simplebar from "simplebar-vue";
 import moment from "moment";
@@ -21,12 +21,15 @@ const { getFileStatusClass } = fileStatusClass();
 
 // const localNotificationCount = ref(page.props.notification_count);
 // const localNotifications = ref(page.props.my_notifications);
-
+let menuOpen = ref(true);
+let menuMdSize = ref(false);
+let showIcon = ref(false);
 const toggleMenu = (event) => {
     event.preventDefault();
     document.body.classList.toggle('sidebar-enable');
+    menuOpen.value = !menuOpen.value;
 
-    // console.log('toggle menu');
+    console.log('toggle menu');
 
     if (window.innerWidth >= 992) {
         const bodyAttribute = document.body.getAttribute('data-sidebar-size');
@@ -42,7 +45,9 @@ const toggleMenu = (event) => {
         }
     } else {
         // If you have the function "initMenuItemScroll", you can call it here.
-        initMenuItemScroll();
+        if (typeof initMenuItemScroll === 'function') {
+            initMenuItemScroll();
+        }
     }
 };
 
@@ -103,8 +108,37 @@ const switchToTeam = (team) => {
     });
 };
 
+const handleResize = () => {
+
+    const simplebarContentWrapper =document.querySelector('.simplebar-placeholder');
+    console.log(simplebarContentWrapper.clientWidth);
+
+    if(window.innerWidth >= 1140 && window.innerWidth <= 1367) {
+        menuMdSize.value = true;
+        showIcon.value = true;
+
+    } else if(window.innerWidth < 1367) {
+        showIcon.value = true;
+        menuOpen.value = false;
+        // menuMdSize.value = true;
+
+    } else if(window.innerWidth < 1140) {
+        menuMdSize.value = false;
+    }
+}
+
 onMounted(() => {
     // console.log('on mount top bar');
+
+    window.addEventListener('resize', handleResize);
+
+
+
+    handleResize()
+
+    console.log(currentSidebarSize.value);
+        console.log(window.innerWidth)
+    // }
 
     initModeSetting();
 
@@ -137,6 +171,10 @@ onMounted(() => {
         });
 });
 
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+
 onBeforeUnmount(() => {
     if(user.value) {
         Echo.leave(`${page.props.tenant_id}.App.Model.User.${user.value.id}`);
@@ -154,9 +192,14 @@ onBeforeUnmount(() => {
             <div class="topbar-brand flex items-center">
                 <div class="navbar-brand flex items-center justify-between shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                     <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
-<!--                        <img src="@/../images/logo-sm.svg" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />-->
-<!--                        <i data-feather="anchor" class="h-9 w-9 mr-2"></i>-->
-                        <span class="hidden xl:block align-middle">Leasemate</span>
+                        <span class="hidden xl:block align-middle">
+                            <img src="/images/logo.svg" class="ml-2 h-8 w-[80%]" alt="logo" />
+                        </span>
+<!--                        {{ menuOpen}}-->
+                        <div v-if="!menuOpen || showIcon" class=" dark:text-white">
+                            <img  src="/images/leasemate-icon.svg" class="ml-2 h-6" alt="logo" />
+                        </div>
+
                     </a>
                 </div>
                 <button @click="toggleMenu" type="button" class="text-gray-600 dark:text-white h-[70px] ltr:-ml-10 ltr:mr-6 rtl:-mr-10 rtl:ml-10 vertical-menu-btn" id="vertical-menu-btn">
@@ -173,7 +216,7 @@ onBeforeUnmount(() => {
             <div class=" text-lg text-center font-medium dark:text-white">{{ $page.props.tenant_name }}</div>
 
             <div class="flex items-center">
-
+<!--menu open: {{ menuOpen }}<br>menu md: {{menuMdSize}}<br>show icon: {{showIcon}}-->
                 <div>
                     <div class="dropdown relative sm:hidden block">
                         <button type="button" class="text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 dropdown-toggle" data-dropdown-toggle="navNotifications">

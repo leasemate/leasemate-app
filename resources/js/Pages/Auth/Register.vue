@@ -42,7 +42,9 @@ const submit = () => {
 
         <AuthenticationCard>
 
-            <template #logo></template>
+            <template #logo>
+                <AuthenticationCardLogo />
+            </template>
 
             <div class="text-center mb-8">
                 <h5 class="text-gray-600 dark:text-gray-100">Register an account

@@ -9,16 +9,16 @@ const page = usePage();
 
 let removeFinishEventListener = Inertia.on('finish', (message) => {
     if(page.props.flash.success) {
-        toast.success(page.props.flash.success, 4000);
+        toast.success(page.props.flash.success, 5000);
     }
     if(page.props.flash.warning) {
-        toast.warning(page.props.flash.warning, 4000);
+        toast.warning(page.props.flash.warning, 5000);
     }
     if(page.props.flash.error) {
-        toast.error(page.props.flash.error, 4000);
+        toast.error(page.props.flash.error, 5000);
     }
     if(page.props.flash.message) {
-        toast.add(page.props.flash.message, 4000);
+        toast.add(page.props.flash.message, 5000);
     }
 });
 

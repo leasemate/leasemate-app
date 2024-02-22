@@ -1,34 +1,36 @@
 <script setup>
 
 import ToastList from "@/Components/ToastList.vue";
+import GlobalValidation from "@/Components/Layout/GlobalValidation.vue";
+import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 </script>
 
 <template>
 
     <ToastList />
 
-<!--    <div class="container-fluid">-->
-<!--        <div class="max-h-screen">-->
-
-<!--            <img src="/images/bg-1.jpg" alt="">-->
-<!--            <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>-->
-<!--        </div>-->
-
-<!--        <slot />-->
-<!--    </div>-->
-
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen bg-gradient-to-br from-white to-violet-800 via-purple-100">
         <div class="relative w-full">
-            <!-- Background image container -->
-<!--            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/bg-1.jpg');">-->
-<!--                &lt;!&ndash; Overlay &ndash;&gt;-->
-<!--                <div class="bg-overlay bg-gray-500/60 inset-0 absolute"></div>-->
-<!--            </div>-->
 
-<!--            &lt;!&ndash; Content (slot) &ndash;&gt;-->
-<!--            <div class="relative z-10">-->
-                <slot />
-<!--            </div>-->
+
+            <div class="container fixed top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-50">
+                <div class="flex justify-center">
+                    <div class="w-full lg:w-[40%]">
+
+                        <div class="text-center">
+                            <a :href="$page.props.app_website">
+                                <img src="/images/logo.svg" alt="logo" class="w-1/2 mx-auto mb-8" />
+                            </a>
+                            <span v-if="$page.props.tenant_name" class="text-xl text-center font-medium dark:text-white mb-8">{{ $page.props.tenant_name }}</span>
+                        </div>
+
+                        <GlobalValidation />
+
+                        <slot />
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

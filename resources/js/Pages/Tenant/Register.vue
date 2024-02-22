@@ -11,6 +11,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 import toast from "@/Stores/toast";
+import TextInputGroup from "@/Components/TextInputGroup.vue";
 
 defineProps({
     recentlyRegistered: Boolean
@@ -38,8 +39,9 @@ const submit = () => {
             toast.error('There was an error creating your account.');
         },
         onFinish: (visit) => {
-            console.log(visit);
-            form.reset('password', 'password_confirmation');
+            console.log('on finish')
+            console.log(visit)
+            form.reset('password', 'password_confirmation')
         }
     });
 };
@@ -53,7 +55,6 @@ const submit = () => {
 
         <AuthenticationCard>
 
-            <template #logo></template>
 
             <form v-if=" ! recentlyRegistered" @submit.prevent="submit">
                     <div>
@@ -72,15 +73,25 @@ const submit = () => {
                         <InputLabel for="domain_name" value="Domain" />
                         <div class="flex items-baseline">
 
-
-                            <TextInput
+                            <TextInputGroup
                                 id="domain_name"
                                 v-model="form.domain"
+                                groupTextSide="right"
+                                :groupText="`.${usePage().props.base_domain}`"
+                                :groupTextClasses="'border-transparent text-slate-400'"
                                 type="text"
-                                class="mt-1 block w-full mr-2"
+                                class="mt-1 block w-full"
                                 required
-                            />
-                            <span class="text-19 whitespace-nowrap">.{{ usePage().props.base_domain }}</span>
+                                />
+
+<!--                            <TextInput-->
+<!--                                id="domain_name"-->
+<!--                                v-model="form.domain"-->
+<!--                                type="text"-->
+<!--                                class="mt-1 block w-full mr-2"-->
+<!--                                required-->
+<!--                            />-->
+<!--                            <span class="text-19 whitespace-nowrap">.{{ usePage().props.base_domain }}</span>-->
                         </div>
                         <InputError class="mt-2" :message="form.errors.domain" />
                     </div>
