@@ -14,7 +14,9 @@ defineProps({
 <template>
     <Head title="Welcome" />
 
-    <GuestLayout>
+    <div class="flex min-h-screen bg-gradient-to-br from-white to-violet-800 via-purple-100">
+        <div class="relative w-full">
+<!--    <GuestLayout>-->
 
 <!--        <div class="relative">-->
 <!--            <div class="sm:fixed sm:top-0 sm:end-0 p-6 text-end z-10">-->
@@ -140,9 +142,9 @@ defineProps({
                 </div>
             </section>
 
-<!--        </div>-->
-
-    </GuestLayout>
+        </div>
+    </div>
+<!--    </GuestLayout>-->
 
 
 </template>
