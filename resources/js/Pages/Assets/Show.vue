@@ -247,8 +247,8 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3 font-normal normal-case">
                         <Menu as="div" class="relative inline-block text-left">
                             <div>
-                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <BoxIcon class="bx-filter-alt" />
+                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    <BoxIcon class="bx-filter-alt text-[20px] text-gray-500" />
                                 </MenuButton>
                             </div>
 
@@ -360,7 +360,7 @@ onBeforeUnmount(() => {
                         >
 
                             <template #trigger>
-                                <BoxIcon class="bx-dots-vertical-rounded" />
+                                <BoxIcon class="bx-dots-vertical-rounded text-gray-500" />
                             </template>
 
                             <template #content>
