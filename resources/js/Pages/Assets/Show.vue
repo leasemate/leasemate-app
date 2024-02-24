@@ -21,6 +21,7 @@ import BoxIcon from "@/Components/BoxIcon.vue";
 import TableDropdown from "@/Components/TableDropdown.vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -225,7 +226,11 @@ onBeforeUnmount(() => {
 
             <template #head>
                 <tr>
-                    <th scope="col" class="px-6 py-3"></th>
+                    <th scope="col" class="pl-4 pr-2 py-3">
+                        <Checkbox />
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Name
                     </th>
@@ -285,6 +290,9 @@ onBeforeUnmount(() => {
             <template #body>
                 <tr v-for="(lease, index) in props.leases" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
+                    <td scope="row" class="pl-4 pr-2 py-4 space-x-2">
+                        <Checkbox />
+                    </td>
                     <th scope="row" class="px-6 py-4 space-x-2">
 
                         <span

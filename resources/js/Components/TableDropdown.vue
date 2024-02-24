@@ -43,12 +43,13 @@ const widthClass = computed(() => {
 
 
 const bottomAlignClass = computed(() => {
-    if(props.length === 1) {
-        return 'bottom-0 right-10';
-    } else if(props.index >= props.length - parseInt(props.bottomAlign)) {
-        return 'bottom-0 right-11';
-    }
-    return '-top-2 right-11';
+    // if(props.length === 1) {
+    //     return 'bottom-0 right-10';
+    // } else if(props.index >= props.length - parseInt(props.bottomAlign)) {
+    //     return 'bottom-0 right-11';
+    // }
+    // return '-top-2 right-11';
+    return 'right-10 -top-2'
 });
 
 const menuItemClasses = computed(() => {
