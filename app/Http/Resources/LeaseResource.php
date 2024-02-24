@@ -30,11 +30,12 @@ class LeaseResource extends JsonResource
             'end_date' => $this->end_date?$this->end_date->format('m/d/Y'):null,
             'rent_per_sqft' => $this->rent_per_sqft,
             'extracted_data' => $this->extracted_data,
-            'is_deleting' => ($this->status == 'Deleting'),
             'status' => $this->status,
             'status_progress' => ($this->status_progress && $this->status == 'Processing' ? $this->status_progress."%" : null),
             'status_msg' => $this->status_msg,
-            'monthly_base_rent' => $this->getMonthlyBaseRent()
+            'monthly_base_rent' => $this->getMonthlyBaseRent(),
+            'is_archived' => ($this->deleted_at?true:false),
+            'is_deleting' => ($this->status == 'Deleting'),
         ];
     }
 

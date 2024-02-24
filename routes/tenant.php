@@ -156,11 +156,11 @@ Route::middleware([
 
     Route::resource('assets', AssetController::class);
     Route::resource('assets.leases', AssetLeaseController::class)->scoped();
-//    Route::resource('assets.leases.chats', AssetLeaseController::class);
 
     Route::scopeBindings()->group(function () {
         Route::post('/assets/{asset}/leases/{lease}/archive', [AssetLeaseController::class, 'archive'])->name('assets.leases.archive');
         Route::post('/assets/{asset}/leases/{lease}/restore', [AssetLeaseController::class, 'restore'])->withTrashed()->name('assets.leases.restore');
+        Route::delete('/assets/{asset}/leases/{lease}/destroy', [AssetLeaseController::class, 'destroy'])->withTrashed()->name('assets.leases.destroy');
 
         Route::get('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'show'])->name('assets.leases.chats.show');
         Route::post('/assets/{asset}/leases/{lease}/chats/{chat?}', [AssetLeaseController::class, 'sendMessage'])->name('assets.leases.chats.send-message');

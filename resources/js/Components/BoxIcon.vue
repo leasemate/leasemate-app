@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
     class: {
         type: String,
         default: 'button',
@@ -10,6 +10,6 @@ defineProps({
 <template>
     <i
         class="bx text-[20px]"
-        :class="class"
+        :class="props.class"
     />
 </template>

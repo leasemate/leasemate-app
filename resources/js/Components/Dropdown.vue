@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 const props = defineProps({
     align: {
@@ -16,7 +16,7 @@ const props = defineProps({
     },
 });
 
-let open = ref(false);
+let open = ref(false)
 
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
@@ -24,8 +24,13 @@ const closeOnEscape = (e) => {
     }
 };
 
-onMounted(() => document.addEventListener('keydown', closeOnEscape));
-onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
+onMounted(() => {
+    document.addEventListener('keydown', closeOnEscape)
+});
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', closeOnEscape)
+});
 
 const widthClass = computed(() => {
     return {
@@ -44,11 +49,14 @@ const alignmentClasses = computed(() => {
 
     return 'origin-top';
 });
+
 </script>
 
 <template>
     <div class="relative">
-        <div @click="open = ! open">
+        <div
+            ref="trigger"
+            @click="open = ! open">
             <slot name="trigger" />
         </div>
 
@@ -64,6 +72,7 @@ const alignmentClasses = computed(() => {
             leave-to-class="transform opacity-0 scale-95"
         >
             <div
+                ref="dropdown"
                 v-show="open"
                 class="absolute z-50 mt-2 rounded-md shadow-lg"
                 :class="[widthClass, alignmentClasses]"

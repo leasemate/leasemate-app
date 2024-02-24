@@ -13,7 +13,8 @@ export function fileStatusClass() {
             'Failed': 'bg-red-50 text-red-800 ring-red-600/20',
             'FAILED': 'bg-red-50 text-red-800 ring-red-600/20',
             'Deleting': 'bg-red-50 text-red-800 ring-red-600/20',
-            'Deleted': 'bg-red-50 text-red-800 ring-red-600/20',
+            'Deleted': 'bg-red-50 text-red-800 ring-slate-600/20',
+            'Archived': 'bg-slate-100 text-slate-400 ring-slate-500/20',
         },
         'PROCESS_CLASSES': {
             'Pending': 'bg-gray-400',
@@ -21,6 +22,7 @@ export function fileStatusClass() {
             'Processing': 'bg-yellow-600',
             'Queued': 'bg-yellow-400',
             'Deleting': 'bg-red-400',
+            'Archived': 'bg-slate-400',
             'Failed': 'bg-red-400',
             'FAILED': 'bg-red-400',
             'Completed': 'bg-green-400',

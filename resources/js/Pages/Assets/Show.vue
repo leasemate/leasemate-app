@@ -6,25 +6,21 @@ import PrimaryLink from "@/Components/PrimaryLink.vue";
 import Button from "@/Components/Button.vue";
 import Table from "@/Components/Table.vue";
 
-import Tooltip from 'primevue/tooltip';
-// import Menu from 'primevue/menu';
-
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
-
 import VueFilePond, { setOptions } from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
 import "filepond/dist/filepond.min.css";
 
-import moment from "moment";
 import Hero from "@/Components/Lease/Hero.vue";
 import Associates from "@/Components/Lease/Associates.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import toast from "@/Stores/toast.js";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SecondaryLink from "@/Components/SecondaryLink.vue";
 import BoxIcon from "@/Components/BoxIcon.vue";
+import TableDropdown from "@/Components/TableDropdown.vue";
+
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -65,17 +61,36 @@ const deleteLease = () => {
         closeModal();
 
         try {
-
-            // new Promise((resolve, reject) => {
-
             router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
                     preserveScroll: true,
-                });
+            });
         } catch (error) {
             toast.error(error);
             console.log(error);
         }
 
+    }
+}
+
+const archiveLease = (lease) => {
+    try {
+        router.post(route('assets.leases.archive', [props.asset, lease]), {}, {
+            preserveScroll: true,
+        });
+    } catch (error) {
+        toast.error(error);
+        console.log(error);
+    }
+}
+
+const restoreLease = (lease) => {
+    try {
+        router.post(route('assets.leases.restore', [props.asset, lease]), {}, {
+            preserveScroll: true,
+        });
+    } catch (error) {
+        toast.error(error);
+        console.log(error);
     }
 }
 
@@ -147,14 +162,11 @@ const toolTipOptions = (lease) => {
 };
 
 const handleOnProcessFile = (error, file) => {
-    // console.log("handle on process file");
-    // console.log(error);
-    // console.log(file);
     router.reload({ only: ['leases'] });
 }
 
 const handleInit = () => {
-    // console.log("handle init");
+
 }
 
 onMounted(() => {
@@ -232,7 +244,35 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3">
                         Rent / Sq Ft
                     </th>
-                    <th>
+                    <th scope="col" class="px-6 py-3 font-normal normal-case">
+                        <Menu as="div" class="relative inline-block text-left">
+                            <div>
+                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    <BoxIcon class="bx-filter-alt" />
+                                </MenuButton>
+                            </div>
+
+                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                                <MenuItems class="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div class="py-1">
+                                        <MenuItem v-slot="{ active }">
+                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Filters...</a>
+                                        </MenuItem>
+<!--                                        <MenuItem v-slot="{ active }">-->
+<!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Support</a>-->
+<!--                                        </MenuItem>-->
+<!--                                        <MenuItem v-slot="{ active }">-->
+<!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">License</a>-->
+<!--                                        </MenuItem>-->
+<!--                                        <form method="POST" action="#">-->
+<!--                                            <MenuItem v-slot="{ active }">-->
+<!--                                                <button type="submit" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-left text-sm']">Sign out</button>-->
+<!--                                            </MenuItem>-->
+<!--                                        </form>-->
+                                    </div>
+                                </MenuItems>
+                            </transition>
+                        </Menu>
 <!--                      <div class="flex justify-center">-->
 <!--                        <Button type="button" icon="bx bx-menu-alt-right" class="relative items-center inline-flex text-center align-bottom justify-center leading-[normal] w-12 p-0 py-3 rounded-md text-white bg-gray-500 border border-gray-500 focus:outline-none focus:outline-offset-0 focus:ring hover:bg-gray-600 hover:border-gray-600 focus:ring-primary-400/50 dark:focus:ring-primary-300/50 transition duration-200 ease-in-out cursor-pointer overflow-hidden select-none" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />-->
 <!--                        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />-->
@@ -243,19 +283,18 @@ onBeforeUnmount(() => {
 
 
             <template #body>
-                <tr v-for="lease in props.leases" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+                <tr v-for="(lease, index) in props.leases" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
                     <th scope="row" class="px-6 py-4 space-x-2">
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(lease.status)"
-                            v-tooltip="toolTipOptions(lease)">
+                            :class="getFileStatusClass(lease.status)">
 
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="!['Ready', 'Failed'].includes(lease.status)">
+                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.status)">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
                                             :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
@@ -313,23 +352,74 @@ onBeforeUnmount(() => {
                         {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
                     </td>
                     <td class="px-6 py-4 ">
-                        <div class="flex items-center space-x-2">
-                            <SecondaryLink
-                                :href="lease.filename"
-                                type="external"
-                                >
-                                <BoxIcon class="bx-cloud-download" />
-                            </SecondaryLink>
 
-                            <DangerButton
-                                :href="route('assets.leases.edit', [lease.asset_id, lease.id])"
-                                class="text-sm"
-                                @click="confirmLeaseDeletion(lease)"
-                                :disabled="lease.is_deleting"
-                            >
-                                Delete
-                            </DangerButton>
-                        </div>
+                        <TableDropdown
+                            :index="index"
+                            :length="leases.length"
+                            width="32"
+                        >
+
+                            <template #trigger>
+                                <BoxIcon class="bx-dots-vertical-rounded" />
+                            </template>
+
+                            <template #content>
+
+                                <MenuItem>
+                                    <a
+                                        :href="lease.filename"
+                                        target="_blank"
+                                        :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                    >
+                                        <BoxIcon class="bx-cloud-download text-gray-500" />
+                                        <span>Download</span>
+                                    </a>
+                                </MenuItem>
+
+                                <MenuItem v-if="lease.is_archived">
+                                    <a href="#"
+                                       :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                       @click="restoreLease(lease)"
+                                    >
+                                        <BoxIcon class="bx-box text-gray-500" />
+                                        <span>Restore</span>
+                                    </a>
+                                </MenuItem>
+
+                                <MenuItem v-else-if="lease.status == 'Ready'">
+                                    <Button
+                                        :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                        @click="archiveLease(lease)"
+                                    >
+                                        <BoxIcon class="bx-box text-gray-500" />
+                                        <span>Archive</span>
+                                    </Button>
+                                </MenuItem>
+
+                                <MenuItem
+                                    :disabled="lease.is_deleting"
+                                >
+
+                                    <Button
+                                        :class="[
+                                            'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full','text-left',
+                                            (lease.is_deleting ? 'text-red-200 cursor-default':'text-red-700 hover:bg-gray-100'),
+                                            ]"
+                                        @click="confirmLeaseDeletion(lease)"
+                                    >
+                                        <BoxIcon
+                                            class="bx-trash"
+                                            :class="(lease.is_deleting ? 'text-red-200':'text-red-500')"
+                                        />
+                                        <span>{{ (lease.is_deleting?'Deleting...':'Delete') }}</span>
+                                    </Button>
+
+                                </MenuItem>
+
+                            </template>
+
+                        </TableDropdown>
+
                     </td>
 
                 </tr>

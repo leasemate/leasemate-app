@@ -62,7 +62,7 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
         $asset->load(['leases' => function ($query) {
-            $query->orderBy('created_at', 'desc');
+            $query->orderBy('created_at', 'desc')->withTrashed();
         }]);
 
         return inertia()->render('Assets/Show', [

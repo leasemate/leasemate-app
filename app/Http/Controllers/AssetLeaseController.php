@@ -49,7 +49,9 @@ class AssetLeaseController extends Controller
                 $lease_document = $request->file('lease_document');
 
                 $disk = 's3';
+
                 $storedName = $lease_document->store(tenant('id')."/leases/".$asset->id, ['disk'=>$disk, 'visibility'=>'public']);
+//                $storedName = basename($lease_document->getClientOriginalName());
 
                 $lease = $asset->leases()->create([
                     'user_id' => auth()->user()->id,
@@ -62,8 +64,6 @@ class AssetLeaseController extends Controller
                 ]);
 
                 //To-do:
-                //send API request with lease data to REAI API backend.
-
                 $registerLeaseUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName);
 
                 \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
@@ -132,11 +132,38 @@ class AssetLeaseController extends Controller
     public function destroy(Asset $asset, Lease $lease)
     {
         try {
-
             $lease->status = 'Deleting';
             $lease->save();
 
             DeleteLeaseFile::dispatch($lease);
+            return redirect()->back();
+
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function archive(Asset $asset, Lease $lease)
+    {
+        try {
+            $lease->status = 'Archived';
+            $lease->save();
+            $lease->delete();
+            return redirect()->back();
+
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function restore(Asset $asset, Lease $lease)
+    {
+        try {
+            $lease->restore();
+            $lease->status = 'Ready';
+            $lease->save();
             return redirect()->back();
 
         } catch(\Exception $e) {

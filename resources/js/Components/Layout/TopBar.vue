@@ -184,36 +184,35 @@ onBeforeUnmount(() => {
                 <button @click="toggleMenu" type="button" class="text-gray-600 dark:text-white h-[70px] ltr:-ml-10 ltr:mr-6 rtl:-mr-10 rtl:ml-10 vertical-menu-btn" id="vertical-menu-btn">
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
-                <form class="app-search hidden xl:block px-5">
-                    <div class="relative inline-block">
-                        <InputText />
-                        <input type="text" class="bg-gray-50/30 dark:bg-zinc-700/50 border-0 rounded focus:ring-0 placeholder:text-sm px-4 dark:placeholder:text-gray-200 dark:text-gray-100 dark:border-zinc-700 " placeholder="Search...">
-                        <button class="py-1.5 px-2.5 text-white bg-violet-500 inline-block absolute ltr:right-1 top-1 rounded shadow shadow-violet-100 dark:shadow-gray-900 rtl:left-1 rtl:right-auto" type="button"><i class="bx bx-search-alt align-middle"></i></button>
-                    </div>
-                </form>
+<!--                <form class="app-search hidden md:block px-5">-->
+<!--                    <div class="relative inline-block">-->
+<!--                        <input type="text" class="bg-gray-50/30 dark:bg-zinc-700/50 border-0 rounded focus:ring-0 placeholder:text-sm px-4 dark:placeholder:text-gray-200 dark:text-gray-100 dark:border-zinc-700 " placeholder="Search...">-->
+<!--                        <button class="py-1.5 px-2.5 text-white bg-violet-500 inline-block absolute ltr:right-1 top-1 rounded shadow shadow-violet-100 dark:shadow-gray-900 rtl:left-1 rtl:right-auto" type="button"><i class="bx bx-search-alt align-middle"></i></button>-->
+<!--                    </div>-->
+<!--                </form>-->
             </div>
 
             <div class=" text-lg text-center font-medium dark:text-white">{{ $page.props.tenant_name }}</div>
 
             <div class="flex items-center">
-                <div>
-                    <div class="dropdown relative sm:hidden block">
-                        <button type="button" class="text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 dropdown-toggle" data-dropdown-toggle="navNotifications">
-                            <i data-feather="search" class="h-5 w-5"></i>
-                        </button>
+<!--                <div>-->
+<!--                    <div class="dropdown relative md:hidden block">-->
+<!--                        <button type="button" class="text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 dropdown-toggle" data-dropdown-toggle="navNotifications">-->
+<!--                            <i data-feather="search" class="h-5 w-5"></i>-->
+<!--                        </button>-->
 
-                        <div class="dropdown-menu absolute px-4 -left-36 top-0 mx-4 w-72 z-50 hidden list-none border border-gray-50 rounded bg-white shadow dark:bg-zinc-800 dark:border-zinc-600 dark:text-gray-300" id="navNotifications">
-                            <form class="py-3 dropdown-item" aria-labelledby="navNotifications">
-                                <div class="form-group m-0">
-                                    <div class="flex w-full">
-                                        <input type="text" class="border-gray-100 dark:border-zinc-600 dark:text-zinc-100 w-fit" placeholder="Search ..." aria-label="Search Result">
-                                        <button class="btn btn-primary border-l-0 rounded-l-none bg-violet-500 border-transparent text-white" type="submit"><i class="mdi mdi-magnify"></i></button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+<!--                        <div class="dropdown-menu absolute px-4 -left-36 top-0 mx-4 w-72 z-50 hidden list-none border border-gray-50 rounded bg-white shadow dark:bg-zinc-800 dark:border-zinc-600 dark:text-gray-300" id="navNotifications">-->
+<!--                            <form class="py-3 dropdown-item" aria-labelledby="navNotifications">-->
+<!--                                <div class="form-group m-0">-->
+<!--                                    <div class="flex w-full">-->
+<!--                                        <input type="text" class="border-gray-100 dark:border-zinc-600 dark:text-zinc-100 w-fit" placeholder="Search ..." aria-label="Search Result">-->
+<!--                                        <button class="btn btn-primary border-l-0 rounded-l-none bg-violet-500 border-transparent text-white" type="submit"><i class="mdi mdi-magnify"></i></button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div>
                     <button type="button" class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block ">
