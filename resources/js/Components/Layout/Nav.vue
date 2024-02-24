@@ -42,15 +42,6 @@ const initActiveMenu = () => {
 
         let isAMatch = pattern.test(pageUrl);
 
-        // if(item.href.includes('role')) {
-        //     isAMatch = pattern.test(pageUrl);
-        // } else {
-        //     isAMatch = item.href == pageUrl;
-        // }
-
-        // console.log(isAMatch);
-        //pattern.test(pageUrl)
-
         if (isAMatch) {
             item.classList.add("active");
             var parent = item.parentElement;
@@ -93,21 +84,13 @@ onMounted(() => {
 
         const metis = new MetisMenu(menuElement);
 
-
         document.addEventListener('show.metisMenu', (event) => {
             console.log('MetisMenu show event:', event);
             // EventBus.emit('metis-menu-show', event);
         });
-
-        // menuElement.addEventListener('show.metisMenu', (event) => {
-        //     console.log('MetisMenu show event:', event);
-        //     // Your logic here
-        // });
     }
 
-
 });
-
 
 </script>
 
@@ -139,20 +122,6 @@ onMounted(() => {
                             <span data-key="t-chat"> Assets</span>
                         </SideNavLink>
                     </li>
-
-<!--                    <li>-->
-<!--                        <SideNavLink :href="route('chats.index')">-->
-<!--                            <i data-feather="message-circle"></i>-->
-<!--                            <span data-key="t-chat"> Chat</span>-->
-<!--                        </SideNavLink>-->
-<!--                    </li>-->
-
-<!--                    <li>-->
-<!--                        <SideNavLink :href="route('files.index')">-->
-<!--                            <i data-feather="file-text"></i>-->
-<!--                            <span data-key="t-file-upload"> Files</span>-->
-<!--                        </SideNavLink>-->
-<!--                    </li>-->
 
                     <li>
                         <a href="javascript:void();" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">

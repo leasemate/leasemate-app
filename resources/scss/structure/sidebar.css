@@ -144,9 +144,9 @@ body[data-sidebar-size=sm] .vertical-menu .simplebar-offset {
     display: none !important;
 }
 
-[data-sidebar-size=sm] .navbar-brand img {
-    max-width: 1.5rem !important;
-}
+/*[data-sidebar-size=sm] .navbar-brand img {*/
+/*    max-width: 1.5rem !important;*/
+/*}*/
 
 [data-sidebar-size=sm] .topbar-brand button {
     margin: 0 !important;

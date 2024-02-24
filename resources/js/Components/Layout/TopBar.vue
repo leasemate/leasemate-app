@@ -19,17 +19,13 @@ const notificationStore = useNotificationStore();
 const currentSidebarSize = ref(document.body.getAttribute('data-sidebar-size'));
 const { getFileStatusClass } = fileStatusClass();
 
-// const localNotificationCount = ref(page.props.notification_count);
-// const localNotifications = ref(page.props.my_notifications);
-let menuOpen = ref(true);
-let menuMdSize = ref(false);
 let showIcon = ref(false);
+const navbarLogoContainer = ref();
 const toggleMenu = (event) => {
     event.preventDefault();
     document.body.classList.toggle('sidebar-enable');
-    menuOpen.value = !menuOpen.value;
 
-    console.log('toggle menu');
+    handleResize()
 
     if (window.innerWidth >= 992) {
         const bodyAttribute = document.body.getAttribute('data-sidebar-size');
@@ -108,37 +104,23 @@ const switchToTeam = (team) => {
     });
 };
 
+
 const handleResize = () => {
-
-    const simplebarContentWrapper =document.querySelector('.simplebar-placeholder');
-    console.log(simplebarContentWrapper.clientWidth);
-
-    if(window.innerWidth >= 1140 && window.innerWidth <= 1367) {
-        menuMdSize.value = true;
-        showIcon.value = true;
-
-    } else if(window.innerWidth < 1367) {
-        showIcon.value = true;
-        menuOpen.value = false;
-        // menuMdSize.value = true;
-
-    } else if(window.innerWidth < 1140) {
-        menuMdSize.value = false;
+    const sidebarMenu = document.querySelector('#sidebar-menu');
+    if (sidebarMenu) {
+        // Add a transitionend event listener
+        setTimeout(() => {
+            const boundingRect = navbarLogoContainer.value.getBoundingClientRect()
+            showIcon.value = boundingRect.width < 249
+        }, 0); // Adjust the delay as needed
     }
 }
 
 onMounted(() => {
-    // console.log('on mount top bar');
 
     window.addEventListener('resize', handleResize);
 
-
-
-    handleResize()
-
-    console.log(currentSidebarSize.value);
-        console.log(window.innerWidth)
-    // }
+    requestAnimationFrame(handleResize)
 
     initModeSetting();
 
@@ -190,33 +172,30 @@ onBeforeUnmount(() => {
         <div class="flex items-center justify-between w-full">
 
             <div class="topbar-brand flex items-center">
-                <div class="navbar-brand flex items-center justify-between shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
-                    <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
-                        <span class="hidden xl:block align-middle">
-                            <img src="/images/logo.svg" class="ml-2 h-8 w-[80%]" alt="logo" />
+                <div ref="navbarLogoContainer" class="navbar-brand flex items-center justify-center shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
+                    <a href="/" class="flex items-center font-bold text-lg  dark:text-white">
+                        <span v-if="!showIcon" class="hidden xl:block align-middle">
+                            <img  src="/images/logo.svg" class="ml-2 h-8 w-[80%]" alt="logo" />
                         </span>
-<!--                        {{ menuOpen}}-->
-                        <div v-if="!menuOpen || showIcon" class=" dark:text-white">
-                            <img  src="/images/leasemate-icon.svg" class="ml-2 h-6" alt="logo" />
-                        </div>
 
+                        <img v-else-if="showIcon" src="/images/leasemate-icon.svg" class="h-[26px]" alt="logo" />
                     </a>
                 </div>
                 <button @click="toggleMenu" type="button" class="text-gray-600 dark:text-white h-[70px] ltr:-ml-10 ltr:mr-6 rtl:-mr-10 rtl:ml-10 vertical-menu-btn" id="vertical-menu-btn">
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
-<!--                <form class="app-search hidden xl:block px-5">-->
-<!--                    <div class="relative inline-block">-->
-<!--                        <input type="text" class="bg-gray-50/30 dark:bg-zinc-700/50 border-0 rounded focus:ring-0 placeholder:text-sm px-4 dark:placeholder:text-gray-200 dark:text-gray-100 dark:border-zinc-700 " placeholder="Search...">-->
-<!--                        <button class="py-1.5 px-2.5 text-white bg-violet-500 inline-block absolute ltr:right-1 top-1 rounded shadow shadow-violet-100 dark:shadow-gray-900 rtl:left-1 rtl:right-auto" type="button"><i class="bx bx-search-alt align-middle"></i></button>-->
-<!--                    </div>-->
-<!--                </form>-->
+                <form class="app-search hidden xl:block px-5">
+                    <div class="relative inline-block">
+                        <InputText />
+                        <input type="text" class="bg-gray-50/30 dark:bg-zinc-700/50 border-0 rounded focus:ring-0 placeholder:text-sm px-4 dark:placeholder:text-gray-200 dark:text-gray-100 dark:border-zinc-700 " placeholder="Search...">
+                        <button class="py-1.5 px-2.5 text-white bg-violet-500 inline-block absolute ltr:right-1 top-1 rounded shadow shadow-violet-100 dark:shadow-gray-900 rtl:left-1 rtl:right-auto" type="button"><i class="bx bx-search-alt align-middle"></i></button>
+                    </div>
+                </form>
             </div>
 
             <div class=" text-lg text-center font-medium dark:text-white">{{ $page.props.tenant_name }}</div>
 
             <div class="flex items-center">
-<!--menu open: {{ menuOpen }}<br>menu md: {{menuMdSize}}<br>show icon: {{showIcon}}-->
                 <div>
                     <div class="dropdown relative sm:hidden block">
                         <button type="button" class="text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 dropdown-toggle" data-dropdown-toggle="navNotifications">
@@ -420,49 +399,49 @@ onBeforeUnmount(() => {
                     </div>
 
                     <!-- Settings Dropdown -->
-<!--                    <div class="ms-3 relative">-->
-<!--                        <Dropdown align="right" width="48">-->
-<!--                            <template #trigger>-->
-<!--                                <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">-->
-<!--                                    <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">-->
-<!--                                </button>-->
+                    <div class="ms-3 relative">
+                        <Dropdown align="right" width="48">
+                            <template #trigger>
+                                <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                    <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
+                                </button>
 
-<!--                                <span v-else class="inline-flex rounded-md">-->
-<!--                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">-->
-<!--                                                {{ $page.props.auth.user.name }}-->
+                                <span v-else class="inline-flex rounded-md">
+                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                                                {{ $page.props.auth.user.name }}
 
-<!--                                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">-->
-<!--                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />-->
-<!--                                                </svg>-->
-<!--                                            </button>-->
-<!--                                        </span>-->
-<!--                            </template>-->
+                                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                </svg>
+                                            </button>
+                                        </span>
+                            </template>
 
-<!--                            <template #content>-->
-<!--                                &lt;!&ndash; Account Management &ndash;&gt;-->
-<!--                                <div class="block px-4 py-2 text-xs text-gray-400">-->
-<!--                                    Manage Account-->
-<!--                                </div>-->
+                            <template #content>
+                                <!-- Account Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    Manage Account
+                                </div>
 
-<!--                                <DropdownLink :href="route('profile.show')">-->
-<!--                                    Profile-->
-<!--                                </DropdownLink>-->
+                                <DropdownLink :href="route('profile.show')">
+                                    Profile
+                                </DropdownLink>
 
-<!--                                <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">-->
-<!--                                    API Tokens-->
-<!--                                </DropdownLink>-->
+                                <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
+                                    API Tokens
+                                </DropdownLink>
 
-<!--                                <div class="border-t border-gray-200 dark:border-gray-600" />-->
+                                <div class="border-t border-gray-200 dark:border-gray-600" />
 
-<!--                                &lt;!&ndash; Authentication &ndash;&gt;-->
-<!--                                <form @submit.prevent="logout">-->
-<!--                                    <DropdownLink as="button">-->
-<!--                                        Log Out-->
-<!--                                    </DropdownLink>-->
-<!--                                </form>-->
-<!--                            </template>-->
-<!--                        </Dropdown>-->
-<!--                    </div>-->
+                                <!-- Authentication -->
+                                <form @submit.prevent="logout">
+                                    <DropdownLink as="button">
+                                        Log Out
+                                    </DropdownLink>
+                                </form>
+                            </template>
+                        </Dropdown>
+                    </div>
                 </div>
 
                 <div>
