@@ -55,8 +55,6 @@ class NewUserPasswordController extends Controller
                 ])->save();
 
                 Auth::login($user);
-
-//                event(new PasswordReset($user));
             }
         );
 

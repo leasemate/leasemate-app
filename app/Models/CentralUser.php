@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasTenants;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,7 @@ use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class CentralUser extends Authenticatable implements SyncMaster
+class CentralUser extends Authenticatable implements SyncMaster, MustVerifyEmail
 {
     // Note that we force the central connection on this model
     use ResourceSyncing, CentralConnection, HasTenants, Notifiable;

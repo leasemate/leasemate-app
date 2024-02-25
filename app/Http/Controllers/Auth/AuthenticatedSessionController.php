@@ -81,7 +81,8 @@ class AuthenticatedSessionController extends Controller
         $this->createJwtToken($user);
 
         Auth::login($user);
-
+//        dump('force login');
+//        dd($user);
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

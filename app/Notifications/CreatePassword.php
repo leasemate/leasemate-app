@@ -2,25 +2,27 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
 
 class CreatePassword extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $token;
+    protected object $user;
     /**
      * Create a new notification instance.
      */
-    public function __construct($token)
+    public function __construct()
     {
-        $this->token = $token;
+        Log::info('NOTIFICATION: __construct');
     }
 
     /**
@@ -30,6 +32,9 @@ class CreatePassword extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
+        Log::info('NOTIFICATION: via');
+        $this->user = $notifiable;
+
         return ['mail'];
     }
 
@@ -38,18 +43,16 @@ class CreatePassword extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = $this->createPasswordUrl($notifiable);
-
-        Log::info('URL to MAIL: '. $url);
-
-        return $this->buildMailMessage($url);
+        return $this->buildMailMessage($this->createPasswordUrl());
     }
 
-    protected function buildMailMessage($url)
+    protected function buildMailMessage($url): MailMessage
     {
         return (new MailMessage)
             ->subject(Lang::get('New Account - Create Password Notification'))
-            ->line(Lang::get('You are receiving this email because your user account was created.'))
+            ->greeting(Lang::get('Hello, :name', ['name' => $this->user->name]))
+            ->line(Lang::get('You are receiving this email because your user account was created for '.tenant('company_name')))
+            ->line(Lang::get('Click the link below to create your password:'))
             ->action(Lang::get('Create Password'), $url)
             ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
             ->line(Lang::get('If you did not request a password reset, no further action is required.'));
@@ -61,13 +64,11 @@ class CreatePassword extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return string
      */
-    protected function createPasswordUrl($notifiable)
+    protected function createPasswordUrl(): string
     {
-        Log::info('DOMAIN:'.tenant('domain'));
-
         return URL::formatScheme().tenant('domain').route('new-user-password.create', [
-            'token' => $this->token,
-            'email' => $notifiable->getEmailForPasswordReset(),
+            'token' => Password::broker()->createToken($this->user),
+            'email' => $this->user->getEmailForPasswordReset(),
         ], false);
     }
 }

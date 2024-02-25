@@ -9,6 +9,7 @@ use App\Http\Resources\UserAssetResource;
 use App\Models\Team;
 use App\Models\User;
 use App\Notifications\CreatePassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
@@ -107,7 +108,13 @@ class UserController extends Controller
 
             DB::beginTransaction();
 
-            $user->update($request->validated());
+            if ($request->validated('email') !== $user->email &&
+                $user instanceof MustVerifyEmail) {
+
+                $this->updateVerifiedUser($user, [...$request->validated(), 'email_verified_at' => null]);
+            } else {
+                $user->update($request->validated());
+            }
 
             $user->syncRoles($request->user_roles);
 
@@ -167,6 +174,18 @@ class UserController extends Controller
         $users = User::search(request('q'))->get();
 
         return response()->json(UserAssetResource::collection($users));
+    }
+
+    /**
+     * Update the given verified user's profile information.
+     *
+     * @param  array<string, string>  $input
+     */
+    protected function updateVerifiedUser(User $user, array $input): void
+    {
+        $user->update($input);
+
+        $user->sendEmailVerificationNotification();
     }
 
 }

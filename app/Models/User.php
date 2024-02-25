@@ -159,6 +159,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
             'name',
             'password',
             'email',
+            'email_verified_at',
         ];
     }
 
