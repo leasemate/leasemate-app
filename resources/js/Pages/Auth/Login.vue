@@ -8,6 +8,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import SecondaryLink from "@/Components/SecondaryLink.vue";
 
 defineProps({
     canResetPassword: Boolean,
@@ -24,10 +25,10 @@ const submit = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
-    })).post(route((usePage().props.tenant_id ? 'login': 'landlord.login')), {
+    })).post(route('login.store'), {
         onFinish: () => form.reset('password'),
-    });
-};
+    })
+}
 </script>
 
 <template>
@@ -36,18 +37,6 @@ const submit = () => {
     <GuestLayout>
 
         <AuthenticationCard>
-
-            <div v-if="$page.props.session.teamInvitation" class="text-center mb-8">
-                <h5 class="text-gray-600 dark:text-gray-100">Welcome! Login
-                    <template>
-                        to {{ $page.props.session.teamInvitation }}
-                    </template>
-                </h5>
-
-                <div v-if="$page.props.jetstream.hasTeamFeatures" class="mt-4 text-center">
-                    <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <Link :href="route('register')" class="text-violet-500 font-semibold"> Register </Link> </p>
-                </div>
-            </div>
 
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
                 {{ status }}
@@ -104,6 +93,11 @@ const submit = () => {
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
+
+                    <Link class="ms-4" :href="route('register')">
+                        Register
+                    </Link>
+
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" tabindex="3">
                         Log in
                     </PrimaryButton>

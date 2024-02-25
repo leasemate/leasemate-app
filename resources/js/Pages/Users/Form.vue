@@ -43,7 +43,8 @@ const saveUser = () => {
             errorBag: 'createUser',
             preserveScroll: true,
             onSuccess: () => {
-                form.reset();
+                // form.reset();
+                console.log(form);
             },
             onError: (error) => {
 

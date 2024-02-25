@@ -31,15 +31,43 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        try {
 
-        $this->createJwtToken(auth()->user());
+            $request->authenticate();
+            $user = auth('central')->user();
 
-        $request->session()->regenerate();
+            if(is_null($user->global_id)) {
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+                return redirect()->route('tenants');
+
+            } else {
+
+                $signedUrl = URL::temporarySignedRoute(
+                    'tenant.force.login',
+                    now()->addMinutes(1),
+                    ['email' => $user->email],
+                    false
+                );
+
+                $redirect = collect([
+                    URL::formatScheme(),
+                    $user->tenants->first()->domain,
+                    $signedUrl])->implode('');
+
+                $this->destroy($request);
+
+                return Inertia::location($redirect);
+
+            }
+
+        } catch (\Exception $e) {
+
+            $this->destroy($request);
+
+            return redirect()->route('login')->with('error', $e->getMessage());
+        }
     }
 
     public function forceLogin(Request $request)
@@ -49,7 +77,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
-//dd($user);
+
         $this->createJwtToken($user);
 
         Auth::login($user);

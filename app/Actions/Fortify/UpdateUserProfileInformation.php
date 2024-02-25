@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\CentralUser;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
@@ -17,11 +18,14 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
-        ])->validateWithBag('updateProfileInformation');
+        tenancy()->central(function ($tenant) use ($input, $user) {
+            $centralUser = CentralUser::where('email', $user->email)->first();
+            Validator::make($input, [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($centralUser->id)],
+                'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
+            ])->validateWithBag('updateProfileInformation');
+        });
 
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo'], tenant('id').'/profile-photos');

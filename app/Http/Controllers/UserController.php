@@ -9,10 +9,12 @@ use App\Http\Resources\UserAssetResource;
 use App\Models\Team;
 use App\Models\User;
 use App\Notifications\CreatePassword;
+use Illuminate\Http\Request;
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
@@ -43,14 +45,30 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request, PasswordBroker $passwordBroker)
+    public function store(Request $request, PasswordBroker $passwordBroker)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'position' => 'nullable',
+            'user_roles' => 'required|array',
+        ],
+        [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'user_roles.required' => 'You must assign a role to this user.',
+        ]);
+
+        tenancy()->central(function ($tenant) use ($request, $validator) {
+            $validator->validate();
+        });
+
         try {
 
             DB::beginTransaction();
 
             $user = User::create([
-                ...$request->validated(),
+                ...$validator->validated(),
                 'password' => bcrypt(Str::random()),
                 'global_id' => explode('.', tenant('domain'))[0],
             ]);

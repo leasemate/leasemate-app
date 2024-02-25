@@ -14,7 +14,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FilesController;
-use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -22,7 +21,6 @@ use App\Models\User;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use routes\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,12 +48,6 @@ Route::group([
 
     Route::get('force-login', [AuthenticatedSessionController::class, 'forceLogin'])
         ->name('tenant.force.login');
-
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('tenant.login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store'])
-        ->name('tenant.login.store');
 });
 
 Route::group([
@@ -66,18 +58,6 @@ Route::group([
     ]
 ], function () {
 
-//    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-//        ->name('password.request');
-//
-//    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-//        ->name('password.email');
-//
-//    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-//        ->name('password.reset');
-//
-//    Route::post('reset-password', [NewPasswordController::class, 'store'])
-//        ->name('password.store');
-//
     Route::get('create-password/{token}', [NewUserPasswordController::class, 'create'])
         ->name('new-user-password.create');
 
@@ -108,8 +88,6 @@ Route::middleware([
         ->name('password.confirm');
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

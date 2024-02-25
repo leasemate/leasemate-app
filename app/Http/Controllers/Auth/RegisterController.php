@@ -1,41 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Tenant;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterTenantRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
-class RegisteredTenantController extends Controller
+class RegisterController extends Controller
 {
     public function create(Request $request)
     {
-        return Inertia::render('Tenant/Register', [
+        return Inertia::render('Auth/Register', [
             'recentlyRegistered' => session('recentlyRegistered'),
         ]);
     }
 
-    public function store(RegisterTenantRequest $request)
+    public function store(RegisterRequest $request)
     {
 
-        try
-        {
+        try {
             $tenant = Tenant::create($request->validated());
-
             $tenant->createDomain(['domain'=>$request->domain]);
-
             $tenant->password = null;
             $tenant->save();
-
             return back()->with('recentlyRegistered', true);
 
         } catch (\Exception $e) {
-
             return back()->with('error', 'An error occurred while registering your account. Please try again.'.$e->getMessage());
         }
 

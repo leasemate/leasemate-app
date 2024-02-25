@@ -1,5 +1,6 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import {onMounted, watch} from 'vue';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
@@ -8,11 +9,17 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+
 import toast from "@/Stores/toast";
+import TextInputGroup from "@/Components/TextInputGroup.vue";
+
+defineProps({
+    recentlyRegistered: Boolean
+})
 
 const form = useForm({
-    // company_name: '',
-    // domain: '',
+    company_name: '',
+    domain: '',
     name: '',
     email: '',
     password: '',
@@ -20,19 +27,25 @@ const form = useForm({
     terms: false,
 });
 
+//watch the form company name for changes and then update the domain name field with the same value, lower case, remove spaces
+watch(() => form.company_name, (value) => {
+    form.domain = value.toLowerCase().replace(/[^a-z0-9]/g, '');
+});
+
 const submit = () => {
-    form.post(route('register'), {
+    form.post(route('register.store'), {
         onError: (errors) => {
             console.log(errors);
             toast.error('There was an error creating your account.');
         },
         onFinish: (visit) => {
-            console.log(visit);
-            form.reset('password', 'password_confirmation');
-
+            console.log('on finish')
+            console.log(visit)
+            form.reset('password', 'password_confirmation')
         }
     });
 };
+
 </script>
 
 <template>
@@ -42,23 +55,46 @@ const submit = () => {
 
         <AuthenticationCard>
 
-            <template #logo>
-                <AuthenticationCardLogo />
-            </template>
 
-            <div class="text-center mb-8">
-                <h5 class="text-gray-600 dark:text-gray-100">Register an account
-                    <template v-if="$page.props.session.teamInvitation">
-                        for {{ $page.props.session.teamInvitation }}
-                    </template>
-                </h5>
-
-                <div class="mt-4 text-center">
-                    <p class="text-gray-500 dark:text-gray-100">Already have an account? <Link :href="route('login')" class="text-violet-500 font-semibold"> Login </Link> </p>
+            <form v-if=" ! recentlyRegistered" @submit.prevent="submit">
+                <div>
+                    <InputLabel for="company_name" value="Company Name" />
+                    <TextInput
+                        id="company_name"
+                        v-model="form.company_name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.company_name" />
                 </div>
-            </div>
 
-            <form @submit.prevent="submit">
+                <div class="mt-4">
+                    <InputLabel for="domain_name" value="Domain" />
+                    <div class="flex items-baseline">
+
+                        <TextInputGroup
+                            id="domain_name"
+                            v-model="form.domain"
+                            groupTextSide="right"
+                            :groupText="`.${usePage().props.base_domain}`"
+                            :groupTextClasses="'border-transparent text-slate-400'"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                        />
+
+                        <!--                            <TextInput-->
+                        <!--                                id="domain_name"-->
+                        <!--                                v-model="form.domain"-->
+                        <!--                                type="text"-->
+                        <!--                                class="mt-1 block w-full mr-2"-->
+                        <!--                                required-->
+                        <!--                            />-->
+                        <!--                            <span class="text-19 whitespace-nowrap">.{{ usePage().props.base_domain }}</span>-->
+                    </div>
+                    <InputError class="mt-2" :message="form.errors.domain" />
+                </div>
 
                 <div class="mt-4">
                     <InputLabel for="name" value="Name" />
@@ -125,9 +161,9 @@ const submit = () => {
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-    <!--                <Link :href="route('login')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">-->
-    <!--                    Already registered?-->
-    <!--                </Link>-->
+                    <Link :href="route('login')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                        Already registered?
+                    </Link>
 
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                         Register
@@ -135,6 +171,13 @@ const submit = () => {
                 </div>
             </form>
 
+            <div v-else>
+
+                <p>Thank you for registering. You will receive an email shortly once your account has been setup.</p>
+
+            </div>
+
         </AuthenticationCard>
+
     </GuestLayout>
 </template>

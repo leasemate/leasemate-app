@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Landlord;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterTenantRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -42,7 +41,7 @@ class TenantController extends Controller
         return Inertia::location($redirect);
     }
 
-    public function store(RegisterTenantRequest $request)
+    public function store(RegisterRequest $request)
     {
         $tenant = Tenant::create($request->validated());
 

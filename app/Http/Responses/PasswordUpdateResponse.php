@@ -13,7 +13,6 @@ class PasswordUpdateResponse implements PasswordUpdateResponseContract
     {
         // Here you can customize the response after a successful password update
         // For example, redirecting with Inertia:
-        Auth::logout();
         return $request->wantsJson()
             ? new Response('', 200)
             : Inertia::location(route('dashboard'));
