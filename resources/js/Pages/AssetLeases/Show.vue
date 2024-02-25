@@ -543,40 +543,49 @@ onBeforeUnmount(() => {
                 <TabView :scrollable="true">
                     <TabPanel header="Original Lease Abstract">
 
+                        <h5>Basic Terms</h5>
+
                         <div class="p-4 bg-white">
 
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+                            <div class="grid grid-cols-2 gap-x-8 gap-y-4">
                                 <div>
-                                    <div class="text-sm font-medium text-gray-600">Tenant</div>
-                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lessee_tenant }}</div>
+                                    <div class="font-bold text-gray-900">Tenant</div>
+                                    <div class="text-sm text-gray-600">{{ lease.extracted_data.lessee_tenant??"--" }}</div>
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium text-gray-600">Landlord</div>
-                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lessor_landlord }}</div>
-                                </div>
-
-                                <div>
-                                    <div class="text-sm font-medium text-gray-600">Property Address</div>
-                                    <div class="text-lg font-semibold">{{ lease.extracted_data.property_address }}</div>
+                                    <div class="font-bold text-gray-900">Landlord</div>
+                                    <div class="text-xs text-gray-600">{{ lease.extracted_data.lessor_landlord??"--" }}</div>
                                 </div>
 
                                 <div>
-                                    <div class="text-sm font-medium text-gray-600">Lease Term</div>
-                                    <div class="text-lg font-semibold">{{ lease.extracted_data.lease_term }}</div>
+                                    <div class="font-bold text-gray-600">Premises Address</div>
+                                    <div class="text-xs text-gray-600">{{ lease.extracted_data.premises_address??"--" }}</div>
                                 </div>
+
+                                <div>
+                                    <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                                        <div>
+                                            <div class="font-bold text-gray-600">Lease Term</div>
+                                            <div class="text-xs text-gray-600">{{ lease.extracted_data.lease_term ? lease.extracted_data.lease_term+" Months" : "--" }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-gray-600">Expiration Date</div>
+                                            <div class="text-xs text-gray-600">{{ lease.extracted_data.expiration_date??"--" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="font-bold text-gray-600">Rentable Sq. Ft.</div>
+                                    <div class="text-xs text-gray-600">{{ filters.formatNumber(lease.extracted_data.rentable_square_feet)??"--" }}</div>
+                                </div>
+
                             </div>
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">
-                                <div>
-                                    <div class="text-sm font-medium text-gray-600">Usable Sq. Ft.</div>
-                                    <div class="text-lg font-semibold">{{ filters.formatNumber(lease.extracted_data.usable_square_feet) }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-sm font-medium text-gray-600">Rentable Sq. Ft.</div>
-                                    <div class="text-lg font-semibold">{{ filters.formatNumber(lease.extracted_data.rentable_square_feet) }}</div>
-                                </div>
 
-                            </div>
+                        </div>
 
+                        <h5>Rent</h5>
+                        <div class="p-4 bg-white">
 
                             <Table class="mt-8" :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
 
@@ -585,7 +594,7 @@ onBeforeUnmount(() => {
                                         <th scope="col" class="px-6 py-3">Start Date</th>
                                         <th scope="col" class="px-6 py-3">End Date</th>
                                         <th scope="col" class="px-6 py-3">Amount</th>
-                                        <th scope="col" class="px-6 py-3">Rent / sqft</th>
+                                        <th scope="col" class="px-6 py-3">per SQFT</th>
                                     </tr>
 
                                 </template>
@@ -602,17 +611,37 @@ onBeforeUnmount(() => {
 
                             </Table>
 
+                            <h6>Abatement</h6>
+                            <h6>Base Year</h6>
+
 <!--                            <div class="grid grid-cols-2 gap-x-4 gap-y-2">-->
 <!--                                <div v-for="(value, key) in lease.extracted_data" :key="key">-->
-<!--                                    <div class="text-sm font-medium text-gray-600">{{ key }}</div>-->
-<!--                                    <div class="text-lg font-semibold">{{ value }}</div>-->
+<!--                                    <div class="font-mediumtext-gray-600">{{ key }}</div>-->
+<!--                                    <div class="text-xs">{{ value }}</div>-->
 <!--                                </div>-->
 <!--                            </div>-->
                         </div>
 
+                        <h5>Condition</h5>
+                        <div class="p-4 bg-white space-y-4">
+                            <div>
+                                <h6>Condition</h6>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>
+                            </div>
+
+                            <div>
+                                <h6>TI Allowance</h6>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>
+                            </div>
+                            <div>
+                                <h6>Landlord Work</h6>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>
+                            </div>
+                        </div>
+
 <!--                        <dl class="divide-y divide-gray-200">-->
 <!--                            <div v-for="(value, key) in lease.extracted_data" class="py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">-->
-<!--                                <dt class="text-sm font-medium text-gray-500">-->
+<!--                                <dt class="font-mediumtext-gray-500">-->
 <!--                                    {{ key }}-->
 <!--                                </dt>-->
 <!--                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-->
