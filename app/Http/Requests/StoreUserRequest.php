@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\CentralUser;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +21,9 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $centralUser = CentralUser::where('email', $this->route('user')->email)->first();
         return [
             'name' => 'required',
-            'email' => ['required', 'email', 'max:255', Rule::unique('mysql.users')->ignore($centralUser->id)],
+            'email' => 'required|email|unique:mysql.users,email',
             'position' => 'nullable',
             'user_roles' => 'required|array',
         ];
@@ -37,8 +34,6 @@ class UpdateUserRequest extends FormRequest
         return [
             'name.required' => 'Name is required',
             'email.required' => 'Email is required',
-            'email.email' => 'A valid email is required',
-            'email.unique' => 'A user with that email already exists',
             'user_roles.required' => 'You must assign a role to this user.',
         ];
     }

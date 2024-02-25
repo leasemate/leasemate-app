@@ -45,30 +45,14 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, PasswordBroker $passwordBroker)
+    public function store(StoreUserRequest $request, PasswordBroker $passwordBroker)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'position' => 'nullable',
-            'user_roles' => 'required|array',
-        ],
-        [
-            'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
-            'user_roles.required' => 'You must assign a role to this user.',
-        ]);
-
-        tenancy()->central(function ($tenant) use ($request, $validator) {
-            $validator->validate();
-        });
-
         try {
 
             DB::beginTransaction();
 
             $user = User::create([
-                ...$validator->validated(),
+                ...$request->only('name', 'email', 'position'),
                 'password' => bcrypt(Str::random()),
                 'global_id' => explode('.', tenant('domain'))[0],
             ]);
@@ -121,13 +105,18 @@ class UserController extends Controller
     {
         try {
 
+            DB::beginTransaction();
+
             $user->update($request->validated());
 
             $user->syncRoles($request->user_roles);
 
+            DB::commit();
+
             session()->flash('success', $user->name.' User updated successfully');
 
         } catch(\Exception $e) {
+            DB::rollBack();
             session()->flash('error', $e->getMessage());
             return redirect()->back()->withInput();
         }
