@@ -110,6 +110,23 @@ class AssetLeaseController extends Controller
         ]);
     }
 
+    public function chat(Asset $asset, Lease $lease, Chat $chat)
+    {
+        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
+
+        if($chat->exists) {
+            $chat->load(['last_message', 'messages']);
+        }
+
+        return inertia()->render('AssetLeases/Chat', [
+            'asset' => new AssetResource($asset),
+            'associates' => UserAssetResource::collection($asset->associates),
+            'lease' => new LeaseResource($lease),
+            'chats' => ChatResource::collection($lease->chatsWithLastMessage),
+            'chat' => $chat->exists ? new ChatResource($chat) : null
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
