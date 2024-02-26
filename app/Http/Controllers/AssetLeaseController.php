@@ -223,7 +223,7 @@ class AssetLeaseController extends Controller
                 throw new \Exception('Failed to delete chat.');
             }
 
-            return redirect()->route('assets.leases.show', [$asset, $lease]);
+            return redirect()->route('assets.leases.chats', [$asset, $lease]);
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());
