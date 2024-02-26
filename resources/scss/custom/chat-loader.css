@@ -7,6 +7,8 @@
     }
 }
 
+div.message-bubble div p:not(:last-child) { margin-bottom: 1rem; }
+
 .dot {
-    @apply w-1.5 h-1.5 mt-8 mb-4 mx-0.5 bg-gray-200 rounded-full;
+    @apply w-1.5 h-1.5 mt-6 mb-2 mx-0.5 bg-gray-300 rounded-full;
 }

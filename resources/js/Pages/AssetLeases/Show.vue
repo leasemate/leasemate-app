@@ -10,6 +10,9 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Panel from 'primevue/panel';
 
+import Markdown from 'vue3-markdown-it';
+import 'highlight.js/styles/monokai.css';
+
 import { fileStatusClass } from "@/Composables/fileStatusClass.js";
 
 import VueFilePond, { setOptions } from "vue-filepond";
@@ -721,34 +724,29 @@ onBeforeUnmount(() => {
 <!--                            </div>-->
 <!--                        </div>-->
 
-                        <!-- Right column for the chat prompt and conversation -->
                         <div class="flex flex-col w-full p-4 dark:border-l-gray-600">
-                            <!-- Chat content area -->
-                            <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4">
-                                <!-- Example of a message item -->
-                                <div v-if="localChat && localChat.messages">
-                                    <div v-for="(entry, index) in localChat.messages" :key="index" class="my-1 sm:my-1.5">
 
-                                        <div
-                                            class="flex flex-row"
-                                            :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
-                                        >
+                            <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4 space-y-3">
 
-                                            <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
-                                                 :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
-                                                <div
-                                                    class="flex items-center px-3 py-2 whitespace-pre-wrap h-auto"
-                                                    :class="{
-                                                        'bg-neutral-50 text-neutral-900 rounded-2xl rounded-bl-none': entry.from === 'bot',
-                                                        'bg-indigo-100 text-violet-900 rounded-2xl rounded-br-none': entry.from === 'user'
-                                                    }">
-<!--                                                    <Markdown :source="entry.message" :breaks="true" />-->
-                                                  {{ entry.message}}
-                                                </div>
+                                <div v-if="localChat && localChat.messages" v-for="(entry, index) in localChat.messages" :key="index">
+                                    <div
+                                        class="flex flex-row"
+                                        :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
+                                    >
+                                        <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
+                                             :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
+                                            <div
+                                                class="message-bubble flex items-center px-3 py-2 h-auto"
+                                                :class="{
+                                                    'bg-gray-100 text-gray-700 rounded-2xl rounded-bl-none': entry.from === 'bot',
+                                                    'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
+                                                }">
+                                                <Markdown :source="entry.message" :breaks="true" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="my-1 sm:my-1.5" v-if="isSending">
                                     <div class="flex flex-col items-start">
@@ -841,16 +839,7 @@ onBeforeUnmount(() => {
                 </div>
             </div>
         </Modal>
-
-<!--        <FilePond-->
-<!--            name="lease_document"-->
-<!--            @init="handleInit"-->
-<!--            @processfile="handleOnProcessFile"-->
-<!--            ref="pond"-->
-<!--            class-name="my-file-upload"-->
-<!--            label-idle="Lease Drop or <span class='filepond&#45;&#45;label-action'>Browse</span>"-->
-<!--        />-->
-
+        
     </AuthenticatedLayout>
 
 </template>
@@ -858,3 +847,4 @@ onBeforeUnmount(() => {
 <style scoped>
 
 </style>
+
