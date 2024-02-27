@@ -656,6 +656,16 @@ onBeforeUnmount(() => {
                             </div>
                         </div>
 
+                        <div class="json-container">
+
+                            <h3>Raw Extracted Data</h3>
+                            <h4>Basic Extracted Data</h4>
+                                <pre>{{ lease.extracted_data??"--" }}</pre>
+                            <h4>Detailed Extracted Data</h4>
+                                <pre>{{ lease.detailed_extracted_data??"--" }}</pre>
+
+                        </div>
+
                     </TabPanel>
                     <TabPanel header="Original Lease Abstract">
 
@@ -775,24 +785,6 @@ onBeforeUnmount(() => {
                             officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
                         </p>
                     </TabPanel>
-<!--                    <TabPanel header="Amendment II">-->
-<!--                        <p class="m-0">-->
-<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
-<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
-<!--                        </p>-->
-<!--                    </TabPanel>-->
-<!--                    <TabPanel header="Amendment II">-->
-<!--                        <p class="m-0">-->
-<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
-<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
-<!--                        </p>-->
-<!--                    </TabPanel>-->
-<!--                    <TabPanel header="Amendment II">-->
-<!--                        <p class="m-0">-->
-<!--                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui-->
-<!--                            officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.-->
-<!--                        </p>-->
-<!--                    </TabPanel>-->
                 </TabView>
             </div>
 
@@ -800,7 +792,11 @@ onBeforeUnmount(() => {
 
 </template>
 
-<style scoped>
 
+
+<style scoped>
+.json-container pre {
+    white-space: pre-wrap;
+}
 </style>
 
