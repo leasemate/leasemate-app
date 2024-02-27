@@ -47,10 +47,10 @@ class LeaseResource extends JsonResource
 
             foreach($this->extracted_data['monthly_base_rent'] as $key => $value) {
                 $monthly_base_rent[$key] = [
-                    'start_date' => Carbon::parse($value['start_date'])->format('m/d/Y'),
-                    'end_date' => Carbon::parse($value['end_date'])->format('m/d/Y'),
-                    'amount_total' => $value['amount_total'],
-                    'amount_per_square_foot' => $value['amount_per_square_foot'],
+                    'start_date' => $value['start_date'] ? Carbon::parse($value['start_date'])->format('m/d/Y') : null,
+                    'end_date' => $value['end_date'] ? Carbon::parse($value['end_date'])->format('m/d/Y') : null,
+                    'amount_total' => $value['amount_total']??null,
+                    'amount_per_square_foot' => $value['amount_per_square_foot']??null,
                 ];
             }
         }

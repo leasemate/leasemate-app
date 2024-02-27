@@ -44,7 +44,6 @@ class ReaiProcessor
 
     public function registerDocumentUpload($asset_id, $lease_id, $storedName)
     {
-
         $post_data =[
             'classification' => 'lease',
             'sub_classification' => 'original',
@@ -56,7 +55,7 @@ class ReaiProcessor
 
         Log::info('SERVICE: Registering lease upload', ['post_data:', $post_data]);
 
-        return $this->send("post", "/register_document_upload", $post_data);
+        return $this->send("post", "/documents", $post_data);
     }
 
     public function registerTenant($tenant_id, $tenant_domain)
@@ -68,7 +67,7 @@ class ReaiProcessor
 
         Log::info('SERVICE: Registering tenant', ['post_data:', $post_data]);
 
-        return $this->send('post',"/register_tenant", $post_data);
+        return $this->send('post',"/tenants", $post_data);
     }
 
     public function archiveFile($lease_id)
