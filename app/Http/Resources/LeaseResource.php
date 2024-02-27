@@ -37,6 +37,7 @@ class LeaseResource extends JsonResource
             'monthly_base_rent' => $this->getMonthlyBaseRent(),
             'is_archived' => ($this->deleted_at?true:false),
             'is_deleting' => ($this->status == 'Deleting'),
+            'documents' => DocumentResource::collection($this->whenLoaded('documents')),
         ];
     }
 

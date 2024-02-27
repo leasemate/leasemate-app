@@ -40,7 +40,6 @@ watch(props.leases, (newLeases, oldLeases) => {
 }, { deep: true });
 
 const { getFileStatusClass } = fileStatusClass();
-const localLeaseStatuses = reactive({});
 
 const leaseToDelete = ref(null);
 const confirmingLeaseDeletion = ref(false);
@@ -344,11 +343,20 @@ onBeforeUnmount(() => {
 
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ lease.address??'--' }}
+
+                        <Link
+                            v-if="lease.address"
+                            :href="route('assets.leases.show', [lease.asset_id, lease.id])"
+                        >
+                            {{ lease.address }}
+                        </Link>
+
+                        <template v-else>
+                            <span class="text-gray-500">--</span>
+                        </template>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                        <!-- {{ filters.formatNumber(lease.gla)??'--' }} -->
-                        {{ lease.gla??'--' }}
+                         {{ filters.formatNumber(lease.gla)??'--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ lease.start_date??'--' }}
@@ -372,6 +380,20 @@ onBeforeUnmount(() => {
                             </template>
 
                             <template #content>
+
+                                <MenuItem v-if="lease.tenant_name">
+
+                                    <Link
+                                        v-if="lease.tenant_name"
+                                        :href="route('assets.leases.show', [lease.asset_id, lease.id])"
+                                        :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                    >
+                                        <BoxIcon class="bx-search text-gray-500" />
+                                        <span>View</span>
+                                    </Link>
+
+                                </MenuItem>
+
 
                                 <MenuItem>
                                     <a

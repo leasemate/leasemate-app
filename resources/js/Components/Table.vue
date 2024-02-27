@@ -4,7 +4,7 @@
 
 <template>
 
-    <div class="relative overflow-x-auto rounded-lg pb-20">
+    <div class="relative overflow-x-auto rounded-lg pb-28">
         <table class="w-full text-sm text-left text-gray-500 overflow-visible">
             <thead class="text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50">
                 <slot name="head" />

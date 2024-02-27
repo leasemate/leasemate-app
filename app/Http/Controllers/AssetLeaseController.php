@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Facades\ReaiProcessor;
 use App\Http\Requests\SendMessageRequest;
+use App\Http\Requests\StoreLeaseAmendmentRequest;
 use App\Http\Resources\AssetResource;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\LeaseResource;
@@ -17,6 +18,7 @@ use App\Services\ChatService;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLeaseRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Rules\Password;
 
 class AssetLeaseController extends Controller
@@ -63,7 +65,6 @@ class AssetLeaseController extends Controller
                     'ext' => $lease_document->getClientOriginalExtension(),
                 ]);
 
-                //To-do:
                 $registerLeaseUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName);
 
                 \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
@@ -89,13 +90,60 @@ class AssetLeaseController extends Controller
         }
     }
 
+    public function storeAmendment(StoreLeaseAmendmentRequest $request, Asset $asset, Lease $lease)
+    {
+        try {
+
+            if ($request->hasFile('lease_amendment')) {
+
+                $lease_amendment = $request->file('lease_amendment');
+
+                $disk = 's3';
+
+                $storedName = $lease_amendment->store(tenant('id') . "/leases/" . $asset->id, ['disk' => $disk, 'visibility' => 'public']);
+
+                $amendment = $lease->documents()->create([
+                    'uuid' => (string) Str::uuid(),
+                    'collection_name' => 'amendments',
+                    'name' => $lease_amendment->getClientOriginalName(),
+                    'file_name' => $storedName,
+                    'mime_type' => $lease_amendment->getMimeType(),
+                    'disk' => $disk, // 'public
+                    'size' => $lease_amendment->getSize(),
+                    'extension' => $lease_amendment->getClientOriginalExtension(),
+                ]);
+
+                $registerAmendmentUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName, 'lease', 'amendment');
+
+                if( ! $registerAmendmentUploadResponse->successful()) {
+
+                    if(Storage::disk('s3')->exists($amendment->file_name)) {
+                        Storage::disk('s3')->delete($amendment->file_name);
+                    }
+                    $amendment->forceDelete();
+
+                    throw new \Exception('Failed to register amendment upload.');
+                }
+
+                return response()->json(['success' => 1, 'lease' => $lease]);
+
+            }
+
+        } catch(\Exception $e) {
+
+            \Log::error($e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(Asset $asset, Lease $lease, Chat $chat)
     {
 
-        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
+        $lease->load(['asset', 'user', 'chatsWithLastMessage', 'documents']);
 
         if($chat->exists) {
             $chat->load(['last_message', 'messages']);
@@ -107,23 +155,6 @@ class AssetLeaseController extends Controller
             'lease' => new LeaseResource($lease),
             'chats' => ChatResource::collection($lease->chatsWithLastMessage),
             'chat' => $chat->exists?new ChatResource($chat):null
-        ]);
-    }
-
-    public function chat(Asset $asset, Lease $lease, Chat $chat)
-    {
-        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
-
-        if($chat->exists) {
-            $chat->load(['last_message', 'messages']);
-        }
-
-        return inertia()->render('AssetLeases/Chat', [
-            'asset' => new AssetResource($asset),
-            'associates' => UserAssetResource::collection($asset->associates),
-            'lease' => new LeaseResource($lease),
-            'chats' => ChatResource::collection($lease->chatsWithLastMessage),
-            'chat' => $chat->exists ? new ChatResource($chat) : null
         ]);
     }
 
@@ -182,48 +213,6 @@ class AssetLeaseController extends Controller
             $lease->status = 'Ready';
             $lease->save();
             return redirect()->back();
-
-        } catch(\Exception $e) {
-            \Log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function sendMessage(SendMessageRequest $sendMessageRequest, Asset $asset, Lease $lease, Chat $chat)
-    {
-        $validated = $sendMessageRequest->validated();
-
-        try {
-            $chatService = new ChatService($chat, $lease->id);
-
-            $chatService->sendMessage($validated['from'], $validated['message']);
-
-            return response()->json([
-                "chat" => new ChatResource($chatService->getChat()),
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::info($e);
-            \Log::info($e->getMessage());
-            \Log::info($e->getCode());
-            return response()->json([
-                'error' => $e->getMessage(),
-            ], ((int)$e->getCode()?: 500));
-
-        }
-
-    }
-
-    public function destroyChat(Asset $asset, Lease $lease, Chat $chat)
-    {
-        try {
-
-            $chatService = new ChatService($chat);
-            if( ! $chatService->destroy()) {
-                throw new \Exception('Failed to delete chat.');
-            }
-
-            return redirect()->route('assets.leases.chats', [$asset, $lease]);
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());

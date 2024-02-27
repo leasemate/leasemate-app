@@ -140,10 +140,12 @@ Route::middleware([
         Route::post('/assets/{asset}/leases/{lease}/restore', [AssetLeaseController::class, 'restore'])->withTrashed()->name('assets.leases.restore');
         Route::delete('/assets/{asset}/leases/{lease}/destroy', [AssetLeaseController::class, 'destroy'])->withTrashed()->name('assets.leases.destroy');
 
-        Route::get('/assets/{asset}/leases/{lease}/chats', [AssetLeaseController::class, 'chat'])->name('assets.leases.chats');
-        Route::get('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'chat'])->name('assets.leases.chats.show');
-        Route::post('/assets/{asset}/leases/{lease}/chats/{chat?}', [AssetLeaseController::class, 'sendMessage'])->name('assets.leases.chats.send-message');
-        Route::delete('/assets/{asset}/leases/{lease}/chats/{chat}', [AssetLeaseController::class, 'destroyChat'])->name('assets.leases.chats.destroy-chat');
+        Route::post('/assets/{asset}/leases/{lease}/store-amendment', [AssetLeaseController::class, 'storeAmendment'])->name('assets.leases.store-amendment');
+
+//        Route::get('/assets/{asset}/leases/{lease}/chats', [ChatController::class, 'index'])->name('assets.leases.chats.index');
+        Route::get('/assets/{asset}/leases/{lease}/chats/{chat?}', [ChatController::class, 'index'])->name('assets.leases.chats.index');
+        Route::post('/assets/{asset}/leases/{lease}/chats/{chat?}', [ChatController::class, 'store'])->name('assets.leases.chats.store');
+        Route::delete('/assets/{asset}/leases/{lease}/chats/{chat}', [ChatController::class, 'destroy'])->name('assets.leases.chats.destroy');
     });
 
     Route::resource('roles', RoleController::class);

@@ -4,8 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Facades\ZepApi;
 use App\Http\Requests\StoreChatRequest;
+use App\Http\Resources\AssetResource;
 use App\Http\Resources\ChatResource;
+use App\Http\Resources\LeaseResource;
+use App\Http\Resources\UserAssetResource;
+use App\Models\Asset;
 use App\Models\Chat;
+use App\Models\Lease;
+use App\Services\ChatService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -15,50 +21,34 @@ class ChatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Asset $asset, Lease $lease, Chat $chat)
     {
-        $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
+        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
 
-        return Inertia::render('Chat/Index', [
-            'chats' => ChatResource::collection($chats)
+        if($chat->exists) {
+            $chat->load(['last_message', 'messages']);
+        }
+
+        return inertia()->render('AssetLeases/Chat', [
+            'asset' => new AssetResource($asset),
+            'associates' => UserAssetResource::collection($asset->associates),
+            'lease' => new LeaseResource($lease),
+            'chats' => ChatResource::collection($lease->chatsWithLastMessage),
+            'chat' => $chat->exists ? new ChatResource($chat) : null
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreChatRequest $request, Chat $chat)
+    public function store(StoreChatRequest $storeChatRequest, Asset $asset, Lease $lease, Chat $chat)
     {
+        $validated = $storeChatRequest->validated();
 
         try {
+            $chatService = new ChatService($chat, $lease->id);
 
-            $validated = $request->validated();
-
-            $chatService = new ChatService($chat, $validated['lease_id']);
-
-//            if( ! $chat->exists) {
-//
-//                $chatService->createChat($validated['lease_id']);
-//                $chat_uuid = Str::uuid();
-//
-//                $zep_session_data= [
-//                    'session_id' => (string) $chat_uuid,
-//                    'user_id' => (string) auth()->user()->zep_user_id,
-//                ];
-//
-//                ZepApi::createSession($zep_session_data);
-//
-//                $chat = auth()->user()->chats()->create([
-//                    'chat_uuid' => $chat_uuid,
-//                    'lease_id' => $validated['lease_id'],
-//                ]);
-//            }
-
-            $chatService->sendMessage('user', $validated['message']);
-
-//            $chat->messages()->create(['from'=> 'user', 'message' => $validated['message']]);
-
-//            $chat->load('last_message');
+            $chatService->sendMessage($validated['from'], $validated['message']);
 
             return response()->json([
                 "chat" => new ChatResource($chatService->getChat()),
@@ -74,46 +64,24 @@ class ChatController extends Controller
 
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Chat $chat)
-    {
-
-        $chats = Chat::with('last_message')->orderBy('updated_at', 'desc')->get();
-
-        $chat->load(['last_message', 'messages']);
-
-        return Inertia::render('Chat/Index', [
-            'chat' => new ChatResource($chat),
-            'chats' => ChatResource::collection($chats)
-        ]);
-    }
-
-
+    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Chat $chat)
+    public function destroy(Asset $asset, Lease $lease, Chat $chat)
     {
         try {
 
-            DB::beginTransaction();
+            $chatService = new ChatService($chat);
+            if( ! $chatService->destroy()) {
+                throw new \Exception('Failed to delete chat.');
+            }
 
-            $chat->delete();
+            return redirect()->route('assets.leases.chats', [$asset, $lease]);
 
-            ZepApi::deleteMessages($chat->chat_uuid);
-
-            DB::commit();
-
-            return redirect()->route('chats.index');
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return redirect()->route('chats.show', $chat->chat_uuid)->with('error', $e->getMessage());
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }

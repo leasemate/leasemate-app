@@ -42,13 +42,13 @@ class ReaiProcessor
         return $this->send("post", "/chat", $post_data);
     }
 
-    public function registerDocumentUpload($asset_id, $lease_id, $storedName)
+    public function registerDocumentUpload($asset_id, $document_id, $storedName, $classification = 'lease', $sub_classification = 'original')
     {
         $post_data =[
-            'classification' => 'lease',
-            'sub_classification' => 'original',
+            'classification' => $classification,
+            'sub_classification' => $sub_classification,
             'asset_id' => (int) $asset_id,
-            'document_id' => (int) $lease_id,
+            'document_id' => (int) $document_id,
             's3_bucket' => config('filesystems.disks.s3.bucket'),
             's3_object' => $storedName,
         ];
