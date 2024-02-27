@@ -64,7 +64,7 @@ class ChatController extends Controller
 
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */

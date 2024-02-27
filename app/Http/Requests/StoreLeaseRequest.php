@@ -26,7 +26,6 @@ class StoreLeaseRequest extends FormRequest
         return [
             'lease_document' => [
                 'required',
-                'optional',
                 'file',
                 'mimes:pdf',
                 'max:51200',
