@@ -1,5 +1,5 @@
 <script setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, toRef} from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, reactive, ref, toRef } from "vue"
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryLink from "@/Components/PrimaryLink.vue";
@@ -485,6 +485,9 @@ onBeforeUnmount(() => {
     }
 });
 
+onUnmounted(() => {
+    socket.disconnect();
+});
 </script>
 
 <template>
