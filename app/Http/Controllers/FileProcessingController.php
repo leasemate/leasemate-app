@@ -22,7 +22,7 @@ class FileProcessingController extends Controller
         try {
 
             \Log::info("start status update");
-//            \Log::info($request->all());
+            \Log::info($request->all());
 
             $s3_object = $request->get('s3_object');
             $status = $request->get('status');
