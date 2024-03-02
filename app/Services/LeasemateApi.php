@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Asset;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -45,7 +46,7 @@ class LeasemateApi
 
     ###################### Tenants ######################
 
-    public function registerTenant($tenant)
+    public function registerTenant(Tenant $tenant)
     {
         Log::info('SERVICE: Registering tenant:');
 
@@ -57,14 +58,14 @@ class LeasemateApi
         return $this->send('post',"/tenants", $post_data);
     }
 
-    public function updateTenant($tenant_id)
+    public function updateTenant(Tenant $tenant_id)
     {
         Log::info('SERVICE: Update tenant:');
 
         return $this->send('post',"/tenants/{$tenant_id}");
     }
 
-    public function deleteTenant($tenant)
+    public function deleteTenant(Tenant $tenant)
     {
         Log::info('SERVICE: Delete tenant:');
 
@@ -106,7 +107,7 @@ class LeasemateApi
 
     ###################### Documents ######################
 
-    public function registerDocument($asset_id, $document_id, $storedName, $classification = 'lease', $sub_classification = 'original')
+    public function registerDocument($asset_id, $lease_id, $storedName, $classification = 'lease', $sub_classification = 'original')
     {
         $post_data =[
             'classification' => $classification,

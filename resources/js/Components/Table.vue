@@ -1,11 +1,25 @@
 <script setup>
-
+//create a classess property for css classes to be passed to the table
+const props = defineProps({
+    containerClasses: {
+        type: String,
+        default: ''
+    },
+    tableClasses: {
+        type: String,
+        default: 'w-full text-sm text-left text-gray-500 overflow-visible'
+    }
+});
 </script>
 
 <template>
 
-    <div class="relative overflow-x-auto rounded-lg pb-28">
-        <table class="w-full text-sm text-left text-gray-500 overflow-visible">
+    <div
+        :class="containerClasses"
+        class="relative overflow-x-auto rounded-lg">
+        <table
+            :class="classes"
+            class="w-full text-sm text-left text-gray-500 overflow-visible">
             <thead class="text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50">
                 <slot name="head" />
             </thead>

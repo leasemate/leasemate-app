@@ -332,7 +332,6 @@ onBeforeUnmount(() => {
                                     </template>
 
                                     <template #body>
-
                                         <tr v-for="base_rent in lease.monthly_base_rent" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
                                             <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
                                             <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
@@ -403,21 +402,60 @@ onBeforeUnmount(() => {
 
             <div class="m-6 mt-0 p-6 pt-0 rounded-lg shadow-md border">
 
+
                 <Accordion :multiple="true" :activeIndex="[0]">
-                    <AccordionTab header="Header I">
+
+                    <AccordionTab header="">
+                        <template #header>
+                            <h5>Options & Rights</h5>
+                        </template>
+
+                        <h6 class="text-indigo-600">Option to Extend</h6>
+                        <p class="m-0">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+
+                        <h6  class="text-indigo-600">Right of First Offer</h6>
+                        <p class="m-0">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+
+                        <h6  class="text-indigo-600">Right of First Refusal</h6>
+                        <p class="m-0">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+
+                        <h6  class="text-indigo-600">Assignment &amp; Subletting</h6>
+                        <p class="m-0">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+
+                        <h6  class="text-indigo-600">Holding Over</h6>
+                        <p class="m-0">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab header="">
+                        <template #header>
+                            <h5>Condition</h5>
+                        </template>
                         <p class="m-0">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
                             consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
                             laborum.
                         </p>
                     </AccordionTab>
-                    <AccordionTab header="Header II">
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-                    <AccordionTab header="Header III">
+
+                    <AccordionTab header="">
+                        <template #header>
+                            <h5>Miscellaneous</h5>
+                        </template>
                         <p class="m-0">
                             At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
                             culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
@@ -426,7 +464,15 @@ onBeforeUnmount(() => {
                 </Accordion>
 
             </div>
+            <div class="json-container">
 
+            <h3>Raw Extracted Data</h3>
+            <h4>Basic Extracted Data</h4>
+            <pre>{{ lease.extracted_data??"--" }}</pre>
+            <h4>Detailed Extracted Data</h4>
+            <pre>{{ lease.detailed_extracted_data??"--" }}</pre>
+
+            </div>
 
         </div>
 

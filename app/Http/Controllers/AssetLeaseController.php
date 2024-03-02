@@ -65,11 +65,11 @@ class AssetLeaseController extends Controller
                     'ext' => $lease_document->getClientOriginalExtension(),
                 ]);
 
-                $registerLeaseUploadResponse = LeasemateApi::registerDocumentUpload($asset->id, $lease->id, $storedName);
+                $registerLeaseUploadResponse = LeasemateApi::registerDocument($asset, $lease, $storedName);
 
                 \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
-                if( ! $registerLeaseUploadResponse->successful()) {
+                if($registerLeaseUploadResponse->failed()) {
 
                     if(Storage::disk('s3')->exists($lease->filename)) {
                         Storage::disk('s3')->delete($lease->filename);
@@ -84,7 +84,6 @@ class AssetLeaseController extends Controller
 
         } catch(\Exception $e) {
             \Log::error($e->getMessage());
-//            \Log::error($e->getTraceAsString());
 
             return response()->json(['message' => $e->getMessage()], 422);
         }
@@ -113,9 +112,9 @@ class AssetLeaseController extends Controller
                     'extension' => $lease_amendment->getClientOriginalExtension(),
                 ]);
 
-                $registerAmendmentUploadResponse = LeasemateApi::registerDocumentUpload($asset->id, $lease->id, $storedName, 'lease', 'amendment');
+                $registerAmendmentUploadResponse = LeasemateApi::registerDocument($asset, $lease, $storedName, 'lease', 'amendment');
 
-                if( ! $registerAmendmentUploadResponse->successful()) {
+                if($registerAmendmentUploadResponse->failed()) {
 
                     if(Storage::disk('s3')->exists($amendment->file_name)) {
                         Storage::disk('s3')->delete($amendment->file_name);
@@ -198,6 +197,9 @@ class AssetLeaseController extends Controller
             $lease->status = 'Archived';
             $lease->save();
             $lease->delete();
+
+            LeasemateApi::archiveDocument($lease);
+
             return redirect()->back();
 
         } catch(\Exception $e) {
@@ -212,6 +214,9 @@ class AssetLeaseController extends Controller
             $lease->restore();
             $lease->status = 'Ready';
             $lease->save();
+
+            LeasemateApi::restoreDocument($lease);
+
             return redirect()->back();
 
         } catch(\Exception $e) {
