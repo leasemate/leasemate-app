@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\LeaseFileDeleted;
-use App\Facades\ReaiProcessor;
+use App\Facades\LeasemateApi;
 use App\Models\Lease;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -43,7 +43,7 @@ class DeleteLeaseFile implements ShouldQueue
             Storage::disk('s3')->delete($this->lease->filename);
         }
 
-        $delete_vectors_response = ReaiProcessor::deleteFile($this->lease->id);
+        $delete_vectors_response = LeasemateApi::deleteFile($this->lease->id);
         \Log::info('deleteFile', ['delete_vectors_response' => $delete_vectors_response]);
 
         \Log::info($delete_vectors_response->status());

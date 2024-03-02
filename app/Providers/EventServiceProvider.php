@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Listeners\CustomUpdateSyncedResource;
+use App\Models\Asset;
 use App\Models\User;
+use App\Observers\AssetObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,6 +32,9 @@ class EventServiceProvider extends ServiceProvider
     protected $observers = [
         User::class => [
             UserObserver::class
+        ],
+        Asset::class => [
+            AssetObserver::class
         ]
     ];
 

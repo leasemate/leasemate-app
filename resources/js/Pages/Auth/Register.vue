@@ -34,13 +34,20 @@ watch(() => form.company_name, (value) => {
 
 const submit = () => {
     form.post(route('register.store'), {
+        onSuccess: (visit) => {
+            form.reset('password', 'password_confirmation')
+            // console.log(visit)
+            if( visit.props.recentlyRegistered) {
+                toast.success('Thank you for registering. You will receive an email shortly once your account has been setup.');
+            }
+        },
         onError: (errors) => {
-            console.log(errors);
+            // console.log(errors);
             toast.error('There was an error creating your account.');
         },
         onFinish: (visit) => {
-            console.log('on finish')
-            console.log(visit)
+            // console.log('on finish')
+            // console.log(visit)
             form.reset('password', 'password_confirmation')
         }
     });
@@ -54,7 +61,6 @@ const submit = () => {
     <GuestLayout>
 
         <AuthenticationCard>
-
 
             <form v-if=" ! recentlyRegistered" @submit.prevent="submit">
                 <div>
@@ -72,26 +78,16 @@ const submit = () => {
                 <div class="mt-4">
                     <InputLabel for="domain_name" value="Domain" />
                     <div class="flex items-baseline">
-
                         <TextInputGroup
                             id="domain_name"
                             v-model="form.domain"
                             groupTextSide="right"
-                            :groupText="`.${usePage().props.base_domain}`"
+                            :groupText="`.${usePage().props.central_domain}`"
                             :groupTextClasses="'border-transparent text-slate-400'"
                             type="text"
                             class="mt-1 block w-full"
                             required
                         />
-
-                        <!--                            <TextInput-->
-                        <!--                                id="domain_name"-->
-                        <!--                                v-model="form.domain"-->
-                        <!--                                type="text"-->
-                        <!--                                class="mt-1 block w-full mr-2"-->
-                        <!--                                required-->
-                        <!--                            />-->
-                        <!--                            <span class="text-19 whitespace-nowrap">.{{ usePage().props.base_domain }}</span>-->
                     </div>
                     <InputError class="mt-2" :message="form.errors.domain" />
                 </div>

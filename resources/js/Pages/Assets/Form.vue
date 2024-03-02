@@ -59,10 +59,9 @@ const submit = () => {
             errorBag: 'createAsset',
             preserveScroll: true,
             onSuccess: () => {
-                form.reset();
+                // form.reset();
             },
             onError: (error) => {
-
                 console.log(error);
             },
         });

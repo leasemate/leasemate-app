@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\ReaiProcessor;
+use App\Facades\LeasemateApi;
 use App\Http\Requests\SendMessageRequest;
 use App\Http\Requests\StoreLeaseAmendmentRequest;
 use App\Http\Resources\AssetResource;
@@ -65,7 +65,7 @@ class AssetLeaseController extends Controller
                     'ext' => $lease_document->getClientOriginalExtension(),
                 ]);
 
-                $registerLeaseUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName);
+                $registerLeaseUploadResponse = LeasemateApi::registerDocumentUpload($asset->id, $lease->id, $storedName);
 
                 \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
@@ -113,7 +113,7 @@ class AssetLeaseController extends Controller
                     'extension' => $lease_amendment->getClientOriginalExtension(),
                 ]);
 
-                $registerAmendmentUploadResponse = ReaiProcessor::registerDocumentUpload($asset->id, $lease->id, $storedName, 'lease', 'amendment');
+                $registerAmendmentUploadResponse = LeasemateApi::registerDocumentUpload($asset->id, $lease->id, $storedName, 'lease', 'amendment');
 
                 if( ! $registerAmendmentUploadResponse->successful()) {
 

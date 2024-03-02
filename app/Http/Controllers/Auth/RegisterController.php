@@ -19,18 +19,18 @@ class RegisterController extends Controller
 
     public function store(RegisterRequest $request)
     {
-
         try {
+
             $tenant = Tenant::create($request->validated());
             $tenant->createDomain(['domain'=>$request->domain]);
             $tenant->password = null;
             $tenant->save();
+
             return back()->with('recentlyRegistered', true);
 
         } catch (\Exception $e) {
-            return back()->with('error', 'An error occurred while registering your account. Please try again.'.$e->getMessage());
-        }
 
-//        return Inertia::location(tenant_route($tenant->domains->first()->domain, 'login'));
+            return back()->with('error', $e->getMessage().' An error occurred while registering your account. Please try again.');
+        }
     }
 }

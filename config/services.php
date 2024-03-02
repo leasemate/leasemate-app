@@ -30,9 +30,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    'reai_api' => [
-        'base_url' => env('REAI_API_BASE_URL'),
-        'api_key' => env('REAI_API_KEY'),
+    'leasemate_api' => [
+        'base_url' => env('LEASEMATE_API_BASE_URL'),
+        'api_key' => env('LEASEMATE_API_KEY'),
     ],
     'zep_api' => [
         'base_url' => env('ZEP_API_BASE_URL'),

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\FileStatusUpdate;
-use App\Facades\ReaiProcessor;
+use App\Facades\LeasemateApi;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
 use App\Jobs\ProcessFile;
@@ -129,7 +129,7 @@ class FilesController extends Controller
 
             try {
                 Storage::disk('s3')->delete($file->stored_name);
-                $response = ReaiProcessor::deleteFile($file->stored_name);
+                $response = LeasemateApi::deleteFile($file->stored_name);
 
                 if($response->ok()) {
 
@@ -176,7 +176,7 @@ class FilesController extends Controller
                 }
 
             } else {
-                $response = ReaiProcessor::deleteFile($file->stored_name);
+                $response = LeasemateApi::deleteFile($file->stored_name);
                 $file->status = 'Deleted';
                 $file->save();
                 $file->delete();

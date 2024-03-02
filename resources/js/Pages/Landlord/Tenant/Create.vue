@@ -81,7 +81,7 @@ const submit = () => {
                                         class="mt-1 block w-full mr-2"
                                         required
                                     />
-                                    <span class="text-19">.{{ usePage().props.base_domain }}</span>
+                                    <span class="text-19">.{{ usePage().props.central_domain }}</span>
                                 </div>
                                 <InputError class="mt-2" :message="form.errors.domain" />
                             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Landlord;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -43,25 +44,39 @@ class TenantController extends Controller
 
     public function store(RegisterRequest $request)
     {
-        $tenant = Tenant::create($request->validated());
+        try {
 
-        $tenant->createDomain(['domain'=>$request->domain]);
+            $tenant = Tenant::create($request->validated());
 
-        $tenant->password = null;
-        $tenant->save();
+            $tenant->createDomain(['domain'=>$request->domain]);
 
-        return redirect()->route('tenants');
+            $tenant->password = null;
+            $tenant->save();
+
+            return redirect()->route('tenants');
+
+        } catch (\Exception $e) {
+
+            return back()->with('error', 'An error occurred while registering your account. Please try again. '.$e->getMessage());
+
+        }
     }
 
     public function destroy(Tenant $tenant)
     {
-        $tenant->users->each->delete();
+        try {
 
-        $tenant->delete();
+            $tenant->users->each->delete();
 
-        Storage::disk('s3')->deleteDirectory($tenant->id);
+            $tenant->delete();
 
-        return redirect()->route('tenants');
+            Storage::disk('s3')->deleteDirectory($tenant->id);
+
+            return redirect()->route('tenants');
+
+        } catch( \Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
 }

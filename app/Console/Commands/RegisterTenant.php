@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Facades\ReaiProcessor;
+use App\Facades\LeasemateApi;
 use App\Models\Domain;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
@@ -35,7 +35,7 @@ class RegisterTenant extends Command implements PromptsForMissingInput
 
         $domain = Domain::where('domain', $tenantDomain)->first();
 
-        $registerTenantResponse = ReaiProcessor::registerTenant($domain->tenant_id, explode(".", $domain->domain)[0]);
+        $registerTenantResponse = LeasemateApi::registerTenant($domain->tenant_id, explode(".", $domain->domain)[0]);
 
         $this->info('Domain Registered!');
 

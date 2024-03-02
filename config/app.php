@@ -175,7 +175,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
 
-        App\Providers\ReaiProcessorServiceProvider::class,
+        App\Providers\LeasemateApiServiceProvider::class,
         App\Providers\ZepApiServiceProvider::class,
         App\Providers\FlowiseApiServiceProvider::class,
 
@@ -197,7 +197,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'ReaiProcessor' => App\Facades\ReaiProcessor::class,
+        'ReaiProcessor' => App\Facades\LeasemateApi::class,
         'Jwt' => Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
