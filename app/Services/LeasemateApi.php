@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Asset;
+use App\Models\Document;
 use App\Models\Lease;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
@@ -85,7 +86,7 @@ class LeasemateApi
         Log::info('SERVICE: Registering asset:');
 
         $post_data = [
-            'asset_id' => $asset->id,
+            'asset_id' => (string) $asset->id,
             'asset_name' => $asset->name,
         ];
 
@@ -108,17 +109,29 @@ class LeasemateApi
 
     ###################### Documents ######################
 
-    public function registerDocument(Asset $asset, Lease $lease, $storedName, $classification = 'lease', $sub_classification = 'original')
-    {
+    public function registerDocument(
+        Asset $asset,
+        Lease $lease,
+        $storedName,
+        $classification = 'lease',
+        Document $document = null
+    ) {
         $post_data =[
             'classification' => $classification,
-            'sub_classification' => $sub_classification,
             'asset_id' => (int) $asset->id,
-            'document_id' => (int) $lease->id,
-            'parent_document_id' => null,
             's3_bucket' => config('filesystems.disks.s3.bucket'),
             's3_object' => $storedName,
         ];
+
+        if($document) {
+            $post_data['sub_classification'] = 'amendment';
+            $post_data['document_id'] = (int) $document->id;
+            $post_data['parent_document_id'] = $lease->id;
+        } else {
+            $post_data['sub_classification'] = 'original';
+            $post_data['document_id'] = (int) $lease->id;
+            $post_data['parent_document_id'] = null;
+        }
 
         Log::info('SERVICE: Registering lease upload', ['post_data:', $post_data]);
 

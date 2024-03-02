@@ -101,7 +101,7 @@ class AssetLeaseController extends Controller
 
                 $storedName = $lease_amendment->store(tenant('id') . "/leases/" . $asset->id, ['disk' => $disk, 'visibility' => 'public']);
 
-                $amendment = $lease->documents()->create([
+                $document = $lease->documents()->create([
                     'uuid' => (string) Str::uuid(),
                     'collection_name' => 'amendments',
                     'name' => $lease_amendment->getClientOriginalName(),
@@ -112,14 +112,14 @@ class AssetLeaseController extends Controller
                     'extension' => $lease_amendment->getClientOriginalExtension(),
                 ]);
 
-                $registerAmendmentUploadResponse = LeasemateApi::registerDocument($asset, $lease, $storedName, 'lease', 'amendment');
+                $registerAmendmentUploadResponse = LeasemateApi::registerDocument($asset, $lease, $storedName, 'lease', $document);
 
                 if($registerAmendmentUploadResponse->failed()) {
 
-                    if(Storage::disk('s3')->exists($amendment->file_name)) {
-                        Storage::disk('s3')->delete($amendment->file_name);
+                    if(Storage::disk('s3')->exists($document->file_name)) {
+                        Storage::disk('s3')->delete($document->file_name);
                     }
-                    $amendment->forceDelete();
+                    $document->forceDelete();
 
                     throw new \Exception('Failed to register amendment upload.');
                 }
