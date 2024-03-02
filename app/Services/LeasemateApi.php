@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Asset;
+use App\Models\Lease;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,7 @@ class LeasemateApi
 
         $post_data = [
             'tenant_id' => $tenant->id,
-            'tenant_domain' => $this->getDomain($tenant->domain),
+            'tenant_domain' => $this->getSubDomain($tenant->domain),
         ];
 
         return $this->send('post',"/tenants", $post_data);
@@ -71,7 +72,7 @@ class LeasemateApi
 
         $post_data = [
             'tenant_id' => $tenant->id,
-            'tenant_domain' => $this->getDomain($tenant->domain),
+            'tenant_domain' => $this->getSubDomain($tenant->domain),
         ];
 
         return $this->send('delete',"/tenants/{$tenant->id}", $post_data);
@@ -91,29 +92,29 @@ class LeasemateApi
         return $this->send('post',"/assets", $post_data);
     }
 
-    public function updateAsset($asset_id)
+    public function updateAsset(Asset $asset)
     {
         Log::info('SERVICE: Update asset:');
 
-        return $this->send('post',"/assets/{$asset_id}");
+        return $this->send('post',"/assets/{$asset->id}");
     }
 
-    public function deleteAsset($asset_id)
+    public function deleteAsset(Asset $asset)
     {
         Log::info('SERVICE: Delete asset:');
 
-        return $this->send('delete',"/assets/{$asset_id}");
+        return $this->send('delete',"/assets/{$asset->id}");
     }
 
     ###################### Documents ######################
 
-    public function registerDocument($asset_id, $lease_id, $storedName, $classification = 'lease', $sub_classification = 'original')
+    public function registerDocument(Asset $asset, Lease $lease, $storedName, $classification = 'lease', $sub_classification = 'original')
     {
         $post_data =[
             'classification' => $classification,
             'sub_classification' => $sub_classification,
-            'asset_id' => (int) $asset_id,
-            'document_id' => (int) $document_id,
+            'asset_id' => (int) $asset->id,
+            'document_id' => (int) $lease->id,
             'parent_document_id' => null,
             's3_bucket' => config('filesystems.disks.s3.bucket'),
             's3_object' => $storedName,
@@ -148,7 +149,7 @@ class LeasemateApi
 
     ####################################################
 
-    private function getDomain($tenant_domain)
+    private function getSubDomain($tenant_domain)
     {
         return explode(".", $tenant_domain)[0];
     }

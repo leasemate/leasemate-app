@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Http\Client\Response updateAsset(Asset $asset)
  * @method static \Illuminate\Http\Client\Response deleteAsset(Asset $asset)
  *
- * @method static \Illuminate\Http\Client\Response registerDocument(int $asset_id, int $lease_id, string $storedName, string $classification, string $sub_classifications)
+ * @method static \Illuminate\Http\Client\Response registerDocument(Asset $asset_id, Lease $lease_id, string $storedName, string $classification, string $sub_classifications)
  * @method static \Illuminate\Http\Client\Response restoreDocument(Lease $lease)
  * @method static \Illuminate\Http\Client\Response archiveDocument(Lease $asset)
  * @method static \Illuminate\Http\Client\Response deleteDocument(Lease $asset)
