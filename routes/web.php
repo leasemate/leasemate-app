@@ -24,7 +24,9 @@ Route::middleware([
     'web',
 ])->group(function() {
 
-    Route::get('/', HomeController::class)->name('home');
+    Route::get('/', function() {
+        return redirect()->route('login');
+    })->name('home');
 
     Route::get('register', [RegisterController::class, 'create'])
         ->name('register');

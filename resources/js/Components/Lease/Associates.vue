@@ -8,11 +8,13 @@ const props = defineProps({
 
 <template>
 
-    <div class="border rounded-lg px-4 py-4 my-8 shadow-lg">
+    <div class="relative border rounded-lg px-4 py-4 my-8 shadow-md">
 
-        <h4>Associates:</h4>
+        <div class="absolute top-0 left-0 transform -translate-y-1/2 w-full px-4">
+            <h5 class="bg-white text-center mx-auto px-2 py-1 inline-block">Team Members</h5>
+        </div>
 
-        <ul>
+        <ul class="my-4">
             <li v-for="associate in associates" :key="associate.id">
                 {{ associate.display_name_with_roles }} - {{ associate.email }}
             </li>
