@@ -94,7 +94,7 @@ return [
     'domain' => null,
 
     'paths' => [
-        'login' => '/admin/login'
+        'login' => env('APP_CENTRAL_DOMAIN').'/login'
     ],
 
     /*
@@ -110,7 +110,7 @@ return [
 
     'middleware' => [
         'web',
-        'tenant',
+//        'tenant',
     ],
 
     /*
