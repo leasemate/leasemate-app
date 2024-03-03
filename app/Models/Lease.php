@@ -17,8 +17,7 @@ class Lease extends Model
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-//        'extracted_data' => 'json',
-//        'detailed_extracted_data' => 'json',
+        'rent_schedule' => 'json',
     ];
 
     protected $dates = [
@@ -79,7 +78,7 @@ class Lease extends Model
 
     public function amendments()
     {
-        return $this->documents()->where('collection_name', 'amendment');
+        return $this->documents()->where('collection_name', Document::COLLECTION_AMENDMENT);
     }
 
     public function lease_document()

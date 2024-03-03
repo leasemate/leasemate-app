@@ -14,11 +14,13 @@ export default {
         const date = new Date(value);
         return `${new Intl.DateTimeFormat().format(date)} ${date.toLocaleTimeString()}`;
     },
-    formatMoney(value) {
+    formatMoney(value, decimals = 2) {
         if(value === null || value === undefined) return;
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
+            decimal: '.',
+            minimumFractionDigits: decimals,
         }).format(value);
     },
 };

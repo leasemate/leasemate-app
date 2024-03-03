@@ -234,9 +234,9 @@ onBeforeUnmount(() => {
                         Name
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Address
+                        Premise
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">
                         GLA (SQFT)
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -245,8 +245,8 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3">
                         End Date
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Rent / Sq Ft
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                        Rent (SQFT)
                     </th>
                     <th scope="col" class="px-6 py-3 font-normal normal-case">
                         <Menu as="div" class="relative inline-block text-left">
@@ -354,10 +354,10 @@ onBeforeUnmount(() => {
                     </th>
                     <td class="px-6 py-4 text-gray-900 ">
                         <Link
-                            v-if="lease.tenant_name"
+                            v-if="lease.tenant"
                             :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                             >
-                            <strong>{{ lease.tenant_name }}</strong>
+                            <strong>{{ lease.tenant }}</strong>
                         </Link>
 
                         <a
@@ -374,10 +374,10 @@ onBeforeUnmount(() => {
                     <td class="px-6 py-4 dark:text-zinc-100/80">
 
                         <Link
-                            v-if="lease.address"
+                            v-if="lease.premise_address"
                             :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                         >
-                            {{ lease.address }}
+                            {{ lease.premise_address }}
                         </Link>
 
                         <template v-else>
@@ -385,7 +385,7 @@ onBeforeUnmount(() => {
                         </template>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                         {{ filters.formatNumber(lease.gla)??'--' }}
+                         {{ filters.formatNumber(lease.gla) ?? '--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ lease.start_date??'--' }}
@@ -410,10 +410,10 @@ onBeforeUnmount(() => {
 
                             <template #content>
 
-                                <MenuItem v-if="lease.tenant_name">
+                                <MenuItem v-if="lease.tenant">
 
                                     <Link
-                                        v-if="lease.tenant_name"
+                                        v-if="lease.tenant"
                                         :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                                         :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
                                     >

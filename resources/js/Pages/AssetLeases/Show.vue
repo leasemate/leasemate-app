@@ -127,8 +127,8 @@ onBeforeUnmount(() => {
             <div class="col-span-6">
 
                 <div class="mb-8">
-                    <h2 class="text-indigo-600">{{ lease.tenant_name }}</h2>
-                    <h5 class="text-gray-500">{{ lease.address }}</h5>
+                    <h2 class="text-indigo-600">{{ lease.tenant }}</h2>
+                    <h5 class="text-gray-500">{{ lease.premise_address }}</h5>
                 </div>
 
             </div>
@@ -140,9 +140,11 @@ onBeforeUnmount(() => {
                     class-name="my-file-upload"
                     label-idle="Amendment Drop (One at a time) or <span class='filepond--label-action'>Browse</span>"
                 />
-                <div class="ml-auto">
-                <PrimaryLink :href="route('assets.leases.chats.index', [asset, lease])">
-                    Chat Bot<BoxIcon class="bx-bot ml-2" />
+                <div class="ml-auto mt-4">
+                <PrimaryLink
+                    class="bg-indigo-600"
+                    :href="route('assets.leases.chats.index', [asset, lease])">
+                    Leasemate<BoxIcon class="bx-comment-detail ml-2" />
                 </PrimaryLink>
                 </div>
             </div>
@@ -159,51 +161,67 @@ onBeforeUnmount(() => {
 
                     <template #header>
                         <div class="flex align-items-center gap-2">
-                            <span class="font-bold white-space-nowrap">Current Lease Terms</span>
+                            <h5 class="font-bold white-space-nowrap">Current Lease</h5>
                         </div>
                     </template>
 
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-6 rounded-lg shadow-md border p-6">
-                            <h5>Basic Terms</h5>
+                        <div class="col-span-6 rounded-lg shadow-md border p-4">
+                            <h5 class="text-indigo-500">Basic Terms</h5>
 
-                            <div class="p-4 bg-white">
+                            <div class="p-2 bg-white">
 
                                 <div class="grid grid-cols-2 gap-x-8 gap-y-4">
                                     <div>
                                         <div class="font-bold text-gray-900">Tenant</div>
-                                        <div class="text-sm text-gray-600">{{ lease.extracted_data.lessee_tenant??"--" }}</div>
+                                        <div class="text-sm text-gray-600">{{ lease.tenant ?? "--" }}</div>
                                     </div>
                                     <div>
                                         <div class="font-bold text-gray-900">Landlord</div>
-                                        <div class="text-xs text-gray-600">{{ lease.extracted_data.lessor_landlord??"--" }}</div>
+                                        <div class="text-sm text-gray-600">{{ lease.landlord ?? "--" }}</div>
                                     </div>
 
                                     <div>
-                                        <div class="font-bold text-gray-600">Premises Address</div>
-                                        <div class="text-xs text-gray-600">{{ lease.address??"--" }}</div>
+                                        <div class="font-bold text-gray-600">Premise Address</div>
+                                        <div class="text-sm text-gray-600">{{ lease.premise_address ?? "--" }}</div>
                                     </div>
 
                                     <div>
                                         <div class="font-bold text-gray-600">Building Address</div>
-                                        <div class="text-xs text-gray-600">{{ lease.extracted_data.property_address??"--" }}</div>
+                                        <div class="text-sm text-gray-600">{{ lease.building_address ?? "--" }}</div>
                                     </div>
 
                                     <div>
-
                                         <div class="font-bold text-gray-600">Rentable Sq. Ft.</div>
-                                        <div class="text-xs text-gray-600">{{ filters.formatNumber(lease.extracted_data.rentable_square_feet)??"--" }}</div>
+                                        <div class="text-sm text-gray-600">{{ filters.formatNumber(lease.rentable_sqft) ?? "--" }}</div>
                                     </div>
 
                                     <div>
                                         <div class="grid grid-cols-2 gap-x-8 gap-y-4">
                                             <div>
-                                                <div class="font-bold text-gray-600">Lease Term</div>
-                                                <div class="text-xs text-gray-600">{{ lease.extracted_data.lease_term ? lease.extracted_data.lease_term+" Months" : "--" }}</div>
+                                                <div class="font-bold text-gray-600">Term</div>
+                                                <div class="text-sm text-gray-600">{{ lease.term ? lease.term+" Months" : "--" }}</div>
                                             </div>
                                             <div>
-                                                <div class="font-bold text-gray-600">Expiration Date</div>
-                                                <div class="text-xs text-gray-600">{{ lease.extracted_data.expiration_date??"--" }}</div>
+                                                <div class="font-bold text-gray-600">Abatement</div>
+                                                <div class="text-sm text-gray-600">{{ lease.abatement ? lease.abatement+" Months" : "--" }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="font-bold text-gray-600">Pro Rata Share</div>
+                                        <div class="text-sm text-gray-600">{{ lease.pro_rata_share ?? "--" }}</div>
+                                    </div>
+                                    <div>
+                                        <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                                            <div>
+                                                <div class="font-bold text-gray-600">Exp. Date</div>
+                                                <div class="text-sm text-gray-600">{{ lease.end_date ?? "--" }}</div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-gray-600">Sec. Deposit</div>
+                                                <div class="text-sm text-gray-600">{{ filters.formatMoney(lease.security_deposit) ?? "--" }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -214,12 +232,12 @@ onBeforeUnmount(() => {
 
                         </div>
 
-                        <div class="col-span-6 rounded-lg shadow-md border p-6">
+                        <div class="col-span-6 rounded-lg shadow-md border p-4">
 
-                            <h5>Rent Schedule</h5>
-                            <div class="p-4 bg-white">
+                            <h5 class="text-indigo-500">Rent Schedule</h5>
+                            <div class="p-2 bg-white">
 
-                                <Table class="mt-8 pb-0" :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
+                                <Table class="pb-0" :data="lease.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
 
                                     <template #head>
                                         <tr>
@@ -233,18 +251,15 @@ onBeforeUnmount(() => {
 
                                     <template #body>
 
-                                        <tr v-for="base_rent in lease.monthly_base_rent" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+                                        <tr v-for="base_rent in lease.rent_schedule" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
                                             <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
                                             <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total) }}</td>
+                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total, 0) }}</td>
                                             <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_per_square_foot) }}</td>
                                         </tr>
                                     </template>
 
                                 </Table>
-
-<!--                                <h6>Abatement</h6>-->
-<!--                                <h6>Base Year</h6>-->
 
                             </div>
 
@@ -262,7 +277,7 @@ onBeforeUnmount(() => {
 <!--                    </div>-->
 
                 </TabPanel>
-                <TabPanel v-if="lease.documents.length">
+                <TabPanel v-if="lease.amendments">
 
                     <template #header>
                         <div class="flex align-items-center gap-2">
@@ -375,23 +390,6 @@ onBeforeUnmount(() => {
                     </template>
                     <p class="m-0">
 
-<!--                        <h5>Condition</h5>-->
-<!--                        <div class="p-4 bg-white space-y-4">-->
-<!--                            <div>-->
-<!--                                <h6>Condition</h6>-->
-<!--                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>-->
-<!--                            </div>-->
-
-<!--                            <div>-->
-<!--                                <h6>TI Allowance</h6>-->
-<!--                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <h6>Landlord Work</h6>-->
-<!--                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sem metus, accumsan a dolor eget, posuere porttitor enim. Suspendisse varius porta semper. Quisque tincidunt ultrices metus, nec pretium lorem ultricies a. Sed tempus arcu gravida ligula mollis congue. Nulla vel egestas lorem. Sed ligula enim, mollis eget congue ut, molestie maximus ligula. Vestibulum tincidunt velit ut felis vestibulum, in lacinia nisi blandit. Vestibulum fermentum mi a ipsum ultricies vehicula.</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
                         <h4>Processing...</h4>
 
                         <h5>{{ document.uuid }}</h5>
@@ -400,67 +398,101 @@ onBeforeUnmount(() => {
 
             </TabView>
 
-            <div class="m-6 mt-0 p-6 pt-0 rounded-lg shadow-md border">
+            <div class="m-6 mt-0 p-4 pt-0 rounded-lg shadow-md border">
 
 
                 <Accordion :multiple="true" :activeIndex="[0]">
 
-                    <AccordionTab header="">
+                    <AccordionTab>
                         <template #header>
-                            <h5>Options & Rights</h5>
+                            <h5 class="text-indigo-600">Option to Extend</h5>
                         </template>
-
-                        <h6 class="text-indigo-600">Option to Extend</h6>
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-
-                        <h6  class="text-indigo-600">Right of First Offer</h6>
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-
-                        <h6  class="text-indigo-600">Right of First Refusal</h6>
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-
-                        <h6  class="text-indigo-600">Assignment &amp; Subletting</h6>
-                        <p class="m-0">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-
-                        <h6  class="text-indigo-600">Holding Over</h6>
-                        <p class="m-0">
+                        <p class="ml-2">
                             Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
                             enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
                         </p>
                     </AccordionTab>
 
-                    <AccordionTab header="">
+                    <AccordionTab>
                         <template #header>
-                            <h5>Condition</h5>
+                            <h5 class="text-indigo-600">Right of First Offer</h5>
                         </template>
-                        <p class="m-0">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-                            laborum.
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
                         </p>
                     </AccordionTab>
 
-                    <AccordionTab header="">
+                    <AccordionTab>
                         <template #header>
-                            <h5>Miscellaneous</h5>
+                            <h5 class="text-indigo-600">Right of First Refusal</h5>
                         </template>
-                        <p class="m-0">
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-                            culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
                         </p>
                     </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">TI Allowance</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">Insurance Requirements</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">Tenant Maintenance</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">Landlord Maintenance</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">Assignment &amp; Subletting</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
+                    <AccordionTab>
+                        <template #header>
+                            <h5 class="text-indigo-600">Holding Over</h5>
+                        </template>
+                        <p class="m-2">
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
+                        </p>
+                    </AccordionTab>
+
                 </Accordion>
 
             </div>
@@ -480,7 +512,9 @@ onBeforeUnmount(() => {
 
 </template>
 
+<style>
 
+</style>
 
 <style scoped>
 .json-container pre {
