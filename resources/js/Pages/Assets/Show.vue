@@ -59,9 +59,7 @@ const closeModal = () => {
 const deleteLease = () => {
 
     if(leaseToDelete.value) {
-
         closeModal();
-
         try {
             router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
                     preserveScroll: true,

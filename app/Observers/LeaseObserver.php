@@ -30,14 +30,14 @@ class LeaseObserver
      */
     public function deleted(Lease $lease): void
     {
-        if( $lease->lease_document ){
+        if( !$lease->isForceDeleting() ) {
             $lease->lease_document->status = 'Archived';
             $lease->lease_document->save();
             $lease->lease_document->delete();
 
             $archiveDocument = LeasemateApi::archiveDocument($lease);
-            Log::info('archiveDocument', [$lease]);
-            Log::info('archiveDocument', [$archiveDocument]);
+
+            Log::info('archiveDocument response: ', [$archiveDocument]);
         }
     }
 
