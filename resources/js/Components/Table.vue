@@ -7,7 +7,7 @@ const props = defineProps({
     },
     tableClasses: {
         type: String,
-        default: 'w-full text-sm text-left text-gray-500 overflow-visible'
+        default: ''
     }
 });
 </script>
@@ -15,11 +15,13 @@ const props = defineProps({
 <template>
 
     <div
+        class="relative overflow-x-auto rounded-lg"
         :class="containerClasses"
-        class="relative overflow-x-auto rounded-lg">
+    >
         <table
-            :class="classes"
-            class="w-full text-sm text-left text-gray-500 overflow-visible">
+            class="w-full text-sm text-left text-gray-500 overflow-visible"
+            :class="tableClasses"
+        >
             <thead class="text-xs text-gray-700 dark:text-gray-100 uppercase bg-gray-50/50 dark:bg-zinc-700/50">
                 <slot name="head" />
             </thead>

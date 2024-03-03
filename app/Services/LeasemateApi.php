@@ -8,6 +8,7 @@ use App\Models\Lease;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Comment\Doc;
 
 class LeasemateApi
 {
@@ -112,9 +113,9 @@ class LeasemateApi
     public function registerDocument(
         Asset $asset,
         Lease $lease,
+        Document $document,
         $storedName,
         $classification = 'lease',
-        Document $document = null
     ) {
         $post_data =[
             'classification' => $classification,
@@ -123,13 +124,13 @@ class LeasemateApi
             's3_object' => $storedName,
         ];
 
-        if($document) {
+        if($document->collection_name === 'amendment') {
             $post_data['sub_classification'] = 'amendment';
-            $post_data['document_id'] = (int) $document->id;
+            $post_data['document_id'] = $document->id;
             $post_data['parent_document_id'] = $lease->id;
         } else {
             $post_data['sub_classification'] = 'original';
-            $post_data['document_id'] = (int) $lease->id;
+            $post_data['document_id'] = $lease->id;
             $post_data['parent_document_id'] = null;
         }
 
@@ -178,7 +179,7 @@ class LeasemateApi
 
         $payload = array_merge($this->baseData, $data);
 
-        Log::info('SEND REQUEST: '.$method.': '.$callingFunction, ['post_data:', $payload]);
+        Log::info("SEND REQUEST: {$method}: {$endpoint} | method: {$callingFunction}", ['post_data:', $payload]);
 
         return $this->makeRequest()->$method($this->getEndpoint($endpoint), $payload);
     }

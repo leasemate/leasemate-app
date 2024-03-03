@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentResource extends JsonResource
 {
@@ -18,8 +19,13 @@ class DocumentResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'status' => $this->status,
+            'status_progress' => ($this->status_progress && $this->status == 'Processing' ? $this->status_progress."%" : null),
+            'status_msg' => $this->status_msg,
             'name' => $this->name,
-            'file_name' => $this->file_name,
+            'file_name' => Storage::disk('s3')->url($this->file_name),
+            'is_deleting' => ($this->status == 'Deleting'),
+//            'extracted_data' => $this->extracted_data,
+//            'detailed_extracted_data' => $this->detailed_extracted_data,
         ];
     }
 }

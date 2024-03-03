@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\FileStatusUpdate;
+use App\Events\LeaseProcessingUpdate;
 use App\Facades\LeasemateApi;
 use App\Http\Requests\StoreFileUploadRequest;
 use App\Http\Requests\UpdateFileUploadRequest;
@@ -93,7 +93,7 @@ class FilesController extends Controller
 
                 Log::info('Fire event: FileProcessed');
 
-                event(new FileStatusUpdate(auth()->user()->id, $fileUpload));
+                event(new LeaseProcessingUpdate(auth()->user()->id, $fileUpload));
 
                 return $fileUpload;
             }

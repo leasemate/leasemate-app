@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Document;
 use App\Models\File;
 use App\Models\Lease;
 use Closure;
@@ -16,12 +17,14 @@ class UniqueLeaseFilename implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $lease_uploads = Lease::where('og_filename', $value->getClientOriginalName())
+        $document = Document::where('name', $value->getClientOriginalName())
             ->where('asset_id', request()->asset->id)
-            ->count();
+            ->withTrashed()
+            ->first();
 
-        if ($lease_uploads > 0) {
-            $fail('This lease already exists!');
+        if ( $document ) {
+            $error_msg = 'This lease document already exists'.($document->trashed() ? ' but is archived' : '')."!";
+            $fail($error_msg);
         }
     }
 }

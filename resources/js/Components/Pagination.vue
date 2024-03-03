@@ -14,38 +14,38 @@ defineProps({
 
     <div>
 
-        <div v-if="dataset.total > 0" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <div v-if="dataset.meta.total > 0" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
 
             <div class="flex flex-1 justify-between sm:hidden">
                 <div>
                     <p class="text-sm text-gray-700">
                         Showing
-                        <span class="font-medium">{{ dataset.from }}</span>
+                        <span class="font-medium">{{ dataset.meta.from }}</span>
                         to
-                        <span class="font-medium">{{ dataset.to }}</span>
+                        <span class="font-medium">{{ dataset.meta.to }}</span>
                         of
-                        <span class="font-medium">{{ dataset.total }}</span>
+                        <span class="font-medium">{{ dataset.meta.total }}</span>
                         results
                     </p>
                 </div>
 
-                <div v-if="dataset.prev_page_url === null" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 opacity-50 pointer-events-none">
+                <div v-if="dataset.links.prev === null" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 opacity-50 pointer-events-none">
                     Previous
                 </div>
                 <Link
                     v-else
-                    :disabled="dataset.prev_page_url === null"
-                    :href="dataset.prev_page_url"
+                    :disabled="dataset.links.prev === null"
+                    :href="dataset.links.prev"
                     class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >Previous</Link>
 
-                <div v-if="dataset.next_page_url === null" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 opacity-50 pointer-events-none">
+                <div v-if="dataset.links.next === null" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 opacity-50 pointer-events-none">
                     Next
                 </div>
                 <Link
                     v-else
-                    :disabled="dataset.next_page_url === null"
-                    :href="dataset.next_page_url"
+                    :disabled="dataset.links.next === null"
+                    :href="dataset.links.next"
                     class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >Next</Link>
 
@@ -55,20 +55,20 @@ defineProps({
                 <div>
                     <p class="text-sm text-gray-700">
                         Showing
-                        <span class="font-medium">{{ dataset.from }}</span>
+                        <span class="font-medium">{{ dataset.meta.from }}</span>
                         to
-                        <span class="font-medium">{{ dataset.to }}</span>
+                        <span class="font-medium">{{ dataset.meta.to }}</span>
                         of
-                        <span class="font-medium">{{ dataset.total }}</span>
+                        <span class="font-medium">{{ dataset.meta.total }}</span>
                         results
                     </p>
                 </div>
-                <div v-if="dataset.links.length > 3">
+                <div v-if="dataset.meta.links.length > 3">
                     <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 
                         <Link
-                            v-if="dataset.prev_page_url !== null"
-                            :href="dataset.prev_page_url"
+                            v-if="dataset.links.prev !== null"
+                            :href="dataset.links.prev"
                             class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                             <span class="sr-only">Previous</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -76,8 +76,8 @@ defineProps({
                             </svg>
                         </Link>
 
-                        <template v-for="(link, key) in dataset.links">
-                            <div v-if="key !== 0 && key !== dataset.links.length - 1">
+                        <template v-for="(link, key) in dataset.meta.links">
+                            <div v-if="key !== 0 && key !== dataset.meta.links.length - 1">
                                 <div v-if="link.url === null" :key="key" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300" v-html="link.label" />
                                 <Link
                                     v-else
@@ -93,8 +93,8 @@ defineProps({
                         </template>
 
                         <Link
-                            v-if="dataset.next_page_url !== null"
-                            :href="dataset.next_page_url"
+                            v-if="dataset.links.next !== null"
+                            :href="dataset.links.next"
                             class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                             <span class="sr-only">Next</span>
                             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

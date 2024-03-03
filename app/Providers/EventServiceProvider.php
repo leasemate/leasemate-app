@@ -4,13 +4,16 @@ namespace App\Providers;
 
 use App\Listeners\CustomUpdateSyncedResource;
 use App\Models\Asset;
+use App\Models\Document;
+use App\Models\Lease;
 use App\Models\User;
 use App\Observers\AssetObserver;
+use App\Observers\DocumentObserver;
+use App\Observers\LeaseObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use Stancl\Tenancy\Events\SyncedResourceSaved;
 
 class EventServiceProvider extends ServiceProvider
@@ -35,6 +38,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         Asset::class => [
             AssetObserver::class
+        ],
+        Lease::class => [
+            LeaseObserver::class
+        ],
+        Document::class => [
+            DocumentObserver::class
         ]
     ];
 

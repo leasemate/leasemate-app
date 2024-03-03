@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Facades\LeasemateApi;
 use App\Models\Lease;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class LeaseObserver
 {
@@ -24,11 +26,19 @@ class LeaseObserver
     }
 
     /**
-     * Handle the Lease "deleted" event.
+     * Handle the Lease "deleted" event. (Archived)
      */
     public function deleted(Lease $lease): void
     {
-        LeasemateApi::archiveDocument($lease);
+        if( $lease->lease_document ){
+            $lease->lease_document->status = 'Archived';
+            $lease->lease_document->save();
+            $lease->lease_document->delete();
+
+            $archiveDocument = LeasemateApi::archiveDocument($lease);
+            Log::info('archiveDocument', [$lease]);
+            Log::info('archiveDocument', [$archiveDocument]);
+        }
     }
 
     /**
@@ -36,14 +46,28 @@ class LeaseObserver
      */
     public function restored(Lease $lease): void
     {
-        LeasemateApi::restoreDocument($lease);
+        $lease->lease_document_trashed->restore();
+        $lease->lease_document_trashed->status = 'Ready';
+        $lease->lease_document_trashed->save();
+
+        $restoreDocument = LeasemateApi::restoreDocument($lease);
+
+        \Log::info('restoreDocument', [$restoreDocument]);
     }
 
     /**
      * Handle the Lease "force deleted" event.
+     *
+     * Actual file deleted from S3 in DocumentObserver
      */
     public function forceDeleted(Lease $lease): void
     {
-        //
+        Log::info('lease observer: force delete document');
+
+        $lease->lease_document_trashed->forceDelete();
+
+        $deleteDocument = LeasemateApi::deleteDocument($lease);
+
+//        \Log::info('deleteFile', ['delete_vectors_response' => $deleteDocument]);
     }
 }

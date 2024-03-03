@@ -8,6 +8,7 @@ use App\Http\Resources\AssetResource;
 use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Models\Asset;
+use App\Models\Lease;
 use Illuminate\Support\Facades\DB;
 
 class AssetController extends Controller
@@ -61,14 +62,19 @@ class AssetController extends Controller
      */
     public function show(Asset $asset)
     {
-        $asset->load(['leases' => function ($query) {
-            $query->orderBy('created_at', 'desc')->withTrashed();
-        }]);
+
+        $leases = Lease::with(['lease_document' => function($query) {
+                $query->withTrashed();
+            }])
+            ->where('asset_id', $asset->id)
+            ->orderBy('created_at', 'desc')
+            ->withTrashed()
+            ->paginate(5);
 
         return inertia()->render('Assets/Show', [
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
-            'leases' => LeaseResource::collection($asset->leases),
+            'leases' => LeaseResource::collection($leases),
         ]);
     }
 

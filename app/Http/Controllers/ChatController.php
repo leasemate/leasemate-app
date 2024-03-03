@@ -23,7 +23,7 @@ class ChatController extends Controller
      */
     public function index(Asset $asset, Lease $lease, Chat $chat)
     {
-        $lease->load(['asset', 'user', 'chatsWithLastMessage']);
+        $lease->load(['asset', 'user', 'chats_with_last_message']);
 
         if($chat->exists) {
             $chat->load(['last_message', 'messages']);
@@ -33,7 +33,7 @@ class ChatController extends Controller
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
-            'chats' => ChatResource::collection($lease->chatsWithLastMessage),
+            'chats' => ChatResource::collection($lease->chats_with_last_message),
             'chat' => $chat->exists ? new ChatResource($chat) : null
         ]);
     }

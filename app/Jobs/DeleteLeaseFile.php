@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DeleteLeaseFile implements ShouldQueue
@@ -21,9 +22,7 @@ class DeleteLeaseFile implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(public Lease $lease)
-    {
-        //
-    }
+    { }
 
     /**
      * Execute the job.
@@ -36,21 +35,14 @@ class DeleteLeaseFile implements ShouldQueue
             'id',
             'user_id',
             'asset_id',
-            'og_filename',
         ]);
 
-        if(Storage::disk('s3')->exists($this->lease->filename)) {
-            Storage::disk('s3')->delete($this->lease->filename);
-        }
+        $lease_data['file_name'] = $this->lease->lease_document_trashed->name;
 
-        $delete_vectors_response = LeasemateApi::deleteDocument($this->lease);
-        \Log::info('deleteFile', ['delete_vectors_response' => $delete_vectors_response]);
-
-        \Log::info($delete_vectors_response->status());
-
+        Log::info('force delete lease');
         $this->lease->forceDelete();
 
-        \Log::info('Fire event LeaseFileDeleted');
+        \Log::info('Fire event LeaseFileDeleted', $lease_data);
         event(new LeaseFileDeleted($lease_data));
     }
 }

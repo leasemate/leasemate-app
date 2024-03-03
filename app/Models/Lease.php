@@ -17,8 +17,8 @@ class Lease extends Model
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'extracted_data' => 'json',
-        'detailed_extracted_data' => 'json',
+//        'extracted_data' => 'json',
+//        'detailed_extracted_data' => 'json',
     ];
 
     protected $dates = [
@@ -27,6 +27,14 @@ class Lease extends Model
     ];
 
     public function rentPerSqFt(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => is_null($value) ? null : $value / 100,
+            set: fn ($value) => is_null($value) ? null : $value * 100,
+        );
+    }
+
+    public function securityDeposit(): Attribute
     {
         return new Attribute(
             get: fn ($value) => is_null($value) ? null : $value / 100,
@@ -59,7 +67,7 @@ class Lease extends Model
         return $this->hasMany(Chat::class);
     }
 
-    public function chatsWithLastMessage()
+    public function chats_with_last_message()
     {
         return $this->hasMany(Chat::class)->with('last_message')->orderBy('updated_at', 'desc');
     }
@@ -68,4 +76,26 @@ class Lease extends Model
     {
         return $this->morphMany(Document::class, 'documentable');
     }
+
+    public function amendments()
+    {
+        return $this->documents()->where('collection_name', 'amendment');
+    }
+
+    public function lease_document()
+    {
+        return $this->morphOne(Document::class, 'documentable')
+            ->where('collection_name', Document::COLLECTION_LEASE);
+    }
+
+    public function lease_document_trashed()
+    {
+        return $this->lease_document()->withTrashed();
+    }
+
+    public function lease_details()
+    {
+        $this->hasOne(LeaseDetail::class);
+    }
+
 }

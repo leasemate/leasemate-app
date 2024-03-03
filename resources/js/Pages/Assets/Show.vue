@@ -22,6 +22,8 @@ import TableDropdown from "@/Components/TableDropdown.vue";
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import Pagination from "@/Components/Pagination.vue"
+import TextInput from "@/Components/TextInput.vue"
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -173,12 +175,12 @@ onMounted(() => {
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('LeaseFileDeleted', (e) => {
-            toast.success(e.lease_deleted.og_filename + ': Deleted successfully');
+            toast.success(e.lease_deleted.file_name + ': Deleted successfully');
             router.reload({
                 'preserveScroll': true,
             });
         })
-        .listen('FileStatusUpdate', (e) => {
+        .listen('LeaseProcessingUpdate', (e) => {
             router.reload({
                 'preserveScroll': true,
             });
@@ -221,12 +223,12 @@ onBeforeUnmount(() => {
         />
 
 
-        <Table>
+
+        <Table v-if="props.leases.data.length" containerClasses="pb-28">
 
             <template #head>
                 <tr>
                     <th scope="col" class="pl-4 pr-2 py-3">
-                        <Checkbox />
                     </th>
                     <th scope="col" class="px-6 py-3">
                     </th>
@@ -283,11 +285,40 @@ onBeforeUnmount(() => {
 <!--                      </div>-->
                     </th>
                 </tr>
+<!--                <tr>-->
+<!--                    <td scope="col" class="pl-4 pr-2 py-2 pt-0">-->
+<!--                        <Checkbox />-->
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+<!--                        <TextInput-->
+<!--                            type="text"-->
+<!--                            class="mt-1 block w-full"-->
+<!--                        />-->
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
+
+<!--                    </td>-->
+<!--                </tr>-->
             </template>
 
 
             <template #body>
-                <tr v-for="(lease, index) in props.leases" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+                <tr v-for="(lease, index) in props.leases.data" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
                     <td scope="row" class="pl-4 pr-2 py-4 space-x-2">
                         <Checkbox />
@@ -296,24 +327,24 @@ onBeforeUnmount(() => {
 
                         <span
                             class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(lease.status)">
+                            :class="getFileStatusClass(lease.lease_document.status)">
 
 
                               <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.status)">
+                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                            :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
                                   </template>
 
                                   <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(lease.status, 'PROCESS_CLASSES')"></span>
+                                        :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
 
                               </span>
 
-                              <span class="whitespace-nowrap">{{ lease.status }} {{ lease.status_progress }}</span>
+                              <span class="whitespace-nowrap">{{ lease.lease_document.status }} {{ lease.lease_document.status_progress }}</span>
 
                           </span>
 
@@ -333,12 +364,12 @@ onBeforeUnmount(() => {
 
                         <a
                             v-else
-                            :href="lease.filename"
+                            :href="lease.lease_document.file_name"
                             type="external"
                             target="_blank"
                             class="text-gray-500"
                         >
-                            {{ lease.og_filename }}
+                            {{ lease.lease_document.name }}
                         </a>
 
                     </td>
@@ -394,10 +425,9 @@ onBeforeUnmount(() => {
 
                                 </MenuItem>
 
-
                                 <MenuItem>
                                     <a
-                                        :href="lease.filename"
+                                        :href="lease.lease_document.file_name"
                                         target="_blank"
                                         :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
                                     >
@@ -416,7 +446,7 @@ onBeforeUnmount(() => {
                                     </a>
                                 </MenuItem>
 
-                                <MenuItem v-else-if="lease.status == 'Ready'">
+                                <MenuItem v-else-if="lease.lease_document.status == 'Ready'">
                                     <Button
                                         :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
                                         @click="archiveLease(lease)"
@@ -427,7 +457,7 @@ onBeforeUnmount(() => {
                                 </MenuItem>
 
                                 <MenuItem
-                                    :disabled="lease.is_deleting"
+                                    :disabled="lease.lease_document.is_deleting"
                                 >
 
                                     <Button
@@ -455,6 +485,16 @@ onBeforeUnmount(() => {
                 </tr>
             </template>
         </Table>
+
+
+        <div v-else class="mt-10 py-24 bg-gray-50 rounded-lg shadow-md">
+            <p class="text-center text-gray-600">Upload your first lease</p>
+        </div>
+
+        <Pagination
+            :dataset="props.leases"
+        />
+
 
         <Modal :show="confirmingLeaseDeletion" @close="closeModal">
             <div class="p-6">

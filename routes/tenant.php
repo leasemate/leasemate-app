@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Events\FileStatusUpdate;
+use App\Events\LeaseProcessingUpdate;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetLeaseController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -17,6 +17,8 @@ use App\Http\Controllers\FilesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Models\Document;
+use App\Models\Lease;
 use App\Models\User;
 use App\Notifications\FileProcessingUpdate;
 use Illuminate\Support\Facades\Route;
@@ -111,7 +113,7 @@ Route::middleware([
 //        dd($file);
 //        $file = new \App\Models\File();
 
-        event(new FileStatusUpdate($user->id, $file));
+        event(new LeaseProcessingUpdate($user->id, $file));
 
         $user->notify(new FileProcessingUpdate($file));
 
@@ -123,6 +125,16 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/dashboard', function () {
+
+        $lease = Lease::with('amendments')->find(8);
+
+//        dd($lease);
+
+        $s3 = "5ce3eb40-dd76-4a83-ba4d-a2285c85d094/leases/1/kec5bGvbInTIWgYZPripKCmZqrDBn1WWSMu8z2lC.pdf";
+        $document = Document::where('file_name', $s3)->with('documentable')->first();
+
+        dd($document);
+
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
