@@ -25,7 +25,7 @@ class LeasemateApi
         $this->baseData = [
             'tenant_id' => tenant('id'),
             'tenant_domain' => explode(".", tenant('domain'))[0],
-            'user_id' => (string) auth()->user()->id ?? null,
+            'user_id' => auth()->user()->id ?? null,
         ];
     }
 
