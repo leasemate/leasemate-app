@@ -126,14 +126,14 @@ Route::middleware([
 
     Route::get('/dashboard', function () {
 
-        $lease = Lease::with('amendments')->find(8);
+//        $lease = Lease::with('amendments')->find(8);
 
 //        dd($lease);
-
-        $s3 = "5ce3eb40-dd76-4a83-ba4d-a2285c85d094/leases/1/kec5bGvbInTIWgYZPripKCmZqrDBn1WWSMu8z2lC.pdf";
-        $document = Document::where('file_name', $s3)->with('documentable')->first();
-
-        dd($document);
+//
+//        $s3 = "5ce3eb40-dd76-4a83-ba4d-a2285c85d094/leases/1/kec5bGvbInTIWgYZPripKCmZqrDBn1WWSMu8z2lC.pdf";
+//        $document = Document::where('file_name', $s3)->with('documentable')->first();
+//
+//        dd($document);
 
         return Inertia::render('Dashboard');
     })->name('dashboard');
