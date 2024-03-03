@@ -26,8 +26,8 @@ class FileProcessingController extends Controller
     protected string $status;
     protected ?string $status_msg;
     protected ?int $status_progress;
-    protected array $basic_extracted_data;
-    protected array $detailed_extracted_data;
+    protected ?array $basic_extracted_data;
+    protected ?array $detailed_extracted_data;
 
     public function statusUpdate(Request $request)
     {
