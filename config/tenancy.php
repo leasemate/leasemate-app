@@ -20,6 +20,9 @@ return [
 //        env('APP_ENV') == 'local' ? "https://leasemate-app.us-1.sharedwithexpose.com" : null,
     ],
 
+    'queue_tenant_created' => env('QUEUE_TENANT_CREATED', false),
+    'queue_tenant_deleted' => env('QUEUE_TENANT_DELETED', false),
+
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
      * Their responsibility is making Laravel features tenant-aware.
