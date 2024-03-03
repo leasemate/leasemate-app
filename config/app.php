@@ -58,6 +58,10 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'central_domain' => env('APP_CENTRAL_DOMAIN', 'localhost'),
+
+    'website_url' => env('APP_WEBSITE', 'http://localhost'),
+
     'asset_url' => env('ASSET_URL'),
 
     /*
