@@ -24,8 +24,8 @@ class FileProcessingController extends Controller
     protected Tenant $tenant;
     protected string $s3_object;
     protected string $status;
-    protected string $status_msg;
-    protected string $status_progress;
+    protected ?string $status_msg;
+    protected ?int $status_progress;
     protected array $basic_extracted_data;
     protected array $detailed_extracted_data;
 
