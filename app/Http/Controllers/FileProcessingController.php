@@ -51,9 +51,9 @@ class FileProcessingController extends Controller
             \Log::info('Domain:', [tenant('domain')]);
             \Log::info($this->s3_object, [$this->status, $this->status_progress]);
 
-            $this->document = Document::where('file_name', $this->s3_object)->first();
+            $this->document = Document::where('file_name', $this->s3_object)->firstOrFail();
 
-            if (!$this->document) {
+            if ( !$this->document ) {
                 throw new \Exception('Document not found');
             }
 
