@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\LeaseAmendmentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -146,6 +147,7 @@ Route::middleware([
 
     Route::resource('assets', AssetController::class);
     Route::resource('assets.leases', AssetLeaseController::class)->scoped();
+    Route::resource('leases.amendments', LeaseAmendmentController::class)->scoped();
 
     Route::scopeBindings()->group(function () {
         Route::post('/assets/{asset}/leases/{lease}/archive', [AssetLeaseController::class, 'archive'])->name('assets.leases.archive');

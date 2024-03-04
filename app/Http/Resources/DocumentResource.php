@@ -23,9 +23,8 @@ class DocumentResource extends JsonResource
             'status_msg' => $this->status_msg,
             'name' => $this->name,
             'file_name' => Storage::disk('s3')->url($this->file_name),
-            'is_deleting' => ($this->status == 'Deleting'),
-//            'extracted_data' => $this->extracted_data,
-//            'detailed_extracted_data' => $this->detailed_extracted_data,
+            'is_deleting' => ($this->status === 'Deleting'),
+            'document_detail' => new DocumentDetailResource($this->whenLoaded('document_detail')),
         ];
     }
 }

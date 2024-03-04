@@ -36,7 +36,7 @@ class LeaseResource extends JsonResource
             'rent_schedule' => $this->getMonthlyBaseRent(),
             'is_archived' => $this->deleted_at ? true : false,
             'lease_document' => new DocumentResource($this->whenLoaded('lease_document')),
-            'amendments' => DocumentResource::collection($this->whenLoaded('amendments')),
+            'amendments' => AmendmentResource::collection($this->whenLoaded('amendments')),
         ];
     }
 

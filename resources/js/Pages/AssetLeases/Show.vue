@@ -8,6 +8,7 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Accordion from "primevue/accordion"
 import AccordionTab from "primevue/accordiontab"
+import SmallCard  from "@/Components/Lease/SmallCard.vue"
 import Hero from "@/Components/Lease/Hero.vue";
 import Associates from "@/Components/Lease/Associates.vue";
 import BoxIcon from "@/Components/BoxIcon.vue"
@@ -18,6 +19,9 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/d
 import "filepond/dist/filepond.min.css";
 import 'highlight.js/styles/monokai.css';
 import { fileStatusClass } from "@/Composables/fileStatusClass.js"
+import LeaseDetail from "@/Pages/AssetLeases/LeaseDetail.vue"
+import BasicTerms from "@/Pages/AssetLeases/BasicTerms.vue"
+import RentSchedule from "@/Pages/AssetLeases/RentSchedule.vue"
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -31,24 +35,22 @@ const props = defineProps({
 const { getFileStatusClass } = fileStatusClass();
 
 const FilePond = VueFilePond(FilePondPluginFileValidateType);
+const pond = ref(null);
+
 let serverResponse = '';
 
 setOptions({
   credits: [],
   required: true,
-  allowMultiple: false,
+  allowMultiple: true,
   allowRevert: false,
   acceptedFileTypes: [
     'application/pdf',
-    // 'image/png',
-    // 'image/jpeg',
-    // 'image/jpg',
-    // 'image/gif',
   ],
   // files: files,
   server: {
     process: {
-      url: route('assets.leases.store-amendment', [props.asset, props.lease]),
+      url: route('leases.amendments.store', [props.lease]),
       headers: {
         'Accept': 'application/json',
         'X-CSRF-TOKEN': page.props.csrf,
@@ -80,8 +82,16 @@ setOptions({
 
 const handleOnProcessFile = (error, file) => {
     console.log("on process file");
+    //
+    // if(pond.value) {
+    //     pond.value.removeFile(file.id);
+    // }
+    // console.log(pond.value)
+    // console.log(file)
+
     router.reload({ only: ['lease'] });
 }
+
 
 onMounted(() => {
 
@@ -118,10 +128,6 @@ onBeforeUnmount(() => {
 
         <Associates :associates="associates" />
 
-        <div class="flex justify-start mb-4 space-x-4">
-
-        </div>
-
         <div class="grid grid-cols-12 gap-4">
 
             <div class="col-span-6">
@@ -133,138 +139,67 @@ onBeforeUnmount(() => {
 
             </div>
             <div class="col-span-6 flex flex-col">
-                <FilePond
-                    name="lease_amendment"
-                    ref="pond"
-                    @processfile="handleOnProcessFile"
-                    class-name="my-file-upload"
-                    label-idle="Amendment Drop (One at a time) or <span class='filepond--label-action'>Browse</span>"
-                />
+                <div class="max-h-36 overflow-auto h-36">
+                    <FilePond
+                        name="lease_amendment"
+                        ref="pond"
+                        @processfile="handleOnProcessFile"
+                        class-name="my-file-upload"
+                        label-idle="Amendment Drop or <span class='filepond--label-action'>Browse</span>"
+                    />
+                </div>
                 <div class="ml-auto mt-4">
-                <PrimaryLink
-                    class="bg-indigo-600"
-                    :href="route('assets.leases.chats.index', [asset, lease])">
-                    Leasemate<BoxIcon class="bx-comment-detail ml-2" />
-                </PrimaryLink>
+                    <PrimaryLink
+                        class="bg-indigo-600"
+                        :href="route('assets.leases.chats.index', [asset, lease])">
+                        Leasemate<BoxIcon class="bx-comment-detail ml-2" />
+                    </PrimaryLink>
                 </div>
             </div>
         </div>
-
 
         <div class="col-span-6 mt-2">
 
             <TabView :scrollable="true">
 
-                <TabPanel
-                    class="p-0"
-                >
+                <TabPanel>
 
                     <template #header>
                         <div class="flex align-items-center gap-2">
-                            <h5 class="font-bold white-space-nowrap">Current Lease</h5>
+                            <h6 class="font-bold white-space-nowrap">Current Lease</h6>
                         </div>
                     </template>
 
+
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-6 rounded-lg shadow-md border p-4">
-                            <h5 class="text-indigo-500">Basic Terms</h5>
 
-                            <div class="p-2 bg-white">
+                        <SmallCard>
 
-                                <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                    <div>
-                                        <div class="font-bold text-gray-900">Tenant</div>
-                                        <div class="text-sm text-gray-600">{{ lease.tenant ?? "--" }}</div>
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-gray-900">Landlord</div>
-                                        <div class="text-sm text-gray-600">{{ lease.landlord ?? "--" }}</div>
-                                    </div>
+                            <template #header>
+                                Basic Terms
+                            </template>
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Premise Address</div>
-                                        <div class="text-sm text-gray-600">{{ lease.premise_address ?? "--" }}</div>
-                                    </div>
+                            <BasicTerms
+                                :lease="lease"
+                            />
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Building Address</div>
-                                        <div class="text-sm text-gray-600">{{ lease.building_address ?? "--" }}</div>
-                                    </div>
+                        </SmallCard>
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Rentable Sq. Ft.</div>
-                                        <div class="text-sm text-gray-600">{{ filters.formatNumber(lease.rentable_sqft) ?? "--" }}</div>
-                                    </div>
+                        <SmallCard>
 
-                                    <div>
-                                        <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                            <div>
-                                                <div class="font-bold text-gray-600">Term</div>
-                                                <div class="text-sm text-gray-600">{{ lease.term ? lease.term+" Months" : "--" }}</div>
-                                            </div>
-                                            <div>
-                                                <div class="font-bold text-gray-600">Abatement</div>
-                                                <div class="text-sm text-gray-600">{{ lease.abatement ? lease.abatement+" Months" : "--" }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <template #header>
+                                Rent Schedule
+                            </template>
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Pro Rata Share</div>
-                                        <div class="text-sm text-gray-600">{{ lease.pro_rata_share ?? "--" }}</div>
-                                    </div>
-                                    <div>
-                                        <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                            <div>
-                                                <div class="font-bold text-gray-600">Exp. Date</div>
-                                                <div class="text-sm text-gray-600">{{ lease.end_date ?? "--" }}</div>
-                                            </div>
-                                            <div>
-                                                <div class="font-bold text-gray-600">Sec. Deposit</div>
-                                                <div class="text-sm text-gray-600">{{ filters.formatMoney(lease.security_deposit) ?? "--" }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <RentSchedule
+                                :lease="lease"
+                            />
 
-                                </div>
+                        </SmallCard>
 
-                            </div>
-
-                        </div>
-
-                        <div class="col-span-6 rounded-lg shadow-md border p-4">
-
-                            <h5 class="text-indigo-500">Rent Schedule</h5>
-                            <div class="p-2 bg-white">
-
-                                <Table class="pb-0" :data="lease.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
-
-                                    <template #head>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">Start Date</th>
-                                            <th scope="col" class="px-6 py-3">End Date</th>
-                                            <th scope="col" class="px-6 py-3">Amount</th>
-                                            <th scope="col" class="px-6 py-3">per SQFT</th>
-                                        </tr>
-
-                                    </template>
-
-                                    <template #body>
-
-                                        <tr v-for="base_rent in lease.rent_schedule" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
-                                            <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total, 0) }}</td>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_per_square_foot) }}</td>
-                                        </tr>
-                                    </template>
-
-                                </Table>
-
-                            </div>
-
-                        </div>
                     </div>
+
+                    <LeaseDetail />
 
 <!--                    <div class="json-container">-->
 
@@ -277,225 +212,85 @@ onBeforeUnmount(() => {
 <!--                    </div>-->
 
                 </TabPanel>
-                <TabPanel v-if="lease.amendments">
+                <TabPanel v-if="lease.amendments.length">
 
                     <template #header>
                         <div class="flex align-items-center gap-2">
-                            <span class="font-bold white-space-nowrap">Original Lease Abstract</span>
+                            <h6 class="font-bold white-space-nowrap">Original Lease Abstract</h6>
                         </div>
                     </template>
 
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-6 rounded-lg shadow-md border p-6">
-                            <h5>Basic Terms</h5>
+                        <SmallCard>
 
-                            <div class="p-4 bg-white">
+                            <template #header>
+                                Basic Terms
+                            </template>
 
-                                <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                    <div>
-                                        <div class="font-bold text-gray-900">Tenant</div>
-                                        <div class="text-sm text-gray-600">{{ lease.extracted_data.lessee_tenant??"--" }}</div>
-                                    </div>
-                                    <div>
-                                        <div class="font-bold text-gray-900">Landlord</div>
-                                        <div class="text-xs text-gray-600">{{ lease.extracted_data.lessor_landlord??"--" }}</div>
-                                    </div>
+                            <BasicTerms
+                                :lease="lease"
+                            />
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Premises Address</div>
-                                        <div class="text-xs text-gray-600">{{ lease.extracted_data.premises_address??"--" }}</div>
-                                    </div>
+                        </SmallCard>
 
-                                    <div>
-                                        <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                                            <div>
-                                                <div class="font-bold text-gray-600">Lease Term</div>
-                                                <div class="text-xs text-gray-600">{{ lease.extracted_data.lease_term ? lease.extracted_data.lease_term+" Months" : "--" }}</div>
-                                            </div>
-                                            <div>
-                                                <div class="font-bold text-gray-600">Expiration Date</div>
-                                                <div class="text-xs text-gray-600">{{ lease.extracted_data.expiration_date??"--" }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <SmallCard>
 
-                                    <div>
-                                        <div class="font-bold text-gray-600">Rentable Sq. Ft.</div>
-                                        <div class="text-xs text-gray-600">{{ filters.formatNumber(lease.extracted_data.rentable_square_feet)??"--" }}</div>
-                                    </div>
+                            <template #header>
+                                Rent Schedule
+                            </template>
 
-                                </div>
+                            <RentSchedule
+                                :lease="lease"
+                            />
 
-                            </div>
-
-                        </div>
-
-                        <div class="col-span-6 rounded-lg shadow-md border p-6">
-                            <h5>Rent Schedule</h5>
-                            <div class="p-4 bg-white">
-
-                                <Table class="mt-8" :data="lease.extracted_data.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
-
-                                    <template #head>
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">Start Date</th>
-                                            <th scope="col" class="px-6 py-3">End Date</th>
-                                            <th scope="col" class="px-6 py-3">Amount</th>
-                                            <th scope="col" class="px-6 py-3">per SQFT</th>
-                                        </tr>
-
-                                    </template>
-
-                                    <template #body>
-                                        <tr v-for="base_rent in lease.monthly_base_rent" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
-                                            <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total) }}</td>
-                                            <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_per_square_foot) }}</td>
-                                        </tr>
-                                    </template>
-
-                                </Table>
-                            </div>
-                        </div>
+                        </SmallCard>
                     </div>
+
+                    <LeaseDetail />
 
                 </TabPanel>
 
-                <TabPanel v-if="lease.documents" v-for="(document, idx) in lease.documents" :key="idx">
+                <TabPanel v-if="lease.amendments" v-for="(amendment, idx) in lease.amendments" :key="idx">
                     <template #header>
                         <div class="flex align-items-center gap-2">
 
                             <span class="inline-flex items-center text-xs font-medium">
                                 <span class="relative flex h-2.5 w-2.5">
-                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(document.status)">
+                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.document.status)">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                            :class="getFileStatusClass(document.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(amendment.document.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(document.status, 'PROCESS_CLASSES')"></span>
+                                            :class="getFileStatusClass(amendment.document.status, 'PROCESS_CLASSES')"></span>
                                   </template>
                                   <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(document.status, 'PROCESS_CLASSES')"></span>
+                                        :class="getFileStatusClass(amendment.document.status, 'PROCESS_CLASSES')"></span>
                                 </span>
                             </span>
 
                             <span class="font-bold white-space-nowrap">
-                                <span
-                                    :class="{ 'text-red-400': document.status === 'Failed' }"
+                                <h6
+                                    :class="{ 'text-red-400': amendment.document.status === 'Failed' }"
                                 >
-                                    Amendment #{{ ++idx }} <small class="text-gray-400">5/25/23</small>
-                                </span>
+                                    Amendment #{{ ++idx }} <small class="text-gray-400">{{ amendment.execution_date }}</small>
+                                </h6>
                             </span>
                         </div>
                     </template>
-                    <p class="m-0">
 
-                        <h4>Processing...</h4>
+                    <div class="min-h-96">
+                        <p class="m-0">
 
-                        <h5>{{ document.uuid }}</h5>
-                    </p>
+                            <h4>Processing...</h4>
+
+                            <h5>{{ amendment.document.uuid }}</h5>
+                        </p>
+                    </div>
+
+
                 </TabPanel>
 
             </TabView>
 
-            <div class="m-6 mt-0 p-4 pt-0 rounded-lg shadow-md border">
-
-
-                <Accordion :multiple="true" :activeIndex="[0]">
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Option to Extend</h5>
-                        </template>
-                        <p class="ml-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Right of First Offer</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Right of First Refusal</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">TI Allowance</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Insurance Requirements</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Tenant Maintenance</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Landlord Maintenance</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Assignment &amp; Subletting</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                    <AccordionTab>
-                        <template #header>
-                            <h5 class="text-indigo-600">Holding Over</h5>
-                        </template>
-                        <p class="m-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                            enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-                        </p>
-                    </AccordionTab>
-
-                </Accordion>
-
-            </div>
             <div class="json-container">
 
             <h3>Raw Extracted Data</h3>

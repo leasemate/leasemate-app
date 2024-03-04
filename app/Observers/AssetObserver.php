@@ -13,11 +13,11 @@ class AssetObserver
      */
     public function created(Asset $asset): void
     {
-        $response = LeasemateApi::registerAsset($asset);
-
-        if ($response->failed()) {
-            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
-        }
+//        $response = LeasemateApi::registerAsset($asset);
+//
+//        if ($response->failed()) {
+//            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+//        }
     }
 
     /**

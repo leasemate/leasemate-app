@@ -63,9 +63,11 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
 
-        $leases = Lease::with(['lease_document' => function($query) {
+        $leases = Lease::with([
+            'lease_document' => function($query) {
                 $query->withTrashed();
-            }])
+            },
+            ])
             ->where('asset_id', $asset->id)
             ->orderBy('created_at', 'desc')
             ->withTrashed()

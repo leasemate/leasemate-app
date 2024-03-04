@@ -94,19 +94,26 @@ class AssetLeaseController extends Controller
      */
     public function show(Asset $asset, Lease $lease, Chat $chat)
     {
+        $lease->load(['asset', 'user', 'chats_with_last_message', 'lease_document.document_detail']);
+        $lease->load([
+            'amendments' => function ($query) {
+                return $query->orderBy('execution_date', 'desc');
+            },
+            'amendments.document.document_detail'
+        ]);
 
-        $lease->load(['asset', 'user', 'chats_with_last_message', 'lease_document']);
-
-        if($chat->exists) {
-            $chat->load(['last_message', 'messages']);
-        }
+//        if($chat->exists) {
+//            $chat->load(['last_message', 'messages']);
+//        }
+//
+//        dd($lease);
 
         return inertia()->render('AssetLeases/Show', [
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
-            'chats' => ChatResource::collection($lease->chats_with_last_message),
-            'chat' => $chat->exists?new ChatResource($chat):null
+//            'chats' => ChatResource::collection($lease->chats_with_last_message),
+//            'chat' => $chat->exists?new ChatResource($chat):null
         ]);
     }
 

@@ -1,1 +1,0 @@
-import{o,d as s,E as a}from"./app-ca0a0686.js";const n=["type"],l={__name:"Button",props:{type:{type:String,default:"button"}},setup(t){return(e,r)=>(o(),s("button",{type:t.type,class:"",disabled:"disabled"},[a(e.$slots,"default")],8,n))}};export{l as _};

@@ -25,7 +25,7 @@ const props = defineProps({
                 >Create Asset</PrimaryLink>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <div v-if="assets" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
                 <!-- Repeat this block for each asset -->
                 <div  v-for="asset in assets" class="border border-gray-200 rounded-lg shadow-md overflow-hidden">
@@ -43,6 +43,11 @@ const props = defineProps({
 
                 <!-- End of asset block -->
             </div>
+
+        <div v-else class="mt-10 py-24 bg-gray-50 rounded-lg shadow-md">
+            <p class="text-center text-gray-600">Create an Asset.</p>
+        </div>
+
 
     </AuthenticatedLayout>
 

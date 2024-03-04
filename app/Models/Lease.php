@@ -76,11 +76,6 @@ class Lease extends Model
         return $this->morphMany(Document::class, 'documentable');
     }
 
-    public function amendments()
-    {
-        return $this->documents()->where('collection_name', Document::COLLECTION_AMENDMENT);
-    }
-
     public function lease_document()
     {
         return $this->morphOne(Document::class, 'documentable')
@@ -92,9 +87,16 @@ class Lease extends Model
         return $this->lease_document()->withTrashed();
     }
 
-    public function lease_details()
+    public function lease_detail()
     {
         $this->hasOne(LeaseDetail::class);
     }
+
+    public function amendments()
+    {
+        return $this->hasMany(Amendment::class);
+    }
+
+
 
 }
