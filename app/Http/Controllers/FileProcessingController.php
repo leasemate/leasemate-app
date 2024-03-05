@@ -96,20 +96,25 @@ class FileProcessingController extends Controller
 
         if ($this->basic_extracted_data && !empty($this->basic_extracted_data['classification'])) {
 
+            $rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
+
             $this->lease->tenant = !empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown';
             $this->lease->landlord = !empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown';
             $this->lease->premise_address = !empty($this->basic_extracted_data['lessee_tenant_address']) ? $this->basic_extracted_data['lessee_tenant_address'] : null;
             $this->lease->building_address = !empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null;
             $this->lease->landlord_address = !empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null;
             $this->lease->gla = !empty($this->basic_extracted_data['rentable_square_feet']) ? $this->basic_extracted_data['rentable_square_feet'] : null;
+
             $this->lease->start_date = !empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
-            $this->lease->end_date = !empty($this->basic_extracted_data['expiration_date']) ? Carbon::parse($this->basic_extracted_data['expiration_date']) : null;
+            $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
+            $this->lease->rent_schedule = $rent_schedule;
+            
             $this->lease->rent_per_sqft = !empty($this->basic_extracted_data['rent_per_sqft']) ? (int)$this->basic_extracted_data['rent_per_sqft'] : null;
-            $this->lease->term = !empty($this->basic_extracted_data['term']) ? (int)$this->basic_extracted_data['term'] : null;
+            $this->lease->term = !empty($this->basic_extracted_data['lease_term']) ? (int)$this->basic_extracted_data['lease_term'] : null;
             $this->lease->abatement = !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null;
             $this->lease->pro_rata_share = !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null;
             $this->lease->security_deposit = !empty($this->basic_extracted_data['security_deposit']) ? (int)$this->basic_extracted_data['security_deposit'] : null;
-            $this->lease->rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? (int)$this->basic_extracted_data['monthly_base_rent'] : null;
+
         }
 
         $this->lease->save();
