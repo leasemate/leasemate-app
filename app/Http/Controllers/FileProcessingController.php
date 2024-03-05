@@ -109,7 +109,7 @@ class FileProcessingController extends Controller
             $this->lease->abatement = !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null;
             $this->lease->pro_rata_share = !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null;
             $this->lease->security_deposit = !empty($this->basic_extracted_data['security_deposit']) ? (int)$this->basic_extracted_data['security_deposit'] : null;
-            $this->lease->rent_schedule = x!empty($this->basic_extracted_data['monthly_base_rent']) ? (int)$this->basic_extracted_data['monthly_base_rent'] : null;
+            $this->lease->rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? (int)$this->basic_extracted_data['monthly_base_rent'] : null;
         }
 
         $this->lease->save();
