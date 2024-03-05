@@ -108,7 +108,7 @@ class FileProcessingController extends Controller
             $this->lease->start_date = !empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
             $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
             $this->lease->rent_schedule = $rent_schedule;
-            
+
             $this->lease->rent_per_sqft = !empty($this->basic_extracted_data['rent_per_sqft']) ? (int)$this->basic_extracted_data['rent_per_sqft'] : null;
             $this->lease->term = !empty($this->basic_extracted_data['lease_term']) ? (int)$this->basic_extracted_data['lease_term'] : null;
             $this->lease->abatement = !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null;
@@ -120,14 +120,14 @@ class FileProcessingController extends Controller
         $this->lease->save();
 
         if( $this->detailed_extracted_data ) {
-          $this->lease->lease_details()->create([
-              'option_to_extend' => !empty($this->detailed_extracted_data['option_to_extend']) ? $this->detailed_extracted_data['option_to_extend'] : null,
-              'right_of_first_offer' => !empty($this->detailed_extracted_data['right_of_first_offer']) ? $this->detailed_extracted_data['right_of_first_offer'] : null,
-              'right_of_first_refusal' => !empty($this->detailed_extracted_data['right_of_first_refusal']) ? $this->detailed_extracted_data['right_of_first_refusal'] : null,
-              'tenant_improvement_allowance' => !empty($this->detailed_extracted_data['tenant_improvement_allowance']) ? $this->detailed_extracted_data['tenant_improvement_allowance'] : null,
-              'tenant_insurance_requirements' => !empty($this->detailed_extracted_data['tenant_insurance_requirements']) ? $this->detailed_extracted_data['tenant_insurance_requirements'] : null,
-              'tenant_maintenance_obligations' => !empty($this->detailed_extracted_data['tenant_maintenance_obligations']) ? $this->detailed_extracted_data['tenant_maintenance_obligations'] : null,
-              'landlord_maintenance_obligations' => !empty($this->detailed_extracted_data['landlord_maintenance_obligations']) ? $this->detailed_extracted_data['landlord_maintenance_obligations'] : null,
+          $this->lease->lease_detail()->create([
+              'option_to_extend' => !empty($this->detailed_extracted_data['option to extend']) ? $this->detailed_extracted_data['option to extend'] : null,
+              'right_of_first_offer' => !empty($this->detailed_extracted_data['right of first offer']) ? $this->detailed_extracted_data['right of first offer'] : null,
+              'right_of_first_refusal' => !empty($this->detailed_extracted_data['right of first refusal']) ? $this->detailed_extracted_data['right of first refusal'] : null,
+              'tenant_improvement_allowance' => !empty($this->detailed_extracted_data['tenant improvement allowance']) ? $this->detailed_extracted_data['tenant improvement allowance'] : null,
+              'tenant_insurance_requirements' => !empty($this->detailed_extracted_data['tenant insurance requirements']) ? $this->detailed_extracted_data['tenant insurance requirements'] : null,
+              'tenant_maintenance_obligations' => !empty($this->detailed_extracted_data['tenant maintenance obligations']) ? $this->detailed_extracted_data['tenant maintenance obligations'] : null,
+              'landlord_maintenance_obligations' => !empty($this->detailed_extracted_data['landlord maintenance obligations']) ? $this->detailed_extracted_data['landlord maintenance obligations'] : null,
               'assignment_subletting' => !empty($this->detailed_extracted_data['assignment_subletting']) ? $this->detailed_extracted_data['assignment_subletting'] : null,
               'holding_over' => !empty($this->detailed_extracted_data['holding_over']) ? $this->detailed_extracted_data['holding_over'] : null,
           ]);
