@@ -120,6 +120,7 @@ class LeasemateApi
         $post_data =[
             'classification' => $classification,
             'asset_id' => (int) $asset->id,
+            'asset_name' => (string) $asset->name,
             's3_bucket' => config('filesystems.disks.s3.bucket'),
             's3_object' => $storedName,
         ];

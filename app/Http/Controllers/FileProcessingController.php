@@ -97,7 +97,7 @@ class FileProcessingController extends Controller
         if ($this->basic_extracted_data && !empty($this->basic_extracted_data['classification'])) {
 
             $this->lease->tenant = !empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown';
-            $this->lease->landord = !empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown';
+            $this->lease->landlord = !empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown';
             $this->lease->premise_address = !empty($this->basic_extracted_data['lessee_tenant_address']) ? $this->basic_extracted_data['lessee_tenant_address'] : null;
             $this->lease->building_address = !empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null;
             $this->lease->landlord_address = !empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null;
