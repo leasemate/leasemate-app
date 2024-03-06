@@ -89,7 +89,7 @@ class Lease extends Model
 
     public function lease_detail()
     {
-        $this->hasOne(LeaseDetail::class);
+        return $this->hasOne(LeaseDetail::class);
     }
 
     public function amendments()
