@@ -68,6 +68,9 @@ class LeaseObserver
 
         $deleteDocument = LeasemateApi::deleteDocument($lease);
 
-//        \Log::info('deleteFile', ['delete_vectors_response' => $deleteDocument]);
+        Log::info('After deleteDocument..................');
+        Log::info('delete doc response..................');
+
+        Log::info($deleteDocument);
     }
 }

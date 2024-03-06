@@ -73,8 +73,8 @@ class LeasemateApi
         Log::info('SERVICE: Delete tenant:');
 
         $post_data = [
-            'tenant_id' => $tenant->id,
-            'tenant_domain' => $this->getSubDomain($tenant->domain),
+            'tenant_id' => (string) $tenant->id,
+            'tenant_domain' => (string) $this->getSubDomain($tenant->domain),
         ];
 
         return $this->send('delete',"/tenants/{$tenant->id}", $post_data);
@@ -87,8 +87,8 @@ class LeasemateApi
         Log::info('SERVICE: Registering asset:');
 
         $post_data = [
-            'asset_id' => (string) $asset->id,
-            'asset_name' => $asset->name,
+            'asset_id' => (int) $asset->id,
+            'asset_name' => (string) $asset->name,
         ];
 
         return $this->send('post',"/assets", $post_data);
@@ -180,7 +180,9 @@ class LeasemateApi
 
         $payload = array_merge($this->baseData, $data);
 
-        Log::info("SEND REQUEST: {$method}: {$endpoint} | method: {$callingFunction}", ['post_data:', $payload]);
+        Log::info("SEND REQUEST: {$method}: {$endpoint} | method: {$callingFunction}", ['data:', $payload]);
+
+        Log::info($this->getEndpoint($endpoint));
 
         return $this->makeRequest()->$method($this->getEndpoint($endpoint), $payload);
     }

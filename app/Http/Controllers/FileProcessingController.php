@@ -120,6 +120,9 @@ class FileProcessingController extends Controller
         $this->lease->save();
 
         if( $this->detailed_extracted_data ) {
+
+            Log::info($this->lease);
+
           $this->lease->lease_detail()->create([
               'option_to_extend' => !empty($this->detailed_extracted_data['option to extend']) ? $this->detailed_extracted_data['option to extend'] : null,
               'right_of_first_offer' => !empty($this->detailed_extracted_data['right of first offer']) ? $this->detailed_extracted_data['right of first offer'] : null,
