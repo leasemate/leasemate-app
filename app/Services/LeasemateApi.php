@@ -144,14 +144,14 @@ class LeasemateApi
     {
         Log::info('REAI SERVICE: Restore file', ['lease_id:', $lease->id]);
 
-        return $this->send("post", "/document/{$lease->id}/restore/");
+        return $this->send("post", "/documents/{$lease->id}/restore/");
     }
 
     public function archiveDocument($lease)
     {
         Log::info('REAI SERVICE: Archiving file', ['lease_id:', $lease->id]);
 
-        return $this->send("post", "/document/{$lease->id}/archive/");
+        return $this->send("post", "/documents/{$lease->id}/archive/");
     }
 
 
@@ -159,7 +159,7 @@ class LeasemateApi
     {
         Log::info('REAI SERVICE: Deleting file', ['lease_id:', $lease->id]);
 
-        return $this->send("delete", "/document/{$lease->id}");
+        return $this->send("delete", "/documents/{$lease->id}");
     }
 
     ####################################################
