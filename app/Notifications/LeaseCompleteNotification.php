@@ -40,7 +40,7 @@ class LeaseCompleteNotification extends Notification
     {
         return [
             'notification_type_name'=>'File Processing',
-            'file_name' => $this->data['og_filename'],
+            'file_name' => $this->data['file_name'],
             'file_status' => $this->data['status'],
             'file_updated_at' => $this->data['updated_at'],
         ];

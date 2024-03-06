@@ -60,10 +60,13 @@ class FileProcessingController extends Controller
             $this->document->status = ($this->status == 'Completed' ? 'Ready' : $this->status);
             $this->document->status_msg = $this->status_msg ?? null;
             $this->document->status_progress = $this->status_progress ?? 0;
-            $this->document->document_detail()->create([
-                'basic_extracted_data' => $this->detailed_extracted_data,
-                'detailed_extracted_data' => $this->detailed_extracted_data,
-            ]);
+
+            if( $this->basic_extracted_data || $this->detailed_extracted_data) {
+                $this->document->document_detail()->create([
+                    'basic_extracted_data' => $this->basic_extracted_data,
+                    'detailed_extracted_data' => $this->detailed_extracted_data,
+                ]);
+            }
 
             $this->document->save();
 
@@ -76,7 +79,6 @@ class FileProcessingController extends Controller
             } elseif( $this->document->collection_name === Document::COLLECTION_AMENDMENT ) {
 
                 $this->processAmendment();
-
             }
 
             return response()->json(['status' => 'success']);
@@ -120,8 +122,6 @@ class FileProcessingController extends Controller
 
         if( $this->detailed_extracted_data ) {
 
-            Log::info($this->lease);
-
           $this->lease->lease_detail()->create([
               'option_to_extend' => !empty($this->detailed_extracted_data['option_to_extend']) ? $this->detailed_extracted_data['option_to_extend'] : null,
               'right_of_first_offer' => !empty($this->detailed_extracted_data['right_of_first_offer']) ? $this->detailed_extracted_data['right_of_first_offer'] : null,
@@ -143,6 +143,8 @@ class FileProcessingController extends Controller
             'status_progress',
             'updated_at',
         ]);
+
+        $lease_payload['file_name'] = $this->document->file_name;
 
         Log::info('Fire event: FileProcessed:', $lease_payload);
         event(new LeaseProcessingUpdate($this->lease->user_id, $lease_payload));
