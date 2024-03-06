@@ -21,7 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Models\Document;
 use App\Models\Lease;
 use App\Models\User;
-use App\Notifications\FileProcessingUpdate;
+use App\Notifications\LeaseCompleteNotification;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -116,7 +116,7 @@ Route::middleware([
 
         event(new LeaseProcessingUpdate($user->id, $file));
 
-        $user->notify(new FileProcessingUpdate($file));
+        $user->notify(new LeaseCompleteNotification($file));
 
         return 'done';
     });

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FileProcessingUpdate extends Notification
+class LeaseCompleteNotification extends Notification
 {
 //    use Queueable;
 
