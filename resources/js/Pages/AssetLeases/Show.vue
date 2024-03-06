@@ -201,7 +201,18 @@ onBeforeUnmount(() => {
 
                     <LeaseDetail />
 
-<!--                    <div class="json-container">-->
+                    <div class="json-container">
+
+                        <h3>Raw Extracted Data</h3>
+                        <h4>Basic Extracted Data</h4>
+                        <pre>{{ lease.lease_document.document_detail.basic_extracted_data ?? "--" }}</pre>
+                        <h4>Detailed Extracted Data</h4>
+                        <pre>{{ lease.lease_document.document_detail.detailed_extracted_data ?? "--" }}</pre>
+
+                    </div>
+
+
+                    <!--                    <div class="json-container">-->
 
 <!--                        <h3>Raw Extracted Data</h3>-->
 <!--                        <h4>Basic Extracted Data</h4>-->
@@ -290,16 +301,6 @@ onBeforeUnmount(() => {
                 </TabPanel>
 
             </TabView>
-
-            <div class="json-container">
-
-            <h3>Raw Extracted Data</h3>
-            <h4>Basic Extracted Data</h4>
-            <pre>{{ lease.extracted_data??"--" }}</pre>
-            <h4>Detailed Extracted Data</h4>
-            <pre>{{ lease.detailed_extracted_data??"--" }}</pre>
-
-            </div>
 
         </div>
 
