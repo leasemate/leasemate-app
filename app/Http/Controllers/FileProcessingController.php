@@ -97,8 +97,6 @@ class FileProcessingController extends Controller
 
         if ($this->basic_extracted_data && !empty($this->basic_extracted_data['classification'])) {
 
-            $rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
-
             $this->lease->tenant = !empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown';
             $this->lease->landlord = !empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown';
             $this->lease->premise_address = !empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null;
@@ -112,8 +110,13 @@ class FileProcessingController extends Controller
                 Log::error($e);
             }
 
-            $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
-            $this->lease->rent_schedule = $rent_schedule;
+            try {
+                $rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
+                $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
+                $this->lease->rent_schedule = $rent_schedule;
+            } catch (\Exception $e) {
+                Log::error($e);
+            }
 
             $this->lease->rent_per_sqft = !empty($this->basic_extracted_data['rent_per_sqft']) ? (int)$this->basic_extracted_data['rent_per_sqft'] : null;
             $this->lease->term = !empty($this->basic_extracted_data['lease_term']) ? (int)$this->basic_extracted_data['lease_term'] : null;
