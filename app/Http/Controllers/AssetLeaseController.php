@@ -108,6 +108,13 @@ class AssetLeaseController extends Controller
 //
 //        dd($lease);
 
+        if( $lease->amendments->count() ) {
+
+            // if there are amendments, get the original data from teh lease document detail object
+            $lease->getOriginalLeaseDetail();
+
+        }
+
         return inertia()->render('AssetLeases/Show', [
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
