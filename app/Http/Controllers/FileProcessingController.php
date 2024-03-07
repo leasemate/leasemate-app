@@ -106,7 +106,12 @@ class FileProcessingController extends Controller
             $this->lease->landlord_address = !empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null;
             $this->lease->gla = !empty($this->basic_extracted_data['rentable_square_feet']) ? $this->basic_extracted_data['rentable_square_feet'] : null;
 
-            $this->lease->start_date = !empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
+            try {
+                $this->lease->start_date = !empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
+            } catch (\Exception $e) {
+                Log::error($e);
+            }
+
             $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
             $this->lease->rent_schedule = $rent_schedule;
 
