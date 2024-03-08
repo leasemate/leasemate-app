@@ -25,7 +25,11 @@ class AssetObserver
      */
     public function updated(Asset $asset): void
     {
-        //
+        $response = LeasemateApi::updateAsset($asset);
+
+        if ($response->failed()) {
+            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+        }
     }
 
     /**
