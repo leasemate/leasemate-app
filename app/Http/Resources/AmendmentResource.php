@@ -16,7 +16,7 @@ class AmendmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'execution_date' => $this->execution_date->format('m/d/y'),
+            'execution_date' => $this->execution_date ? $this->execution_date->format('m/d/y') : null,
             'document' => new DocumentResource($this->whenLoaded('document')),
         ];
     }
