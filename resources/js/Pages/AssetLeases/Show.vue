@@ -99,7 +99,10 @@ onMounted(() => {
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('LeaseProcessingUpdate', (e) => {
-            router.reload({ only: ['lease'] });
+
+            console.log(e);
+            
+            router.reload();
         });
 
 });
