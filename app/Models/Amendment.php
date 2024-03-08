@@ -9,8 +9,15 @@ class Amendment extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function document()
     {
         return $this->morphOne(Document::class, 'documentable');
+    }
+
+    public function lease()
+    {
+        return $this->belongsTo(Lease::class);
     }
 }
