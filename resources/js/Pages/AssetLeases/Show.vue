@@ -98,10 +98,10 @@ onMounted(() => {
     // messageField.value.focus();
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen('LeaseProcessingUpdate', (e) => {
+        .listen('AmendmentProcessingUpdate', (e) => {
 
             console.log(e);
-            
+
             router.reload();
         });
 
