@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateFileUploadRequest;
 use App\Jobs\ProcessFile;
 use App\Models\File;
 //use App\Services\ReaiProcessor;
-use App\Notifications\LeaseCompleteNotification;
+use App\Notifications\DocumentCompleteNotification;
 use App\Notifications\FileProcessingStarted;
 use App\Services\ZepApi;
 use Illuminate\Http\Request;

@@ -98,7 +98,7 @@ onMounted(() => {
     // messageField.value.focus();
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen('FileStatusUpdate', (e) => {
+        .listen('LeaseProcessingUpdate', (e) => {
             router.reload({ only: ['lease'] });
         });
 

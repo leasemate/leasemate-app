@@ -127,6 +127,8 @@ onMounted(() => {
     Echo.private(`${page.props.tenant_id}.App.Model.User.${user.value.id}`)
         .notification((notification) => {
 
+            console.log(notification);
+
             axios.get(route('notifications.show', notification.id))
                 .then(response => {
 

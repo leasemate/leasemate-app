@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Events\AmendmentProcessingUpdate;
 use App\Events\LeaseProcessingUpdate;
+use App\Models\Amendment;
 use App\Models\Document;
 use App\Models\Domain;
 use App\Models\File;
 use App\Models\Lease;
 use App\Models\Scopes\UserScope;
 use App\Models\Tenant;
-use App\Notifications\LeaseCompleteNotification;
+use App\Notifications\DocumentCompleteNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,7 @@ class FileProcessingController extends Controller
 {
 
     protected Lease $lease;
+    protected Amendment $amendment;
     protected Document $document;
     protected Tenant $tenant;
     protected string $s3_object;
@@ -70,13 +72,17 @@ class FileProcessingController extends Controller
 
             $this->document->save();
 
-            $this->lease = $this->document->documentable;
-
             if( $this->document->collection_name === Document::COLLECTION_LEASE ) {
+
+                Log::info('*************** LEASE ******************');
+                $this->lease = $this->document->documentable;
 
                 $this->processLease();
 
             } elseif( $this->document->collection_name === Document::COLLECTION_AMENDMENT ) {
+
+                Log::info('*************** AMENDEMENT ******************');
+                $this->amendment = $this->document->documentable;
 
                 $this->processAmendment();
             }
@@ -154,12 +160,12 @@ class FileProcessingController extends Controller
 
         $lease_payload['file_name'] = $this->document->file_name;
 
-        Log::info('Fire event: FileProcessed:', $lease_payload);
+        Log::info('Fire event: LeaseProcessingUpdate:', $lease_payload);
         event(new LeaseProcessingUpdate($this->lease->user_id, $lease_payload));
 
-        if (in_array($this->status, ['Ready', 'Failed'])) {
-            Log::info('Send notification: FileProcessingComplete:');
-            $this->lease->user->notify(new LeaseCompleteNotification($lease_payload));
+        if ( in_array($this->status, ['Ready', 'Failed']) ) {
+            Log::info('Send notification: LeaseCompleteNotification:');
+            $this->lease->user->notify(new DocumentCompleteNotification($lease_payload));
         }
 
     }
@@ -167,6 +173,24 @@ class FileProcessingController extends Controller
     protected function processAmendment()
     {
 
-//        event(new AmendmentStatusUpdate($this->document));
+        Log::info('Processing Amendment.................');
+
+        $amendment_payload = [
+            'id' => $this->amendment->id,
+            'status' => $this->status,
+            'status_msg' => $this->status_msg,
+            'status_progress' => $this->status_progress,
+            'file_name' => $this->document->file_name,
+            'updated_at' => $this->amendment->updated_at,
+        ];
+
+        Log::info('Fire event: AmendmentProcessingUpdate:', $amendment_payload);
+        event(new AmendmentProcessingUpdate($this->amendment->lease->user_id, $amendment_payload));
+
+        if ( in_array($this->status, ['Ready', 'Failed']) ) {
+            Log::info('Send notification: LeaseCompleteNotification:');
+            $this->amendment->lease->user->notify(new DocumentCompleteNotification($amendment_payload));
+        }
+
     }
 }
