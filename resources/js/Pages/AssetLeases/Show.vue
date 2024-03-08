@@ -214,17 +214,6 @@ onBeforeUnmount(() => {
 
                     </div>
 
-
-                    <!--                    <div class="json-container">-->
-
-<!--                        <h3>Raw Extracted Data</h3>-->
-<!--                        <h4>Basic Extracted Data</h4>-->
-<!--                            <pre>{{ lease.extracted_data??"&#45;&#45;" }}</pre>-->
-<!--                        <h4>Detailed Extracted Data</h4>-->
-<!--                            <pre>{{ lease.detailed_extracted_data??"&#45;&#45;" }}</pre>-->
-
-<!--                    </div>-->
-
                 </TabPanel>
                 <TabPanel v-if="lease.amendments.length">
 
@@ -294,9 +283,15 @@ onBeforeUnmount(() => {
                     <div class="min-h-96">
                         <p class="m-0">
 
-                            <h4>Processing...</h4>
+                            <div class="json-container">
 
-                            <h5>{{ amendment.document.uuid }}</h5>
+                                <h3>Raw Extracted Amendment Data</h3>
+                                <h4>Basic Extracted Data</h4>
+                                    <pre>{{ amendment.document.document_detail.basic_extracted_data ?? "--" }}</pre>
+                                <h4>Detailed Extracted Data</h4>
+                                    <pre>{{ amendment.document.document_detail.detailed_extracted_data ?? "--" }}</pre>
+
+                            </div>
                         </p>
                     </div>
 

@@ -51,16 +51,6 @@ class Lease extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function child_leases()
-    {
-        return $this->hasMany(Lease::class, 'parent_id');
-    }
-
-    public function parent_lease()
-    {
-        return $this->belongsTo(Lease::class, 'parent_id');
-    }
-
     public function chats()
     {
         return $this->hasMany(Chat::class);

@@ -318,46 +318,52 @@ onBeforeUnmount(() => {
             <template #body>
                 <tr v-for="(lease, index) in props.leases.data" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
-                    <td scope="row" class="pl-4 pr-2 py-4 space-x-2">
+                    <td class="pl-4 pr-2 py-4 space-x-2">
                         <Checkbox />
                     </td>
                     <th scope="row" class="px-6 py-4 space-x-2">
 
-                        <span
-                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(lease.lease_document.status)">
 
 
-                              <span class="relative mr-1.5 flex h-2.5 w-2.5">
+                            <span
+                                class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                                :class="getFileStatusClass(lease.lease_document.status)">
 
-                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
-                                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+
+
+                                  <span class="relative mr-1.5 flex h-2.5 w-2.5">
+
+                                      <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
+                                          <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                          <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                      </template>
+
+                                      <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                             :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
-                                      <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
-                                  </template>
 
-                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                  </span>
 
-                              </span>
+                                  <span class="whitespace-nowrap">{{ lease.lease_document.status }} {{ lease.lease_document.status_progress }}</span>
 
-                              <span class="whitespace-nowrap">{{ lease.lease_document.status }} {{ lease.lease_document.status_progress }}</span>
-
-                          </span>
-
-<!--                        <span class="badge font-medium rounded-full bg-gray-50 text-gray-500 text-10 pt-0.5 px-0.5 ">-->
-<!--                            <i class=" bx bx-question-mark"></i>-->
-<!--                        </span>-->
-
+                            </span>
 
                     </th>
                     <td class="px-6 py-4 text-gray-900 ">
+
                         <Link
-                            v-if="lease.tenant"
+                            v-if="lease.lease_document.status === 'Ready'"
                             :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                             >
-                            <strong>{{ lease.tenant }}</strong>
+                            <div class="flex items-center">
+                                <BoxIcon v-if="!lease.tenant" class="bx-error mr-1 text-yellow-500" />
+
+                                <strong v-if="lease.tenant">{{ lease.tenant }}</strong>
+                                <span v-else
+                                      class="italic text-gray-500"
+                                >{{ lease.lease_document.name }}</span>
+                            </div>
                         </Link>
 
                         <a
