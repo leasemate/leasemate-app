@@ -11,6 +11,10 @@ class Amendment extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'execution_date' => 'datetime',
+    ];
+
     public function document()
     {
         return $this->morphOne(Document::class, 'documentable');
