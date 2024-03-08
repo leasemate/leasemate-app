@@ -49,7 +49,7 @@ Route::group([
         return redirect('login');
     })->name('home');
 
-    Route::get('force-login', [AuthenticatedSessionController::class, 'forceLogin'])
+    Route::get('tenant-login', [AuthenticatedSessionController::class, 'forceLogin'])
         ->name('tenant.force.login');
 });
 
