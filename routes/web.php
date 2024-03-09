@@ -22,7 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'web',
-])->group(function() {
+    'guest'
+])->group(function () {
 
     Route::get('/', function() {
         return redirect()->route('login');
@@ -33,14 +34,6 @@ Route::middleware([
 
     Route::post('register', [RegisterController::class, 'store'])
         ->name('register.store');
-
-});
-
-
-Route::middleware([
-    'web',
-    'guest'
-])->group(function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.store');

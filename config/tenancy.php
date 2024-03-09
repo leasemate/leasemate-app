@@ -17,7 +17,7 @@ return [
      */
     'central_domains' => [
         env('APP_CENTRAL_DOMAIN', 'localhost'),
-//        env('APP_ENV') == 'local' ? "https://leasemate-app.us-1.sharedwithexpose.com" : null,
+        env('APP_ENV') == 'local' ? "https://leasemate-app.us-1.sharedwithexpose.com" : null,
     ],
 
     'queue_tenant_created' => env('QUEUE_TENANT_CREATED', false),

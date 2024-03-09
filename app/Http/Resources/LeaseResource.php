@@ -37,6 +37,7 @@ class LeaseResource extends JsonResource
             'is_archived' => $this->deleted_at ? true : false,
             'lease_document' => new DocumentResource($this->whenLoaded('lease_document')),
             'amendments' => AmendmentResource::collection($this->whenLoaded('amendments')),
+            'lease_detail' => new LeaseDetailResource($this->whenLoaded('lease_detail')),
         ];
     }
 

@@ -202,7 +202,9 @@ onBeforeUnmount(() => {
 
                     </div>
 
-                    <LeaseDetail />
+                    <LeaseDetail
+                        :lease_detail="lease.lease_detail"
+                    />
 
                     <div class="json-container">
 
@@ -249,7 +251,9 @@ onBeforeUnmount(() => {
                         </SmallCard>
                     </div>
 
-                    <LeaseDetail />
+<!--                    <LeaseDetail-->
+<!--                        :lease_detail="lease.lease_document.document_detail.detailed_extracted_data ?? {}"-->
+<!--                    />-->
 
                 </TabPanel>
 

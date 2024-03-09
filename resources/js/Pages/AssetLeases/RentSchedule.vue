@@ -8,7 +8,12 @@ const props = defineProps({
 <template>
     <div class="p-2 bg-white">
 
-        <Table class="pb-0" :data="lease.rent_schedule" :columns="['Start Date', 'End Date', 'Amount', 'Frequency']">
+        <Table
+            class="pb-0"
+            :data="lease.rent_schedule"
+            :columns="['Start Date', 'End Date', 'Amount', 'Frequency']"
+            containerClasses="max-h-64 overflow-y-auto"
+        >
 
             <template #head>
                 <tr>

@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +29,12 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $this->shouldReturnJson($request, $exception)
+            ? response()->json(['message' => $exception->getMessage()], 401)
+            : Inertia::location($exception->redirectTo() ?? route('login'));
+    }
+
 }

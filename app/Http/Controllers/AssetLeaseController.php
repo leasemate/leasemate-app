@@ -94,25 +94,22 @@ class AssetLeaseController extends Controller
      */
     public function show(Asset $asset, Lease $lease, Chat $chat)
     {
-        $lease->load(['asset', 'user', 'chats_with_last_message', 'lease_document.document_detail']);
         $lease->load([
+            'asset',
+            'user',
+            'chats_with_last_message',
+            'lease_document.document_detail',
+            'lease_detail',
             'amendments' => function ($query) {
                 return $query->orderBy('execution_date', 'desc');
             },
             'amendments.document.document_detail'
         ]);
 
-//        if($chat->exists) {
-//            $chat->load(['last_message', 'messages']);
-//        }
-//
-//        dd($lease);
-
         if( $lease->amendments->count() ) {
 
             // if there are amendments, get the original data from teh lease document detail object
             $lease->getOriginalLeaseDetail();
-
         }
 
         return inertia()->render('AssetLeases/Show', [
