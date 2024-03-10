@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAssetPhotoRequest;
 use App\Http\Requests\StoreAssetRequest;
 use App\Http\Requests\UpdateAssetRequest;
 use App\Http\Resources\AssetResource;
@@ -9,7 +10,11 @@ use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Models\Asset;
 use App\Models\Lease;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller
 {
@@ -40,7 +45,7 @@ class AssetController extends Controller
 
             DB::beginTransaction();
 
-            $asset = auth()->user()->asset()->create($request->safe()->only('name', 'address', 'gross_leasable_area'));
+            $asset = auth()->user()->asset()->create($request->safe()->only('name', 'address', 'gross_leasable_area', 'asset_photo'));
 
             $asset->associates()->attach(collect($request->get('users'))->pluck('id'));
 
@@ -55,6 +60,15 @@ class AssetController extends Controller
             session()->flash('error', $e->getMessage());
             return redirect()->back()->withInput();
         }
+    }
+
+    public function photoUpload(StoreAssetPhotoRequest $request)
+    {
+        $storedName = $request
+            ->file('asset_photo')
+            ->store(tenant('id')."/asset_photos", ['visibility'=>'public']);
+
+        return response()->json(['success' => 1, 'asset_photo_path' => $storedName]);
     }
 
     /**
@@ -91,6 +105,16 @@ class AssetController extends Controller
         ]);
     }
 
+    public function loadPhoto(Asset $asset)
+    {
+        $response = Http::get(Storage::url($asset->asset_photo));
+
+        // Return the image as a Blob
+        return response($response->body(), 200, [
+            'Content-Type' => $response->header('Content-Type'),
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -98,9 +122,19 @@ class AssetController extends Controller
     {
         try {
 
+            Log::info('Current Asset Photo');
+            Log::info($asset->asset_photo);
+
+            Log::info('Request Asset Photo');
+            Log::info($request->asset_photo);
+
             DB::beginTransaction();
 
-            $asset->update($request->safe()->only('name', 'address', 'gross_leasable_area'));
+            if( !$request->asset_photo || ($request->asset_photo && $request->asset_photo !== $asset->asset_photo) ) {
+                $asset->deletePhoto();
+            }
+
+            $asset->update($request->safe()->only('name', 'address', 'gross_leasable_area', 'asset_photo'));
 
             $asset->associates()->sync(collect($request->get('users'))->pluck('id'));
 
@@ -123,6 +157,8 @@ class AssetController extends Controller
      */
     public function destroy(Asset $asset)
     {
-        //
+        $asset->forceDelete();
+
+        return redirect()->route('assets.index');
     }
 }

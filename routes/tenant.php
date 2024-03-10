@@ -146,6 +146,10 @@ Route::middleware([
 
 
     Route::resource('assets', AssetController::class);
+
+    Route::post('/assets/photo-upload', [AssetController::class, 'photoUpload'])->name('assets.photo-upload');
+    Route::get('/assets/{asset}/load-photo', [AssetController::class, 'loadPhoto'])->name('assets.load-photo');
+
     Route::resource('assets.leases', AssetLeaseController::class)->scoped();
     Route::resource('leases.amendments', LeaseAmendmentController::class)->scoped();
 

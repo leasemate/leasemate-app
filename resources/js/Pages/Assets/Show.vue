@@ -30,7 +30,7 @@ const user = computed(() => page.props.auth.user);
 const props = defineProps({
     asset: Object,
     associates: Array,
-    leases: Array,
+    leases: Object,
 });
 
 const leases = ref(props.leases);

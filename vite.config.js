@@ -7,7 +7,7 @@ export default defineConfig({
         laravel({
             input: 'resources/js/app.js',
             refresh: true,
-            detectTls: 'reai.test',
+            detectTls: 'leasemate-app.test',
         }),
         vue({
             template: {

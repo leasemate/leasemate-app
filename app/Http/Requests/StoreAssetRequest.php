@@ -26,6 +26,7 @@ class StoreAssetRequest extends FormRequest
             'address' => 'required|string|max:255',
             'gross_leasable_area' => 'required|numeric',
             'users'=> 'required|array',
+            'asset_photo' => 'nullable'
         ];
     }
 }
