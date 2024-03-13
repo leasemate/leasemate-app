@@ -63,7 +63,7 @@ class FileProcessingController extends Controller
 
             $this->document = Document::where('file_name', $this->s3_object)->firstOrFail();
 
-            if (! $this->document) {
+            if (!$this->document->exists) {
                 throw new \Exception('Document not found');
             }
 
@@ -90,10 +90,10 @@ class FileProcessingController extends Controller
 
             } elseif ($this->document->collection_name === Document::COLLECTION_AMENDMENT) {
 
-                Log::info('*************** AMENDEMENT ******************');
+                Log::info('*************** AMENDMENT ******************');
                 $this->amendment = $this->document->documentable;
                 $this->user = $this->amendment->lease->user;
-
+                
                 $this->processAmendment();
             }
 
@@ -110,53 +110,13 @@ class FileProcessingController extends Controller
 
     protected function processLease()
     {
-
-        if ($this->basic_extracted_data && ! empty($this->basic_extracted_data['classification'])) {
-
-            $this->lease->tenant = ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown';
-            $this->lease->landlord = ! empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown';
-            $this->lease->premise_address = ! empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null;
-            $this->lease->building_address = ! empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null;
-            $this->lease->landlord_address = ! empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null;
-            $this->lease->gla = ! empty($this->basic_extracted_data['rentable_square_feet']) ? $this->basic_extracted_data['rentable_square_feet'] : null;
-
-            try {
-                $this->lease->start_date = ! empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
-            } catch (\Exception $e) {
-                Log::error($e);
-            }
-
-            try {
-                $rent_schedule = ! empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
-                $this->lease->end_date = end($rent_schedule)['end_date'] ?? null;
-                $this->lease->rent_schedule = $rent_schedule;
-            } catch (\Exception $e) {
-                Log::error($e);
-            }
-
-            $this->lease->rent_per_sqft = ! empty($this->basic_extracted_data['rent_per_sqft']) ? (int) $this->basic_extracted_data['rent_per_sqft'] : null;
-            $this->lease->term = ! empty($this->basic_extracted_data['lease_term']) ? (int) $this->basic_extracted_data['lease_term'] : null;
-            $this->lease->abatement = ! empty($this->basic_extracted_data['abatement']) ? (int) $this->basic_extracted_data['abatement'] : null;
-            $this->lease->pro_rata_share = ! empty($this->basic_extracted_data['abatement']) ? (int) $this->basic_extracted_data['abatement'] : null;
-            $this->lease->security_deposit = ! empty($this->basic_extracted_data['security_deposit']) ? (int) $this->basic_extracted_data['security_deposit'] : null;
-
+        if ($basicLeaseData = $this->getBasicLeaseData()) {
+            $this->lease->fill($basicLeaseData);
+            $this->lease->save();
         }
 
-        $this->lease->save();
-
-        if ($this->detailed_extracted_data) {
-
-            $this->lease->lease_detail()->create([
-                'option_to_extend' => ! empty($this->detailed_extracted_data['option_to_extend']) ? $this->detailed_extracted_data['option_to_extend'] : null,
-                'right_of_first_offer' => ! empty($this->detailed_extracted_data['right_of_first_offer']) ? $this->detailed_extracted_data['right_of_first_offer'] : null,
-                'right_of_first_refusal' => ! empty($this->detailed_extracted_data['right_of_first_refusal']) ? $this->detailed_extracted_data['right_of_first_refusal'] : null,
-                'tenant_improvement_allowance' => ! empty($this->detailed_extracted_data['tenant_improvement_allowance']) ? $this->detailed_extracted_data['tenant_improvement_allowance'] : null,
-                'tenant_insurance_requirements' => ! empty($this->detailed_extracted_data['tenant_insurance_requirements']) ? $this->detailed_extracted_data['tenant_insurance_requirements'] : null,
-                'tenant_maintenance_obligations' => ! empty($this->detailed_extracted_data['tenant_maintenance_obligations']) ? $this->detailed_extracted_data['tenant_maintenance_obligations'] : null,
-                'landlord_maintenance_obligations' => ! empty($this->detailed_extracted_data['landlord_maintenance_obligations']) ? $this->detailed_extracted_data['landlord_maintenance_obligations'] : null,
-                'assignment_subletting' => ! empty($this->detailed_extracted_data['assignment_subletting']) ? $this->detailed_extracted_data['assignment_subletting'] : null,
-                'holding_over' => ! empty($this->detailed_extracted_data['holding_over']) ? $this->detailed_extracted_data['holding_over'] : null,
-            ]);
+        if ($detailLeaseData = $this->getDetailedLeaseData()) {
+            $this->lease->lease_detail()->create($detailLeaseData);
         }
 
         $lease_payload = $this->eventPayload();
@@ -173,13 +133,14 @@ class FileProcessingController extends Controller
 
     protected function processAmendment()
     {
-
         Log::info('Processing Amendment.................');
 
         //save data to amendment
         $this->amendment->execution_date = ! empty($this->basic_extracted_data['execution_date']) ? Carbon::parse($this->basic_extracted_data['execution_date']) : null;
-
         $this->amendment->save();
+
+        $this->amendment->lease()->update($this->getBasicLeaseData());
+        $this->amendment->lease->lease_detail()->update($this->getDetailedLeaseData());
 
         $amendment_payload = $this->eventPayload();
 
@@ -202,6 +163,64 @@ class FileProcessingController extends Controller
             'status_progress' => $this->status_progress,
             'file_name' => $this->document->name,
             'updated_at' => $this->document->updated_at->format('m/d/y'),
+        ];
+    }
+
+    protected function getBasicLeaseData(): mixed
+    {
+        if (!$this->basic_extracted_data || empty($this->basic_extracted_data['classification'])) {
+            return null;
+        }
+
+        try {
+            $start_date = null;
+            $start_date = !empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null;
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
+
+        try {
+            $rent_schedule = !empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
+            $end_date = end($rent_schedule)['end_date'] ?? null;
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
+
+        return [
+            'tenant' => !empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown',
+            'landlord' => !empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown',
+            'premise_address' => !empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null,
+            'building_address' => !empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null,
+            'landlord_address' => !empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null,
+            'gla' => !empty($this->basic_extracted_data['rentable_square_feet']) ? $this->basic_extracted_data['rentable_square_feet'] : null,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'rent_schedule' => $rent_schedule,
+            'rentable_sqft' => !empty($this->basic_extracted_data['rentable_square_feet']) ? (int)$this->basic_extracted_data['rentable_square_feet'] : null,
+            'rent_per_sqft' => !empty($this->basic_extracted_data['rent_per_sqft']) ? (int)$this->basic_extracted_data['rent_per_sqft'] : null,
+            'term' => !empty($this->basic_extracted_data['lease_term']) ? (int)$this->basic_extracted_data['lease_term'] : null,
+            'abatement' => !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null,
+            'pro_rata_share' => !empty($this->basic_extracted_data['abatement']) ? (int)$this->basic_extracted_data['abatement'] : null,
+            'security_deposit' => !empty($this->basic_extracted_data['security_deposit']) ? (int)$this->basic_extracted_data['security_deposit'] : null,
+        ];
+    }
+
+    protected function getDetailedLeaseData(): mixed
+    {
+        if (empty($this->detailed_extracted_data)) {
+            return null;
+        }
+
+        return [
+            'option_to_extend' => !empty($this->detailed_extracted_data['option_to_extend']) ? $this->detailed_extracted_data['option_to_extend'] : null,
+            'right_of_first_offer' => !empty($this->detailed_extracted_data['right_of_first_offer']) ? $this->detailed_extracted_data['right_of_first_offer'] : null,
+            'right_of_first_refusal' => !empty($this->detailed_extracted_data['right_of_first_refusal']) ? $this->detailed_extracted_data['right_of_first_refusal'] : null,
+            'tenant_improvement_allowance' => !empty($this->detailed_extracted_data['tenant_improvement_allowance']) ? $this->detailed_extracted_data['tenant_improvement_allowance'] : null,
+            'tenant_insurance_requirements' => !empty($this->detailed_extracted_data['tenant_insurance_requirements']) ? $this->detailed_extracted_data['tenant_insurance_requirements'] : null,
+            'tenant_maintenance_obligations' => !empty($this->detailed_extracted_data['tenant_maintenance_obligations']) ? $this->detailed_extracted_data['tenant_maintenance_obligations'] : null,
+            'landlord_maintenance_obligations' => !empty($this->detailed_extracted_data['landlord_maintenance_obligations']) ? $this->detailed_extracted_data['landlord_maintenance_obligations'] : null,
+            'assignment_subletting' => !empty($this->detailed_extracted_data['assignment_subletting']) ? $this->detailed_extracted_data['assignment_subletting'] : null,
+            'holding_over' => !empty($this->detailed_extracted_data['holding_over']) ? $this->detailed_extracted_data['holding_over'] : null,
         ];
     }
 }

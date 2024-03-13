@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
                             </template>
 
                             <BasicTerms
-                                :lease="lease"
+                                :lease="lease.lease_document.document_detail.basic_extracted_data ?? {}"
                             />
 
                         </SmallCard>
@@ -245,15 +245,15 @@ onBeforeUnmount(() => {
                             </template>
 
                             <RentSchedule
-                                :lease="lease"
+                                :lease="lease.lease_document.document_detail.basic_extracted_data ?? {}"
                             />
 
                         </SmallCard>
                     </div>
 
-<!--                    <LeaseDetail-->
-<!--                        :lease_detail="lease.lease_document.document_detail.detailed_extracted_data ?? {}"-->
-<!--                    />-->
+                    <LeaseDetail
+                        :lease_detail="lease.lease_document.document_detail.detailed_extracted_data ?? {}"
+                    />
 
                 </TabPanel>
 

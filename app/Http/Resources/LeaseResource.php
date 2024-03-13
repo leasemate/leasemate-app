@@ -47,6 +47,8 @@ class LeaseResource extends JsonResource
         if ($this->rent_schedule) {
 
             foreach ($this->rent_schedule as $key => $value) {
+                if (!is_numeric($key)) continue;
+
                 $monthly_base_rent[$key] = [
                     'start_date' => $value['start_date'] ? Carbon::parse($value['start_date'])->format('m/d/Y') : null,
                     'end_date' => $value['end_date'] ? Carbon::parse($value['end_date'])->format('m/d/Y') : null,
