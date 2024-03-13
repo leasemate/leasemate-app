@@ -20,7 +20,7 @@ class UserAssetResource extends JsonResource
             'email' => (string) $this->email,
             'display_name_with_roles' => (string) $this->display_name_with_roles,
             'disabled' => true,
-            'roles'=>$this->getRoleNames(),
+            'roles' => $this->getRoleNames(),
         ];
     }
 }

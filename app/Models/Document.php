@@ -12,6 +12,7 @@ class Document extends Model
     use SoftDeletes;
 
     const COLLECTION_AMENDMENT = 'amendment';
+
     const COLLECTION_LEASE = 'lease';
 
     protected $guarded = [];
@@ -25,5 +26,4 @@ class Document extends Model
     {
         return $this->hasOne(DocumentDetail::class);
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use App\Rules\UniqueLeaseFilename;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -29,7 +28,7 @@ class StoreLeaseAmendmentRequest extends FormRequest
                 'file',
                 'mimes:pdf',
                 'max:51200',
-//                new UniqueLeaseFilename()
+                //                new UniqueLeaseFilename()
             ],
         ];
     }

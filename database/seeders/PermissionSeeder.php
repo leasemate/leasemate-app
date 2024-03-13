@@ -21,7 +21,7 @@ class PermissionSeeder extends Seeder
 
         foreach (config('permission.permissions') as $group => $actions) {
             foreach ($actions as $action) {
-                $permissionName = $group . ' ' . $action;
+                $permissionName = $group.' '.$action;
                 $new_permissions->push($permissionName);
             }
         }

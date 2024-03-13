@@ -17,7 +17,7 @@ class FileUploadFactory extends Factory
     public function definition(): array
     {
         return [
-            'file'=> fake()->uuid().".pdf",
+            'file' => fake()->uuid().'.pdf',
         ];
 
     }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Scopes\UserScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Model
@@ -15,12 +15,11 @@ class File extends Model
 
     protected static function booted(): void
     {
-//        static::addGlobalScope(new UserScope());
+        //        static::addGlobalScope(new UserScope());
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 }

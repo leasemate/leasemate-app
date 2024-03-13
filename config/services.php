@@ -42,6 +42,6 @@ return [
         'base_url' => env('FLOWISE_API_BASE_URL'),
         'api_key' => env('FLOWISE_API_KEY'),
         'chat_app_id' => env('FLOWISE_API_CHAT_APP_ID'),
-    ]
+    ],
 
 ];

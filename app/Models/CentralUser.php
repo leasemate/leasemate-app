@@ -12,16 +12,17 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Stancl\Tenancy\Contracts\SyncMaster;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class CentralUser extends Authenticatable implements SyncMaster, MustVerifyEmail
+class CentralUser extends Authenticatable implements MustVerifyEmail, SyncMaster
 {
     // Note that we force the central connection on this model
-    use ResourceSyncing, CentralConnection, HasTenants, Notifiable;
+    use CentralConnection, HasTenants, Notifiable, ResourceSyncing;
     use HasProfilePhoto;
 
     protected $guarded = [];
+
     public $timestamps = false;
+
     public $table = 'users';
 
     protected $appends = [

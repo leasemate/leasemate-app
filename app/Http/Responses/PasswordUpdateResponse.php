@@ -3,9 +3,8 @@
 namespace App\Http\Responses;
 
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Fortify\Contracts\PasswordUpdateResponse as PasswordUpdateResponseContract;
 use Inertia\Inertia;
+use Laravel\Fortify\Contracts\PasswordUpdateResponse as PasswordUpdateResponseContract;
 
 class PasswordUpdateResponse implements PasswordUpdateResponseContract
 {

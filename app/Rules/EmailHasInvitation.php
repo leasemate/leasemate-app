@@ -16,7 +16,7 @@ class EmailHasInvitation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $invitation = TeamInvitation::where('email', $value)->first();
-        if( ! $invitation) {
+        if (! $invitation) {
             $fail('This email does not have an invitation.');
         }
     }

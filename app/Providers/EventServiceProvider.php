@@ -25,26 +25,26 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
-            SendEmailVerificationNotification::class
+            SendEmailVerificationNotification::class,
         ],
         SyncedResourceSaved::class => [
-            CustomUpdateSyncedResource::class
-        ]
+            CustomUpdateSyncedResource::class,
+        ],
     ];
 
     protected $observers = [
         User::class => [
-            UserObserver::class
+            UserObserver::class,
         ],
         Asset::class => [
-            AssetObserver::class
+            AssetObserver::class,
         ],
         Lease::class => [
-            LeaseObserver::class
+            LeaseObserver::class,
         ],
         Document::class => [
-            DocumentObserver::class
-        ]
+            DocumentObserver::class,
+        ],
     ];
 
     /**

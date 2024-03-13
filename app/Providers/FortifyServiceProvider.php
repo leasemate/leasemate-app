@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\PasswordUpdateResponse as FortifyPasswordUpdateResponse;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -36,7 +36,7 @@ class FortifyServiceProvider extends ServiceProvider
             PasswordUpdateResponse::class
         );
 
-        Fortify::registerView(function() {
+        Fortify::registerView(function () {
             return Inertia::render('Auth/Register');
         });
 

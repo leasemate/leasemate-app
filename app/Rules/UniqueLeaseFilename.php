@@ -3,8 +3,6 @@
 namespace App\Rules;
 
 use App\Models\Document;
-use App\Models\File;
-use App\Models\Lease;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -22,8 +20,8 @@ class UniqueLeaseFilename implements ValidationRule
             ->withTrashed()
             ->first();
 
-        if ( $document ) {
-            $error_msg = 'This lease document already exists'.($document->trashed() ? ' but is archived' : '')."!";
+        if ($document) {
+            $error_msg = 'This lease document already exists'.($document->trashed() ? ' but is archived' : '').'!';
             $fail($error_msg);
         }
     }

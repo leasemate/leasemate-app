@@ -31,11 +31,11 @@ class RegisterTenant extends Command implements PromptsForMissingInput
 
         $tenantDomain = $this->argument('tenant_domain');
 
-        $this->info('Registering tenant with domain: ' . $tenantDomain);
+        $this->info('Registering tenant with domain: '.$tenantDomain);
 
         $domain = Domain::where('domain', $tenantDomain)->first();
 
-        $registerTenantResponse = LeasemateApi::registerTenant($domain->tenant_id, explode(".", $domain->domain)[0]);
+        $registerTenantResponse = LeasemateApi::registerTenant($domain->tenant_id, explode('.', $domain->domain)[0]);
 
         $this->info('Domain Registered!');
 

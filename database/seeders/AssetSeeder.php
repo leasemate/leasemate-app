@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Asset;
 use App\Models\Lease;
-use Database\Factories\AssetFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AssetSeeder extends Seeder

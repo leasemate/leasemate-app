@@ -3,15 +3,11 @@
 namespace App\Models;
 
 use App\Facades\LeasemateApi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
@@ -31,7 +27,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             // if there is an exception, we will catch it and not create the tenant or run job pipeline
             $registerTenantResponse = LeasemateApi::registerTenant($tenant);
 
-            if($registerTenantResponse->failed()) {
+            if ($registerTenantResponse->failed()) {
                 throw new \Exception("{$registerTenantResponse->status()}: {$registerTenantResponse->reason()}: API Error: Unable to register tenant.");
             }
 
@@ -47,7 +43,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             // if there is an exception, we will catch it and not delete the tenant or run job pipeline
             $deleteTenantResponse = LeasemateApi::deleteTenant($tenant);
 
-            if($deleteTenantResponse->failed()) {
+            if ($deleteTenantResponse->failed()) {
                 throw new \Exception("{$deleteTenantResponse->status()}: {$deleteTenantResponse->reason()}: API Error: Unable to delete tenant.");
             }
 
@@ -60,5 +56,4 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->belongsToMany(CentralUser::class, 'tenant_users', 'tenant_id', 'global_user_id', 'id', 'global_id')
             ->using(TenantPivot::class);
     }
-
 }

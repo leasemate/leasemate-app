@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 class RedirectRegisteredUserToTeamInvitation
 {
-
     public function handle(Request $request, callable $next)
     {
 

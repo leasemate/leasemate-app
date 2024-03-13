@@ -13,7 +13,9 @@ class AmendmentProcessingUpdate implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private $user_id;
+
     public $payload;
+
     /**
      * Create a new event instance.
      */

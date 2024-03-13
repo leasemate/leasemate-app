@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Traits\ApiRequestTrait;
 
 class ZepApi
@@ -17,14 +16,12 @@ class ZepApi
     public function getAllUsers()
     {
         $response = $this->get('/user');
-        if($response->successful()) {
+        if ($response->successful()) {
             return $response->json();
         } else {
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
     }
-
-
 
     public function createUser(array $user_data)
     {
@@ -39,8 +36,7 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error creating user', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
-
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
     }
 
@@ -56,9 +52,9 @@ class ZepApi
 
             return $response->json();
         } else {
-            \Log::error('SERVICE: Error updating user: '.$response->status()." - ".$response->reason());
+            \Log::error('SERVICE: Error updating user: '.$response->status().' - '.$response->reason());
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
     }
 
@@ -74,9 +70,9 @@ class ZepApi
 
             return $response->json();
         } else {
-            \Log::error('SERVICE: Error deleting user: '.$response->status()." - ".$response->reason());
+            \Log::error('SERVICE: Error deleting user: '.$response->status().' - '.$response->reason());
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
     }
 
@@ -92,7 +88,7 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error creating user', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
 
     }
@@ -109,7 +105,7 @@ class ZepApi
         } else {
             \Log::error('SERVICE: Error getting messages', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
     }
 
@@ -121,16 +117,14 @@ class ZepApi
 
         \Log::info('SERVICE: Deleting messages response', ['response' => $response]);
 
-        if($response->successful() || $response->notFound()) {
+        if ($response->successful() || $response->notFound()) {
             return $response->json();
 
         } else {
             \Log::error('SERVICE: Error deleting messages', ['response' => $response]);
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason(), $response->status());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason(), $response->status());
         }
 
-
     }
-
 }

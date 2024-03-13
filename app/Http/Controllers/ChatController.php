@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\ZepApi;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Resources\AssetResource;
 use App\Http\Resources\ChatResource;
@@ -12,9 +11,6 @@ use App\Models\Asset;
 use App\Models\Chat;
 use App\Models\Lease;
 use App\Services\ChatService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 class ChatController extends Controller
 {
@@ -25,7 +21,7 @@ class ChatController extends Controller
     {
         $lease->load(['asset', 'user', 'chats_with_last_message']);
 
-        if($chat->exists) {
+        if ($chat->exists) {
             $chat->load(['last_message', 'messages']);
         }
 
@@ -34,7 +30,7 @@ class ChatController extends Controller
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
             'chats' => ChatResource::collection($lease->chats_with_last_message),
-            'chat' => $chat->exists ? new ChatResource($chat) : null
+            'chat' => $chat->exists ? new ChatResource($chat) : null,
         ]);
     }
 
@@ -51,16 +47,17 @@ class ChatController extends Controller
             $chatService->sendMessage($validated['from'], $validated['message']);
 
             return response()->json([
-                "chat" => new ChatResource($chatService->getChat()),
+                'chat' => new ChatResource($chatService->getChat()),
             ]);
 
         } catch (\Exception $e) {
             \Log::info($e);
             \Log::info($e->getMessage());
             \Log::info($e->getCode());
+
             return response()->json([
                 'error' => $e->getMessage(),
-            ], ((int)$e->getCode()?: 500));
+            ], ((int) $e->getCode() ?: 500));
 
         }
     }
@@ -73,14 +70,15 @@ class ChatController extends Controller
         try {
 
             $chatService = new ChatService($chat);
-            if( ! $chatService->destroy()) {
+            if (! $chatService->destroy()) {
                 throw new \Exception('Failed to delete chat.');
             }
 
             return redirect()->route('assets.leases.chats', [$asset, $lease]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
+
             return redirect()->back()->with('error', $e->getMessage());
         }
 

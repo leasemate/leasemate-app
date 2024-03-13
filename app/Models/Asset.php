@@ -29,8 +29,9 @@ class Asset extends Model
 
     public function deletePhoto()
     {
-        if($this->asset_photo === null) return;
+        if ($this->asset_photo === null) {
+            return;
+        }
         Storage::delete($this->asset_photo);
     }
-
 }

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         Log::info('Running DatabaseSeeder');
 
         $this->call([
-//            UserSeeder::class,
+            //            UserSeeder::class,
             PermissionSeeder::class,
             RoleSeeder::class,
 

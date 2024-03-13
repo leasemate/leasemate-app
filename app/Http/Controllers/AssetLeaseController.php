@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Facades\LeasemateApi;
-use App\Http\Requests\SendMessageRequest;
 use App\Http\Requests\StoreLeaseAmendmentRequest;
+use App\Http\Requests\StoreLeaseRequest;
 use App\Http\Resources\AssetResource;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\LeaseResource;
@@ -14,16 +14,12 @@ use App\Models\Asset;
 use App\Models\Chat;
 use App\Models\Document;
 use App\Models\Lease;
-
-use App\Services\ChatService;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreLeaseRequest;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Laravel\Fortify\Rules\Password;
-use Illuminate\Support\Facades\DB;
 
 class AssetLeaseController extends Controller
 {
@@ -64,10 +60,11 @@ class AssetLeaseController extends Controller
 
             return response()->json(['success' => 1, 'lease' => $lease]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
 
             DB::rollBack();
+
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -82,9 +79,10 @@ class AssetLeaseController extends Controller
 
             return response()->json(['success' => 1, 'lease' => $lease]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             \Log::error($e->getMessage());
+
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -103,10 +101,10 @@ class AssetLeaseController extends Controller
             'amendments' => function ($query) {
                 return $query->orderBy('execution_date', 'desc');
             },
-            'amendments.document.document_detail'
+            'amendments.document.document_detail',
         ]);
 
-        if( $lease->amendments->count() ) {
+        if ($lease->amendments->count()) {
 
             // if there are amendments, get the original data from teh lease document detail object
             $lease->getOriginalLeaseDetail();
@@ -116,8 +114,8 @@ class AssetLeaseController extends Controller
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
-//            'chats' => ChatResource::collection($lease->chats_with_last_message),
-//            'chat' => $chat->exists?new ChatResource($chat):null
+            //            'chats' => ChatResource::collection($lease->chats_with_last_message),
+            //            'chat' => $chat->exists?new ChatResource($chat):null
         ]);
     }
 
@@ -151,8 +149,9 @@ class AssetLeaseController extends Controller
 
             return redirect()->back();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -161,10 +160,12 @@ class AssetLeaseController extends Controller
     {
         try {
             $lease->delete();
+
             return redirect()->back();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -173,32 +174,34 @@ class AssetLeaseController extends Controller
     {
         try {
             $lease->restore();
+
             return redirect()->back();
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $lease
-     * @param Asset $asset
-     * @param array|\Illuminate\Http\UploadedFile|null $lease_document
-     * @param bool|string $storedName
+     * @param  \Illuminate\Database\Eloquent\Model  $lease
+     * @param  array|\Illuminate\Http\UploadedFile|null  $lease_document
+     * @param  bool|string  $storedName
      * @return void
+     *
      * @throws \Exception
      */
     protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
     {
 
-        $storedName = $upload_document->store(tenant('id')."/leases/".$asset->id, ['visibility'=>'public']);
-//        $storedName = $upload_document->getBasename();
+        $storedName = $upload_document->store(tenant('id').'/leases/'.$asset->id, ['visibility' => 'public']);
+        //        $storedName = $upload_document->getBasename();
 
         $document = $lease->documents()
             ->create([
                 'asset_id' => $asset->id,
-                'uuid' => (string)Str::uuid(),
+                'uuid' => (string) Str::uuid(),
                 'collection_name' => $collection_name,
                 'name' => $upload_document->getClientOriginalName(),
                 'file_name' => $storedName,
@@ -212,9 +215,9 @@ class AssetLeaseController extends Controller
 
         \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
-        if ( $registerLeaseUploadResponse->failed() ) {
+        if ($registerLeaseUploadResponse->failed()) {
 
-            if ( Storage::disk()->exists($document->file_name) ) {
+            if (Storage::disk()->exists($document->file_name)) {
                 Storage::disk()->delete($document->file_name);
             }
 
@@ -223,5 +226,4 @@ class AssetLeaseController extends Controller
 
         return $document;
     }
-
 }

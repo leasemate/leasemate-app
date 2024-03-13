@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Facades\LeasemateApi;
 use App\Models\Lease;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class LeaseObserver
 {
@@ -30,7 +29,7 @@ class LeaseObserver
      */
     public function deleted(Lease $lease): void
     {
-        if( !$lease->isForceDeleting() ) {
+        if (! $lease->isForceDeleting()) {
             $lease->lease_document->status = 'Archived';
             $lease->lease_document->save();
             $lease->lease_document->delete();

@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         $centralUser = CentralUser::where('email', $this->route('user')->email)->first();
+
         return [
             'name' => 'required',
             'email' => ['required', 'email', 'max:255', Rule::unique('mysql.users')->ignore($centralUser->id)],
@@ -42,5 +43,4 @@ class UpdateUserRequest extends FormRequest
             'user_roles.required' => 'You must assign a role to this user.',
         ];
     }
-
 }

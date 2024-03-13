@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\TeamInvitation;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use App\Models\TeamInvitation;
 
 class Authenticate extends Middleware
 {
@@ -34,10 +34,11 @@ class Authenticate extends Middleware
                  * intended URL to team invitation route so the User does not get
                  * a 403 after login or register. We can't do this here since
                  * the intended URL is not yet set, but place a marker to do so in.
+                 *
                  * @see RedirectIfAuthenticated::handle()
                  */
                 $request->session()->put('removeUrlIntended', true);
-                $request->session()->flash('status', "This invitation has expired.");
+                $request->session()->flash('status', 'This invitation has expired.');
             }
         }
 

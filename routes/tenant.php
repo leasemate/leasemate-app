@@ -42,7 +42,7 @@ Route::group([
         'web',
         'guest',
         'tenant',
-    ]
+    ],
 ], function () {
 
     Route::get('/', function () {
@@ -58,7 +58,7 @@ Route::group([
         'web',
         'guest',
         'tenant',
-    ]
+    ],
 ], function () {
 
     Route::get('create-password/{token}', [NewUserPasswordController::class, 'create'])
@@ -105,14 +105,14 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/notify', function() {
+    Route::get('/notify', function () {
         $user = User::find(1);
 
-//        dd($user->broadcastChannel());
-//        dump($user);
+        //        dd($user->broadcastChannel());
+        //        dump($user);
         $file = \App\Models\File::find(1);
-//        dd($file);
-//        $file = new \App\Models\File();
+        //        dd($file);
+        //        $file = new \App\Models\File();
 
         event(new LeaseProcessingUpdate($user->id, $file));
 
@@ -127,23 +127,21 @@ Route::middleware([
 
     Route::get('/dashboard', function () {
 
-//        $lease = Lease::with('amendments')->find(8);
+        //        $lease = Lease::with('amendments')->find(8);
 
-//        dd($lease);
-//
-//        $s3 = "5ce3eb40-dd76-4a83-ba4d-a2285c85d094/leases/1/kec5bGvbInTIWgYZPripKCmZqrDBn1WWSMu8z2lC.pdf";
-//        $document = Document::where('file_name', $s3)->with('documentable')->first();
-//
-//        dd($document);
+        //        dd($lease);
+        //
+        //        $s3 = "5ce3eb40-dd76-4a83-ba4d-a2285c85d094/leases/1/kec5bGvbInTIWgYZPripKCmZqrDBn1WWSMu8z2lC.pdf";
+        //        $document = Document::where('file_name', $s3)->with('documentable')->first();
+        //
+        //        dd($document);
 
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
     Route::get('/users/{user}/resendInvitation', [UserController::class, 'resendInvitation'])->name('users.resendInvitation');
     Route::resource('users', UserController::class);
-
 
     Route::resource('assets', AssetController::class);
 
@@ -160,7 +158,7 @@ Route::middleware([
 
         Route::post('/assets/{asset}/leases/{lease}/store-amendment', [AssetLeaseController::class, 'storeAmendment'])->name('assets.leases.store-amendment');
 
-//        Route::get('/assets/{asset}/leases/{lease}/chats', [ChatController::class, 'index'])->name('assets.leases.chats.index');
+        //        Route::get('/assets/{asset}/leases/{lease}/chats', [ChatController::class, 'index'])->name('assets.leases.chats.index');
         Route::get('/assets/{asset}/leases/{lease}/chats/{chat?}', [ChatController::class, 'index'])->name('assets.leases.chats.index');
         Route::post('/assets/{asset}/leases/{lease}/chats/{chat?}', [ChatController::class, 'store'])->name('assets.leases.chats.store');
         Route::delete('/assets/{asset}/leases/{lease}/chats/{chat}', [ChatController::class, 'destroy'])->name('assets.leases.chats.destroy');
@@ -173,7 +171,6 @@ Route::middleware([
     Route::post('/files/{file}/restore', [FilesController::class, 'restore'])->name('files.restore')->withTrashed();
     Route::post('/files/{file}/prune', [FilesController::class, 'prune'])->name('files.prune')->withTrashed();
 
-
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat?}', [ChatController::class, 'store'])->name('chats.store');
@@ -184,16 +181,14 @@ Route::middleware([
     Route::resource('notifications', NotificationController::class);
     Route::post('notifications/mark-as-read/{notification}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
 
-    Route::post('/refresh-token', function() {
+    Route::post('/refresh-token', function () {
 
-        if(auth() && auth()->user()) {
+        if (auth() && auth()->user()) {
             auth()->user()->jwt_token = JWTAuth::fromUser(auth()->user());
             auth()->user()->save();
+
             return response()->json(['token' => auth()->user()->jwt_token]);
         }
     })->name('refresh-token');
 
 });
-
-
-

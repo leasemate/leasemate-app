@@ -10,23 +10,22 @@ use Illuminate\Support\Str;
 
 class ChatService
 {
-
     public string $session_id;
 
     public function __construct(protected Chat $chat, protected int $lease_id = 0)
     {
-        if($chat->exists) {
+        if ($chat->exists) {
             $this->session_id = $chat->chat_uuid;
         }
     }
 
-    public function createChat() : void
+    public function createChat(): void
     {
-        if(! auth()->check()) {
+        if (! auth()->check()) {
             throw new \Exception('To create a chat, you must be logged in.');
         }
 
-        if($this->chat->exists) {
+        if ($this->chat->exists) {
             throw new \Exception('Chat already exists.');
         }
 
@@ -38,20 +37,20 @@ class ChatService
         ]);
     }
 
-    public function sendMessage($from, $message) : void
+    public function sendMessage($from, $message): void
     {
-        if( ! $this->chat->exists) {
+        if (! $this->chat->exists) {
             $this->createChat();
         }
 
-        $this->chat->messages()->create(['from'=> $from, 'message' => $message]);
+        $this->chat->messages()->create(['from' => $from, 'message' => $message]);
 
         $this->chat->load('last_message');
     }
 
-    public function destroy() : bool
+    public function destroy(): bool
     {
-        if( ! $this->chat->exists) {
+        if (! $this->chat->exists) {
             throw new \Exception('Chat does not exist.');
         }
 
@@ -62,7 +61,6 @@ class ChatService
             $this->chat->delete();
 
             ZepApi::deleteMessages($this->session_id);
-
 
             DB::commit();
 
@@ -78,22 +76,21 @@ class ChatService
     }
 
     //create getter for chat
-    public function getChat() : Chat
+    public function getChat(): Chat
     {
         return $this->chat;
     }
 
-    private function createSession() : void
+    private function createSession(): void
     {
         $this->session_id = (string) Str::uuid();
 
-        $zep_session_data= [
+        $zep_session_data = [
             'session_id' => $this->session_id,
-//            'user_id' => (string) auth()->user()->zep_user_id,
+            //            'user_id' => (string) auth()->user()->zep_user_id,
         ];
 
         ZepApi::createSession($zep_session_data);
 
     }
-
 }

@@ -8,11 +8,11 @@ use App\Models\Lease;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use PhpParser\Comment\Doc;
 
 class LeasemateApi
 {
     private $baseUrl;
+
     private $apiKey;
 
     private $baseData;
@@ -24,7 +24,7 @@ class LeasemateApi
 
         $this->baseData = [
             'tenant_id' => tenant('id'),
-            'tenant_domain' => explode(".", tenant('domain'))[0],
+            'tenant_domain' => explode('.', tenant('domain'))[0],
             'user_id' => auth()->user()->id ?? null,
         ];
     }
@@ -40,14 +40,14 @@ class LeasemateApi
     {
         $post_data = [
             'chat_id' => $chat_uuid,
-            'user_message' => $message
+            'user_message' => $message,
         ];
         Log::info('SERVICE: Chat', ['post_data:', $post_data]);
 
-        return $this->send("post", "/chat", $post_data);
+        return $this->send('post', '/chat', $post_data);
     }
 
-    ###################### Tenants ######################
+    //##################### Tenants ######################
 
     public function registerTenant(Tenant $tenant)
     {
@@ -58,14 +58,14 @@ class LeasemateApi
             'tenant_domain' => $this->getSubDomain($tenant->domain),
         ];
 
-        return $this->send('post',"/tenants", $post_data);
+        return $this->send('post', '/tenants', $post_data);
     }
 
     public function updateTenant(Tenant $tenant_id)
     {
         Log::info('SERVICE: Update tenant:');
 
-        return $this->send('post',"/tenants/{$tenant_id}");
+        return $this->send('post', "/tenants/{$tenant_id}");
     }
 
     public function deleteTenant(Tenant $tenant)
@@ -77,10 +77,10 @@ class LeasemateApi
             'tenant_domain' => (string) $this->getSubDomain($tenant->domain),
         ];
 
-        return $this->send('delete',"/tenants/{$tenant->id}", $post_data);
+        return $this->send('delete', "/tenants/{$tenant->id}", $post_data);
     }
 
-    ###################### Assets ######################
+    //##################### Assets ######################
 
     public function registerAsset(Asset $asset)
     {
@@ -91,24 +91,24 @@ class LeasemateApi
             'asset_name' => (string) $asset->name,
         ];
 
-        return $this->send('post',"/assets", $post_data);
+        return $this->send('post', '/assets', $post_data);
     }
 
     public function updateAsset(Asset $asset)
     {
         Log::info('SERVICE: Update asset:');
 
-        return $this->send('post',"/assets/{$asset->id}");
+        return $this->send('post', "/assets/{$asset->id}");
     }
 
     public function deleteAsset(Asset $asset)
     {
         Log::info('SERVICE: Delete asset:');
 
-        return $this->send('delete',"/assets/{$asset->id}");
+        return $this->send('delete', "/assets/{$asset->id}");
     }
 
-    ###################### Documents ######################
+    //##################### Documents ######################
 
     public function registerDocument(
         Asset $asset,
@@ -117,7 +117,7 @@ class LeasemateApi
         $storedName,
         $classification = 'lease',
     ) {
-        $post_data =[
+        $post_data = [
             'classification' => $classification,
             'asset_id' => (int) $asset->id,
             'asset_name' => (string) $asset->name,
@@ -125,7 +125,7 @@ class LeasemateApi
             's3_object' => $storedName,
         ];
 
-        if($document->collection_name === 'amendment') {
+        if ($document->collection_name === 'amendment') {
             $post_data['sub_classification'] = 'amendment';
             $post_data['document_id'] = $document->id;
             $post_data['parent_document_id'] = $lease->id;
@@ -137,42 +137,41 @@ class LeasemateApi
 
         Log::info('SERVICE: Registering lease upload', ['post_data:', $post_data]);
 
-        return $this->send("post", "/documents", $post_data);
+        return $this->send('post', '/documents', $post_data);
     }
 
     public function restoreDocument($lease)
     {
         Log::info('REAI SERVICE: Restore file', ['lease_id:', $lease->id]);
 
-        return $this->send("post", "/documents/{$lease->id}/restore/");
+        return $this->send('post', "/documents/{$lease->id}/restore/");
     }
 
     public function archiveDocument($lease)
     {
         Log::info('REAI SERVICE: Archiving file', ['lease_id:', $lease->id]);
 
-        return $this->send("post", "/documents/{$lease->id}/archive/");
+        return $this->send('post', "/documents/{$lease->id}/archive/");
     }
-
 
     public function deleteDocument($lease)
     {
         Log::info('REAI SERVICE: Deleting file', ['lease_id:', $lease->id]);
 
-        return $this->send("delete", "/documents/{$lease->id}");
+        return $this->send('delete', "/documents/{$lease->id}");
     }
 
-    ####################################################
+    //###################################################
 
     private function getSubDomain($tenant_domain)
     {
-        return explode(".", $tenant_domain)[0];
+        return explode('.', $tenant_domain)[0];
     }
 
-    private function send($method='get', $endpoint, $data=[])
+    private function send($method, $endpoint, $data = [])
     {
         $callStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        $callingFunction='';
+        $callingFunction = '';
         // Check if there is a calling function
         if (isset($callStack[1]['function'])) {
             $callingFunction = $callStack[1]['function'];
@@ -187,19 +186,19 @@ class LeasemateApi
         return $this->makeRequest()->$method($this->getEndpoint($endpoint), $payload);
     }
 
-    private function get($endpoint, $data=[])
+    private function get($endpoint, $data = [])
     {
-        return $this->send("get", $endpoint, $data);
+        return $this->send('get', $endpoint, $data);
     }
 
-    private function post($endpoint, $data=[])
+    private function post($endpoint, $data = [])
     {
-        return $this->send("post", $endpoint, $data);
+        return $this->send('post', $endpoint, $data);
     }
 
-    private function delete($endpoint, $data=[])
+    private function delete($endpoint, $data = [])
     {
-        return $this->send("delete", $endpoint, $data);
+        return $this->send('delete', $endpoint, $data);
     }
 
     private function makeRequest()
@@ -216,10 +215,6 @@ class LeasemateApi
         return $this->baseUrl;
     }
 
-    /**
-     * @param $endpoint
-     * @return string
-     */
     private function getEndpoint($endpoint): string
     {
         return $this->baseUrl.$endpoint;

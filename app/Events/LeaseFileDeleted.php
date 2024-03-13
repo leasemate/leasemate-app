@@ -2,9 +2,7 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,6 +13,7 @@ class LeaseFileDeleted implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $lease_deleted;
+
     /**
      * Create a new event instance.
      */
@@ -31,6 +30,7 @@ class LeaseFileDeleted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         \Log::info('broadcasting LeaseFileDeleted');
+
         return [
             new PrivateChannel('tenant-global-channel.'.tenant('id')),
         ];

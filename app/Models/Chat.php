@@ -19,7 +19,7 @@ class Chat extends Model
 
     protected static function booted(): void
     {
-//        static::addGlobalScope(new UserScope());
+        //        static::addGlobalScope(new UserScope());
     }
 
     public function user()
@@ -41,5 +41,4 @@ class Chat extends Model
     {
         return $this->hasOne(ChatMessage::class)->latestOfMany('created_at');
     }
-
 }

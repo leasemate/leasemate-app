@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +37,7 @@ class AuthenticatedSessionController extends Controller
             $request->authenticate();
             $user = auth('central')->user();
 
-            if(is_null($user->global_id)) {
+            if (is_null($user->global_id)) {
 
                 return redirect()->route('tenants');
 
@@ -72,7 +71,7 @@ class AuthenticatedSessionController extends Controller
 
     public function forceLogin(Request $request)
     {
-        if (!$request->hasValidSignature(false)) {
+        if (! $request->hasValidSignature(false)) {
             abort(403, 'Invalid login attempt.');
         }
 
@@ -81,8 +80,9 @@ class AuthenticatedSessionController extends Controller
         $this->createJwtToken($user);
 
         Auth::login($user);
-//        dump('force login');
-//        dd($user);
+
+        //        dump('force login');
+        //        dd($user);
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

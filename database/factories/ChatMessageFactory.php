@@ -21,10 +21,10 @@ class ChatMessageFactory extends Factory
 
         return [
             'chat_id' => \App\Models\Chat::factory(),
-            'from'=> $this->faker->randomElement(['user', 'bot']),
+            'from' => $this->faker->randomElement(['user', 'bot']),
             'message' => $this->faker->sentence,
-            'created_at' =>$randomDate,
-            'updated_at' =>$this->faker->dateTimeBetween($randomDate, 'now')
+            'created_at' => $randomDate,
+            'updated_at' => $this->faker->dateTimeBetween($randomDate, 'now'),
         ];
     }
 }

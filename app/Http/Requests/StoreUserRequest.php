@@ -37,5 +37,4 @@ class StoreUserRequest extends FormRequest
             'user_roles.required' => 'You must assign a role to this user.',
         ];
     }
-
 }

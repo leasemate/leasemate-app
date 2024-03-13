@@ -43,13 +43,13 @@ class LeaseAmendmentController extends Controller
 
             $amendment = $lease->amendments()->create();
 
-            $storedName = $upload_document->store(tenant('id')."/leases/".$lease->asset_id, ['visibility'=>'public']);
-//        $storedName = $upload_document->getBasename();
+            $storedName = $upload_document->store(tenant('id').'/leases/'.$lease->asset_id, ['visibility' => 'public']);
+            //        $storedName = $upload_document->getBasename();
 
             $document = $amendment->document()
                 ->create([
                     'asset_id' => $lease->asset_id,
-                    'uuid' => (string)Str::uuid(),
+                    'uuid' => (string) Str::uuid(),
                     'collection_name' => Document::COLLECTION_AMENDMENT,
                     'name' => $upload_document->getClientOriginalName(),
                     'file_name' => $storedName,
@@ -63,9 +63,9 @@ class LeaseAmendmentController extends Controller
 
             \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
-            if ( $registerLeaseUploadResponse->failed() ) {
+            if ($registerLeaseUploadResponse->failed()) {
 
-                if ( Storage::disk()->exists($document->file_name) ) {
+                if (Storage::disk()->exists($document->file_name)) {
                     Storage::disk()->delete($document->file_name);
                 }
 
@@ -76,10 +76,11 @@ class LeaseAmendmentController extends Controller
 
             return response()->json(['success' => 1, 'amendment' => $amendment]);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::error($e->getMessage());
 
             DB::rollBack();
+
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }

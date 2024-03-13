@@ -5,14 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\LeaseProcessingUpdate;
 use App\Facades\LeasemateApi;
 use App\Http\Requests\StoreFileUploadRequest;
-use App\Http\Requests\UpdateFileUploadRequest;
-use App\Jobs\ProcessFile;
 use App\Models\File;
 //use App\Services\ReaiProcessor;
-use App\Notifications\DocumentCompleteNotification;
-use App\Notifications\FileProcessingStarted;
-use App\Services\ZepApi;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -29,23 +23,24 @@ class FilesController extends Controller
 
         $files = File::with('user')->orderBy('created_at', 'desc');
 
-        if($trashed_file_count && request()->has('archived') && request('archived') ) {
+        if ($trashed_file_count && request()->has('archived') && request('archived')) {
             $files->onlyTrashed();
         }
 
-        if(!$trashed_file_count && request()->has('archived')) {
+        if (! $trashed_file_count && request()->has('archived')) {
             return redirect()->route('files.index');
         }
 
         $files = $files->paginate(20)->withQueryString();
 
-        if(request()->has('page') && !$files->count()) {
+        if (request()->has('page') && ! $files->count()) {
             return redirect()->route('files.index', ($files->lastPage() == 1 ? [] : ['page' => $files->lastPage()]));
         }
 
         $transformed = $files->getCollection()->map(function ($file) {
             $file->size_readable = readableBytes($file->size);
             $file->download_link = Storage::disk('s3')->url($file->stored_name);
+
             return $file;
         });
 
@@ -53,8 +48,8 @@ class FilesController extends Controller
 
         return Inertia::render('Files/Index', [
             'uploaded_files' => $files,
-            'archived'=>(int) request('archived'),
-            'trashed_file_count'=>(int)$trashed_file_count
+            'archived' => (int) request('archived'),
+            'trashed_file_count' => (int) $trashed_file_count,
         ]);
     }
 
@@ -70,14 +65,14 @@ class FilesController extends Controller
 
                 $file = $request->file('upload_file');
 
-//                $storedName = $file->getBasename();
-//                $file->store(auth()->user()->id.'/pdfs');
-                $storedName = $file->store(tenant('domain')."/".auth()->user()->id, ['disk'=>'s3', 'visibility'=>'public']);
+                //                $storedName = $file->getBasename();
+                //                $file->store(auth()->user()->id.'/pdfs');
+                $storedName = $file->store(tenant('domain').'/'.auth()->user()->id, ['disk' => 's3', 'visibility' => 'public']);
 
-//                $fullPath = Storage::path($storedName);
+                //                $fullPath = Storage::path($storedName);
 
-                if(!$storedName) {
-                    throw new \Exception("Unable to upload file! Try again.");
+                if (! $storedName) {
+                    throw new \Exception('Unable to upload file! Try again.');
                 }
 
                 Log::info('File uploaded:'.$file->getClientOriginalName());
@@ -111,12 +106,12 @@ class FilesController extends Controller
         try {
 
             $file->status = 'Completed';
-//            $file->save();
+            //            $file->save();
             $file->restore();
 
-            return redirect()->back()->with('success', "File restored");
+            return redirect()->back()->with('success', 'File restored');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
 
@@ -127,29 +122,29 @@ class FilesController extends Controller
     public function prune(File $file)
     {
 
-            try {
-                Storage::disk('s3')->delete($file->stored_name);
-                $response = LeasemateApi::deleteFile($file->stored_name);
+        try {
+            Storage::disk('s3')->delete($file->stored_name);
+            $response = LeasemateApi::deleteFile($file->stored_name);
 
-                if($response->ok()) {
+            if ($response->ok()) {
 
-                    $file->forceDelete();
+                $file->forceDelete();
 
-                    return redirect()->back()->with('success', "File deleted");
+                return redirect()->back()->with('success', 'File deleted');
 
-                } elseif($response->serverError() || $response->clientError()) {
+            } elseif ($response->serverError() || $response->clientError()) {
 
-                    return redirect()->back()->with('error', $response->status().": ".$response->reason());
-                } else {
+                return redirect()->back()->with('error', $response->status().': '.$response->reason());
+            } else {
 
-                    return redirect()->back()->with('error', "Error deleting file");
-                }
-
-            } catch(\Exception $e) {
-
-                return redirect()->back()->with('error', $e->getMessage());
-
+                return redirect()->back()->with('error', 'Error deleting file');
             }
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+
+        }
     }
 
     /**
@@ -160,16 +155,16 @@ class FilesController extends Controller
         try {
 
             \Log::info($file);
-            \Log::info("stored name");
+            \Log::info('stored name');
             \Log::info($file->stored_name);
 
-            if( ! in_array($file->status, ['Pending', 'Completed', 'Failed'])) {
-                throw new \Exception("File cannot be deleted");
+            if (! in_array($file->status, ['Pending', 'Completed', 'Failed'])) {
+                throw new \Exception('File cannot be deleted');
             }
 
-            if(in_array($file->status, ['Pending','Failed'])) {
+            if (in_array($file->status, ['Pending', 'Failed'])) {
 
-                if(Storage::disk('s3')->exists($file->stored_name)) {
+                if (Storage::disk('s3')->exists($file->stored_name)) {
 
                     Storage::disk('s3')->delete($file->stored_name);
                     $file->forceDelete();
@@ -182,14 +177,13 @@ class FilesController extends Controller
                 $file->delete();
             }
 
-            return redirect()->back()->with('success', "File deleted");
+            return redirect()->back()->with('success', 'File deleted');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());
 
         }
 
     }
-
 }

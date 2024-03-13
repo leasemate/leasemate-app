@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Traits\ApiRequestTrait;
 
 class FlowiseApi
@@ -28,11 +27,10 @@ class FlowiseApi
 
             return $response->json();
         } else {
-            \Log::error('SERVICE: Error Chat: '.$response->status()." - ".$response->reason());
+            \Log::error('SERVICE: Error Chat: '.$response->status().' - '.$response->reason());
 
-            throw new \Exception("Error: ".$response->status()." - ".$response->reason());
+            throw new \Exception('Error: '.$response->status().' - '.$response->reason());
         }
 
     }
-
 }

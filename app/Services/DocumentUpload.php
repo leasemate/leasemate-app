@@ -4,7 +4,4 @@ namespace App\Services;
 
 class DocumentUpload
 {
-
-
-
 }

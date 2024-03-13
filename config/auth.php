@@ -77,10 +77,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-         'api_token' => [
-             'driver' => 'database',
-             'table' => 'api_tokens',
-         ],
+        'api_token' => [
+            'driver' => 'database',
+            'table' => 'api_tokens',
+        ],
     ],
 
     /*

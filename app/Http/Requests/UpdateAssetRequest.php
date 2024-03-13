@@ -25,8 +25,8 @@ class UpdateAssetRequest extends FormRequest
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'gross_leasable_area' => 'required|numeric',
-            'users'=> 'required|array',
-            'asset_photo' => 'nullable'
+            'users' => 'required|array',
+            'asset_photo' => 'nullable',
         ];
     }
 
@@ -36,5 +36,4 @@ class UpdateAssetRequest extends FormRequest
             'users.required' => 'You must assign a user to this asset.',
         ];
     }
-
 }

@@ -4,16 +4,15 @@ namespace App\Observers;
 
 use App\Models\User;
 use App\Notifications\CreatePassword;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 
 class UserObserver
 {
     public function created(User $user): void
     {
-//        \Log::info('OBSERVER: User created', ['user' => $user]);
+        //        \Log::info('OBSERVER: User created', ['user' => $user]);
 
-        if(tenant() && !$user->is_super_admin) {
+        if (tenant() && ! $user->is_super_admin) {
             $password_token = Password::broker()->createToken($user);
             $user->notify(new CreatePassword($password_token));
         }

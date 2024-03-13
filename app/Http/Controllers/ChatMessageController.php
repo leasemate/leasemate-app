@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreChatMessageRequest;
-use App\Http\Resources\ChatMessageCollection;
 use App\Http\Resources\ChatMessageResource;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -30,14 +29,14 @@ class ChatMessageController extends Controller
 
         $validated = $request->validated();
 
-        $user_message = ['from'=> 'bot', 'message' => $validated['message']];
+        $user_message = ['from' => 'bot', 'message' => $validated['message']];
 
         $message = $chat->messages()->create($user_message);
 
-//        dd($messages);
-//        $latestMessage = $chat->messages()->orderBy('created_at')->first();
+        //        dd($messages);
+        //        $latestMessage = $chat->messages()->orderBy('created_at')->first();
 
-//        dd($latestMessage);
+        //        dd($latestMessage);
         return new ChatMessageResource($message);
 
     }
@@ -49,7 +48,6 @@ class ChatMessageController extends Controller
     {
 
     }
-
 
     /**
      * Update the specified resource in storage.

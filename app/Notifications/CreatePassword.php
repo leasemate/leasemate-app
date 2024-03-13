@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -17,6 +16,7 @@ class CreatePassword extends Notification implements ShouldQueue
     use Queueable;
 
     protected object $user;
+
     /**
      * Create a new notification instance.
      */
@@ -62,7 +62,6 @@ class CreatePassword extends Notification implements ShouldQueue
      * Get the reset URL for the given notifiable.
      *
      * @param  mixed  $notifiable
-     * @return string
      */
     protected function createPasswordUrl(): string
     {

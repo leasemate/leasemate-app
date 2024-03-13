@@ -22,8 +22,8 @@ class ChatFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id ?? User::factory()->create()->id,
             'chat_uuid' => $this->faker->uuid,
-            'created_at' =>$randomDate,
-            'updated_at' =>$this->faker->dateTimeBetween($randomDate, 'now')
+            'created_at' => $randomDate,
+            'updated_at' => $this->faker->dateTimeBetween($randomDate, 'now'),
         ];
     }
 }

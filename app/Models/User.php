@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use App\Traits\HasTenants;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -22,16 +21,15 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Syncable
 {
-
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use HasTeams;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
     use HasRoles;
+    use HasTeams;
     use HasTenants;
+    use Notifiable;
     use ResourceSyncing;
+    use TwoFactorAuthenticatable;
 
     protected $appends = [
         'profile_photo_url',
@@ -100,7 +98,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
     public function displayNameWithRoles(): Attribute
     {
         return Attribute::get(function (): string {
-            $roles = $this->getRoleNames()->isNotEmpty() ? " (".$this->getRoleNames()->implode(', ').")": '';
+            $roles = $this->getRoleNames()->isNotEmpty() ? ' ('.$this->getRoleNames()->implode(', ').')' : '';
 
             return $this->name.$roles;
         });
@@ -108,7 +106,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
 
     public function getZepUserIdAttribute()
     {
-        return tenant('id')."-".$this->id;
+        return tenant('id').'-'.$this->id;
     }
 
     public function asset()
@@ -125,7 +123,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
     {
         return self::with('roles')
             ->where('name', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search."%");
+            ->orWhere('email', 'like', '%'.$search.'%');
     }
 
     public function chats()
@@ -133,11 +131,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
         return $this->hasMany(Chat::class);
     }
 
-
     /**
      *Stancl Tenancy Syncable
      */
-
     public function getGlobalIdentifierKey()
     {
         return $this->getAttribute($this->getGlobalIdentifierKeyName());
@@ -162,5 +158,4 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
             'email_verified_at',
         ];
     }
-
 }

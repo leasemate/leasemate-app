@@ -3,16 +3,13 @@
 namespace App\Jobs;
 
 use App\Events\LeaseFileDeleted;
-use App\Facades\LeasemateApi;
 use App\Models\Lease;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class DeleteLeaseFile implements ShouldQueue
 {
@@ -22,7 +19,8 @@ class DeleteLeaseFile implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(public Lease $lease)
-    { }
+    {
+    }
 
     /**
      * Execute the job.

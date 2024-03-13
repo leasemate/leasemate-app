@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\CreateNewUser;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserAssetResource;
@@ -10,12 +9,9 @@ use App\Models\Team;
 use App\Models\User;
 use App\Notifications\CreatePassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
@@ -26,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-//        $this->authorize('user read');
+        //        $this->authorize('user read');
 
         return inertia()->render('Users/Index', [
             'users' => User::with('roles')->get(),
@@ -70,9 +66,10 @@ class UserController extends Controller
 
             session()->flash('success', $user->name.' User created successfully');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
+
             return redirect()->back()->withInput();
         }
 
@@ -122,9 +119,10 @@ class UserController extends Controller
 
             session()->flash('success', $user->name.' User updated successfully');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
+
             return redirect()->back()->withInput();
         }
 
@@ -142,7 +140,7 @@ class UserController extends Controller
 
             session()->flash('success', $user->name.' User deleted successfully');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
 
@@ -157,7 +155,7 @@ class UserController extends Controller
 
             session()->flash('success', 'Invitation resent successfully');
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
 
@@ -187,5 +185,4 @@ class UserController extends Controller
 
         $user->sendEmailVerificationNotification();
     }
-
 }

@@ -22,7 +22,7 @@ class RegisterController extends Controller
         try {
 
             $tenant = Tenant::create($request->validated());
-            $tenant->createDomain(['domain'=>$request->domain]);
+            $tenant->createDomain(['domain' => $request->domain]);
             $tenant->password = null;
             $tenant->save();
 

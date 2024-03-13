@@ -31,7 +31,7 @@ class GenerateAPIToken extends Command
 
         $fresh = $this->option('fresh');
 
-        if($fresh) {
+        if ($fresh) {
             $this->info('Deleting all existing tokens...');
             ApiToken::truncate();
         }
@@ -40,7 +40,7 @@ class GenerateAPIToken extends Command
             'api_token' => hash('sha256', Str::uuid()->toString()),
         ]);
 
-        $this->info('API token: ' . $apiToken->api_token);
+        $this->info('API token: '.$apiToken->api_token);
 
     }
 }

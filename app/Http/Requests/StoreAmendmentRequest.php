@@ -28,7 +28,7 @@ class StoreAmendmentRequest extends FormRequest
                 'file',
                 'mimes:pdf',
                 'max:51200',
-                new UniqueAmendmentFilename()
+                new UniqueAmendmentFilename(),
             ],
         ];
     }

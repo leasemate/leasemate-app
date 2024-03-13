@@ -26,7 +26,7 @@ class LeaseFactory extends Factory
             'gross_leasable_area' => $this->faker->numberBetween(10000, 100000),
             'start_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
             'end_date' => $this->faker->dateTimeBetween('now', '+5 years'),
-        'rent_per_sqft' => $this->faker->randomFloat(2, 1, 5),
+            'rent_per_sqft' => $this->faker->randomFloat(2, 1, 5),
         ];
     }
 }

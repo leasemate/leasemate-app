@@ -2,8 +2,6 @@
 
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Http\Middleware\AuthenticateSession;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 return [
 
@@ -65,9 +63,9 @@ return [
     'features' => [
         Features::termsAndPrivacyPolicy(),
         Features::profilePhotos(),
-//        Features::api(),
-//        Features::teams(['invitations' => true]),
-//        Features::accountDeletion(),
+        //        Features::api(),
+        //        Features::teams(['invitations' => true]),
+        //        Features::accountDeletion(),
     ],
 
     /*

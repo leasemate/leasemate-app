@@ -2,8 +2,6 @@
 
 use App\Providers\RouteServiceProvider;
 use Laravel\Fortify\Features;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 return [
 
@@ -94,7 +92,7 @@ return [
     'domain' => null,
 
     'paths' => [
-        'login' => env('APP_CENTRAL_DOMAIN').'/login'
+        'login' => env('APP_CENTRAL_DOMAIN').'/login',
     ],
 
     /*
@@ -154,16 +152,16 @@ return [
     */
 
     'features' => [
-//        Features::registration(),
-//        Features::resetPasswords(),
+        //        Features::registration(),
+        //        Features::resetPasswords(),
         Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
-//        Features::twoFactorAuthentication([
-//            'confirm' => true,
-//            'confirmPassword' => true,
-//            // 'window' => 0,
-//        ]),
+        //        Features::twoFactorAuthentication([
+        //            'confirm' => true,
+        //            'confirmPassword' => true,
+        //            // 'window' => 0,
+        //        ]),
     ],
 
 ];

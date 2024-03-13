@@ -87,12 +87,10 @@ class Lease extends Model
         return $this->hasMany(Amendment::class);
     }
 
-
     public function getOriginalLeaseDetail()
     {
-//        dump('loadOriginalLeaseDetail');
-//        dd($this->lease_document->document_detail->basic_extracted_data);
-//        $this->load(['lease_detail']);
+        //        dump('loadOriginalLeaseDetail');
+        //        dd($this->lease_document->document_detail->basic_extracted_data);
+        //        $this->load(['lease_detail']);
     }
-
 }

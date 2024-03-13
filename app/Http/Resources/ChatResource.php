@@ -4,11 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Str;
 
 class ChatResource extends JsonResource
 {
-//    public static $wrap = 'chat';
+    //    public static $wrap = 'chat';
     /**
      * Transform the resource into an array.
      *
@@ -18,12 +17,12 @@ class ChatResource extends JsonResource
     {
 
         return [
-            'chat_uuid'=>$this->chat_uuid,
-            'updated_at'=>$this->updated_at->format('M j, y g:ia'),
-            'last_message'=>$this->when($this->relationLoaded('last_message'), function() {
+            'chat_uuid' => $this->chat_uuid,
+            'updated_at' => $this->updated_at->format('M j, y g:ia'),
+            'last_message' => $this->when($this->relationLoaded('last_message'), function () {
                 return new ChatMessageResource($this->last_message);
             }),
-            'messages'=>ChatMessageResource::collection($this->whenLoaded('messages'))
+            'messages' => ChatMessageResource::collection($this->whenLoaded('messages')),
         ];
     }
 }

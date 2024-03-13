@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\UserSuperAdminFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -13,6 +11,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\User::factory(1)->create();
+        \App\Models\User::factory(1)->create();
     }
 }

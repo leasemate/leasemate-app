@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class LeaseDetailResource extends JsonResource
 {
@@ -33,9 +32,9 @@ class LeaseDetailResource extends JsonResource
     {
         $monthly_base_rent = [];
 
-        if ( $this->rent_schedule ) {
+        if ($this->rent_schedule) {
 
-            foreach($this->rent_schedule as $key => $value) {
+            foreach ($this->rent_schedule as $key => $value) {
                 $monthly_base_rent[$key] = [
                     'start_date' => $value['start_date'] ? Carbon::parse($value['start_date'])->format('m/d/Y') : null,
                     'end_date' => $value['end_date'] ? Carbon::parse($value['end_date'])->format('m/d/Y') : null,
@@ -44,6 +43,7 @@ class LeaseDetailResource extends JsonResource
                 ];
             }
         }
+
         return $monthly_base_rent;
     }
 }

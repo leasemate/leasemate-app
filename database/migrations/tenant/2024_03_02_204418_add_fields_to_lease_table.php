@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::table('leases', function (Blueprint $table) {
 
-            DB::statement("ALTER TABLE `leases` CHANGE `tenant_name` `tenant` varchar(255)");
-            DB::statement("ALTER TABLE `leases` CHANGE `gla` `gla` int(11)");
-            DB::statement("ALTER TABLE `leases` CHANGE `address` `premise_address` varchar(255)");
+            DB::statement('ALTER TABLE `leases` CHANGE `tenant_name` `tenant` varchar(255)');
+            DB::statement('ALTER TABLE `leases` CHANGE `gla` `gla` int(11)');
+            DB::statement('ALTER TABLE `leases` CHANGE `address` `premise_address` varchar(255)');
 
             $table->string('landlord')->nullable()->after('tenant');
             $table->string('building_address')->nullable()->after('premise_address');
@@ -34,9 +34,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('leases', function (Blueprint $table) {
-            DB::statement("ALTER TABLE `leases` CHANGE `tenant` `tenant_name` varchar(255)");
-            DB::statement("ALTER TABLE `leases` CHANGE `premise_address` `address` varchar(255)");
-            DB::statement("ALTER TABLE `leases` CHANGE `gla` `gla` varchar(255) NULL");
+            DB::statement('ALTER TABLE `leases` CHANGE `tenant` `tenant_name` varchar(255)');
+            DB::statement('ALTER TABLE `leases` CHANGE `premise_address` `address` varchar(255)');
+            DB::statement('ALTER TABLE `leases` CHANGE `gla` `gla` varchar(255) NULL');
 
             $table->dropColumn('landlord');
             $table->dropColumn('building_address');

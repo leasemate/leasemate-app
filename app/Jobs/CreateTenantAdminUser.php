@@ -7,12 +7,10 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Laravel\Fortify\Fortify;
 
 class CreateTenantAdminUser implements ShouldQueue
 {
@@ -35,7 +33,7 @@ class CreateTenantAdminUser implements ShouldQueue
 
             $user = User::create([
                 ...$tenant->only('name', 'email', 'password'),
-                'is_super_admin' => true
+                'is_super_admin' => true,
             ]);
 
             $this->createTeam($user);

@@ -23,7 +23,7 @@ class NotificationController extends Controller
     public function show(DatabaseNotification $notification)
     {
         try {
-            if($notification) {
+            if ($notification) {
 
                 $response_data = [
                     'status' => 'success',
@@ -49,7 +49,7 @@ class NotificationController extends Controller
     {
         try {
 
-            if($notification) {
+            if ($notification) {
                 $notification->markAsRead();
             }
 

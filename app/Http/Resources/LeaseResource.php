@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class LeaseResource extends JsonResource
 {
@@ -29,8 +28,8 @@ class LeaseResource extends JsonResource
             'end_date' => $this->end_date ? $this->end_date->format('m/d/Y') : null,
             'rentable_sqft' => $this->rentable_sqft ?? null,
             'rent_per_sqft' => $this->rent_per_sqft ?? null,
-            'term' => $this->term ??  null,
-            'abatement' => $this->abatement ??  null,
+            'term' => $this->term ?? null,
+            'abatement' => $this->abatement ?? null,
             'pro_rata_share' => $this->pro_rata_share ? "{$this->pro_rata_share}%" : null,
             'security_deposit' => $this->security_deposit ?? null,
             'rent_schedule' => $this->getMonthlyBaseRent(),
@@ -45,9 +44,9 @@ class LeaseResource extends JsonResource
     {
         $monthly_base_rent = [];
 
-        if ( $this->rent_schedule ) {
+        if ($this->rent_schedule) {
 
-            foreach($this->rent_schedule as $key => $value) {
+            foreach ($this->rent_schedule as $key => $value) {
                 $monthly_base_rent[$key] = [
                     'start_date' => $value['start_date'] ? Carbon::parse($value['start_date'])->format('m/d/Y') : null,
                     'end_date' => $value['end_date'] ? Carbon::parse($value['end_date'])->format('m/d/Y') : null,
@@ -56,6 +55,7 @@ class LeaseResource extends JsonResource
                 ];
             }
         }
+
         return $monthly_base_rent;
     }
 }

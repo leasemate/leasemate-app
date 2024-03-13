@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Facades\ZepApi;
 use App\Jobs\CreateTenantAdminUser;
 use App\Jobs\DeleteTenantS3Files;
 use App\Jobs\DeleteZepUsers;
@@ -13,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
-use Stancl\Tenancy\Events\DeletingDatabase;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
@@ -39,7 +37,6 @@ class TenancyServiceProvider extends ServiceProvider
                     // Provision API keys, create S3 buckets, anything you want!
                     // Your own jobs to prepare the tenant.
 
-
                 ])->send(function (Events\TenantCreated $event) {
                     return $event->tenant;
                 })->shouldBeQueued(config('tenancy.queue_tenant_created')), // `false` by default, but you probably want to make this `true` for production.
@@ -56,7 +53,7 @@ class TenancyServiceProvider extends ServiceProvider
 
                     Jobs\DeleteDatabase::class,
                     DeleteTenantS3Files::class,
-//                    DeleteZepUsers::class,
+                    //                    DeleteZepUsers::class,
 
                 ])->send(function (Events\TenantDeleted $event) {
                     return $event->tenant;
@@ -93,15 +90,15 @@ class TenancyServiceProvider extends ServiceProvider
                 function (Events\TenancyEnded $event) {
                     $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
                     $permissionRegistrar->cacheKey = 'spatie.permission.cache';
-                }
+                },
             ],
 
             Events\BootstrappingTenancy::class => [],
             Events\TenancyBootstrapped::class => [
                 function (Events\TenancyBootstrapped $event) {
                     $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
-                    $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
-                }
+                    $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.'.$event->tenancy->tenant->getTenantKey();
+                },
             ],
             Events\RevertingToCentralContext::class => [],
             Events\RevertedToCentralContext::class => [],

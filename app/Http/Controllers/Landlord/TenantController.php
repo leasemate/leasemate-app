@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Landlord;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -48,7 +47,7 @@ class TenantController extends Controller
 
             $tenant = Tenant::create($request->validated());
 
-            $tenant->createDomain(['domain'=>$request->domain]);
+            $tenant->createDomain(['domain' => $request->domain]);
 
             $tenant->password = null;
             $tenant->save();
@@ -74,9 +73,8 @@ class TenantController extends Controller
 
             return redirect()->route('tenants');
 
-        } catch( \Exception $e) {
+        } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
     }
-
 }
