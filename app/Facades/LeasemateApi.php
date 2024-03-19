@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Illuminate\Http\Client\Response updateAsset(Asset $asset)
  * @method static \Illuminate\Http\Client\Response deleteAsset(Asset $asset)
  * @method static \Illuminate\Http\Client\Response registerDocument(Asset $asset, Lease $lease, Document $document, string $storedName, string $classification = 'lease')
- * @method static \Illuminate\Http\Client\Response restoreDocument(Lease $lease)
- * @method static \Illuminate\Http\Client\Response archiveDocument(Lease $asset)
- * @method static \Illuminate\Http\Client\Response deleteDocument(Lease $asset)
+ * @method static \Illuminate\Http\Client\Response restoreDocument(Document $document)
+ * @method static \Illuminate\Http\Client\Response archiveDocument(Document $document)
+ * @method static \Illuminate\Http\Client\Response deleteDocument(Document $document)
  */
 class LeasemateApi extends Facade
 {

@@ -34,7 +34,7 @@ class LeaseObserver
             $lease->lease_document->save();
             $lease->lease_document->delete();
 
-            $archiveDocument = LeasemateApi::archiveDocument($lease);
+            $archiveDocument = LeasemateApi::archiveDocument($lease->lease_document);
 
             Log::info('archiveDocument response: ', [$archiveDocument]);
         }
@@ -49,7 +49,7 @@ class LeaseObserver
         $lease->lease_document_trashed->status = 'Ready';
         $lease->lease_document_trashed->save();
 
-        $restoreDocument = LeasemateApi::restoreDocument($lease);
+        $restoreDocument = LeasemateApi::restoreDocument($lease->lease_document);
 
         \Log::info('restoreDocument', [$restoreDocument]);
     }
@@ -65,7 +65,7 @@ class LeaseObserver
 
         $lease->lease_document_trashed->forceDelete();
 
-        $deleteDocument = LeasemateApi::deleteDocument($lease);
+        $deleteDocument = LeasemateApi::deleteDocument($lease->lease_document);
 
         Log::info('After deleteDocument..................');
         Log::info('delete doc response..................');

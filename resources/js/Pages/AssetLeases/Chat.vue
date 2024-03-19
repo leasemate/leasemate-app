@@ -271,6 +271,7 @@ const sendQuery = async (question) => {
         tenant_domain: page.props.tenant_domain,
         asset_id: props.asset.id,
         lease_id: props.lease.id,
+        document_id: props.lease.lease_document.id,
     };
 
     // console.log(data);

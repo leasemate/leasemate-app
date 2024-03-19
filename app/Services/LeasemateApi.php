@@ -128,37 +128,37 @@ class LeasemateApi
         if ($document->collection_name === 'amendment') {
             $post_data['sub_classification'] = 'amendment';
             $post_data['document_id'] = $document->id;
-            $post_data['parent_document_id'] = $lease->id;
+            $post_data['parent_document_id'] = $lease->lease_document->id;
         } else {
             $post_data['sub_classification'] = 'original';
-            $post_data['document_id'] = $lease->id;
+            $post_data['document_id'] = $document->id;
             $post_data['parent_document_id'] = null;
         }
 
-        Log::info('SERVICE: Registering lease upload', ['post_data:', $post_data]);
+        Log::info('SERVICE: Registering document upload', ['post_data:', $post_data]);
 
         return $this->send('post', '/documents', $post_data);
     }
 
-    public function restoreDocument($lease)
+    public function restoreDocument(Document $document)
     {
-        Log::info('REAI SERVICE: Restore file', ['lease_id:', $lease->id]);
+        Log::info('REAI SERVICE: Restore document', ['document_id:', $document->id]);
 
-        return $this->send('post', "/documents/{$lease->id}/restore/");
+        return $this->send('post', "/documents/{$document->id}/restore/");
     }
 
-    public function archiveDocument($lease)
+    public function archiveDocument(Document $document)
     {
-        Log::info('REAI SERVICE: Archiving file', ['lease_id:', $lease->id]);
+        Log::info('REAI SERVICE: Archiving document', ['document_id:', $document->id]);
 
-        return $this->send('post', "/documents/{$lease->id}/archive/");
+        return $this->send('post', "/documents/{$document->id}/archive/");
     }
 
-    public function deleteDocument($lease)
+    public function deleteDocument(Document $document)
     {
-        Log::info('REAI SERVICE: Deleting file', ['lease_id:', $lease->id]);
+        Log::info('REAI SERVICE: Deleting document', ['document_id:', $document->id]);
 
-        return $this->send('delete', "/documents/{$lease->id}");
+        return $this->send('delete', "/documents/{$document->id}");
     }
 
     //###################################################

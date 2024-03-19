@@ -153,7 +153,6 @@ class FileProcessingController extends Controller
             Log::info('Send notification: LeaseCompleteNotification:');
             $this->amendment->lease->user->notify(new DocumentCompleteNotification($amendment_payload));
         }
-
     }
 
     protected function eventPayload()
