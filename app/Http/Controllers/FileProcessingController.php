@@ -188,7 +188,7 @@ class FileProcessingController extends Controller
         }
 
         try {
-            $rent_schedule = ! empty($this->basic_extracted_data['monthly_base_rent']) ? $this->basic_extracted_data['monthly_base_rent'] : null;
+            $rent_schedule = ! empty($this->basic_extracted_data['rent_schedule']) ? (array) $this->basic_extracted_data['rent_schedule'] : [];
             $end_date = end($rent_schedule)['end_date'] ?? null;
         } catch (\Exception $e) {
             Log::error($e);
