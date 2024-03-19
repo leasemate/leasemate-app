@@ -110,7 +110,11 @@ class FileProcessingController extends Controller
 
     protected function processLease()
     {
-        if ($basicLeaseData = $this->getBasicLeaseData()) {
+        $basicLeaseData = $this->getBasicLeaseData();
+
+            Log::info('basic info:', $basicLeaseData);
+
+        if ($basicLeaseData) {
             Log::info('basic data: ', $basicLeaseData);
 
             $this->lease->fill($basicLeaseData);
@@ -189,6 +193,8 @@ class FileProcessingController extends Controller
         } catch (\Exception $e) {
             Log::error($e);
         }
+
+        Log::info('build array......');
 
         return [
             'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown',
