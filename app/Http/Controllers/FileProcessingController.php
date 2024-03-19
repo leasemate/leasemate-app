@@ -112,19 +112,9 @@ class FileProcessingController extends Controller
     {
         $basicLeaseData = $this->getBasicLeaseData();
 
-        Log::info('basic info:');
-        Log::info($basicLeaseData);
-
         if ($basicLeaseData) {
-            Log::info('basic data: ');
-            Log::info($basicLeaseData);
-
             $this->lease->fill($basicLeaseData);
             $this->lease->save();
-
-            Log::info('lease saved: ');
-            Log::info($this->lease);
-
         }
 
         if ($detailLeaseData = $this->getDetailedLeaseData()) {
@@ -193,12 +183,10 @@ class FileProcessingController extends Controller
 
         try {
             $rent_schedule = ! empty($this->basic_extracted_data['rent_schedule']) ? (array) $this->basic_extracted_data['rent_schedule'] : [];
-            $end_date = end($rent_schedule)['end_date'] ?? null;
+            $end_date = is_array($rent_schedule) ? end($rent_schedule)['end_date'] : null;
         } catch (\TypeError|\Exception $e) {
             Log::error($e);
         }
-
-        Log::info('build array......');
 
         return [
             'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown',
