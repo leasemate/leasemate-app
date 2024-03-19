@@ -112,11 +112,13 @@ class FileProcessingController extends Controller
     {
         $basicLeaseData = $this->getBasicLeaseData();
 
-            Log::info('basic info:', $basicLeaseData);
+            Log::info('basic info:');
+            Log::info($basicLeaseData);
 
         if ($basicLeaseData) {
-            Log::info('basic data: ', $basicLeaseData);
-
+            Log::info('basic data: ');
+            Log::info($basicLeaseData);
+            
             $this->lease->fill($basicLeaseData);
             $this->lease->save();
 
