@@ -19,7 +19,7 @@ class ChatController extends Controller
      */
     public function index(Asset $asset, Lease $lease, Chat $chat)
     {
-        $lease->load(['asset', 'user', 'chats_with_last_message']);
+        $lease->load(['asset', 'user', 'chats_with_last_message', 'lease_document']);
 
         if ($chat->exists) {
             $chat->load(['last_message', 'messages']);
