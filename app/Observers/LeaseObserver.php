@@ -67,6 +67,9 @@ class LeaseObserver
 
         Log::info('Before deleteDocument..................');
 
+        Log::info('lease document..................');
+        Log::info($lease->lease_document);
+
         $deleteDocument = LeasemateApi::deleteDocument($lease->lease_document);
 
         Log::info('After deleteDocument..................');
