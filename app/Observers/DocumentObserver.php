@@ -45,10 +45,10 @@ class DocumentObserver
      */
     public function forceDeleted(Document $document): void
     {
-        Log::info('DocumentObserver:forceDeleted... delete from S3: '.$document->file_name);
+
         if (Storage::disk()->exists($document->file_name)) {
             Storage::disk()->delete($document->file_name);
-            Log::info('DocumentObserver:forceDeleted... DELETED from S3: '.$document->file_name);
+            Log::info('DocumentObserver:forceDeleted... deleted from S3: '.$document->file_name);
         }
     }
 }
