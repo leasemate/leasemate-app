@@ -24,11 +24,11 @@ class AssetObserver
      */
     public function updated(Asset $asset): void
     {
-        //        $response = LeasemateApi::updateAsset($asset);
+        $response = LeasemateApi::updateAsset($asset);
 
-        //        if ($response->failed()) {
-        //            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
-        //        }
+        if ($response->failed()) {
+            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+        }
     }
 
     /**
@@ -51,11 +51,11 @@ class AssetObserver
     {
         $asset->deletePhoto();
 
-        //        $response = LeasemateApi::deleteAsset($asset);
-        //
-        //        if ($response->failed()) {
-        //            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
-        //        }
+        $response = LeasemateApi::deleteAsset($asset);
+
+        if ($response->failed()) {
+            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
+        }
     }
 
     /**
