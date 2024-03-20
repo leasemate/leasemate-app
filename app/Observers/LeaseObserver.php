@@ -65,11 +65,13 @@ class LeaseObserver
 
         $lease->lease_document_trashed->forceDelete();
 
+        Log::info('Before deleteDocument..................');
+
         $deleteDocument = LeasemateApi::deleteDocument($lease->lease_document);
 
         Log::info('After deleteDocument..................');
-        Log::info('delete doc response..................');
 
+        Log::info('delete doc response..................');
         Log::info($deleteDocument);
     }
 }
