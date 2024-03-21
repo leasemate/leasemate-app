@@ -244,7 +244,7 @@ onMounted(() => {
                     ref="pond"
                     class-name="my-pond"
                     class="mt-1"
-                    label-idle="Drop property photo here..."
+                    label-idle="Photo Drop or <span class='filepond--label-action'>Browse</span>"
                     :allow-multiple="false"
                     :allow-replace="true"
                     :maxFiles="1"
