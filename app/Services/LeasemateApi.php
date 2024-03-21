@@ -96,9 +96,13 @@ class LeasemateApi
 
     public function updateAsset(Asset $asset)
     {
-        Log::info('SERVICE: Update asset:');
+        $post_data = [
+            'asset_name' => (string) $asset->name,
+        ];
 
-        return $this->send('post', "/assets/{$asset->id}");
+        Log::info('SERVICE: Update asset:', $post_data);
+
+        return $this->send('post', "/assets/{$asset->id}", $post_data);
     }
 
     public function deleteAsset(Asset $asset)
