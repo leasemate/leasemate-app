@@ -44,7 +44,7 @@ class AssetController extends Controller
 
             DB::beginTransaction();
 
-            $asset = auth()->user()->asset()->create($request->safe()->only('name', 'address', 'gross_leasable_area', 'asset_photo'));
+            $asset = auth()->user()->asset()->create($this->getAssetFields($request));
 
             $asset->associates()->attach(collect($request->get('users'))->pluck('id'));
 
@@ -68,7 +68,11 @@ class AssetController extends Controller
             ->file('asset_photo')
             ->store(tenant('id').'/asset_photos', ['visibility' => 'public']);
 
-        return response()->json(['success' => 1, 'asset_photo_path' => $storedName]);
+        return response()->json([
+            'success' => 1,
+            'asset_photo_path' => $storedName,
+            'photo_filename' => $request->file('asset_photo')->getClientOriginalName(),
+        ]);
     }
 
     /**
@@ -121,20 +125,13 @@ class AssetController extends Controller
     public function update(UpdateAssetRequest $request, Asset $asset)
     {
         try {
-
-            Log::info('Current Asset Photo');
-            Log::info($asset->asset_photo);
-
-            Log::info('Request Asset Photo');
-            Log::info($request->asset_photo);
-
             DB::beginTransaction();
 
-            if (! $request->asset_photo || ($request->asset_photo && $request->asset_photo !== $asset->asset_photo)) {
+            if(! $request->asset_photo || ($request?->asset_photo !== $asset->asset_photo)) {
                 $asset->deletePhoto();
             }
 
-            $asset->update($request->safe()->only('name', 'address', 'gross_leasable_area', 'asset_photo'));
+            $asset->update($this->getAssetFields($request));
 
             $asset->associates()->sync(collect($request->get('users'))->pluck('id'));
 
@@ -150,7 +147,6 @@ class AssetController extends Controller
 
             return redirect()->back()->withInput();
         }
-
     }
 
     /**
@@ -159,7 +155,18 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         $asset->forceDelete();
-
         return redirect()->route('assets.index');
     }
+
+    private function getAssetFields($request): array
+    {
+        return $request->safe()->only(
+            'name',
+            'address',
+            'gross_leasable_area',
+            'asset_photo',
+            'photo_filename'
+        );
+    }
+
 }

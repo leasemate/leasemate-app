@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Asset extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $guarded = [];
 
@@ -29,9 +32,8 @@ class Asset extends Model
 
     public function deletePhoto()
     {
-        if ($this->asset_photo === null) {
-            return;
+        if ($this->asset_photo) {
+            Storage::delete($this->asset_photo);
         }
-        Storage::delete($this->asset_photo);
     }
 }

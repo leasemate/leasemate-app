@@ -33,6 +33,8 @@ const props = defineProps({
                 address: '',
                 gross_leasable_area: null,
                 asset_photo: null,
+                asset_photo_url: null,
+                photo_filename: null,
             }
         }
     },
@@ -67,33 +69,11 @@ const search = (event) => {
 
 const pond = ref(null);
 let serverResponse = '';
-// const preloadedFiles = computed(() => {
-//
-//     console.log('preloadedFiles')
-//     console.log(form.id, [form.asset_photo])
-//     console.log(form.processing)
-//
-//     if (form.id && form.asset_photo) {
-//         return [
-//             {
-//                 source: form.asset_photo,
-//                 options: {
-//                     type: 'local'
-//                 }
-//             }
-//         ];
-//     } else {
-//         return [];
-//     }
-// });
 
 setOptions({
     server: {
         load: (source, load, error, progress, abort, headers) => {
-
-            console.log('load source:', source)
-
-            if(props.asset.asset_photo) {
+            if(props.asset.asset_photo_url) {
                 fetch(route('assets.load-photo', props.asset))
                     .then(response => {
                         if (response.ok) {
@@ -106,14 +86,13 @@ setOptions({
                     })
                     .catch(err => {
                         error(err.message);
-                    });
+                    })
 
-                // Optionally, return an abort function to stop the fetch operation
                 return {
                     abort: () => {
                         // This function is entered if the user cancels the load
                     }
-                };
+                }
             }
         },
         process: {
@@ -124,29 +103,25 @@ setOptions({
                 'X-CSRF-TOKEN': usePage().props.csrf
             },
             onload: (response) => {
-                console.log("!!!!!!! ON LOAD !!!!!");
-
                 serverResponse = JSON.parse(response)
-
-                console.log(serverResponse)
-                // debugger
-                form.asset_photo = serverResponse.asset_photo_path;
+                form.asset_photo = serverResponse.asset_photo_path
+                form.photo_filename = serverResponse.photo_filename
             },
-            ondata: (formData) => {
-                console.log("on data");
-                formData.append('asset_id', form.id);
-                return formData;
-            },
+            // ondata: (formData) => {
+            //     console.log("on data");
+            //     formData.append('asset_id', form.id);
+            //     return formData;
+            // },
             onerror: (response) => {
-                console.log("on error");
                 serverResponse = JSON.parse(response);
+                console.error(serverResponse);
             },
         },
     },
     labelFileProcessingError: (error) => {
-        console.log("labelFileProcessingError");
-        console.log(error);
-        console.log(serverResponse);
+        // console.log("labelFileProcessingError");
+        // console.log(error);
+        // console.log(serverResponse);
         if (serverResponse.errors && serverResponse.errors.asset_photo) {
             return serverResponse.errors.asset_photo.join(' ');
         }
@@ -192,7 +167,7 @@ onMounted(() => {
     if(props.asset.asset_photo) {
         preloadFiles.value = [
             {
-                source: props.asset.asset_photo,
+                source: props.asset.photo_filename ?? "--",
                 options: {
                     type: 'local'
                 }

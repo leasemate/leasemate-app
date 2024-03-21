@@ -20,7 +20,9 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'address' => $this->address,
             'gross_leasable_area' => $this->gross_leasable_area,
-            'asset_photo' => $this->asset_photo ? Storage::url($this->asset_photo) : null,
+            'asset_photo_url' => $this->asset_photo ? Storage::url($this->asset_photo) : null,
+            'asset_photo' => $this->asset_photo ?? null,
+            'photo_filename' => $this->photo_filename ?? null,
             'associates' => UserAssetResource::collection($this->whenLoaded('associates')),
         ];
     }

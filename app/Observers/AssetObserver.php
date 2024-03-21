@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Facades\LeasemateApi;
 use App\Models\Asset;
+use Illuminate\Support\Facades\Log;
 
 class AssetObserver
 {
@@ -12,10 +13,11 @@ class AssetObserver
      */
     public function created(Asset $asset): void
     {
-        $response = LeasemateApi::registerAsset($asset);
-
-        if ($response->failed()) {
-            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+        if(app()->environment('production')) {
+            $response = LeasemateApi::registerAsset($asset);
+            if ($response->failed()) {
+                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+            }
         }
     }
 
@@ -24,10 +26,12 @@ class AssetObserver
      */
     public function updated(Asset $asset): void
     {
-        $response = LeasemateApi::updateAsset($asset);
 
-        if ($response->failed()) {
-            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+        if(app()->environment('production')) {
+            $response = LeasemateApi::updateAsset($asset);
+            if ($response->failed()) {
+                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+            }
         }
     }
 
@@ -47,22 +51,18 @@ class AssetObserver
         //
     }
 
-    public function forceDeleting(Asset $asset): void
-    {
-        $asset->deletePhoto();
-
-        $response = LeasemateApi::deleteAsset($asset);
-
-        if ($response->failed()) {
-            throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
-        }
-    }
-
     /**
      * Handle the Asset "force deleted" event.
      */
     public function forceDeleted(Asset $asset): void
     {
+        $asset->deletePhoto();
 
+        if(app()->environment('production')) {
+            $response = LeasemateApi::deleteAsset($asset);
+            if ($response->failed()) {
+                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
+            }
+        }
     }
 }

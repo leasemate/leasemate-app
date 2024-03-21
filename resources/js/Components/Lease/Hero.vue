@@ -10,7 +10,7 @@ const props = defineProps({
 
     <div class="relative mt-4">
         <img
-            :src="asset.asset_photo ?? '/images/asset-tmp-photo.png'"
+            :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'"
             alt="Property" class="w-full h-auto object-cover max-h-72 rounded-lg shadow-lg" />
 
         <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center rounded-lg">

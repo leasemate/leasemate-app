@@ -68,7 +68,7 @@ const deleteAsset = () => {
                 <!-- Repeat this block for each asset -->
                 <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-md overflow-hidden">
                     <Link :href="route('assets.show', asset)">
-                        <img :src="asset.asset_photo ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
+                        <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
 
                         <div class="p-4">
                             <h3 class="text-lg font-semibold">{{asset.name}}</h3>
