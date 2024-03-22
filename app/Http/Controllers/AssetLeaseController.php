@@ -196,7 +196,7 @@ class AssetLeaseController extends Controller
     {
 
         //only in production
-        if(app()->environment('local')) {
+        if(!app()->environment('local')) {
             $storedName = $upload_document->store(tenant('id').'/leases/'.$asset->id, ['visibility' => 'public']);
         } else {
             $storedName = $upload_document->getBasename();
