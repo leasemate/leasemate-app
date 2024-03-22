@@ -161,6 +161,10 @@ onBeforeUnmount(() => {
             </div>
         </div>
 
+        <div v-if="lease.expired" class="relative px-5 py-3 border-2 bg-red-50 text-red-700 border-red-100 rounded mt-6 text-center">
+            <h5>Lease Expired!</h5>
+        </div>
+
         <div class="col-span-6 mt-2">
 
             <TabView :scrollable="true">

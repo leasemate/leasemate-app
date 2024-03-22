@@ -195,8 +195,12 @@ class AssetLeaseController extends Controller
     protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
     {
 
-        $storedName = $upload_document->store(tenant('id').'/leases/'.$asset->id, ['visibility' => 'public']);
-        //        $storedName = $upload_document->getBasename();
+        //only in production
+        if(app()->environment('local')) {
+            $storedName = $upload_document->store(tenant('id').'/leases/'.$asset->id, ['visibility' => 'public']);
+        } else {
+            $storedName = $upload_document->getBasename();
+        }
 
         $document = $lease->documents()
             ->create([

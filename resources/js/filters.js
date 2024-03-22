@@ -21,6 +21,7 @@ export default {
             currency: 'USD',
             decimal: '.',
             minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
         }).format(value);
     },
 };

@@ -19,11 +19,11 @@ class LeaseResource extends JsonResource
         return [
             'id' => $this->id,
             'asset_id' => $this->asset_id,
+            'expired' => $this->expired,
             'tenant' => $this->tenant,
             'landlord' => $this->landlord,
             'premise_address' => $this->premise_address,
             'building_address' => $this->building_address,
-            'gla' => $this->gla ?? null,
             'start_date' => $this->start_date ? $this->start_date->format('m/d/Y') : null,
             'end_date' => $this->end_date ? $this->end_date->format('m/d/Y') : null,
             'rentable_sqft' => $this->rentable_sqft ?? null,
@@ -50,10 +50,11 @@ class LeaseResource extends JsonResource
                 if (!is_numeric($key)) continue;
 
                 $monthly_base_rent[$key] = [
+                    'current' => $value['current'] ?? false,
                     'start_date' => $value['start_date'] ? Carbon::parse($value['start_date'])->format('m/d/Y') : null,
                     'end_date' => $value['end_date'] ? Carbon::parse($value['end_date'])->format('m/d/Y') : null,
-                    'amount_total' => $value['amount'] ?? null,
-                    'amount_per_square_foot' => $value['amount_per_sq_ft'] ?? null,
+                    'amount_total' => $value['monthly_base_rent'] ?? null,
+                    'amount_per_square_foot' => $value['rent_per_sqft'] ?? null,
                 ];
             }
         }

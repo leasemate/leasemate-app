@@ -25,11 +25,37 @@ const props = defineProps({
             </template>
 
             <template #body>
-                <tr v-for="base_rent in lease.rent_schedule" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
-                    <th scope="row" class="px-6 py-4 space-x-2">{{ base_rent.start_date }}</th>
-                    <td class="px-6 py-4 text-gray-900 ">{{ base_rent.end_date }}</td>
-                    <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_total, 0) }}</td>
-                    <td class="px-6 py-4 text-gray-900 ">{{ filters.formatMoney(base_rent.amount_per_square_foot) }}</td>
+                <tr
+                    v-for="base_rent in lease.rent_schedule"
+                    class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600"
+
+                >
+                    <td
+                        class="px-6 py-4 space-x-2"
+                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                    >
+                        {{ base_rent.start_date }}
+                    </td>
+
+                    <td
+                        class="px-6 py-4"
+                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                    >
+                        {{ base_rent.end_date }}
+                    </td>
+
+                    <td
+                        class="px-6 py-4"
+                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                    >
+                        {{ filters.formatMoney(base_rent.amount_total) }}
+                    </td>
+                    <td
+                        class="px-6 py-4"
+                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                    >
+                        {{ filters.formatMoney(base_rent.amount_per_square_foot) }}
+                    </td>
                 </tr>
             </template>
 

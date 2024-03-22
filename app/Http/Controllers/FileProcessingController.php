@@ -181,28 +181,60 @@ class FileProcessingController extends Controller
         }
 
         try {
+
+            $rentable_square_feet = ! empty($this->basic_extracted_data['rentable_square_feet']) ? (int) $this->basic_extracted_data['rentable_square_feet'] : null;
+            $current_rent_per_sqft = 0;
+
             $rent_schedule = ! empty($this->basic_extracted_data['rent_schedule']) ? $this->basic_extracted_data['rent_schedule'] : [];
             $end_date = is_array($rent_schedule) ? end($rent_schedule)['end_date'] ?? null : null;
+
+            if ($end_date) {
+                $lease_expired = !Carbon::parse($end_date)->isFuture();
+            }
+
+            foreach($rent_schedule as &$rent_period) {
+
+                if($rentable_square_feet) {
+                    $rent_period['current'] = false;
+                    $rent_period['rent_per_sqft'] = number_format($rent_period['monthly_base_rent'] / $rentable_square_feet, 2);
+
+                    $rent_period_start_date = Carbon::parse($rent_period['start_date']);
+                    $rent_period_end_date = Carbon::parse($rent_period['end_date']);
+
+                    if ($rent_period_start_date &&
+                        $rent_period_end_date &&
+                        Carbon::now()->isBetween($rent_period_start_date, $rent_period_end_date, true)
+                    ) {
+                        $current_rent_per_sqft = $rent_period['rent_per_sqft'];
+                        $rent_period['current'] = true;
+                    }
+                }
+            }
+
+            if(!$current_rent_per_sqft) {
+                $current_rent_per_sqft = end($rent_schedule)['rent_per_sqft'] ?? 0;
+            }
+
         } catch (\TypeError|\Exception $e) {
             Log::error($e);
         }
 
         return [
+            'expired' => $lease_expired ?? false,
             'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown',
             'landlord' => ! empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown',
             'premise_address' => ! empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null,
             'building_address' => ! empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null,
             'landlord_address' => ! empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null,
-            'gla' => ! empty($this->basic_extracted_data['rentable_square_feet']) ? $this->basic_extracted_data['rentable_square_feet'] : null,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'rent_schedule' => $rent_schedule,
-            'rentable_sqft' => ! empty($this->basic_extracted_data['rentable_square_feet']) ? (int) $this->basic_extracted_data['rentable_square_feet'] : null,
-            'rent_per_sqft' => ! empty($this->basic_extracted_data['rent_per_sqft']) ? (int) $this->basic_extracted_data['rent_per_sqft'] : null,
+            'rentable_sqft' => $rentable_square_feet,
+            'rent_per_sqft' => $current_rent_per_sqft,
             'term' => ! empty($this->basic_extracted_data['lease_term']) ? (int) $this->basic_extracted_data['lease_term'] : null,
             'abatement' => ! empty($this->basic_extracted_data['abatement']) ? (int) $this->basic_extracted_data['abatement'] : null,
-            'pro_rata_share' => ! empty($this->basic_extracted_data['abatement']) ? (int) $this->basic_extracted_data['abatement'] : null,
-            'security_deposit' => ! empty($this->basic_extracted_data['security_deposit']) ? (int) $this->basic_extracted_data['security_deposit'] : null,
+            'pro_rata_share' => ! empty($this->basic_extracted_data['pro_rata_share']) ? (float) $this->basic_extracted_data['pro_rata_share'] : null,
+            'security_deposit' => ! empty($this->basic_extracted_data['security_deposit']) ? (float) $this->basic_extracted_data['security_deposit'] : null,
         ];
     }
 

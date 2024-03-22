@@ -391,12 +391,15 @@ onBeforeUnmount(() => {
                         </template>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                         {{ filters.formatNumber(lease.gla) ?? '--' }}
+                         {{ filters.formatNumber(lease.rentable_sqft) ?? '--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ lease.start_date??'--' }}
                     </td>
-                    <td class="px-6 py-4 space-x-2">
+                    <td
+                        class="px-6 py-4 space-x-2"
+                        :class="lease.expired ? 'text-red-500' : 'text-green-600'"
+                    >
                         {{ lease.end_date??'--' }}
                     </td>
                     <td class="px-6 py-4 space-x-2">
@@ -490,9 +493,8 @@ onBeforeUnmount(() => {
             </template>
         </Table>
 
-
-        <div v-else class="mt-10 py-24 bg-gray-50 rounded-lg shadow-md">
-            <p class="text-center text-gray-600">Upload your first lease</p>
+        <div v-else class="mt-10 py-48 bg-gray-50 rounded-lg shadow-md">
+            <h2 class="text-center text-gray-300">No Leases</h2>
         </div>
 
         <Pagination
