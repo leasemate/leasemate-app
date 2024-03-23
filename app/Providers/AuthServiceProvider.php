@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Carbon;
@@ -25,9 +26,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
         Gate::before(function ($user, $ability) {
-            if ($user->isSuperAdmin() || $user->hasRole('Admin')) {
+            if ($user instanceof User && ($user->isSuperAdmin() || $user->hasRole('Admin'))) {
                 return true;
             }
         });
