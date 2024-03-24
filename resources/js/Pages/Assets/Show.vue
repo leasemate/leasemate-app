@@ -347,7 +347,7 @@ onBeforeUnmount(() => {
 
                         <div v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status) && lease.lease_document.status_progress" class="progress h-2.5 w-full bg-gray-50 rounded-full relative dark:bg-zinc-600 mt-2 px-1">
                             <div class="progress-bar h-2.5 bg-violet-500 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
-                                 :style="`width: ${lease.lease_document.status_progress ?? 0}%;`"
+                                 :style="`width: ${lease.lease_document.status_progress};`"
                                  role="progressbar">
                             </div>
                         </div>
