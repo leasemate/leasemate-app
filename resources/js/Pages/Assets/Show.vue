@@ -394,7 +394,7 @@ onBeforeUnmount(() => {
                         </template>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                         {{ filters.formatNumber(lease.rentable_sqft) ?? '--' }}
+                         {{ lease.rentable_sqft ? filters.formatNumber(lease.rentable_sqft) : '--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
                         {{ lease.start_date??'--' }}
@@ -406,7 +406,7 @@ onBeforeUnmount(() => {
                         {{ lease.end_date??'--' }}
                     </td>
                     <td class="px-6 py-4 space-x-2">
-                        {{ filters.formatMoney(lease.rent_per_sqft)??'--' }}
+                        {{ lease.rent_per_sqft ? filters.formatMoney(lease.rent_per_sqft) : '--' }}
                     </td>
                     <td class="px-6 py-4 ">
 

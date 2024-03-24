@@ -196,7 +196,12 @@ class FileProcessingController extends Controller
 
                 if($rentable_square_feet) {
                     $rent_period['current'] = false;
-                    $rent_period['rent_per_sqft'] = number_format($rent_period['monthly_base_rent'] / $rentable_square_feet, 2);
+
+                    if(!empty($rent_period['monthly_base_rent']) && $rent_period['monthly_base_rent'] !== "NA") {
+                        $rent_period['rent_per_sqft'] = number_format($rent_period['monthly_base_rent'] / $rentable_square_feet, 2);
+                    } else {
+                        $rent_period['rent_per_sqft'] = null;
+                    }
 
                     $rent_period_start_date = Carbon::parse($rent_period['start_date']);
                     $rent_period_end_date = Carbon::parse($rent_period['end_date']);

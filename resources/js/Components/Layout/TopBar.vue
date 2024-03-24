@@ -313,7 +313,7 @@ onBeforeUnmount(() => {
                                                     </div>
                                                     <div class="text-13 text-gray-600">
                                                         <p class="mb-1 dark:text-gray-400">{{  notification.data.file_name }}</p>
-                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>{{  moment(notification.data.file_updated_at).fromNow() }}</span></p>
+                                                        <p class="mb-0"><i class="mdi mdi-clock-outline dark:text-gray-400"></i> <span>{{  moment(notification.data.file_updated_at, 'MM/DD/YY').fromNow() }}</span></p>
                                                     </div>
                                                 </div>
 
