@@ -17,23 +17,23 @@ onMounted(function() {
             <div class="grid grid-cols-1 mb-5">
                 <div class="flex items-center justify-between">
                     <h4 class="mb-sm-0 text-lg font-semibold grow text-gray-800 dark:text-gray-100">Dashboard</h4>
-                    <nav class="flex" aria-label="Breadcrumb">
-                        <ol class="inline-flex items-center space-x-1 ltr:md:space-x-3 rtl:md:space-x-0">
-                            <li class="inline-flex items-center">
-                                <a href="#" class="inline-flex items-center text-sm font-medium text-gray-800 hover:text-gray-900 dark:text-zinc-100 dark:hover:text-white">
-                                    Dashboard
-                                </a>
-                            </li>
-                            <li>
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <a href="#" class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-500 hover:text-gray-900 ltr:md:ml-2 rtl:md:mr-2 dark:text-gray-100 dark:hover:text-white">Dashboard</a>
-                                </div>
-                            </li>
-                        </ol>
-                    </nav>
+<!--                    <nav class="flex" aria-label="Breadcrumb">-->
+<!--                        <ol class="inline-flex items-center space-x-1 ltr:md:space-x-3 rtl:md:space-x-0">-->
+<!--                            <li class="inline-flex items-center">-->
+<!--                                <a href="#" class="inline-flex items-center text-sm font-medium text-gray-800 hover:text-gray-900 dark:text-zinc-100 dark:hover:text-white">-->
+<!--                                    Dashboard-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <div class="flex items-center">-->
+<!--                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">-->
+<!--                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>-->
+<!--                                    </svg>-->
+<!--                                    <a href="#" class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-500 hover:text-gray-900 ltr:md:ml-2 rtl:md:mr-2 dark:text-gray-100 dark:hover:text-white">Dashboard</a>-->
+<!--                                </div>-->
+<!--                            </li>-->
+<!--                        </ol>-->
+<!--                    </nav>-->
                 </div>
             </div>
         </template>
@@ -46,15 +46,69 @@ onMounted(function() {
                 <div class="card-body">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
-                            <div class="col-span-5">
-                                <span class="text-gray-700 dark:text-zinc-100 text-center">
-                                    <h5 class="text-gray-500">Total GLA</h5>
-                                </span>
+                            <div class="col-span-6">
+                                <span class="text-gray-700 dark:text-zinc-100">Total GLA</span>
+                                <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
+                                    <span class="counter-value" data-target="95">243,896</span>
+                                </h4>
                             </div>
-                            <div class="col-span-7">
-                                <h1 class="text-indigo-600 text-4xl">587,672</h1>
+                            <div class="col-span-6">
+                                <MiniChart
+                                    chartId="mini-chart1"
+                                    :colors="['#6366f1']"
+                                    :options="{
+                                        series: [{
+                                            data: [
+                                                220876,
+                                                235473,
+                                                232279,
+                                                229976,
+                                                265476,
+                                                ],
+                                        }],
+                                        chart: {
+                                            type: 'line',
+                                            height: 50,
+                                            sparkline: {
+                                                enabled: true,
+                                            },
+                                        },
+                                        markers: {
+                                            size: 2,
+                                        },
+                                        stroke: {
+                                            curve: 'smooth',
+                                            width: 4,
+                                        },
+                                        tooltip: {
+                                            fixed: {
+                                                enabled: false,
+                                            },
+                                            x: {
+                                                show: false,
+                                            },
+                                            y: {
+                                                formatter: function(val) {
+                                                    return val.toLocaleString();
+                                                },
+                                                title: {
+                                                    formatter: function() {
+                                                        return '';
+                                                    }
+                                                }
+                                            },
+                                            marker: {
+                                                show: false,
+                                            },
+                                        },
+                                    }"
+                                />
                             </div>
                         </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 43,967</span>
+                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
@@ -71,7 +125,7 @@ onMounted(function() {
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
-                                    chartId="mini-chart1"
+                                    chartId="mini-chart2"
                                     :colors="['#6366f1']"
                                     :options="{
                                         series: [{
@@ -89,7 +143,7 @@ onMounted(function() {
                                         },
                                         stroke: {
                                             curve: 'smooth',
-                                            width: 2,
+                                            width: 4,
                                         },
                                         dataLabels: {
                                             formatter: function(val) {
@@ -141,11 +195,11 @@ onMounted(function() {
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
-                                    chartId="mini-chart2"
+                                    chartId="mini-chart3"
                                     :colors="['#6366f1']"
                                     :options="{
                                         series: [{
-                                            data: [0.7, 0.8, 0.6, 1.1, 1.28],
+                                            data: [0.7, 0.8, 0.6, 0.9, 1.28],
                                         }],
                                         chart: {
                                             type: 'line',
@@ -159,7 +213,7 @@ onMounted(function() {
                                         },
                                         stroke: {
                                             curve: 'smooth',
-                                            width: 2,
+                                            width: 4,
                                         },
                                         dataLabels: {
                                             formatter: function(val) {
