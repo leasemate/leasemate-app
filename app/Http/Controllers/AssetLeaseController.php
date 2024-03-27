@@ -194,49 +194,35 @@ class AssetLeaseController extends Controller
      */
     protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
     {
-//        try {
+        $path = tenant('id').'/leases/'.$asset->id;
+        $filename = $upload_document->hashName();
+        $storedName = "{$path}/{$filename}";
 
-            $path = tenant('id').'/leases/'.$asset->id;
-            $filename = $upload_document->hashName();
-            $storedName = "{$path}/{$filename}";
+        $document = $lease->documents()
+            ->create([
+                'asset_id' => $asset->id,
+                'uuid' => (string) Str::uuid(),
+                'collection_name' => $collection_name,
+                'name' => $upload_document->getClientOriginalName(),
+                'file_name' => $storedName,
+                'mime_type' => $upload_document->getMimeType(),
+                'disk' => config('filesystems.default'),
+                'size' => $upload_document->getSize(),
+                'extension' => $upload_document->getClientOriginalExtension(),
+            ]);
 
-            $document = $lease->documents()
-                ->create([
-                    'asset_id' => $asset->id,
-                    'uuid' => (string) Str::uuid(),
-                    'collection_name' => $collection_name,
-                    'name' => $upload_document->getClientOriginalName(),
-                    'file_name' => $storedName,
-                    'mime_type' => $upload_document->getMimeType(),
-                    'disk' => config('filesystems.default'),
-                    'size' => $upload_document->getSize(),
-                    'extension' => $upload_document->getClientOriginalExtension(),
-                ]);
+        $registerLeaseUploadResponse = LeasemateApi::registerDocument($asset, $lease, $document, $storedName);
 
-            $registerLeaseUploadResponse = LeasemateApi::registerDocument($asset, $lease, $document, $storedName);
+        \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
 
-            \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
+        if ($registerLeaseUploadResponse->failed()) {
+            throw new \Exception('Failed to register lease upload.');
+        }
 
-            if ($registerLeaseUploadResponse->failed()) {
-                throw new \Exception('Failed to register lease upload.');
-            }
+        if(!app()->environment('local')) {
+            $upload_document->storePubliclyAs($path, $filename);
+        }
 
-            if(!app()->environment('local')) {
-                $upload_document->storePubliclyAs($path, $filename);
-            }
-
-            return $document;
-
-//        } catch(\Exception $e) {
-//
-//            \Log::error($e->getMessage());
-//
-//            if($document->exists) {
-//                $document->delete();
-//            }
-//
-//            throw $e;
-//        }
-
+        return $document;
     }
 }

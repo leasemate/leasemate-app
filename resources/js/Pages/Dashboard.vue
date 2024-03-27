@@ -38,26 +38,44 @@ onMounted(function() {
             </div>
         </template>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div class="card dark:bg-zinc-800 dark:border-zinc-600">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+
+
+            <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
+                <div class="card-body">
+                    <div>
+                        <div class="grid grid-cols-12 gap-5 items-center">
+                            <div class="col-span-5">
+                                <span class="text-gray-700 dark:text-zinc-100 text-center">
+                                    <h5 class="text-gray-500">Total GLA</h5>
+                                </span>
+                            </div>
+                            <div class="col-span-7">
+                                <h1 class="text-indigo-600 text-4xl">587,672</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
                 <div class="card-body">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
-                                <span class="text-gray-700 dark:text-zinc-100">Under Management</span>
+                                <span class="text-gray-700 dark:text-zinc-100">% Leased</span>
                                 <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
-                                    $
-                                    <span class="counter-value" data-target="865.2">865.2</span>
-                                    k
+                                    <span class="counter-value" data-target="95">95</span>%
                                 </h4>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
                                     chartId="mini-chart1"
-                                    :colors="['#FF0000', '--primary-color', '#00FF00']"
+                                    :colors="['#6366f1']"
                                     :options="{
                                         series: [{
-                                            data: [47, 15, 2, 67, 22, 20, 36, 60, 60, 30, 50, 11, 12, 3, 8, ]
+                                            data: [70,85,82,87,94],
                                         }],
                                         chart: {
                                             type: 'line',
@@ -66,9 +84,17 @@ onMounted(function() {
                                                 enabled: true,
                                             },
                                         },
+                                        markers: {
+                                            size: 2,
+                                        },
                                         stroke: {
                                             curve: 'smooth',
                                             width: 2,
+                                        },
+                                        dataLabels: {
+                                            formatter: function(val) {
+                                                return val + '%';
+                                            },
                                         },
                                         tooltip: {
                                             fixed: {
@@ -78,11 +104,14 @@ onMounted(function() {
                                                 show: false,
                                             },
                                             y: {
+                                                formatter: function(val) {
+                                                    return '$' + val + 'M';
+                                                },
                                                 title: {
                                                     formatter: function() {
                                                         return '';
-                                                    },
-                                                },
+                                                    }
+                                                }
                                             },
                                             marker: {
                                                 show: false,
@@ -90,33 +119,33 @@ onMounted(function() {
                                         },
                                     }"
                                 />
-
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ $20.9k</span>
-                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last week</span>
+                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 2%</span>
+                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
+
             <div class="card dark:bg-zinc-800 dark:border-zinc-600">
                 <div class="card-body">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
-                                <span class="text-gray-700 dark:text-zinc-100">Number of Trades</span>
+                                <span class="text-gray-700 dark:text-zinc-100">Base Rental Income</span>
                                 <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
-                                    <span class="counter-value" data-target="865.2">6258</span>
+                                    $<span class="counter-value" data-target="1.28">1.28</span>M
                                 </h4>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
                                     chartId="mini-chart2"
-                                    :colors="['#5156be', '--primary-color', '#00FF00']"
+                                    :colors="['#6366f1']"
                                     :options="{
                                         series: [{
-                                            data: [2, 10, 18, 22, 36, 15, 47, 75, 65, 19, 14, 2, 47, 42, 15, ]
+                                            data: [0.7, 0.8, 0.6, 1.1, 1.28],
                                         }],
                                         chart: {
                                             type: 'line',
@@ -125,9 +154,17 @@ onMounted(function() {
                                                 enabled: true,
                                             },
                                         },
+                                        markers: {
+                                            size: 2,
+                                        },
                                         stroke: {
                                             curve: 'smooth',
                                             width: 2,
+                                        },
+                                        dataLabels: {
+                                            formatter: function(val) {
+                                                return '$' + val + 'M';
+                                            },
                                         },
                                         tooltip: {
                                             fixed: {
@@ -137,11 +174,14 @@ onMounted(function() {
                                                 show: false,
                                             },
                                             y: {
+                                                formatter: function(val) {
+                                                    return '$' + val + 'M';
+                                                },
                                                 title: {
                                                     formatter: function() {
                                                         return '';
-                                                    },
-                                                },
+                                                    }
+                                                }
                                             },
                                             marker: {
                                                 show: false,
@@ -153,8 +193,8 @@ onMounted(function() {
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs py-[1px] px-1 bg-red-50/60 text-red-500 rounded font-medium dark:bg-red-500/30">- 29 Trades</span>
-                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last week</span>
+                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ $380k</span>
+                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
@@ -162,20 +202,11 @@ onMounted(function() {
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
-            <div class="col-span-12 xl:col-span-6">
+
+            <div class="col-span-12 xl:col-span-4">
+
                 <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
                     <div class="card-body">
-<!--                        <div class="flex flex-wrap items-center mb-2">-->
-<!--                            <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Portfolio Composition by Square Footage</h5>-->
-<!--                            <div class="ltr:ml-auto rtl:mr-auto flex gap-1">-->
-<!--                                <button type="button" class="btn py-1 px-2 text-13 bg-gray-50/50 border-transparent text-gray-500 hover:bg-gray-50/50 dark:hover:bg-zinc-600/800 hover:text-white focus:bg-gray-500 focus:text-white dark:bg-gray-500/10 dark:text-zinc-100 hover:bg-gray-500 dark:hover:bg-gray-200 dark:hover:text-gray-800 font-medium">ALL</button>-->
-<!--                                <button type="button" class="btn py-1 px-2 text-13 bg-violet-50/50 border-transparent text-violet-500 hover:bg-violet-500 hover:text-white focus:bg-violet-500 focus:text-white dark:bg-violet-500/20 dark:text-violet-300 dark:hover:bg-violet-500 dark:hover:text-white font-medium">1M</button>-->
-<!--                                <button type="button" class="btn py-1 px-2 text-13 bg-gray-50/50 border-transparent text-gray-500 hover:bg-gray-50/50 dark:hover:bg-zinc-600/800 hover:text-white focus:bg-gray-500 focus:text-white dark:bg-gray-500/10 dark:text-zinc-100 hover:bg-gray-500 dark:hover:bg-gray-200 dark:hover:text-gray-800 font-medium">6M</button>-->
-<!--                                <button type="button" class="btn py-1 px-2 text-13 bg-gray-50/50 border-transparent text-gray-500 hover:bg-gray-50/50 dark:hover:bg-zinc-600/800 hover:text-white focus:bg-gray-500 focus:text-white dark:bg-gray-500/10 dark:text-zinc-100 hover:bg-gray-500 dark:hover:bg-gray-200 dark:hover:text-gray-800 font-medium">1Y</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-
-
                         <div class="flex flex-wrap items-center mb-2">
                             <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Portfolio Composition</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
@@ -190,13 +221,13 @@ onMounted(function() {
                             <div class="col-span-12 justify-self-center">
                                 <MiniChart
                                     class="mt-8"
-                                    chartId="wallet-balance"
-                                    :colors="['#22c55e', '#0ea5e9', '#a8aada']"
+                                    chartId="portoflio-composition"
+                                    :colors="['#22c55e', '#0ea5e9', '#6366f1']"
                                     :options="{
-                                        series: [35, 70, 15],
+                                        series: [25, 70, 15],
                                         chart: {
-                                            width: 427,
-                                            height: 427,
+                                            width: 400,
+                                            height: 400,
                                             type: 'pie',
                                         },
                                         labels: ['Industrial', 'Office', 'Retail'],
@@ -236,86 +267,310 @@ onMounted(function() {
                                     }"
                                 />
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-span-12 xl:col-span-6">
-                <div class="grid grid-cols-12 gap-5">
-                    <div class="col-span-12">
-                        <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
-                            <div class="card-body">
-                                <div class="flex flex-wrap items-center mb-2">
-                                    <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Leases Expiring</h5>
-                                    <div class="ltr:ml-auto rtl:mr-auto">
-                                        <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
-                                            <option value="AP">by Square Feet</option>
-                                            <option value="MA">by Quantity</option>
-                                        </select>
-                                    </div>
-                                </div>
+            <div class="col-span-12 xl:col-span-8">
 
-                                <MiniChart
-                                    class="mt-8"
-                                    chartId="wallet-balance1"
-                                    :colors="['#22c55e', '#0ea5e9', '#a8aada']"
-                                    :options="{
-                                      chart: {
-                                        type: 'bar'
-                                      },
-                                      dataLabels: {
-
-                                        formatter: function(val) {
-                                            return val.toLocaleString(); // Converts the number to a string with commas
-                                          }
-                                      },
-                                      yaxis: {
-                                        labels: {
-                                          formatter: function(val) {
-                                            return val.toLocaleString(); // Converts the number to a string with commas
-                                          }
-                                        }
-                                      },
-                                      tooltip: {
-                                        y: {
-                                          formatter: function(val) {
-                                            return val.toLocaleString(); // Converts the number to a string with commas for the tooltip as well
-                                          }
-                                        }
-                                      },
-                                      series: [{
-                                        data: [{
-                                          x: 'Expired',
-                                          y: 4520,
-                                          fillColor: '#6366f1',
-                                        }, {
-                                          x: '30 Days',
-                                          y: 15029,
-                                          fillColor: '#6366f1',
-                                        }, {
-                                          x: '60 Days',
-                                          y: 3502,
-                                          fillColor: '#6366f1',
-                                        }, {
-                                          x: '90 Days',
-                                          y: 25929,
-                                          fillColor: '#6366f1',
-                                        }]
-                                      }]
-                                    }"
-                                />
-
-                                <div class="grid grid-cols-12 gap-5">
-
-                                </div>
-                            </div>
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
+                    <div class="card-body pb-0">
+                        <h6 class="mb-1 text-15 text-gray-700 dark:text-gray-100">Upcoming Lease Expiration</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="relative overflow-x-auto">
+                            <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
+                                <thead class="text-sm text-gray-700 dark:text-gray-100 ">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Tenant
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Property
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        RSF
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Expiring Rent
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Expiration
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        AOK Logistics
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        Elysian Valley Logistic
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        2,102
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $2.10
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        3/31/24
+                                    </td>
+                                </tr>
+                                <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        Antec Lighting
+                                    </th>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        Elysian Valley Logistic
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        5,234
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $1,30
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        3/31/24
+                                    </td>
+                                </tr>
+                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
+                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        Duck Logistics
+                                    </th>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        1940 Denby
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        10,020
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $3.20
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        4/30/24
+                                    </td>
+                                </tr>
+                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
+                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        JB Hunt
+                                    </th>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        SEC Government Building
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        40,302
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $0.75
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        6/30/24
+                                    </td>
+                                </tr>
+                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
+                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        ICC Cabling
+                                    </th>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        Frogtown Spectrum
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        1,200
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $2.12
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        6/30/24
+                                    </td>
+                                </tr>
+                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
+                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        LA Slot Machine
+                                    </th>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        Frogtown Spectrum
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        140,010
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $1.78
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        6/30/24
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
+
+            <div class="col-span-12 xl:col-span-7">
+
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
+                    <div class="card-body pb-0">
+                        <h6 class="mb-1 text-15 text-gray-700 dark:text-gray-100">In-Place Rent Table</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="relative overflow-x-auto">
+                            <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
+                                <thead class="text-sm text-gray-700 dark:text-gray-100 ">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Property
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        GLA
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Avg. Rent
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        WALT
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        Elysian Valley Logistic
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        1,002,919
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $2.10
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        3.23
+                                    </td>
+                                </tr>
+                                <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        1940 Denby
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        203,010
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $1.30
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        2.42
+                                    </td>
+                                </tr>
+                                <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        SEC Government Building
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        745,092
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $3.20
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        5.02
+                                    </td>
+                                </tr>
+                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
+                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                        Frogtown Spectrum
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        425,001
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        $0.75
+                                    </td>
+                                    <td class="px-6 py-3.5 dark:text-zinc-100">
+                                        4.45
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 xl:col-span-5">
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
+                    <div class="card-body">
+                        <div class="flex flex-wrap items-center mb-2">
+                            <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Leases Expiring</h5>
+                            <div class="ltr:ml-auto rtl:mr-auto">
+                                <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
+                                    <option value="AP">by Square Feet</option>
+                                    <option value="MA">by Quantity</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <MiniChart
+                            class="mt-8"
+                            chartId="wallet-balance1"
+                            :colors="['#22c55e', '#0ea5e9', '#a8aada']"
+                            :options="{
+                              chart: {
+                                type: 'bar'
+                              },
+                              dataLabels: {
+                                formatter: function(val) {
+                                    return val.toLocaleString(); // Converts the number to a string with commas
+                                  }
+                              },
+                              yaxis: {
+                                labels: {
+                                  formatter: function(val) {
+                                    return val.toLocaleString(); // Converts the number to a string with commas
+                                  }
+                                }
+                              },
+                              tooltip: {
+                                y: {
+                                  formatter: function(val) {
+                                    return val.toLocaleString(); // Converts the number to a string with commas for the tooltip as well
+                                  }
+                                }
+                              },
+                              series: [{
+                                data: [{
+                                  x: 'Expired',
+                                  y: 4520,
+                                  fillColor: '#6366f1',
+                                }, {
+                                  x: '30 Days',
+                                  y: 15029,
+                                  fillColor: '#6366f1',
+                                }, {
+                                  x: '60 Days',
+                                  y: 3502,
+                                  fillColor: '#6366f1',
+                                }, {
+                                  x: '90 Days',
+                                  y: 25929,
+                                  fillColor: '#6366f1',
+                                }]
+                              }]
+                            }"
+                        />
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
 
     </AuthenticatedLayout>
 </template>
