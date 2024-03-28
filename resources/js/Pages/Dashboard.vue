@@ -40,15 +40,13 @@ onMounted(function() {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-
-
             <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body">
+                <div class="card-body shadow-lg">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
-                                <span class="text-gray-700 dark:text-zinc-100">Total GLA</span>
-                                <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
+                                <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Total GLA</h5>
+                                <h4 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
                                     <span class="counter-value" data-target="95">243,896</span>
                                 </h4>
                             </div>
@@ -114,12 +112,12 @@ onMounted(function() {
             </div>
 
             <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body">
+                <div class="card-body shadow-lg">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
-                                <span class="text-gray-700 dark:text-zinc-100">% Leased</span>
-                                <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
+                                <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">% Leased</h5>
+                                <h4 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
                                     <span class="counter-value" data-target="95">95</span>%
                                 </h4>
                             </div>
@@ -184,14 +182,14 @@ onMounted(function() {
             </div>
 
             <div class="card dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body">
+                <div class="card-body shadow-lg">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
-                                <span class="text-gray-700 dark:text-zinc-100">Base Rental Income</span>
-                                <h4 class="my-4 text-xl text-gray-800 dark:text-gray-100 ">
+                                <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Base Rental Income</h5>
+                                <h3 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
                                     $<span class="counter-value" data-target="1.28">1.28</span>M
-                                </h4>
+                                </h3>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
@@ -259,10 +257,11 @@ onMounted(function() {
 
             <div class="col-span-12 xl:col-span-4">
 
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
-                    <div class="card-body">
-                        <div class="flex flex-wrap items-center mb-2">
-                            <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Portfolio Composition</h5>
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
+
+                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                        <div class="flex flex-wrap items-center">
+                            <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Portfolio Composition</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
                                 <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
@@ -270,7 +269,8 @@ onMounted(function() {
                                 </select>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="card-body">
                         <div class="grid grid-cols-12 gap-5 justify-items-stretch">
                             <div class="col-span-12 justify-self-center">
                                 <MiniChart
@@ -327,9 +327,9 @@ onMounted(function() {
             </div>
             <div class="col-span-12 xl:col-span-8">
 
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
-                    <div class="card-body pb-0">
-                        <h6 class="mb-1 text-15 text-gray-700 dark:text-gray-100">Upcoming Lease Expiration</h6>
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
+                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                        <h6 class="mb-1 text-15 text-indigo-600 dark:text-gray-100">Upcoming Lease Expiration</h6>
                     </div>
                     <div class="card-body">
                         <div class="relative overflow-x-auto">
@@ -469,9 +469,9 @@ onMounted(function() {
 
             <div class="col-span-12 xl:col-span-7">
 
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
-                    <div class="card-body pb-0">
-                        <h6 class="mb-1 text-15 text-gray-700 dark:text-gray-100">In-Place Rent Table</h6>
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
+                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                        <h6 class="mb-1 text-15 text-indigo-600 dark:text-gray-100">In-Place Rent Table</h6>
                     </div>
                     <div class="card-body">
                         <div class="relative overflow-x-auto">
@@ -557,10 +557,11 @@ onMounted(function() {
             </div>
 
             <div class="col-span-12 xl:col-span-5">
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100">
-                    <div class="card-body">
-                        <div class="flex flex-wrap items-center mb-2">
-                            <h5 class="text-15 mr-2 text-gray-800 dark:text-gray-100 ">Leases Expiring</h5>
+                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
+
+                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                        <div class="flex flex-wrap items-center">
+                            <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Leases Expiring</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
                                 <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
@@ -568,7 +569,9 @@ onMounted(function() {
                                 </select>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="card-body">
                         <MiniChart
                             class="mt-8"
                             chartId="wallet-balance1"
@@ -607,7 +610,7 @@ onMounted(function() {
                                   fillColor: '#6366f1',
                                 }, {
                                   x: '60 Days',
-                                  y: 3502,
+                                  y: 2502,
                                   fillColor: '#6366f1',
                                 }, {
                                   x: '90 Days',

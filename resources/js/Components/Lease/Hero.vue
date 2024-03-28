@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
 
-    <div class="relative mt-4">
+    <div class="relative mt-4 shadow-lg">
         <img
             :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'"
             alt="Property" class="w-full h-auto object-cover max-h-72 rounded-lg shadow-lg" />

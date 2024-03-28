@@ -96,7 +96,7 @@ onMounted(() => {
 
 <template>
 
-    <div class="vertical-menu rtl:right-0 fixed ltr:left-0 bottom-0 top-16 h-screen border-r bg-slate-50 border-gray-50 print:hidden dark:bg-zinc-800 dark:border-neutral-700 z-10">
+    <div class="vertical-menu rtl:right-0 fixed ltr:left-0 bottom-0 top-16 h-screen border-r bg-indigo-50 border-gray-50 print:hidden dark:bg-zinc-800 dark:border-neutral-700 z-10">
 
         <simplebar data-simplebar class="h-full">
             <!--- Sidemenu -->
@@ -124,7 +124,7 @@ onMounted(() => {
                     </li>
 
                     <li>
-                        <a href="javascript:void();" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-violet-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
+                        <a href="javascript:void();" class="nav-menu pl-6 pr-4 py-3 block text-sm font-medium text-gray-700 ease-linear hover:text-indigo-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
                             <i data-feather="settings"></i>
                             <span data-key="t-dashboard"> Settings</span>
                         </a>

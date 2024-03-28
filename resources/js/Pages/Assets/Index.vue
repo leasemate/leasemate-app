@@ -66,7 +66,7 @@ const deleteAsset = () => {
             <div v-if="assets.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
                 <!-- Repeat this block for each asset -->
-                <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                     <Link :href="route('assets.show', asset)">
                         <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
 

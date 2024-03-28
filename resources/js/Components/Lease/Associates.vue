@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
 
-    <div class="relative border rounded-lg px-4 py-4 my-8 shadow-md">
+    <div class="relative border rounded-lg px-4 py-4 my-10 shadow-lg">
 
         <div class="absolute top-0 left-0 transform -translate-y-1/2 w-full px-4">
             <h5 class="bg-white text-center mx-auto px-2 py-1 inline-block">Team Members</h5>

@@ -56,16 +56,16 @@
 /*    @apply px-2;*/
 /*}*/
 .metismenu .mm-active .active {
-    @apply text-violet-500 border-r-4 border-violet-500 bg-violet-50 !important;
+    @apply text-indigo-500 border-r-4 border-indigo-500 bg-indigo-100 !important;
 }
 
 [data-mode=dark] .metismenu .mm-active .active {
     @apply text-white !important;
-    @apply bg-violet-700 !important;
+    @apply bg-violet-900 !important;
 }
 
 .mm-active>a {
-    @apply text-violet-500 !important;
+    @apply text-indigo-500 !important;
 }
 
 #sidebar-menu ul li ul li ul li a{
@@ -101,7 +101,7 @@
 }
 
 .metismenu .mm-active a {
-    @apply text-violet-500;
+    @apply text-indigo-500;
 }
 
   [data-sidebar-size=sm] .main-content {

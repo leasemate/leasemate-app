@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
         <div class="flex items-center justify-between w-full">
 
             <div class="topbar-brand flex items-center">
-                <div ref="navbarLogoContainer" class="navbar-brand flex items-center justify-center shrink px-4 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
+                <div ref="navbarLogoContainer" class="navbar-brand flex items-center justify-center shrink px-4 h-[70px] border-r bg-indigo-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                     <a href="/" class="flex items-center font-bold text-lg  dark:text-white">
                         <span v-if="!showIcon" class="hidden xl:block align-middle">
                             <img  src="/images/logo.svg" class="ml-2 h-8 w-[80%]" alt="logo" />
