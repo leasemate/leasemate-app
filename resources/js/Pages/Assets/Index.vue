@@ -57,36 +57,36 @@ const deleteAsset = () => {
 
         <template #header> Assets </template>
 
-            <div class="flex justify-end">
-                <PrimaryLink
-                    :href="route('assets.create')"
-                >Create Asset</PrimaryLink>
-            </div>
+        <div class="flex justify-end">
+            <PrimaryLink
+                :href="route('assets.create')"
+            >Create Asset</PrimaryLink>
+        </div>
 
-            <div v-if="assets.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div v-if="assets.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
-                <!-- Repeat this block for each asset -->
-                <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <Link :href="route('assets.show', asset)">
-                        <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
+            <!-- Repeat this block for each asset -->
+            <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                <Link :href="route('assets.show', asset)">
+                    <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
 
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold">{{asset.name}}</h3>
-                            <p class="text-sm text-gray-600">{{ asset.address }}</p>
-                            <p class="text-sm text-gray-600">GLA: {{ filters.formatNumberSqFt(asset.gross_leasable_area)??'--' }}</p>
-                        </div>
-                    </Link>
-
-                    <div class="absolute bottom-0 right-0 p-4">
-                        <BoxIcon
-                            @click="confirmAssetDeletion(asset)"
-                            class="bx-trash text-red-400 hover:text-red-600 cursor-pointer"
-                        />
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">{{asset.name}}</h3>
+                        <p class="text-sm text-gray-600">{{ asset.address }}</p>
+                        <p class="text-sm text-gray-600">GLA: {{ filters.formatNumberSqFt(asset.gross_leasable_area)??'--' }}</p>
                     </div>
+                </Link>
 
+                <div class="absolute bottom-0 right-0 p-4">
+                    <BoxIcon
+                        @click="confirmAssetDeletion(asset)"
+                        class="bx-trash text-red-400 hover:text-red-600 cursor-pointer"
+                    />
                 </div>
 
             </div>
+
+        </div>
 
         <div v-else class="mt-10 py-48 bg-gray-50 rounded-lg shadow-md">
             <h2 class="text-center text-gray-300">No Assets</h2>

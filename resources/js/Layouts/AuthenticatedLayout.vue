@@ -147,15 +147,17 @@ onBeforeUnmount(() => {
 
             <div class="container-fluid px-[0.625rem]">
 
-                <SubHeader>
-                    <template #header>
-                        <slot name="header" />
-                    </template>
-                </SubHeader>
-
                 <div class="max-w-screen-2xl mx-auto">
 
-                    <div class="max-w-full mx-auto mt-6 mb-6">
+                    <div class="mt-6 mb-6">
+
+                        <div class="grid grid-cols-1 mb-5">
+                            <div class="flex items-center justify-between">
+                                <h4 class="mb-sm-0 text-lg font-semibold grow text-gray-800 dark:text-gray-100">
+                                    <slot name="header" />
+                                </h4>
+                            </div>
+                        </div>
 
                         <div v-if="$page.props.flash.success" class="relative px-5 py-3 border-2 bg-green-50 text-green-700 border-green-100 rounded-lg">
                             <p>{{ $page.props.flash.success }}</p>

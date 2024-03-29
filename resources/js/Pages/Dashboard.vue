@@ -13,29 +13,9 @@ onMounted(function() {
 
 <template>
     <AuthenticatedLayout>
+
         <template #header>
-            <div class="grid grid-cols-1 mb-5">
-                <div class="flex items-center justify-between">
-                    <h4 class="mb-sm-0 text-lg font-semibold grow text-gray-800 dark:text-gray-100">Dashboard</h4>
-<!--                    <nav class="flex" aria-label="Breadcrumb">-->
-<!--                        <ol class="inline-flex items-center space-x-1 ltr:md:space-x-3 rtl:md:space-x-0">-->
-<!--                            <li class="inline-flex items-center">-->
-<!--                                <a href="#" class="inline-flex items-center text-sm font-medium text-gray-800 hover:text-gray-900 dark:text-zinc-100 dark:hover:text-white">-->
-<!--                                    Dashboard-->
-<!--                                </a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <div class="flex items-center">-->
-<!--                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">-->
-<!--                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>-->
-<!--                                    </svg>-->
-<!--                                    <a href="#" class="ltr:ml-1 rtl:mr-1 text-sm font-medium text-gray-500 hover:text-gray-900 ltr:md:ml-2 rtl:md:mr-2 dark:text-gray-100 dark:hover:text-white">Dashboard</a>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                        </ol>-->
-<!--                    </nav>-->
-                </div>
-            </div>
+            Dashboard
         </template>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -263,7 +243,7 @@ onMounted(function() {
                         <div class="flex flex-wrap items-center">
                             <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Portfolio Composition</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
-                                <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
+                                <select class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
                                     <option value="MA">by Quantity</option>
                                 </select>
@@ -280,8 +260,8 @@ onMounted(function() {
                                     :options="{
                                         series: [25, 70, 15],
                                         chart: {
-                                            width: 400,
-                                            height: 400,
+                                            width: 350,
+                                            height: 350,
                                             type: 'pie',
                                         },
                                         labels: ['Industrial', 'Office', 'Retail'],
@@ -289,23 +269,26 @@ onMounted(function() {
                                             width: 1,
                                         },
                                         legend: {
-                                            show: true,
+                                            show: false,
                                             fontSize: '14px'
                                         },
                                         dataLabels: {
-                                          style: {
+                                            formatter: function (val, opts) {
+                                              return val.toFixed() + '% '+opts.w.config.labels[opts.seriesIndex]
+                                            },
+                                            style: {
                                               fontSize: '14px',
                                               fontWeight: 'bold',
                                               colors: ['#fff', '#fff', '#fff']
-                                          },
-                                          dropShadow: {
+                                            },
+                                            dropShadow: {
                                               enabled: true,
                                               top: 1,
                                               left: 1,
                                               blur: 1,
                                               color: '#000',
                                               opacity: 0.45
-                                          }
+                                            }
                                         },
                                         markers: {
                                            colors: ['#F44336', '#E91E63', '#9C27B0']
@@ -563,7 +546,7 @@ onMounted(function() {
                         <div class="flex flex-wrap items-center">
                             <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Leases Expiring</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
-                                <select class="form-select form-select-sm py-0 ltr:pl-4 rtl:pr-4 border-gray-50 bg-gray-50/20 dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
+                                <select class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
                                     <option value="MA">by Quantity</option>
                                 </select>
@@ -580,6 +563,14 @@ onMounted(function() {
                               chart: {
                                 type: 'bar'
                               },
+                              plotOptions: {
+                                  bar: {
+                                    horizontal: false,
+                                    dataLabels: {
+                                      position: 'top'
+                                    }
+                                  }
+                                },
                               dataLabels: {
                                 formatter: function(val) {
                                     return val.toLocaleString(); // Converts the number to a string with commas

@@ -221,6 +221,7 @@ onBeforeUnmount(() => {
                     </div>
 
                 </TabPanel>
+                
                 <TabPanel v-if="lease.amendments.length">
 
                     <template #header>
