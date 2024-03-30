@@ -12,9 +12,16 @@ class Lease extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const TYPE_ORIGINAL = 'original';
+    const TYPE_AMENDMENT = 'amendment';
+    const TYPE_CURRENT = 'current';
+
     protected $guarded = [];
 
     protected $casts = [
+        'execution_date' => 'datetime',
+        'commencement_date' => 'datetime',
+        'expiration_date' => 'datetime',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'rent_schedule' => 'json',
@@ -23,6 +30,9 @@ class Lease extends Model
     protected $dates = [
         'start_date',
         'end_date',
+        'execution_date',
+        'commencement_date',
+        'expiration_date',
     ];
 
     public function rentPerSqFt(): Attribute
@@ -39,6 +49,54 @@ class Lease extends Model
             get: fn ($value) => is_null($value) ? null : $value / 100,
             set: fn ($value) => is_null($value) ? null : $value * 100,
         );
+    }
+
+    public function isAmendment(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => $this->type === self::TYPE_AMENDMENT,
+        );
+    }
+
+    public function original_lease()
+    {
+        return $this->belongsTo(Lease::class, 'parent_id', 'id')
+            ->where('type', self::TYPE_ORIGINAL);
+    }
+    public function current_lease()
+    {
+        return $this->hasOne(Lease::class, 'parent_id', 'id')
+            ->where('type', self::TYPE_CURRENT);
+    }
+
+    public function amendments()
+    {
+        return $this->hasMany(Lease::class, 'parent_id', 'id')
+            ->where('type', self::TYPE_AMENDMENT);
+    }
+
+    /**
+     * Scope a query to only include original leases.
+     */
+    public function scopeOriginal($query)
+    {
+        return $query->where('type', self::TYPE_ORIGINAL);
+    }
+
+    /**
+     * Scope a query to only include current leases.
+     */
+    public function scopeCurrent($query)
+    {
+        return $query->where('type', self::TYPE_CURRENT);
+    }
+
+    /**
+     * Scope a query to only include amendments.
+     */
+    public function scopeAmendments($query)
+    {
+        return $query->where('type', self::TYPE_AMENDMENT);
     }
 
     public function asset()
@@ -68,8 +126,7 @@ class Lease extends Model
 
     public function lease_document()
     {
-        return $this->morphOne(Document::class, 'documentable')
-            ->where('collection_name', Document::COLLECTION_LEASE);
+        return $this->morphOne(Document::class, 'documentable');
     }
 
     public function lease_document_trashed()
@@ -80,17 +137,5 @@ class Lease extends Model
     public function lease_detail()
     {
         return $this->hasOne(LeaseDetail::class);
-    }
-
-    public function amendments()
-    {
-        return $this->hasMany(Amendment::class);
-    }
-
-    public function getOriginalLeaseDetail()
-    {
-        //        dump('loadOriginalLeaseDetail');
-        //        dd($this->lease_document->document_detail->basic_extracted_data);
-        //        $this->load(['lease_detail']);
     }
 }

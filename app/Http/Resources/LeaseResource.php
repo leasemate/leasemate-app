@@ -15,15 +15,20 @@ class LeaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
+//dd($this->amendments);
+//        dd($this->whenLoaded('current_lease'));
         return [
             'id' => $this->id,
+            'parent_id' => $this->parent_id,
             'asset_id' => $this->asset_id,
             'expired' => $this->expired,
             'tenant' => $this->tenant,
             'landlord' => $this->landlord,
             'premise_address' => $this->premise_address,
             'building_address' => $this->building_address,
+            'execution_date' => $this->execution_date ? $this->execution_date->format('m/d/Y') : null,
+            'commencement_date' => $this->commencement_date ? $this->commencement_date->format('m/d/Y') : null,
+            'expiration_date' => $this->expiration_date ? $this->expiration_date->format('m/d/Y') : null,
             'start_date' => $this->start_date ? $this->start_date->format('m/d/Y') : null,
             'end_date' => $this->end_date ? $this->end_date->format('m/d/Y') : null,
             'rentable_sqft' => $this->rentable_sqft ?? null,
@@ -35,7 +40,10 @@ class LeaseResource extends JsonResource
             'rent_schedule' => $this->getMonthlyBaseRent(),
             'is_archived' => $this->deleted_at ? true : false,
             'lease_document' => new DocumentResource($this->whenLoaded('lease_document')),
-            'amendments' => AmendmentResource::collection($this->whenLoaded('amendments')),
+            $this->mergeWhen($this->relationLoaded('current_lease') && $this->current_lease !== null, [
+                'current_lease' => new LeaseResource($this->current_lease),
+            ]),
+            'amendments' => LeaseResource::collection($this->whenLoaded('amendments')),
             'lease_detail' => new LeaseDetailResource($this->whenLoaded('lease_detail')),
         ];
     }

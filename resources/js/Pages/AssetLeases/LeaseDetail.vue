@@ -1,7 +1,7 @@
 <script setup>
 import Accordion from "primevue/accordion"
 import AccordionTab from "primevue/accordiontab"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 
 const leaseDetails = computed(() => {
     return [
@@ -20,6 +20,11 @@ const leaseDetails = computed(() => {
 const props = defineProps({
     lease_detail: Object,
 })
+
+onMounted(() => {
+    console.log("Lease Detail");
+    console.log(props.lease_detail)
+});
 
 </script>
 

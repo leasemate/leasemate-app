@@ -20,7 +20,7 @@ class FileProcessingController extends Controller
 
     protected Lease $lease;
 
-    protected Amendment $amendment;
+//    protected Amendment $amendment;
 
     protected Document $document;
 
@@ -80,21 +80,39 @@ class FileProcessingController extends Controller
 
             $this->document->save();
 
-            if ($this->document->collection_name === Document::COLLECTION_LEASE) {
+            Log::info('*************** ' . $this->document->collection_name . ' ******************');
 
-                Log::info('*************** LEASE ******************');
-                $this->lease = $this->document->documentable;
-                $this->user = $this->lease->user;
+            $this->lease = $this->document->documentable;
+            $this->user = $this->lease->user;
+            $this->processLease(); //processing a lease or amendment
 
-                $this->processLease();
+            if($this->lease->is_amendment) {
 
-            } elseif ($this->document->collection_name === Document::COLLECTION_AMENDMENT) {
+                $original_lease = $this->lease->original_lease;
+                if(!$currentLease = $original_lease->current_lease) {
+                    $currentLease = $original_lease->replicate();
+                    $currentLease->parent_id = $original_lease->id;
+                    $currentLease->type = Lease::TYPE_CURRENT;
+                    $currentLease->push();
 
-                Log::info('*************** AMENDMENT ******************');
-                $this->amendment = $this->document->documentable;
-                $this->user = $this->amendment->lease->user;
+                    $currentLeaseDetail = $original_lease->lease_detail->replicate();
+                    $currentLease->lease_detail()->updateOrCreate([
+                        'lease_id' => $currentLease->id,
+                    ], $currentLeaseDetail->toArray());
+                }
 
-                $this->processAmendment();
+                $this->lease = $currentLease;
+                $this->processLease(true); //processing current lease -- only update if value exists
+            }
+
+            $lease_payload = $this->eventPayload();
+
+            Log::info('Fire event: LeaseProcessingUpdate:', $lease_payload);
+            event(new LeaseProcessingUpdate($this->user->id, $lease_payload));
+
+            if (in_array($this->status, ['Ready', 'Failed'])) {
+                Log::info('Send notification: LeaseCompleteNotification:');
+                $this->lease->user->notify(new DocumentCompleteNotification($lease_payload));
             }
 
             return response()->json(['status' => 'success']);
@@ -108,50 +126,23 @@ class FileProcessingController extends Controller
 
     }
 
-    protected function processLease()
+    protected function processLease($updateOnlyIfValueExists = false)
     {
-        $basicLeaseData = $this->getBasicLeaseData();
-
-        if ($basicLeaseData) {
-            $this->lease->fill($basicLeaseData);
+        if ($basicLeaseData = $this->getBasicLeaseData()) {
+            if($updateOnlyIfValueExists) {
+                $basicLeaseData = $basicLeaseData->filter();
+            }
+            $this->lease->fill($basicLeaseData->toArray());
             $this->lease->save();
         }
 
         if ($detailLeaseData = $this->getDetailedLeaseData()) {
-            $this->lease->lease_detail()->create($detailLeaseData);
-        }
-
-        $lease_payload = $this->eventPayload();
-
-        Log::info('Fire event: LeaseProcessingUpdate:', $lease_payload);
-        event(new LeaseProcessingUpdate($this->user->id, $lease_payload));
-
-        if (in_array($this->status, ['Ready', 'Failed'])) {
-            Log::info('Send notification: LeaseCompleteNotification:');
-            $this->lease->user->notify(new DocumentCompleteNotification($lease_payload));
-        }
-
-    }
-
-    protected function processAmendment()
-    {
-        Log::info('Processing Amendment.................');
-
-        //save data to amendment
-        $this->amendment->execution_date = ! empty($this->basic_extracted_data['execution_date']) ? Carbon::parse($this->basic_extracted_data['execution_date']) : null;
-        $this->amendment->save();
-
-        $this->amendment->lease()->update($this->getBasicLeaseData());
-        $this->amendment->lease->lease_detail()->update($this->getDetailedLeaseData());
-
-        $amendment_payload = $this->eventPayload();
-
-        Log::info('Fire event: AmendmentProcessingUpdate:', $amendment_payload);
-        event(new AmendmentProcessingUpdate($this->user->id, $amendment_payload));
-
-        if (in_array($this->status, ['Ready', 'Failed'])) {
-            Log::info('Send notification: LeaseCompleteNotification:');
-            $this->amendment->lease->user->notify(new DocumentCompleteNotification($amendment_payload));
+            if($updateOnlyIfValueExists) {
+                $detailLeaseData = $detailLeaseData->filter();
+            }
+            $this->lease->lease_detail()->updateOrCreate([
+                'lease_id' => $this->lease->id,
+            ], $detailLeaseData->toArray());
         }
     }
 
@@ -224,13 +215,16 @@ class FileProcessingController extends Controller
             Log::error($e);
         }
 
-        return [
+        return collect([
             'expired' => $lease_expired ?? false,
-            'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : 'Unknown',
-            'landlord' => ! empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : 'Unknown',
+            'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : null,
+            'landlord' => ! empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : null,
             'premise_address' => ! empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null,
             'building_address' => ! empty($this->basic_extracted_data['property_address']) ? $this->basic_extracted_data['property_address'] : null,
             'landlord_address' => ! empty($this->basic_extracted_data['lessor_landlord_address']) ? $this->basic_extracted_data['lessor_landlord_address'] : null,
+            'execution_date' => ! empty($this->basic_extracted_data['execution_date']) ? Carbon::parse($this->basic_extracted_data['execution_date']) : null,
+            'commencement_date' => ! empty($this->basic_extracted_data['commencement_date']) ? Carbon::parse($this->basic_extracted_data['commencement_date']) : null,
+            'expiration_date' => ! empty($this->basic_extracted_data['expiration_date']) ? Carbon::parse($this->basic_extracted_data['expiration_date']) : null,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'rent_schedule' => $rent_schedule,
@@ -240,7 +234,7 @@ class FileProcessingController extends Controller
             'abatement' => ! empty($this->basic_extracted_data['abatement']) ? (int) $this->basic_extracted_data['abatement'] : null,
             'pro_rata_share' => ! empty($this->basic_extracted_data['pro_rata_share']) ? (float) $this->basic_extracted_data['pro_rata_share'] : null,
             'security_deposit' => ! empty($this->basic_extracted_data['security_deposit']) ? (float) $this->basic_extracted_data['security_deposit'] : null,
-        ];
+        ]);
     }
 
     protected function getDetailedLeaseData(): mixed
@@ -249,7 +243,7 @@ class FileProcessingController extends Controller
             return null;
         }
 
-        return [
+        return collect([
             'option_to_extend' => ! empty($this->detailed_extracted_data['option_to_extend']) ? $this->detailed_extracted_data['option_to_extend'] : null,
             'right_of_first_offer' => ! empty($this->detailed_extracted_data['right_of_first_offer']) ? $this->detailed_extracted_data['right_of_first_offer'] : null,
             'right_of_first_refusal' => ! empty($this->detailed_extracted_data['right_of_first_refusal']) ? $this->detailed_extracted_data['right_of_first_refusal'] : null,
@@ -259,6 +253,6 @@ class FileProcessingController extends Controller
             'landlord_maintenance_obligations' => ! empty($this->detailed_extracted_data['landlord_maintenance_obligations']) ? $this->detailed_extracted_data['landlord_maintenance_obligations'] : null,
             'assignment_subletting' => ! empty($this->detailed_extracted_data['assignment_subletting']) ? $this->detailed_extracted_data['assignment_subletting'] : null,
             'holding_over' => ! empty($this->detailed_extracted_data['holding_over']) ? $this->detailed_extracted_data['holding_over'] : null,
-        ];
+        ]);
     }
 }

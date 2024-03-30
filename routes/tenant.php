@@ -149,7 +149,7 @@ Route::middleware([
     Route::get('/assets/{asset}/load-photo', [AssetController::class, 'loadPhoto'])->name('assets.load-photo');
 
     Route::resource('assets.leases', AssetLeaseController::class)->scoped();
-    Route::resource('leases.amendments', LeaseAmendmentController::class)->scoped();
+//    Route::resource('leases.amendments', LeaseAmendmentController::class)->scoped();
 
     Route::scopeBindings()->group(function () {
         Route::post('/assets/{asset}/leases/{lease}/archive', [AssetLeaseController::class, 'archive'])->name('assets.leases.archive');

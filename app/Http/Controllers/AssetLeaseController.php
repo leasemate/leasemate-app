@@ -6,7 +6,6 @@ use App\Facades\LeasemateApi;
 use App\Http\Requests\StoreLeaseAmendmentRequest;
 use App\Http\Requests\StoreLeaseRequest;
 use App\Http\Resources\AssetResource;
-use App\Http\Resources\ChatResource;
 use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Jobs\DeleteLeaseFile;
@@ -18,7 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AssetLeaseController extends Controller
@@ -61,10 +59,8 @@ class AssetLeaseController extends Controller
             return response()->json(['success' => 1, 'lease' => $lease]);
 
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-
             DB::rollBack();
-
+            \Log::error($e->getMessage());
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -73,16 +69,28 @@ class AssetLeaseController extends Controller
     {
         try {
 
+            DB::beginTransaction();
+
             $upload_document = $request->file('lease_amendment');
 
-            $this->saveDocument($asset, $lease, $upload_document, Document::COLLECTION_AMENDMENT);
+            $amendment = $lease->amendments()->create([
+                'asset_id' => $asset->id,
+                'user_id' => auth()->user()->id,
+                'type' => Lease::TYPE_AMENDMENT,
+            ]);
+
+            $this->saveDocument($asset, $amendment, $upload_document, Document::COLLECTION_AMENDMENT);
+
+            DB::commit();
 
             return response()->json(['success' => 1, 'lease' => $lease]);
 
         } catch (\Exception $e) {
-
+            DB::rollBack();
             \Log::error($e->getMessage());
-
+            if(!app()->environment('production')) {
+                Log::error($e);
+            }
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -98,17 +106,14 @@ class AssetLeaseController extends Controller
             'chats_with_last_message',
             'lease_document.document_detail',
             'lease_detail',
-            'amendments' => function ($query) {
+            'current_lease.lease_detail',
+            'amendments' => function($query) {
                 return $query->orderBy('execution_date', 'desc');
             },
-            'amendments.document.document_detail',
+            'amendments.lease_document.document_detail',
+            'amendments.lease_detail',
         ]);
-
-        if ($lease->amendments->count()) {
-
-            // if there are amendments, get the original data from teh lease document detail object
-            $lease->getOriginalLeaseDetail();
-        }
+//dd($lease->toArray());
 
         return inertia()->render('AssetLeases/Show', [
             'asset' => new AssetResource($asset),
@@ -184,14 +189,6 @@ class AssetLeaseController extends Controller
         }
     }
 
-    /**
-     * @param  \Illuminate\Database\Eloquent\Model  $lease
-     * @param  array|\Illuminate\Http\UploadedFile|null  $lease_document
-     * @param  bool|string  $storedName
-     * @return void
-     *
-     * @throws \Exception
-     */
     protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
     {
         $path = tenant('id').'/leases/'.$asset->id;
