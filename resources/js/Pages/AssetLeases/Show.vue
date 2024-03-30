@@ -97,10 +97,8 @@ onMounted(() => {
     // messageField.value.focus();
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen('AmendmentProcessingUpdate', (e) => {
-
+        .listen('LeaseProcessingUpdate', (e) => {
             console.log(e);
-
             router.reload();
         });
 
@@ -208,7 +206,7 @@ onBeforeUnmount(() => {
                     <LeaseDetail
                         :lease_detail="lease.current_lease ? lease.current_lease.lease_detail : lease.lease_detail"
                     />
-                    
+
                     <div class="json-container">
 
                         <template v-if="lease.current_lease">
