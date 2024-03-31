@@ -132,7 +132,7 @@ class LeasemateApi
         if ($document->collection_name === 'amendment') {
             $post_data['sub_classification'] = 'amendment';
             $post_data['document_id'] = $document->id;
-            $post_data['parent_document_id'] = $lease->original_lease->lease_document->id;
+            $post_data['parent_document_id'] = $lease->current_lease->lease_document->id;
         } else {
             $post_data['sub_classification'] = 'original';
             $post_data['document_id'] = $document->id;

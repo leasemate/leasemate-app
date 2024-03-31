@@ -22,6 +22,7 @@ import { fileStatusClass } from "@/Composables/fileStatusClass.js"
 import LeaseDetail from "@/Pages/AssetLeases/LeaseDetail.vue"
 import BasicTerms from "@/Pages/AssetLeases/BasicTerms.vue"
 import RentSchedule from "@/Pages/AssetLeases/RentSchedule.vue"
+import Checkbox from "@/Components/Checkbox.vue"
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -93,15 +94,11 @@ const handleOnProcessFile = (error, file) => {
 }
 
 onMounted(() => {
-
-    // messageField.value.focus();
-
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('LeaseProcessingUpdate', (e) => {
             console.log(e);
             router.reload();
         });
-
 });
 
 onBeforeUnmount(() => {
@@ -184,7 +181,7 @@ onBeforeUnmount(() => {
                             </template>
 
                             <BasicTerms
-                                :lease="lease.current_lease ?? lease"
+                                :lease="lease"
                             />
 
                         </SmallCard>
@@ -196,7 +193,7 @@ onBeforeUnmount(() => {
                             </template>
 
                             <RentSchedule
-                                :lease="lease.current_lease ?? lease"
+                                :lease="lease"
                             />
 
                         </SmallCard>
@@ -204,18 +201,13 @@ onBeforeUnmount(() => {
                     </div>
 
                     <LeaseDetail
-                        :lease_detail="lease.current_lease ? lease.current_lease.lease_detail : lease.lease_detail"
+                        :lease_detail="lease.lease_detail"
                     />
 
                     <div class="json-container">
 
-                        <template v-if="lease.current_lease">
-                            <h3>Current Lease</h3>
-
-                        </template>
-
-                        <template v-else>
-                            <h3>Original Lease</h3>
+                        <template v-if="!lease.original_lease">
+                            <h3>Original Lease Extraction Data</h3>
                             <h4>Basic Extracted Data</h4>
                             <pre>{{ lease.lease_document.document_detail.basic_extracted_data ?? "--" }}</pre>
                             <h4>Detailed Extracted Data</h4>
@@ -223,6 +215,100 @@ onBeforeUnmount(() => {
                         </template>
 
                     </div>
+
+                </TabPanel>
+
+                <TabPanel v-if="lease.amendments_processing.length">
+                    <template #header>
+                        <div class="flex align-items-center gap-2">
+                            <span class="inline-flex items-center text-xs font-medium">
+                                <span class="relative flex h-2.5 w-2.5">
+<!--                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">-->
+                                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                            :class="getFileStatusClass('Pending', 'PROCESS_CLASSES')"></span>
+                                      <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                            :class="getFileStatusClass('Pending', 'PROCESS_CLASSES')"></span>
+<!--                                  </template>-->
+<!--                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"-->
+<!--                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>-->
+                                </span>
+                            </span>
+
+                            <span class="font-bold white-space-nowrap">
+                                <h6>Amendment Processing</h6>
+                            </span>
+                        </div>
+                    </template>
+
+<!--                    <div class="flex justify-center items-center h-96">-->
+<!--                        <div class="text-center">-->
+<!--                            <h4 class="text-gray-500">Processing...</h4>-->
+
+<!--                            <p class="text-gray-400">Please wait while we process your amendment</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                    <Table>
+
+                        <template #head>
+                            <tr>
+                                <th scope="col" class="pl-4 pr-2 py-3"></th>
+                                <th scope="col" class="px-6 py-3">
+                                    Amendment
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Progress
+                                </th>
+                            </tr>
+                        </template>
+
+                        <template #body>
+                            <tr v-for="(amendment, index) in lease.amendments_processing" :key="amendment.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+
+                                <td class="pl-4 pr-2 py-4 space-x-2">
+
+                                    <span
+                                        class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                                        :class="getFileStatusClass(amendment.lease_document.status)">
+
+                                          <span class="relative mr-1.5 flex h-2.5 w-2.5">
+
+                                              <template v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">
+                                                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                                  <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                              </template>
+
+                                              <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                    :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                          </span>
+
+                                          <span class="whitespace-nowrap">{{ amendment.lease_document.status }} {{ amendment.lease_document.status_progress }}</span>
+
+                                    </span>
+
+                                </td>
+                                <td class="pl-4 pr-2 py-4 space-x-2">
+                                    {{ amendment.lease_document.name }}
+                                </td>
+                                <td class="pl-4 pr-2 py-4 space-x-2">
+                                    <div class="flex items-center">
+                                        <div class="flex-1 progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600">
+                                            <div class="progress-bar h-2.5 bg-indigo-600 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
+                                                 :style="`width: 30%`"
+                                                 role="progressbar"
+                                            ></div>
+                                            <!--                                     :style="`width: ${amendment.lease_document.status_progress ?? '2%'};`"-->
+                                        </div>
+                                        <div class="ml-2 font-bold">30%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+
+                    </Table>
 
                 </TabPanel>
 
@@ -253,81 +339,6 @@ onBeforeUnmount(() => {
                         </div>
                     </template>
 
-                    <template v-if="amendment.lease_document.status == 'Ready'">
-
-                        <div class="grid grid-cols-12 gap-6">
-                            <SmallCard>
-
-                                <template #header>
-                                    Basic Terms
-                                </template>
-
-                                <BasicTerms
-                                    :lease="amendment"
-                                />
-
-                            </SmallCard>
-
-                            <SmallCard>
-
-                                <template #header>
-                                    Rent Schedule
-                                </template>
-
-                                <RentSchedule
-                                    :lease="amendment"
-                                />
-
-                            </SmallCard>
-                        </div>
-
-                        <LeaseDetail
-                            :lease_detail="amendment.lease_detail ?? {}"
-                        />
-
-                        <div class="min-h-96">
-                            <p class="m-0">
-
-                                <div class="json-container">
-
-                                    <h3>Raw Extracted Amendment Data</h3>
-                                    <h4>Basic Extracted Data</h4>
-                                    <pre>{{ amendment.lease_document.document_detail?.basic_extracted_data ?? "--" }}</pre>
-                                    <h4>Detailed Extracted Data</h4>
-                                    <pre>{{ amendment.lease_document.document_detail?.detailed_extracted_data ?? "--" }}</pre>
-
-                                </div>
-                            </p>
-                        </div>
-
-                    </template>
-
-                    <template v-else>
-
-                        <div class="flex justify-center items-center h-96">
-                            <div class="text-center">
-                                <h4 class="text-gray-500">{{ amendment.lease_document.status }}...</h4>
-                                <div class="progress h-2.5 my-6 w-full bg-gray-50 rounded-full relative dark:bg-zinc-600">
-                                    <div class="progress-bar h-2.5 bg-indigo-600 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
-                                         :style="`width: ${amendment.lease_document.status_progress ?? '2%'};`"
-                                         role="progressbar"
-                                    ></div>
-                                </div>
-                                <p class="text-gray-400">Please wait while we process your amendment</p>
-                            </div>
-                        </div>
-                    </template>
-
-                </TabPanel>
-
-                <TabPanel v-if="lease.current_lease">
-
-                    <template #header>
-                        <div class="flex align-items-center gap-2">
-                            <h6 class="font-bold white-space-nowrap">Original Lease Abstract</h6>
-                        </div>
-                    </template>
-
                     <div class="grid grid-cols-12 gap-6">
                         <SmallCard>
 
@@ -336,7 +347,7 @@ onBeforeUnmount(() => {
                             </template>
 
                             <BasicTerms
-                                :lease="lease"
+                                :lease="amendment"
                             />
 
                         </SmallCard>
@@ -348,14 +359,67 @@ onBeforeUnmount(() => {
                             </template>
 
                             <RentSchedule
-                                :lease="lease"
+                                :lease="amendment"
                             />
 
                         </SmallCard>
                     </div>
 
                     <LeaseDetail
-                        :lease_detail="lease.lease_detail"
+                        :lease_detail="amendment.lease_detail ?? {}"
+                    />
+
+                    <div class="min-h-96">
+                        <p class="m-0">
+
+                            <div class="json-container">
+                                <h3>Amendment Extraction Data</h3>
+                                <h4>Basic Extracted Data</h4>
+                                <pre>{{ amendment.lease_document.document_detail?.basic_extracted_data ?? "--" }}</pre>
+                                <h4>Detailed Extracted Data</h4>
+                                <pre>{{ amendment.lease_document.document_detail?.detailed_extracted_data ?? "--" }}</pre>
+
+                            </div>
+                        </p>
+                    </div>
+                </TabPanel>
+
+                <TabPanel v-if="lease.original_lease">
+
+                    <template #header>
+                        <div class="flex align-items-center gap-2">
+                            <h6 class="font-bold white-space-nowrap">Original Lease</h6>
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-12 gap-6">
+                        <SmallCard>
+
+                            <template #header>
+                                Basic Terms
+                            </template>
+
+                            <BasicTerms
+                                :lease="lease.original_lease"
+                            />
+
+                        </SmallCard>
+
+                        <SmallCard>
+
+                            <template #header>
+                                Rent Schedule
+                            </template>
+
+                            <RentSchedule
+                                :lease="lease.original_lease"
+                            />
+
+                        </SmallCard>
+                    </div>
+
+                    <LeaseDetail
+                        :lease_detail="lease.original_lease.lease_detail"
                     />
 
                     <div class="min-h-96">
@@ -363,7 +427,7 @@ onBeforeUnmount(() => {
 
                             <div class="json-container">
 
-                                <h3>Raw Extracted Amendment Data</h3>
+                                <h3>Original Lease Extraction Data</h3>
                                 <h4>Basic Extracted Data</h4>
                                 <pre>{{ lease.lease_document.document_detail.basic_extracted_data ?? "--" }}</pre>
                                 <h4>Detailed Extracted Data</h4>

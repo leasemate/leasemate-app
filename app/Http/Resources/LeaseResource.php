@@ -15,6 +15,8 @@ class LeaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+//        dump($this->relationLoaded('amendments_processing'));
+//        dd($this);
 //dd($this->amendments);
 //        dd($this->whenLoaded('current_lease'));
         return [
@@ -40,9 +42,10 @@ class LeaseResource extends JsonResource
             'rent_schedule' => $this->getMonthlyBaseRent(),
             'is_archived' => $this->deleted_at ? true : false,
             'lease_document' => new DocumentResource($this->whenLoaded('lease_document')),
-            $this->mergeWhen($this->relationLoaded('current_lease') && $this->current_lease !== null, [
-                'current_lease' => new LeaseResource($this->current_lease),
+            $this->mergeWhen($this->whenLoaded('original_lease') && $this->original_lease !== null, [
+                'original_lease' => new LeaseResource($this->original_lease),
             ]),
+            'amendments_processing' => LeaseResource::collection($this->whenLoaded('amendments_processing')),
             'amendments' => LeaseResource::collection($this->whenLoaded('amendments')),
             'lease_detail' => new LeaseDetailResource($this->whenLoaded('lease_detail')),
         ];

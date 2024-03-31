@@ -88,20 +88,22 @@ class FileProcessingController extends Controller
 
             if($this->lease->is_amendment) {
 
-                $original_lease = $this->lease->original_lease;
-                if(!$currentLease = $original_lease->current_lease) {
-                    $currentLease = $original_lease->replicate();
-                    $currentLease->parent_id = $original_lease->id;
-                    $currentLease->type = Lease::TYPE_CURRENT;
-                    $currentLease->push();
+                $current_lease = $this->lease->current_lease;
 
-                    $currentLeaseDetail = $original_lease->lease_detail->replicate();
-                    $currentLease->lease_detail()->updateOrCreate([
-                        'lease_id' => $currentLease->id,
-                    ], $currentLeaseDetail->toArray());
+                if(!$current_lease->original_lease) {
+                    $original_lease = $current_lease->replicate();
+                    $original_lease->parent_id = $current_lease->id;
+                    $original_lease->type = Lease::TYPE_ORIGINAL;
+                    $original_lease->push();
+
+                    $original_lease_detail = $current_lease->lease_detail->replicate();
+
+                    $original_lease->lease_detail()->updateOrCreate([
+                        'lease_id' => $original_lease->id,
+                    ], $original_lease_detail->toArray());
                 }
 
-                $this->lease = $currentLease;
+                $this->lease = $current_lease;
                 $this->processLease(true); //processing current lease -- only update if value exists
             }
 
@@ -174,9 +176,18 @@ class FileProcessingController extends Controller
         try {
 
             $rentable_square_feet = ! empty($this->basic_extracted_data['rentable_square_feet']) ? (int) $this->basic_extracted_data['rentable_square_feet'] : null;
+
+            if(!$rentable_square_feet) {
+                if($this->lease->is_amendment) {
+                    $rentable_square_feet = $this->lease->current_lease->rentable_sqft;
+                } else {
+                    $rentable_square_feet = $this->lease->rentable_sqft;
+                }
+            }
+
             $current_rent_per_sqft = 0;
 
-            $rent_schedule = ! empty($this->basic_extracted_data['rent_schedule']) ? $this->basic_extracted_data['rent_schedule'] : [];
+            $rent_schedule = !empty($this->basic_extracted_data['rent_schedule']) ? $this->basic_extracted_data['rent_schedule'] : [];
             $end_date = is_array($rent_schedule) ? end($rent_schedule)['end_date'] ?? null : null;
 
             if ($end_date) {

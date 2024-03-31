@@ -21,10 +21,10 @@ const props = defineProps({
     lease_detail: Object,
 })
 
-onMounted(() => {
-    console.log("Lease Detail");
-    console.log(props.lease_detail)
-});
+// onMounted(() => {
+//     console.log("Lease Detail");
+//     console.log(props.lease_detail)
+// });
 
 </script>
 

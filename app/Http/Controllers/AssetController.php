@@ -86,7 +86,7 @@ class AssetController extends Controller
                     $query->withTrashed();
                 },
             ])
-            ->original()
+            ->current()
             ->where('asset_id', $asset->id)
             ->orderBy('created_at', 'desc')
             ->withTrashed()

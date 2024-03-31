@@ -103,15 +103,13 @@ class AssetLeaseController extends Controller
         $lease->load([
             'asset',
             'user',
-            'chats_with_last_message',
-            'lease_document.document_detail',
             'lease_detail',
-            'current_lease.lease_detail',
-            'amendments' => function($query) {
-                return $query->orderBy('execution_date', 'desc');
-            },
-            'amendments.lease_document.document_detail',
+            'lease_document.document_detail',
+            'original_lease.lease_detail',
+            'amendments_processing.lease_document',
+            'amendments',
             'amendments.lease_detail',
+            'amendments.lease_document.document_detail',
         ]);
 //dd($lease->toArray());
 
@@ -119,8 +117,6 @@ class AssetLeaseController extends Controller
             'asset' => new AssetResource($asset),
             'associates' => UserAssetResource::collection($asset->associates),
             'lease' => new LeaseResource($lease),
-            //            'chats' => ChatResource::collection($lease->chats_with_last_message),
-            //            'chat' => $chat->exists?new ChatResource($chat):null
         ]);
     }
 

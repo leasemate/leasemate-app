@@ -60,16 +60,33 @@ class Lease extends Model
 
     public function original_lease()
     {
-        return $this->belongsTo(Lease::class, 'parent_id', 'id')
+        return $this->hasOne(Lease::class, 'parent_id', 'id')
             ->where('type', self::TYPE_ORIGINAL);
     }
     public function current_lease()
     {
-        return $this->hasOne(Lease::class, 'parent_id', 'id')
+        return $this->belongsTo(Lease::class, 'parent_id', 'id')
             ->where('type', self::TYPE_CURRENT);
     }
 
+    public function amendments_processing()
+    {
+        return $this->base_amendments()
+            ->whereHas('lease_document', function($q) {
+                $q->where('status', '!=', 'Ready');
+            });
+    }
+
     public function amendments()
+    {
+        return $this->base_amendments()
+            ->whereHas('lease_document', function($q) {
+                $q->whereIn('status', ['Ready','Failed']);
+            })
+            ->orderBy('execution_date', 'desc');
+    }
+
+    public function base_amendments()
     {
         return $this->hasMany(Lease::class, 'parent_id', 'id')
             ->where('type', self::TYPE_AMENDMENT);
