@@ -321,35 +321,39 @@ onBeforeUnmount(() => {
                     </td>
                     <th scope="row" class="px-6 py-4">
 
-                        <span
-                            class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                            :class="getFileStatusClass(lease.lease_document.status)">
+                        <div class="inline-block">
+                            <span
+                                class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
+                                :class="getFileStatusClass(lease.lease_document.status)">
 
-                              <span class="relative mr-1.5 flex h-2.5 w-2.5">
+                                  <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
-                                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                      <template v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
+                                          <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                          <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
+                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                      </template>
+
+                                      <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                             :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
-                                      <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
-                                  </template>
 
-                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                        :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                  </span>
 
-                              </span>
+                                  <span class="whitespace-nowrap">{{ lease.lease_document.status }} {{ lease.lease_document.status_progress }}</span>
 
-                              <span class="whitespace-nowrap">{{ lease.lease_document.status }} {{ lease.lease_document.status_progress }}</span>
-
-                        </span>
-
-                        <div v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status) && lease.lease_document.status_progress" class="progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600 mt-2 mx-2">
-                            <div class="progress-bar h-2.5 bg-violet-500 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
-                                 :style="`width: ${lease.lease_document.status_progress};`"
-                                 role="progressbar">
+                            </span>
+                            <div class="mt-2 px-2">
+                                <div v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status) && lease.lease_document.status_progress"
+                                     class="progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600 mt-2"
+                                >
+                                    <div class="progress-bar h-2.5 bg-violet-500 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
+                                         :style="`width: ${lease.lease_document.status_progress};`"
+                                         role="progressbar">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                     </th>
                     <td class="px-6 py-4 text-gray-900 ">
 

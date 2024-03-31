@@ -299,12 +299,12 @@ onBeforeUnmount(() => {
                                     <div class="flex items-center">
                                         <div class="flex-1 progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600">
                                             <div class="progress-bar h-2.5 bg-indigo-600 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
-                                                 :style="`width: ${amendment.lease_document.status_progress ?? '5%'};`"
+                                                 :style="`width: ${amendment.lease_document.status_progress ?? '0%'};`"
                                                  role="progressbar"
                                             ></div>
 
                                         </div>
-                                        <div class="ml-2 font-bold">{{ amendment.lease_document.status_progress ?? 2 }}%</div>
+                                        <div class="ml-2 font-bold">{{ amendment.lease_document.status_progress ?? "" }}</div>
                                     </div>
                                 </td>
                             </tr>
