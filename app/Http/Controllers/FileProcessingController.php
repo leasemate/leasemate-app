@@ -76,7 +76,7 @@ class FileProcessingController extends Controller
                     'basic_extracted_data' => $this->basic_extracted_data ?? null,
                     'detailed_extracted_data' => $this->detailed_extracted_data ?? null,
                 ]);
-                
+
                 $this->processLease(); //processing a lease or amendment
 
                 if($this->lease->is_amendment) {
