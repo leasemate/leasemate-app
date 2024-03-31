@@ -80,7 +80,6 @@ class AssetController extends Controller
      */
     public function show(Asset $asset)
     {
-
         $leases = Lease::with([
                 'lease_document' => function ($query) {
                     $query->withTrashed();

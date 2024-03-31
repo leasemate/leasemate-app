@@ -16,11 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class FileProcessingController extends Controller
 {
-    protected User $user;
-
     protected Lease $lease;
-
-//    protected Amendment $amendment;
 
     protected Document $document;
 
@@ -67,50 +63,48 @@ class FileProcessingController extends Controller
                 throw new \Exception('Document not found');
             }
 
-            $this->document->status = ($this->status == 'Completed' ? 'Ready' : $this->status);
+            $this->document->status = $this->status;
             $this->document->status_msg = $this->status_msg ?? null;
             $this->document->status_progress = $this->status_progress ?? 0;
-
-            if ($this->basic_extracted_data || $this->detailed_extracted_data) {
-                $this->document->document_detail()->create([
-                    'basic_extracted_data' => $this->basic_extracted_data,
-                    'detailed_extracted_data' => $this->detailed_extracted_data,
-                ]);
-            }
-
             $this->document->save();
 
-            Log::info('*************** ' . $this->document->collection_name . ' ******************');
+            if($this->status === 'Ready') {
 
-            $this->lease = $this->document->documentable;
-            $this->user = $this->lease->user;
-            $this->processLease(); //processing a lease or amendment
+                $this->document->document_detail()->create([
+                    'basic_extracted_data' => $this->basic_extracted_data ?? null,
+                    'detailed_extracted_data' => $this->detailed_extracted_data ?? null,
+                ]);
 
-            if($this->lease->is_amendment) {
+                $this->lease = $this->document->documentable;
+                $this->processLease(); //processing a lease or amendment
 
-                $current_lease = $this->lease->current_lease;
+                if($this->lease->is_amendment) {
 
-                if(!$current_lease->original_lease) {
-                    $original_lease = $current_lease->replicate();
-                    $original_lease->parent_id = $current_lease->id;
-                    $original_lease->type = Lease::TYPE_ORIGINAL;
-                    $original_lease->push();
+                    $current_lease = $this->lease->current_lease;
 
-                    $original_lease_detail = $current_lease->lease_detail->replicate();
+                    if( !$current_lease->original_lease) {
+                        $original_lease = $current_lease->replicate();
+                        $original_lease->parent_id = $current_lease->id;
+                        $original_lease->type = Lease::TYPE_ORIGINAL;
+                        $original_lease->push();
 
-                    $original_lease->lease_detail()->updateOrCreate([
-                        'lease_id' => $original_lease->id,
-                    ], $original_lease_detail->toArray());
+                        $original_lease_detail = $current_lease->lease_detail->replicate();
+
+                        $original_lease->lease_detail()->updateOrCreate([
+                            'lease_id' => $original_lease->id,
+                        ], $original_lease_detail->toArray());
+                    }
+
+                    $this->lease = $current_lease;
+                    $this->processLease(true); //processing current lease -- only update if value exists
                 }
 
-                $this->lease = $current_lease;
-                $this->processLease(true); //processing current lease -- only update if value exists
             }
 
             $lease_payload = $this->eventPayload();
 
             Log::info('Fire event: LeaseProcessingUpdate:', $lease_payload);
-            event(new LeaseProcessingUpdate($this->user->id, $lease_payload));
+            event(new LeaseProcessingUpdate($this->lease->user->id, $lease_payload));
 
             if (in_array($this->status, ['Ready', 'Failed'])) {
                 Log::info('Send notification: LeaseCompleteNotification:');
@@ -131,20 +125,20 @@ class FileProcessingController extends Controller
     protected function processLease($updateOnlyIfValueExists = false)
     {
         if ($basicLeaseData = $this->getBasicLeaseData()) {
-            if($updateOnlyIfValueExists) {
-                $basicLeaseData = $basicLeaseData->filter();
-            }
-            $this->lease->fill($basicLeaseData->toArray());
+//            if($updateOnlyIfValueExists) {
+//                $basicLeaseData = $basicLeaseData->filter();
+//            }
+            $this->lease->fill($basicLeaseData->filter()->toArray());
             $this->lease->save();
         }
 
         if ($detailLeaseData = $this->getDetailedLeaseData()) {
-            if($updateOnlyIfValueExists) {
-                $detailLeaseData = $detailLeaseData->filter();
-            }
+//            if($updateOnlyIfValueExists) {
+//                $detailLeaseData = $detailLeaseData->filter();
+//            }
             $this->lease->lease_detail()->updateOrCreate([
                 'lease_id' => $this->lease->id,
-            ], $detailLeaseData->toArray());
+            ], $detailLeaseData->filter()->toArray());
         }
     }
 
