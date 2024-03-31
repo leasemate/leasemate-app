@@ -97,9 +97,8 @@ class FileProcessingController extends Controller
                     }
 
                     $this->lease = $current_lease;
-                    $this->processLease(true); //processing current lease -- only update if value exists
+                    $this->processLease();
                 }
-
             }
 
             $lease_payload = $this->eventPayload();
@@ -123,20 +122,16 @@ class FileProcessingController extends Controller
 
     }
 
-    protected function processLease($updateOnlyIfValueExists = false)
+    protected function processLease()
     {
         if ($basicLeaseData = $this->getBasicLeaseData()) {
-//            if($updateOnlyIfValueExists) {
-//                $basicLeaseData = $basicLeaseData->filter();
-//            }
-            $this->lease->fill($basicLeaseData->filter()->toArray());
+            $this->lease->fill($basicLeaseData->filter(function ($value) {
+                return !is_null($value);
+            })->toArray());
             $this->lease->save();
         }
 
         if ($detailLeaseData = $this->getDetailedLeaseData()) {
-//            if($updateOnlyIfValueExists) {
-//                $detailLeaseData = $detailLeaseData->filter();
-//            }
             $this->lease->lease_detail()->updateOrCreate([
                 'lease_id' => $this->lease->id,
             ], $detailLeaseData->filter()->toArray());
@@ -222,7 +217,7 @@ class FileProcessingController extends Controller
         }
 
         return collect([
-            'expired' => $lease_expired ?? false,
+            'expired' => $lease_expired ?? 0,
             'tenant' => ! empty($this->basic_extracted_data['lessee_tenant']) ? $this->basic_extracted_data['lessee_tenant'] : null,
             'landlord' => ! empty($this->basic_extracted_data['lessor_landlord']) ? $this->basic_extracted_data['lessor_landlord'] : null,
             'premise_address' => ! empty($this->basic_extracted_data['premises_address']) ? $this->basic_extracted_data['premises_address'] : null,
