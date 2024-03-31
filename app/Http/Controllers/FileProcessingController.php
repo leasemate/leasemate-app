@@ -68,14 +68,15 @@ class FileProcessingController extends Controller
             $this->document->status_progress = $this->status_progress ?? 0;
             $this->document->save();
 
+            $this->lease = $this->document->documentable;
+
             if($this->status === 'Ready') {
 
                 $this->document->document_detail()->create([
                     'basic_extracted_data' => $this->basic_extracted_data ?? null,
                     'detailed_extracted_data' => $this->detailed_extracted_data ?? null,
                 ]);
-
-                $this->lease = $this->document->documentable;
+                
                 $this->processLease(); //processing a lease or amendment
 
                 if($this->lease->is_amendment) {
