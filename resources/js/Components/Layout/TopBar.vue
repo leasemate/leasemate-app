@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
 
 <template>
 
-    <nav class="border-b border-slate-100 dark:bg-zinc-800 print:hidden flex items-center fixed top-0 right-0 left-0 bg-white z-10 dark:border-zinc-700">
+    <nav class="border-b border-slate-100 dark:bg-zinc-800 print:hidden flex items-center fixed top-0 right-0 left-0 bg-white z-10 dark:border-zinc-700 shadow-md">
 
         <div class="flex items-center justify-between w-full">
 
