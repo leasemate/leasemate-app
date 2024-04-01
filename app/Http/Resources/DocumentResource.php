@@ -19,7 +19,7 @@ class DocumentResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'status' => $this->status,
-            'status_progress' => ($this->status_progress && $this->status == 'Processing' ? $this->status_progress.'%' : null),
+            'status_progress' => ($this->status_progress && !in_array($this->status, ['Ready','Failed']) ? $this->status_progress.'%' : null),
             'status_msg' => $this->status_msg,
             'name' => $this->name,
             'file_name' => Storage::disk('s3')->url($this->file_name),
