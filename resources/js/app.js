@@ -34,8 +34,8 @@ createInertiaApp({
 
         const app = createApp({ render: () => h(App, props) });
 
-        app.config.globalProperties.filters = filters;
-        app.config.globalProperties.dayjs = dayjs;
+        app.config.globalProperties.filters = filters
+        app.config.globalProperties.dayjs = dayjs.default || dayjs
 
         // app.directive('tooltip', Tooltip);
 
