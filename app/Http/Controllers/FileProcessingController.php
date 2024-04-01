@@ -146,7 +146,7 @@ class FileProcessingController extends Controller
             'status_msg' => $this->status_msg,
             'status_progress' => $this->status_progress,
             'file_name' => $this->document->name,
-            'updated_at' => $this->document->updated_at->format('m/d/y'),
+            'updated_at' => $this->document->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 

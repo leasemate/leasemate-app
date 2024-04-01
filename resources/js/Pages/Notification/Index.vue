@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
-import moment from "moment";
 import Pagination from "@/Components/Pagination.vue";
 import {fileStatusClass} from "@/Composables/fileStatusClass.js";
 
@@ -83,7 +82,7 @@ onBeforeUnmount(() => {
                         >{{ notification.data.file_status }}</span>
                     </td>
                     <td>
-                        <p>{{ moment(notification.created_at,).format("MMM DD, YYYY h:mma") }}</p>
+                        <p>{{ dayjs(notification.created_at).format("MMM DD, YYYY h:mma") }}</p>
                     </td>
                 </tr>
 

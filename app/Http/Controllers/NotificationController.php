@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotificationResource;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Inertia;
@@ -16,7 +17,7 @@ class NotificationController extends Controller
         $notifications = auth()->user()->notifications()->paginate(10);
 
         return Inertia::render('Notification/Index', [
-            'notifications' => $notifications,
+            'notifications' => NotificationResource::collection($notifications),
         ]);
     }
 

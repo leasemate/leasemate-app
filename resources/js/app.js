@@ -17,6 +17,12 @@ import PrimeVue from "primevue/config";
 
 import Wind from "./presets/wind";
 import filters from "./filters";
+import * as dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime.js"
+import en from "dayjs/locale/en.js"
+
+dayjs.extend(relativeTime)
+dayjs.locale(en)
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pinia = createPinia();
@@ -29,6 +35,8 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
 
         app.config.globalProperties.filters = filters;
+        app.config.globalProperties.dayjs = dayjs;
+
         // app.directive('tooltip', Tooltip);
 
         return app.use(plugin)

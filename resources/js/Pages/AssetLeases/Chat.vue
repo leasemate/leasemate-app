@@ -19,7 +19,6 @@ import VueFilePond, { setOptions } from "vue-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
 import "filepond/dist/filepond.min.css";
 
-import moment from "moment";
 import Hero from "@/Components/Lease/Hero.vue";
 import Associates from "@/Components/Lease/Associates.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";

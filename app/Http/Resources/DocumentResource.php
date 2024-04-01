@@ -32,7 +32,7 @@ class DocumentResource extends JsonResource
     protected function getStatusProgress(): ?string
     {
         if($this->collection_name == Document::COLLECTION_AMENDMENT) {
-            return $this->status_progress;
+            return "{$this->status_progress}%";
         } else {
             return $this->status_progress && $this->status == 'Processing' ? $this->status_progress.'%' : null;
         }
