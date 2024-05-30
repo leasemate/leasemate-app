@@ -11,6 +11,10 @@
             name="description"
         />
 
+        <link rel="icon" href="{{ Vite::asset('resources/images/icon-32x32.png') }}" sizes="32x32" />
+        <link rel="icon" href="{{ Vite::asset('resources/images/icon-192x192.png') }}" sizes="192x192" />
+        <link rel="apple-touch-icon" href="{{ Vite::asset('resources/images/icon-192x192.png') }}" />
+
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         @routes
