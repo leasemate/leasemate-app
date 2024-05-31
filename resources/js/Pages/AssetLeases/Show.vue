@@ -204,7 +204,7 @@ onBeforeUnmount(() => {
                         :lease_detail="lease.lease_detail"
                     />
 
-                    <div class="json-container">
+                    <div v-if="false" class="json-container">
 
                         <template v-if="!lease.original_lease">
                             <h3>Original Lease Extraction Data</h3>
@@ -371,7 +371,7 @@ onBeforeUnmount(() => {
                         :lease_detail="amendment.lease_detail ?? {}"
                     />
 
-                    <div class="min-h-96">
+                    <div v-if="false" class="min-h-96">
                         <p class="m-0">
 
                             <div class="json-container">
@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
                         :lease_detail="lease.original_lease.lease_detail"
                     />
 
-                    <div class="min-h-96">
+                    <div v-if="false" class="min-h-96">
                         <p class="m-0">
 
                             <div class="json-container">
