@@ -224,8 +224,8 @@ onBeforeUnmount(() => {
 
             <template #head>
                 <tr>
-                    <th scope="col" class="pl-4 pr-2 py-3">
-                    </th>
+<!--                    <th scope="col" class="pl-4 pr-2 py-3">-->
+<!--                    </th>-->
                     <th scope="col" class="px-6 py-3">
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -247,78 +247,34 @@ onBeforeUnmount(() => {
                         Rent (SQFT)
                     </th>
                     <th scope="col" class="px-6 py-3 font-normal normal-case">
-                        <Menu as="div" class="relative inline-block text-left">
-                            <div>
-                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    <BoxIcon class="bx-filter-alt text-[20px] text-gray-500" />
-                                </MenuButton>
-                            </div>
+<!--                        <Menu as="div" class="relative inline-block text-left">-->
+<!--                            <div>-->
+<!--                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">-->
+<!--                                    <BoxIcon class="bx-filter-alt text-[20px] text-gray-500" />-->
+<!--                                </MenuButton>-->
+<!--                            </div>-->
 
-                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                                <MenuItems class="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <div class="py-1">
-                                        <MenuItem v-slot="{ active }">
-                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Filters...</a>
-                                        </MenuItem>
+<!--                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">-->
+<!--                                <MenuItems class="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">-->
+<!--                                    <div class="py-1">-->
 <!--                                        <MenuItem v-slot="{ active }">-->
-<!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Support</a>-->
+<!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Filters...</a>-->
 <!--                                        </MenuItem>-->
-<!--                                        <MenuItem v-slot="{ active }">-->
-<!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">License</a>-->
-<!--                                        </MenuItem>-->
-<!--                                        <form method="POST" action="#">-->
-<!--                                            <MenuItem v-slot="{ active }">-->
-<!--                                                <button type="submit" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-4 py-2 text-left text-sm']">Sign out</button>-->
-<!--                                            </MenuItem>-->
-<!--                                        </form>-->
-                                    </div>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
-<!--                      <div class="flex justify-center">-->
-<!--                        <Button type="button" icon="bx bx-menu-alt-right" class="relative items-center inline-flex text-center align-bottom justify-center leading-[normal] w-12 p-0 py-3 rounded-md text-white bg-gray-500 border border-gray-500 focus:outline-none focus:outline-offset-0 focus:ring hover:bg-gray-600 hover:border-gray-600 focus:ring-primary-400/50 dark:focus:ring-primary-300/50 transition duration-200 ease-in-out cursor-pointer overflow-hidden select-none" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />-->
-<!--                        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />-->
-<!--                      </div>-->
+<!--                                    </div>-->
+<!--                                </MenuItems>-->
+<!--                            </transition>-->
+<!--                        </Menu>-->
                     </th>
                 </tr>
-<!--                <tr>-->
-<!--                    <td scope="col" class="pl-4 pr-2 py-2 pt-0">-->
-<!--                        <Checkbox />-->
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-<!--                        <TextInput-->
-<!--                            type="text"-->
-<!--                            class="mt-1 block w-full"-->
-<!--                        />-->
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                    <td scope="col" class="px-6 py-2 pt-0">-->
-
-<!--                    </td>-->
-<!--                </tr>-->
             </template>
 
 
             <template #body>
                 <tr v-for="(lease, index) in props.leases.data" :key="lease.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
-                    <td class="pl-4 pr-2 py-4 space-x-2">
-                        <Checkbox />
-                    </td>
+<!--                    <td class="pl-4 pr-2 py-4 space-x-2">-->
+<!--                        <Checkbox />-->
+<!--                    </td>-->
                     <th scope="row" class="px-6 py-4">
 
                         <div class="inline-block">

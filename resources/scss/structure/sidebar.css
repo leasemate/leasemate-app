@@ -55,6 +55,7 @@
 /*.metismenu .mm-active {*/
 /*    @apply px-2;*/
 /*}*/
+
 .metismenu .mm-active .active {
     @apply text-indigo-500 border-r-4 border-indigo-500 bg-indigo-100 !important;
 }
@@ -100,7 +101,7 @@
     transition-property: height, visibility;
 }
 
-.metismenu .mm-active a {
+.metismenu .mm-active .mm-active a {
     @apply text-indigo-500;
 }
 
