@@ -9,7 +9,7 @@ defineProps({
 
 <template>
     <button :type="type" class="inline-flex items-center px-2 py-1
-    bg-indigo-500 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-white dark:text-gray-800
+    bg-indigo-600 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-white dark:text-gray-800
     hover:bg-indigo-700 dark:hover:bg-white
     focus:bg-indigo-700 dark:focus:bg-white
     active:bg-indigo-900 dark:active:bg-gray-300

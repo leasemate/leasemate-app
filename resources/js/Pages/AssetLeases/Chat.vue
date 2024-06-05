@@ -502,14 +502,17 @@ onUnmounted(() => {
 
         <Associates :associates="associates" />
 
-        <PrimaryLink
-            :href="route('assets.leases.show', [asset, lease])"
-            class="my-4"
-        ><BoxIcon class="bx-arrow-back mr-2" />Lease Abstract</PrimaryLink>
+        <div class="flex flex-row items-start justify-between">
 
-        <div class="my-6">
-            <h3>{{ lease.tenant_name }}</h3>
-            <h4>{{ lease.address }}</h4>
+            <div class="mb-8">
+                <h2 class="text-indigo-600">{{ lease.tenant }}</h2>
+                <h5 class="text-gray-500">{{ lease.premise_address }}</h5>
+            </div>
+
+            <PrimaryLink
+                :href="route('assets.leases.show', [asset, lease])"
+                class="my-4"
+            ><BoxIcon class="bx-arrow-back mr-2" />Lease Abstract</PrimaryLink>
         </div>
 
         <div class="col-span-12 mb-8">
@@ -618,7 +621,7 @@ onUnmounted(() => {
                                         stroke-width="2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80">
+                                        class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-indigo-600 dark:bg-indigo-200 hover:bg-indigo-700 dark:hover:bg-white focus:bg-indigo-700 dark:focus:bg-white active:bg-indigo-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-white">
 
                                         <path d="M12 5l0 14"></path>
                                         <path d="M18 11l-6 -6"></path>

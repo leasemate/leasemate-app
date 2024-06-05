@@ -246,7 +246,9 @@ onBeforeUnmount(() => {
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">
                         Rent (SQFT)
                     </th>
-                    <th scope="col" class="px-6 py-3 font-normal normal-case">
+                    <th scope="col" class="py-3">
+                    </th>
+                    <th scope="col" class="px-3 py-3 font-normal normal-case">
 <!--                        <Menu as="div" class="relative inline-block text-left">-->
 <!--                            <div>-->
 <!--                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">-->
@@ -367,7 +369,14 @@ onBeforeUnmount(() => {
                     <td class="px-6 py-4 space-x-2">
                         {{ lease.rent_per_sqft ? filters.formatMoney(lease.rent_per_sqft) : '--' }}
                     </td>
-                    <td class="px-6 py-4 ">
+                    <td class="py-4 ">
+                        <PrimaryLink
+                            class="bg-indigo-600"
+                            :href="route('assets.leases.chats.index', [asset, lease])">
+                            Chat <BoxIcon class="bx-comment-detail ml-2" />
+                        </PrimaryLink>
+                    </td>
+                    <td class="px-3 py-4 ">
 
                         <TableDropdown
                             :index="index"

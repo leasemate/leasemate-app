@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
                     <PrimaryLink
                         class="bg-indigo-600"
                         :href="route('assets.leases.chats.index', [asset, lease])">
-                        Leasemate<BoxIcon class="bx-comment-detail ml-2" />
+                        Chat <BoxIcon class="bx-comment-detail ml-2" />
                     </PrimaryLink>
                 </div>
             </div>
