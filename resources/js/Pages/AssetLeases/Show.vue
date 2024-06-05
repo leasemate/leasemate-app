@@ -1,23 +1,24 @@
 <script setup>
-import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, toRef} from "vue";
-import {usePage, Head, Link, router} from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryLink from "@/Components/PrimaryLink.vue";
-import Table from "@/Components/Table.vue";
-import TabView from 'primevue/tabview';
-import TabPanel from 'primevue/tabpanel';
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, toRef } from "vue"
+import { usePage, Head, Link, router } from "@inertiajs/vue3"
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue"
+import PrimaryLink from "@/Components/PrimaryLink.vue"
+import Table from "@/Components/Table.vue"
+import TabView from "primevue/tabview"
+import TabPanel from "primevue/tabpanel"
 import Accordion from "primevue/accordion"
 import AccordionTab from "primevue/accordiontab"
-import SmallCard  from "@/Components/Lease/SmallCard.vue"
-import Hero from "@/Components/Lease/Hero.vue";
-import Associates from "@/Components/Lease/Associates.vue";
+import SmallCard from "@/Components/Lease/SmallCard.vue"
+import Hero from "@/Components/Lease/Hero.vue"
+import Associates from "@/Components/Lease/Associates.vue"
 import BoxIcon from "@/Components/BoxIcon.vue"
 
-import VueFilePond, { setOptions } from "vue-filepond";
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js";
+import VueFilePond, { setOptions } from "vue-filepond"
+import FilePondPluginFileValidateType
+    from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js"
 
-import "filepond/dist/filepond.min.css";
-import 'highlight.js/styles/monokai.css';
+import "filepond/dist/filepond.min.css"
+import "highlight.js/styles/monokai.css"
 import { fileStatusClass } from "@/Composables/fileStatusClass.js"
 import LeaseDetail from "@/Pages/AssetLeases/LeaseDetail.vue"
 import BasicTerms from "@/Pages/AssetLeases/BasicTerms.vue"
@@ -25,65 +26,65 @@ import RentSchedule from "@/Pages/AssetLeases/RentSchedule.vue"
 import Checkbox from "@/Components/Checkbox.vue"
 import SecondaryLink from "@/Components/SecondaryLink.vue"
 
-const page = usePage();
-const user = computed(() => page.props.auth.user);
+const page = usePage()
+const user = computed(() => page.props.auth.user)
 
 const props = defineProps({
     asset: Object,
     associates: Array,
     lease: Object,
-});
+})
 
-const { getFileStatusClass } = fileStatusClass();
+const { getFileStatusClass } = fileStatusClass()
 
-const FilePond = VueFilePond(FilePondPluginFileValidateType);
-const pond = ref(null);
+const FilePond = VueFilePond(FilePondPluginFileValidateType)
+const pond = ref(null)
 
-let serverResponse = '';
+let serverResponse = ""
 
 setOptions({
-  credits: [],
-  required: true,
-  allowMultiple: true,
-  allowRevert: false,
-  acceptedFileTypes: [
-    'application/pdf',
-  ],
-  // files: files,
-  server: {
-    process: {
-      url: route('assets.leases.store-amendment', [props.asset, props.lease]),
-      headers: {
-        'Accept': 'application/json',
-        'X-CSRF-TOKEN': page.props.csrf,
-      },
-      ondata: (formData) => {
-          formData.append('classification', 'lease_amendment')
-          return formData
-      },
-      onsuccess: (response) => {
-        console.log("on success");
-        console.log(response);
-        // serverResponse = JSON.parse(response);
-      },
-      onerror: (response) => {
-        console.log("on error");
-        serverResponse = JSON.parse(response);
-      },
+    credits: [],
+    required: true,
+    allowMultiple: true,
+    allowRevert: false,
+    acceptedFileTypes: [
+        "application/pdf",
+    ],
+    // files: files,
+    server: {
+        process: {
+            url: route("assets.leases.store-amendment", [props.asset, props.lease]),
+            headers: {
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": page.props.csrf,
+            },
+            ondata: (formData) => {
+                formData.append("classification", "lease_amendment")
+                return formData
+            },
+            onsuccess: (response) => {
+                console.log("on success")
+                console.log(response)
+                // serverResponse = JSON.parse(response);
+            },
+            onerror: (response) => {
+                console.log("on error")
+                serverResponse = JSON.parse(response)
+            },
+        },
     },
-  },
-  labelFileProcessingError: (error) => {
-    console.log(error);
-    console.log(serverResponse);
-    if (serverResponse.errors && serverResponse.errors.lease_amendment) {
-      return serverResponse.errors.lease_amendment.join(' ');
-    }
-    return serverResponse.message;
-  },
-});
+    labelFileProcessingError: (error) => {
+        console.log(error)
+        console.log(serverResponse)
+        if (serverResponse.errors && serverResponse.errors.lease_amendment) {
+            return serverResponse.errors.lease_amendment.join(" ")
+        }
+        return serverResponse.message
+    },
+})
 
 const handleOnProcessFile = (error, file) => {
-    console.log("on process file");
+    console.log("on process file")
     //
     // if(pond.value) {
     //     pond.value.removeFile(file.id);
@@ -91,22 +92,22 @@ const handleOnProcessFile = (error, file) => {
     // console.log(pond.value)
     // console.log(file)
 
-    router.reload({ only: ['lease'] });
+    router.reload({ only: ["lease"] })
 }
 
 onMounted(() => {
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen('LeaseProcessingUpdate', (e) => {
-            console.log(e);
-            router.reload();
-        });
-});
+        .listen("LeaseProcessingUpdate", (e) => {
+            console.log(e)
+            router.reload()
+        })
+})
 
 onBeforeUnmount(() => {
-    if(user.value) {
-        Echo.leave(`tenant-global-channel.${page.props.tenant_id}`);
+    if (user.value) {
+        Echo.leave(`tenant-global-channel.${page.props.tenant_id}`)
     }
-});
+})
 
 </script>
 
@@ -146,18 +147,20 @@ onBeforeUnmount(() => {
                         <SecondaryLink
                             :href="route('assets.show', asset)"
                             icon-left="chevron-left"
-                        >Leases</SecondaryLink>
+                        >Leases
+                        </SecondaryLink>
 
                         <PrimaryLink
                             :href="route('assets.leases.chats.index', [asset, lease])"
-                            icon-left="comment-detail"
+                            icon-left="chat"
                         ></PrimaryLink>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div v-if="lease.expired" class="relative px-5 py-3 border-2 bg-red-50 text-red-700 border-red-100 rounded mt-6 text-center">
+        <div v-if="lease.expired"
+             class="relative px-5 py-3 border-2 bg-red-50 text-red-700 border-red-100 rounded mt-6 text-center">
             <h5>Lease Expired!</h5>
         </div>
 
@@ -230,9 +233,9 @@ onBeforeUnmount(() => {
                                             :class="getFileStatusClass('Pending', 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                             :class="getFileStatusClass('Pending', 'PROCESS_CLASSES')"></span>
-<!--                                  </template>-->
-<!--                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"-->
-<!--                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>-->
+                                    <!--                                  </template>-->
+                                    <!--                                  <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"-->
+                                    <!--                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>-->
                                 </span>
                             </span>
 
@@ -242,13 +245,13 @@ onBeforeUnmount(() => {
                         </div>
                     </template>
 
-<!--                    <div class="flex justify-center items-center h-96">-->
-<!--                        <div class="text-center">-->
-<!--                            <h4 class="text-gray-500">Processing...</h4>-->
+                    <!--                    <div class="flex justify-center items-center h-96">-->
+                    <!--                        <div class="text-center">-->
+                    <!--                            <h4 class="text-gray-500">Processing...</h4>-->
 
-<!--                            <p class="text-gray-400">Please wait while we process your amendment</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!--                            <p class="text-gray-400">Please wait while we process your amendment</p>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
 
 
                     <Table>
@@ -266,7 +269,8 @@ onBeforeUnmount(() => {
                         </template>
 
                         <template #body>
-                            <tr v-for="(amendment, index) in lease.amendments_processing" :key="amendment.id" class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
+                            <tr v-for="(amendment, index) in lease.amendments_processing" :key="amendment.id"
+                                class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600">
 
                                 <td class="pl-4 pr-2 py-4 space-x-2">
 
@@ -276,9 +280,11 @@ onBeforeUnmount(() => {
 
                                           <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
-                                              <template v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">
-                                                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                                        :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                              <template
+                                                  v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">
+                                                  <span
+                                                      class="absolute inline-flex h-full w-full animate-ping rounded-full"
+                                                      :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
                                                   <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
                                                         :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
                                               </template>
@@ -294,19 +300,23 @@ onBeforeUnmount(() => {
                                 </td>
                                 <td class="pl-4 pr-2 py-4 space-x-2">
                                     <a :href="amendment.lease_document.file_name" target="_blank" class="underline">
-                                    {{ amendment.lease_document.name }}
+                                        {{ amendment.lease_document.name }}
                                     </a>
                                 </td>
                                 <td class="pl-4 pr-2 py-4 space-x-2">
                                     <div class="flex items-center">
-                                        <div class="flex-1 progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600">
-                                            <div class="progress-bar h-2.5 bg-indigo-600 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
-                                                 :style="`width: ${amendment.lease_document.status_progress ?? '0%'};`"
-                                                 role="progressbar"
+                                        <div
+                                            class="flex-1 progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600">
+                                            <div
+                                                class="progress-bar h-2.5 bg-indigo-600 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
+                                                :style="`width: ${amendment.lease_document.status_progress ?? '0%'};`"
+                                                role="progressbar"
                                             ></div>
 
                                         </div>
-                                        <div class="ml-2 font-bold">{{ amendment.lease_document.status_progress ?? "" }}</div>
+                                        <div class="ml-2 font-bold">{{ amendment.lease_document.status_progress ?? ""
+                                            }}
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -322,7 +332,8 @@ onBeforeUnmount(() => {
 
                             <span class="inline-flex items-center text-xs font-medium">
                                 <span class="relative flex h-2.5 w-2.5">
-                                  <template v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">
+                                  <template
+                                      v-if="!['Ready', 'Failed', 'Archived'].includes(amendment.lease_document.status)">
                                       <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
                                             :class="getFileStatusClass(amendment.lease_document.status, 'PROCESS_CLASSES')"></span>
                                       <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
@@ -337,7 +348,8 @@ onBeforeUnmount(() => {
                                 <h6
                                     :class="{ 'text-red-400': amendment.lease_document.status === 'Failed' }"
                                 >
-                                    Amendment #{{ lease.amendments.length - idx }} <small class="text-gray-400">{{ amendment.execution_date }}</small>
+                                    Amendment #{{ lease.amendments.length - idx }} <small
+                                    class="text-gray-400">{{ amendment.execution_date }}</small>
                                 </h6>
                             </span>
                         </div>
@@ -381,7 +393,8 @@ onBeforeUnmount(() => {
                                 <h4>Basic Extracted Data</h4>
                                 <pre>{{ amendment.lease_document.document_detail?.basic_extracted_data ?? "--" }}</pre>
                                 <h4>Detailed Extracted Data</h4>
-                                <pre>{{ amendment.lease_document.document_detail?.detailed_extracted_data ?? "--" }}</pre>
+                                <pre>{{ amendment.lease_document.document_detail?.detailed_extracted_data ?? "--"
+                                    }}</pre>
 
                             </div>
                         </p>
