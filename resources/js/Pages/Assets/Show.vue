@@ -3,6 +3,7 @@ import {computed, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
 import {usePage, Head, Link, router} from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryLink from "@/Components/PrimaryLink.vue";
+import SecondaryLink from "@/Components/SecondaryLink.vue";
 import Button from "@/Components/Button.vue";
 import Table from "@/Components/Table.vue";
 
@@ -200,11 +201,11 @@ onBeforeUnmount(() => {
 
     <AuthenticatedLayout>
 
-        <template #header> Asset - {{ asset.name }} </template>
-
         <div class="flex justify-end">
-            <PrimaryLink
-                :href="route('assets.edit', asset)">Edit Asset</PrimaryLink>
+            <SecondaryLink
+                :href="route('assets.edit', asset)"
+                icon-left="edit"
+            ></SecondaryLink>
         </div>
 
         <Hero :asset="asset" />
@@ -372,9 +373,9 @@ onBeforeUnmount(() => {
                     <td class="py-4 ">
                         <PrimaryLink
                             class="bg-indigo-600"
-                            :href="route('assets.leases.chats.index', [asset, lease])">
-                            Chat <BoxIcon class="bx-comment-detail ml-2" />
-                        </PrimaryLink>
+                            :href="route('assets.leases.chats.index', [asset, lease])"
+                            icon-left="comment-detail"
+                        ></PrimaryLink>
                     </td>
                     <td class="px-3 py-4 ">
 

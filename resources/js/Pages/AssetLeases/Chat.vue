@@ -32,6 +32,7 @@ import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import BoxIcon from "@/Components/BoxIcon.vue"
+import SecondaryLink from "@/Components/SecondaryLink.vue"
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -118,7 +119,9 @@ const handlePaste = (event) => {
 };
 
 const addNewChat = () => {
-  router.visit(route('assets.leases.chats.index', [props.asset.id, props.lease.id]));
+  router.visit(route('assets.leases.chats.index', [props.asset.id, props.lease.id]), {
+    preserveScroll: true
+  });
 };
 
 const scrollToBottom = () => {
@@ -170,8 +173,8 @@ const closeModal = () => {
 
 const truncatedMessage = (message) => {
     if (!message) return null;
-    const maxLength = 38;
-    return message.length > maxLength ? message.slice(0, maxLength) + '...' : message;
+    const maxLength = 40;
+    return message.length > maxLength ? message.slice(0, maxLength) : message;
 }
 
 const initEmptyChat = () => {
@@ -496,8 +499,6 @@ onUnmounted(() => {
 
     <AuthenticatedLayout>
 
-        <template #header> Asset - {{ asset.name }} </template>
-
         <Hero :asset="asset" />
 
         <Associates :associates="associates" />
@@ -509,10 +510,10 @@ onUnmounted(() => {
                 <h5 class="text-gray-500">{{ lease.premise_address }}</h5>
             </div>
 
-            <PrimaryLink
+            <SecondaryLink
                 :href="route('assets.leases.show', [asset, lease])"
-                class="my-4"
-            ><BoxIcon class="bx-arrow-back mr-2" />Lease Abstract</PrimaryLink>
+                icon-left="chevron-left"
+            >Lease Abstract</SecondaryLink>
         </div>
 
         <div class="col-span-12 mb-8">
@@ -525,24 +526,30 @@ onUnmounted(() => {
                     <!-- Left column for list of chats -->
                     <div class=" w-1/3 p-4">
                         <div class="max-h-[36rem] overflow-y-auto">
-                            <PrimaryButton class="mb-4" @click="addNewChat">
-                                <i class="bx bx-plus text-16 align-middle ltr:mr-1 rtl:ml-1 "></i>
-                                Chat
+                            <PrimaryButton
+                                class="m-1 mb-4"
+                                icon-left="plus"
+                               @click="addNewChat">
                             </PrimaryButton>
 
                             <div
                                 v-for="(conv_obj, index) in localChatList"
                                 :key="conv_obj.id"
                                 @click="selectChat(conv_obj)"
-                                :class="{ 'bg-slate-50': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
-                                class="transition duration-300 mb-4 p-4 hover:bg-slate-100 rounded-lg cursor-pointer border-b shadow"
+                                :class="{ 'bg-gray-100': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
+                                class=" ml-1 mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer border-b shadow group"
                             >
 
                               <div class="flex items-center justify-between space-x-2">
 
                                 <div class="relative grow overflow-hidden whitespace-nowrap text-sm text-gray-500">
                                   {{ truncatedMessage(conv_obj?.last_message?.message) || null }}
-                                  <div class="absolute bottom-0 right-0 top-0 bg-gradient-to-l to-transparent w-8 from-white from-0% group-hover:w-20 group-hover:from-token-surface-primary group-hover:from-80%"></div>
+                                  <div
+                                      :class="{ 'from-gray-100': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
+                                      class="
+                                  absolute bottom-0 right-0 top-0
+                                  bg-gradient-to-l to-transparent w-24 from-white from-0%
+                                  group-hover:from-gray-100"></div>
                                 </div>
 
                                   <i
@@ -571,10 +578,10 @@ onUnmounted(() => {
                                     <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
                                          :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
                                         <div
-                                            class="message-bubble flex items-center px-3 py-2 h-auto"
+                                            class="message-bubble flex items-center px-4 py-2 h-auto"
                                             :class="{
-                                                'bg-gray-100 text-gray-700 rounded-2xl rounded-bl-none': entry.from === 'bot',
-                                                'bg-violet-500 text-white rounded-2xl rounded-br-none': entry.from === 'user'
+                                                'bg-gray-100 text-gray-700 rounded-3xl font-medium rounded-bl-none': entry.from === 'bot',
+                                                'bg-indigo-600 text-white rounded-3xl font-medium rounded-br-none': entry.from === 'user'
                                             }">
                                             <Markdown :source="entry.message" :breaks="true" />
                                         </div>

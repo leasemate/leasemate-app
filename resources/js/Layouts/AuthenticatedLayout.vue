@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
 
                         <div class="grid grid-cols-1 mb-5">
                             <div class="flex items-center justify-between">
-                                <h4 class="mb-sm-0 text-lg font-semibold grow text-gray-800 dark:text-gray-100">
+                                <h4 class="mb-sm-0 text-lg font-semibold uppercase grow text-gray-800 dark:text-gray-100">
                                     <slot name="header" />
                                 </h4>
                             </div>

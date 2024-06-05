@@ -55,12 +55,11 @@ const deleteAsset = () => {
 
     <AuthenticatedLayout>
 
-        <template #header> Assets </template>
-
         <div class="flex justify-end">
             <PrimaryLink
                 :href="route('assets.create')"
-            >Create Asset</PrimaryLink>
+                icon-left="plus"
+            ></PrimaryLink>
         </div>
 
         <div v-if="assets.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">

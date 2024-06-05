@@ -52,7 +52,9 @@ const closeModal = () => {
         <template #header> Users </template>
 
         <div class="flex justify-end">
-            <PrimaryLink :href="route('users.create')" class="mb-4">Create User</PrimaryLink>
+            <PrimaryLink :href="route('users.create')"
+                            iconLeft="plus"
+                         class="mb-4"></PrimaryLink>
         </div>
 
         <Table>

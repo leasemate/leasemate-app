@@ -23,6 +23,7 @@ import LeaseDetail from "@/Pages/AssetLeases/LeaseDetail.vue"
 import BasicTerms from "@/Pages/AssetLeases/BasicTerms.vue"
 import RentSchedule from "@/Pages/AssetLeases/RentSchedule.vue"
 import Checkbox from "@/Components/Checkbox.vue"
+import SecondaryLink from "@/Components/SecondaryLink.vue"
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -114,13 +115,7 @@ onBeforeUnmount(() => {
     <Head title="Asset" />
 
     <AuthenticatedLayout>
-
-        <template #header> Asset - {{ asset.name }} </template>
-
-        <PrimaryLink :href="route('assets.show', asset)">
-            <BoxIcon class="bx-arrow-back mr-2" />Leases
-        </PrimaryLink>
-
+        
         <Hero :asset="asset" />
 
         <Associates :associates="associates" />
@@ -146,11 +141,18 @@ onBeforeUnmount(() => {
                     />
                 </div>
                 <div class="ml-auto mt-4">
-                    <PrimaryLink
-                        class="bg-indigo-600"
-                        :href="route('assets.leases.chats.index', [asset, lease])">
-                        Chat <BoxIcon class="bx-comment-detail ml-2" />
-                    </PrimaryLink>
+
+                    <div class="flex gap-2">
+                        <SecondaryLink
+                            :href="route('assets.show', asset)"
+                            icon-left="chevron-left"
+                        >Leases</SecondaryLink>
+
+                        <PrimaryLink
+                            :href="route('assets.leases.chats.index', [asset, lease])"
+                            icon-left="comment-detail"
+                        ></PrimaryLink>
+                    </div>
                 </div>
             </div>
         </div>
