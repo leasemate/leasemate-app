@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Landlord;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Tenant;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -16,11 +17,6 @@ class TenantController extends Controller
         return inertia('Landlord/Tenant/Index', [
             'tenants' => Tenant::with('domains')->latest()->get(),
         ]);
-    }
-
-    public function create()
-    {
-        return inertia('Landlord/Tenant/Create');
     }
 
     public function forceLogin(Tenant $tenant)
@@ -53,11 +49,16 @@ class TenantController extends Controller
 
             return redirect()->route('tenants');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             return back()->with('error', 'An error occurred while registering your account. Please try again. '.$e->getMessage());
 
         }
+    }
+
+    public function create()
+    {
+        return inertia('Landlord/Tenant/Create');
     }
 
     public function destroy(Tenant $tenant)
@@ -72,8 +73,9 @@ class TenantController extends Controller
 
             return redirect()->route('tenants');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
+
     }
 }

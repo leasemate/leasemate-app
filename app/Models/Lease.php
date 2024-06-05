@@ -13,7 +13,9 @@ class Lease extends Model
     use SoftDeletes;
 
     const TYPE_ORIGINAL = 'original';
+
     const TYPE_AMENDMENT = 'amendment';
+
     const TYPE_CURRENT = 'current';
 
     protected $guarded = [];
@@ -63,6 +65,7 @@ class Lease extends Model
         return $this->hasOne(Lease::class, 'parent_id', 'id')
             ->where('type', self::TYPE_ORIGINAL);
     }
+
     public function current_lease()
     {
         return $this->belongsTo(Lease::class, 'parent_id', 'id')
@@ -72,7 +75,7 @@ class Lease extends Model
     public function amendments_processing()
     {
         return $this->base_amendments()
-            ->whereHas('lease_document', function($q) {
+            ->whereHas('lease_document', function ($q) {
                 $q->where('status', '!=', 'Ready');
             });
     }
@@ -80,8 +83,8 @@ class Lease extends Model
     public function amendments()
     {
         return $this->base_amendments()
-            ->whereHas('lease_document', function($q) {
-                $q->whereIn('status', ['Ready','Failed']);
+            ->whereHas('lease_document', function ($q) {
+                $q->whereIn('status', ['Ready', 'Failed']);
             })
             ->orderBy('execution_date', 'desc');
     }

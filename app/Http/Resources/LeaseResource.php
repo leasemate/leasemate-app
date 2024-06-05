@@ -15,10 +15,10 @@ class LeaseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//        dump($this->relationLoaded('amendments_processing'));
-//        dd($this);
-//dd($this->amendments);
-//        dd($this->whenLoaded('current_lease'));
+        //        dump($this->relationLoaded('amendments_processing'));
+        //        dd($this);
+        //dd($this->amendments);
+        //        dd($this->whenLoaded('current_lease'));
         return [
             'id' => $this->id,
             'parent_id' => $this->parent_id,
@@ -58,7 +58,9 @@ class LeaseResource extends JsonResource
         if ($this->rent_schedule) {
 
             foreach ($this->rent_schedule as $key => $value) {
-                if (!is_numeric($key)) continue;
+                if (! is_numeric($key)) {
+                    continue;
+                }
 
                 $monthly_base_rent[$key] = [
                     'current' => $value['current'] ?? false,

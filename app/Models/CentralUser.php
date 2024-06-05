@@ -47,7 +47,7 @@ class CentralUser extends Authenticatable implements MustVerifyEmail, SyncMaster
 
     public function isSuperAdmin(): bool
     {
-        return (bool)$this->is_super_admin;
+        return (bool) $this->is_super_admin;
     }
 
     public function sendEmailVerificationNotification()

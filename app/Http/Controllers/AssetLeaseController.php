@@ -61,6 +61,7 @@ class AssetLeaseController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
+
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -88,9 +89,10 @@ class AssetLeaseController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
-            if(!app()->environment('production')) {
+            if (! app()->environment('production')) {
                 Log::error($e);
             }
+
             return response()->json(['message' => $e->getMessage()], 422);
         }
     }
@@ -111,7 +113,7 @@ class AssetLeaseController extends Controller
             'amendments.lease_detail',
             'amendments.lease_document.document_detail',
         ]);
-//dd($lease->toArray());
+        //dd($lease->toArray());
 
         return inertia()->render('AssetLeases/Show', [
             'asset' => new AssetResource($asset),
@@ -212,7 +214,7 @@ class AssetLeaseController extends Controller
             throw new \Exception('Failed to register lease upload.');
         }
 
-        if(!app()->environment('local')) {
+        if (! app()->environment('local')) {
             $upload_document->storePubliclyAs($path, $filename);
         }
 

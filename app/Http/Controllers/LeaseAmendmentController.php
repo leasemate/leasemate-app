@@ -41,7 +41,6 @@ class LeaseAmendmentController extends Controller
 
             $amendment = $lease->amendments()->create();
 
-
             $upload_document = $request->file('lease_amendment');
             $storedName = $upload_document->store(tenant('id').'/leases/'.$lease->asset_id, ['visibility' => 'public']);
             //        $storedName = $upload_document->getBasename();

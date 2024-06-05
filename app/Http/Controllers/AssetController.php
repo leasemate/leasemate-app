@@ -10,9 +10,9 @@ use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Models\Asset;
 use App\Models\Lease;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller
@@ -27,12 +27,17 @@ class AssetController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function photoUpload(StoreAssetPhotoRequest $request)
     {
-        return inertia()->render('Assets/Create');
+        $storedName = $request
+            ->file('asset_photo')
+            ->store(tenant('id').'/asset_photos', ['visibility' => 'public']);
+
+        return response()->json([
+            'success' => 1,
+            'asset_photo_path' => $storedName,
+            'photo_filename' => $request->file('asset_photo')->getClientOriginalName(),
+        ]);
     }
 
     /**
@@ -54,7 +59,7 @@ class AssetController extends Controller
 
             return redirect()->route('assets.show', $asset);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
 
@@ -62,17 +67,23 @@ class AssetController extends Controller
         }
     }
 
-    public function photoUpload(StoreAssetPhotoRequest $request)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        $storedName = $request
-            ->file('asset_photo')
-            ->store(tenant('id').'/asset_photos', ['visibility' => 'public']);
+        return inertia()->render('Assets/Create');
+    }
 
-        return response()->json([
-            'success' => 1,
-            'asset_photo_path' => $storedName,
-            'photo_filename' => $request->file('asset_photo')->getClientOriginalName(),
-        ]);
+    private function getAssetFields($request): array
+    {
+        return $request->safe()->only(
+            'name',
+            'address',
+            'gross_leasable_area',
+            'asset_photo',
+            'photo_filename'
+        );
     }
 
     /**
@@ -81,10 +92,10 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
         $leases = Lease::with([
-                'lease_document' => function ($query) {
-                    $query->withTrashed();
-                },
-            ])
+            'lease_document' => function ($query) {
+                $query->withTrashed();
+            },
+        ])
             ->current()
             ->where('asset_id', $asset->id)
             ->orderBy('created_at', 'desc')
@@ -127,7 +138,7 @@ class AssetController extends Controller
         try {
             DB::beginTransaction();
 
-            if(! $request->asset_photo || ($request?->asset_photo !== $asset->asset_photo)) {
+            if (! $request->asset_photo || ($request?->asset_photo !== $asset->asset_photo)) {
                 $asset->deletePhoto();
             }
 
@@ -141,7 +152,7 @@ class AssetController extends Controller
 
             return redirect()->route('assets.show', $asset);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
 
@@ -155,18 +166,7 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         $asset->forceDelete();
+
         return redirect()->route('assets.index');
     }
-
-    private function getAssetFields($request): array
-    {
-        return $request->safe()->only(
-            'name',
-            'address',
-            'gross_leasable_area',
-            'asset_photo',
-            'photo_filename'
-        );
-    }
-
 }

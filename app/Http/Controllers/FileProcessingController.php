@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\AmendmentProcessingUpdate;
 use App\Events\LeaseProcessingUpdate;
 use App\Models\Amendment;
 use App\Models\Document;
 use App\Models\Lease;
 use App\Models\Tenant;
-use App\Models\User;
 use App\Notifications\DocumentCompleteNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -70,7 +68,7 @@ class FileProcessingController extends Controller
 
             $this->lease = $this->document->documentable;
 
-            if($this->status === 'Ready') {
+            if ($this->status === 'Ready') {
 
                 $this->document->document_detail()->create([
                     'basic_extracted_data' => $this->basic_extracted_data ?? null,
@@ -79,11 +77,11 @@ class FileProcessingController extends Controller
 
                 $this->processLease(); //processing a lease or amendment
 
-                if($this->lease->is_amendment) {
+                if ($this->lease->is_amendment) {
 
                     $current_lease = $this->lease->current_lease;
 
-                    if( !$current_lease->original_lease) {
+                    if (! $current_lease->original_lease) {
                         $original_lease = $current_lease->replicate();
                         $original_lease->parent_id = $current_lease->id;
                         $original_lease->type = Lease::TYPE_ORIGINAL;
@@ -126,7 +124,7 @@ class FileProcessingController extends Controller
     {
         if ($basicLeaseData = $this->getBasicLeaseData()) {
             $this->lease->fill($basicLeaseData->filter(function ($value) {
-                return !is_null($value);
+                return ! is_null($value);
             })->toArray());
             $this->lease->save();
         }
@@ -167,8 +165,8 @@ class FileProcessingController extends Controller
 
             $rentable_square_feet = ! empty($this->basic_extracted_data['rentable_square_feet']) ? (int) $this->basic_extracted_data['rentable_square_feet'] : null;
 
-            if(!$rentable_square_feet) {
-                if($this->lease->is_amendment) {
+            if (! $rentable_square_feet) {
+                if ($this->lease->is_amendment) {
                     $rentable_square_feet = $this->lease->current_lease->rentable_sqft;
                 } else {
                     $rentable_square_feet = $this->lease->rentable_sqft;
@@ -177,19 +175,19 @@ class FileProcessingController extends Controller
 
             $current_rent_per_sqft = 0;
 
-            $rent_schedule = !empty($this->basic_extracted_data['rent_schedule']) ? $this->basic_extracted_data['rent_schedule'] : [];
+            $rent_schedule = ! empty($this->basic_extracted_data['rent_schedule']) ? $this->basic_extracted_data['rent_schedule'] : [];
             $end_date = is_array($rent_schedule) ? end($rent_schedule)['end_date'] ?? null : null;
 
             if ($end_date) {
-                $lease_expired = !Carbon::parse($end_date)->isFuture();
+                $lease_expired = ! Carbon::parse($end_date)->isFuture();
             }
 
-            foreach($rent_schedule as &$rent_period) {
+            foreach ($rent_schedule as &$rent_period) {
 
-                if($rentable_square_feet) {
+                if ($rentable_square_feet) {
                     $rent_period['current'] = false;
 
-                    if(!empty($rent_period['monthly_base_rent']) && $rent_period['monthly_base_rent'] !== "NA") {
+                    if (! empty($rent_period['monthly_base_rent']) && $rent_period['monthly_base_rent'] !== 'NA') {
                         $rent_period['rent_per_sqft'] = number_format($rent_period['monthly_base_rent'] / $rentable_square_feet, 2);
                     } else {
                         $rent_period['rent_per_sqft'] = null;
@@ -208,7 +206,7 @@ class FileProcessingController extends Controller
                 }
             }
 
-            if(!$current_rent_per_sqft) {
+            if (! $current_rent_per_sqft) {
                 $current_rent_per_sqft = end($rent_schedule)['rent_per_sqft'] ?? 0;
             }
 

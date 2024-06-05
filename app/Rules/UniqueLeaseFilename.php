@@ -9,10 +9,12 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class UniqueLeaseFilename implements ValidationRule
 {
     protected $lease_type;
+
     public function __construct($type = 'lease')
     {
         $this->lease_type = $type;
     }
+
     /**
      * Run the validation rule.
      *
@@ -27,7 +29,7 @@ class UniqueLeaseFilename implements ValidationRule
             ->first();
 
         if ($document) {
-            $error_msg = "This {$this->lease_type} document already exists".($document->trashed() ? ' but is archived' : '')."!";
+            $error_msg = "This {$this->lease_type} document already exists".($document->trashed() ? ' but is archived' : '').'!';
             $fail($error_msg);
         }
     }

@@ -72,7 +72,7 @@ return [
 
     'middleware' => [
         'web',
-        'auth:central'
+        'auth:central',
     ],
 
     /*
