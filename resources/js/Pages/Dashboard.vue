@@ -1,38 +1,30 @@
 <script setup>
-
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue"
-
-import MiniChart from "@/Components/MiniChart.vue"
-
-import { onMounted } from "vue"
-
-onMounted(function() {
-
-})
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import MiniChart from '@/Components/MiniChart.vue'
+import { usePage } from '@inertiajs/vue3'
 </script>
 
 <template>
     <AuthenticatedLayout>
 
         <template #header>
-            Dashboard
+            <span class="capitalize">Hello, {{ usePage().props.auth.user.name }}</span>
         </template>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-lg">
+            <div class="card flex rounded-lg flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
+                <div class="card-body shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
                                 <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Total GLA</h5>
-                                <h4 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
+                                <h4 class="my-4 text-2xl text-gray-500 dark:text-gray-100 ">
                                     <span class="counter-value" data-target="95">243,896</span>
                                 </h4>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
-                                    chartId="mini-chart1"
                                     :colors="['#6366f1']"
                                     :options="{
                                         series: [{
@@ -80,30 +72,32 @@ onMounted(function() {
                                             },
                                         },
                                     }"
+                                    chartId="mini-chart1"
                                 />
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 43,967</span>
-                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
+                        <span
+                            class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 43,967</span>
+                        <span
+                            class="ltr:ml-1.5 rtl:mr-1.5 text-gray-400 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
 
-            <div class="card flex flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-lg">
+            <div class="card flex rounded-lg flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
+                <div class="card-body shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
                                 <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">% Leased</h5>
-                                <h4 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
+                                <h4 class="my-4 text-2xl text-gray-500 dark:text-gray-100 ">
                                     <span class="counter-value" data-target="95">95</span>%
                                 </h4>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
-                                    chartId="mini-chart2"
                                     :colors="['#6366f1']"
                                     :options="{
                                         series: [{
@@ -150,30 +144,32 @@ onMounted(function() {
                                             },
                                         },
                                     }"
+                                    chartId="mini-chart2"
                                 />
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 2%</span>
-                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
+                        <span
+                            class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ 2%</span>
+                        <span
+                            class="ltr:ml-1.5 rtl:mr-1.5 text-gray-400 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
 
-            <div class="card dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-lg">
+            <div class="card flex rounded-lg dark:bg-zinc-800 dark:border-zinc-600">
+                <div class="card-body shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
                                 <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Base Rental Income</h5>
-                                <h3 class="my-4 text-2xl text-gray-800 dark:text-gray-100 ">
+                                <h3 class="my-4 text-2xl text-gray-500 dark:text-gray-100 ">
                                     $<span class="counter-value" data-target="1.28">1.28</span>M
                                 </h3>
                             </div>
                             <div class="col-span-6">
                                 <MiniChart
-                                    chartId="mini-chart3"
                                     :colors="['#6366f1']"
                                     :options="{
                                         series: [{
@@ -220,13 +216,16 @@ onMounted(function() {
                                             },
                                         },
                                     }"
+                                    chartId="mini-chart3"
                                 />
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ $380k</span>
-                        <span class="ltr:ml-1.5 rtl:mr-1.5 text-gray-700 text-13 dark:text-zinc-100">Since last month</span>
+                        <span
+                            class="text-xs py-[1px] px-1 bg-green-50/60 text-green-500 rounded font-medium dark:bg-green-500/30">+ $380k</span>
+                        <span
+                            class="ltr:ml-1.5 rtl:mr-1.5 text-gray-400 text-13 dark:text-zinc-100">Since last month</span>
                     </div>
                 </div>
             </div>
@@ -234,16 +233,15 @@ onMounted(function() {
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
-
             <div class="col-span-12 xl:col-span-4">
-
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
-
-                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                <div class="card rounded-lg dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-md">
+                    <div
+                        class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
                         <div class="flex flex-wrap items-center">
                             <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Portfolio Composition</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
-                                <select class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
+                                <select
+                                    class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
                                     <option value="MA">by Quantity</option>
                                 </select>
@@ -254,8 +252,6 @@ onMounted(function() {
                         <div class="grid grid-cols-12 gap-5 justify-items-stretch">
                             <div class="col-span-12 justify-self-center">
                                 <MiniChart
-                                    class="mt-8"
-                                    chartId="portoflio-composition"
                                     :colors="['#22c55e', '#0ea5e9', '#6366f1']"
                                     :options="{
                                         series: [25, 70, 15],
@@ -302,6 +298,8 @@ onMounted(function() {
                                             }
                                         }]
                                     }"
+                                    chartId="portoflio-composition"
+                                    class="mt-8"
                                 />
                             </div>
                         </div>
@@ -310,8 +308,9 @@ onMounted(function() {
             </div>
             <div class="col-span-12 xl:col-span-8">
 
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
-                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                <div class="card rounded-lg dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-md">
+                    <div
+                        class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
                         <h6 class="mb-1 text-15 text-indigo-600 dark:text-gray-100">Upcoming Lease Expiration</h6>
                     </div>
                     <div class="card-body">
@@ -319,19 +318,19 @@ onMounted(function() {
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Tenant
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Property
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         RSF
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Expiring Rent
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Expiration
                                     </th>
                                 </tr>
@@ -355,7 +354,8 @@ onMounted(function() {
                                     </td>
                                 </tr>
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
-                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                        scope="row">
                                         Antec Lighting
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
@@ -372,7 +372,8 @@ onMounted(function() {
                                     </td>
                                 </tr>
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
-                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                        scope="row">
                                         Duck Logistics
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
@@ -389,7 +390,8 @@ onMounted(function() {
                                     </td>
                                 </tr>
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
-                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                        scope="row">
                                         JB Hunt
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
@@ -406,7 +408,8 @@ onMounted(function() {
                                     </td>
                                 </tr>
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
-                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                        scope="row">
                                         ICC Cabling
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
@@ -423,7 +426,8 @@ onMounted(function() {
                                     </td>
                                 </tr>
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
-                                    <th scope="row" class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
+                                    <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                        scope="row">
                                         LA Slot Machine
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
@@ -452,8 +456,9 @@ onMounted(function() {
 
             <div class="col-span-12 xl:col-span-7">
 
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
-                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                <div class="card rounded-lg dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-md">
+                    <div
+                        class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
                         <h6 class="mb-1 text-15 text-indigo-600 dark:text-gray-100">In-Place Rent Table</h6>
                     </div>
                     <div class="card-body">
@@ -461,16 +466,16 @@ onMounted(function() {
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Property
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         GLA
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         Avg. Rent
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th class="px-6 py-3" scope="col">
                                         WALT
                                     </th>
                                 </tr>
@@ -540,13 +545,15 @@ onMounted(function() {
             </div>
 
             <div class="col-span-12 xl:col-span-5">
-                <div class="card dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-lg">
+                <div class="card rounded-lg dark:bg-zinc-800 dark:border-zinc-600 card-h-100 shadow-md">
 
-                    <div class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
+                    <div
+                        class="card-header border-b border-gray-50 p-5 bg-indigo-50 dark:bg-gray-700 dark:border-gray-900">
                         <div class="flex flex-wrap items-center">
                             <h5 class="text-15 mr-2 text-indigo-600 dark:text-gray-100 ">Leases Expiring</h5>
                             <div class="ltr:ml-auto rtl:mr-auto">
-                                <select class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
+                                <select
+                                    class="form-select form-select-sm py-0 ltr:pl-2 rtl:pr-4 border-gray-50 bg-indigo-200 rounded-lg dark:border-zinc-600 dark:text-gray-100 dark:bg-zinc-700">
                                     <option value="AP">by Square Feet</option>
                                     <option value="MA">by Quantity</option>
                                 </select>
@@ -556,8 +563,6 @@ onMounted(function() {
 
                     <div class="card-body">
                         <MiniChart
-                            class="mt-8"
-                            chartId="wallet-balance1"
                             :colors="['#22c55e', '#0ea5e9', '#a8aada']"
                             :options="{
                               chart: {
@@ -610,6 +615,8 @@ onMounted(function() {
                                 }]
                               }]
                             }"
+                            chartId="wallet-balance1"
+                            class="mt-8"
                         />
 
                     </div>
@@ -617,7 +624,6 @@ onMounted(function() {
 
             </div>
         </div>
-
 
 
     </AuthenticatedLayout>
