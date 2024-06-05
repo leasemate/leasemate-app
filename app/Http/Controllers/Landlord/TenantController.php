@@ -25,11 +25,10 @@ class TenantController extends Controller
 
     public function forceLogin(Tenant $tenant)
     {
-
         $signedUrl = URL::temporarySignedRoute(
             'tenant.force.login',
             now()->addMinutes(1),
-            ['email' => $tenant->data['email']],
+            ['email' => $tenant->email],
             false
         );
 
