@@ -1,31 +1,29 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue"
-import { usePage, Head, Link, router } from "@inertiajs/vue3"
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue"
-import PrimaryLink from "@/Components/PrimaryLink.vue"
-import SecondaryLink from "@/Components/SecondaryLink.vue"
-import Button from "@/Components/Button.vue"
-import Table from "@/Components/Table.vue"
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import PrimaryLink from '@/Components/PrimaryLink.vue'
+import SecondaryLink from '@/Components/SecondaryLink.vue'
+import Button from '@/Components/Button.vue'
+import Table from '@/Components/Table.vue'
 
-import { fileStatusClass } from "@/Composables/fileStatusClass.js"
-import VueFilePond, { setOptions } from "vue-filepond"
+import { fileStatusClass } from '@/Composables/fileStatusClass.js'
+import VueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType
-    from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js"
-import "filepond/dist/filepond.min.css"
+    from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js'
+import 'filepond/dist/filepond.min.css'
 
-import Hero from "@/Components/Lease/Hero.vue"
-import Associates from "@/Components/Lease/Associates.vue"
-import Modal from "@/Components/Modal.vue"
-import SecondaryButton from "@/Components/SecondaryButton.vue"
-import DangerButton from "@/Components/DangerButton.vue"
-import toast from "@/Stores/toast.js"
-import BoxIcon from "@/Components/BoxIcon.vue"
-import TableDropdown from "@/Components/TableDropdown.vue"
+import Hero from '@/Components/Lease/Hero.vue'
+import Associates from '@/Components/Lease/Associates.vue'
+import Modal from '@/Components/Modal.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import DangerButton from '@/Components/DangerButton.vue'
+import toast from '@/Stores/toast.js'
+import BoxIcon from '@/Components/BoxIcon.vue'
+import TableDropdown from '@/Components/TableDropdown.vue'
 
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue"
-import Checkbox from "@/Components/Checkbox.vue"
-import Pagination from "@/Components/Pagination.vue"
-import TextInput from "@/Components/TextInput.vue"
+import { MenuItem } from '@headlessui/vue'
+import Pagination from '@/Components/Pagination.vue'
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -40,7 +38,7 @@ const leases = ref(props.leases)
 // Watch for changes in the local ref
 watch(props.leases, (newLeases, oldLeases) => {
     // Do something when props.leases changes
-    console.log("props.leases has changed:", newLeases)
+    console.log('props.leases has changed:', newLeases)
 }, { deep: true })
 
 const { getFileStatusClass } = fileStatusClass()
@@ -63,7 +61,7 @@ const deleteLease = () => {
     if (leaseToDelete.value) {
         closeModal()
         try {
-            router.delete(route("assets.leases.destroy", [props.asset, leaseToDelete.value.id]), {
+            router.delete(route('assets.leases.destroy', [props.asset, leaseToDelete.value.id]), {
                 preserveScroll: true,
             })
         } catch (error) {
@@ -76,7 +74,7 @@ const deleteLease = () => {
 
 const archiveLease = (lease) => {
     try {
-        router.post(route("assets.leases.archive", [props.asset, lease]), {}, {
+        router.post(route('assets.leases.archive', [props.asset, lease]), {}, {
             preserveScroll: true,
         })
     } catch (error) {
@@ -87,7 +85,7 @@ const archiveLease = (lease) => {
 
 const restoreLease = (lease) => {
     try {
-        router.post(route("assets.leases.restore", [props.asset, lease]), {}, {
+        router.post(route('assets.leases.restore', [props.asset, lease]), {}, {
             preserveScroll: true,
         })
     } catch (error) {
@@ -97,7 +95,7 @@ const restoreLease = (lease) => {
 }
 
 const FilePond = VueFilePond(FilePondPluginFileValidateType)
-let serverResponse = ""
+let serverResponse = ''
 
 setOptions({
     credits: [],
@@ -105,7 +103,7 @@ setOptions({
     allowMultiple: true,
     allowRevert: false,
     acceptedFileTypes: [
-        "application/pdf",
+        'application/pdf',
         // 'image/png',
         // 'image/jpeg',
         // 'image/jpg',
@@ -114,22 +112,22 @@ setOptions({
     // files: files,
     server: {
         process: {
-            url: route("assets.leases.store", props.asset),
+            url: route('assets.leases.store', props.asset),
             headers: {
-                "Accept": "application/json",
-                "X-CSRF-TOKEN": page.props.csrf,
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': page.props.csrf,
             },
             // ondata: (formData) => {
             //     formData.append('asset_id', props.asset.id);
             //     return formData;
             // },
             onsuccess: (response) => {
-                console.log("on success")
+                console.log('on success')
                 console.log(response)
                 // serverResponse = JSON.parse(response);
             },
             onerror: (response) => {
-                console.log("on error")
+                console.log('on error')
                 serverResponse = JSON.parse(response)
             },
         },
@@ -138,23 +136,23 @@ setOptions({
         console.log(error)
         console.log(serverResponse)
         if (serverResponse.errors && serverResponse.errors.lease_document) {
-            return serverResponse.errors.lease_document.join(" ")
+            return serverResponse.errors.lease_document.join(' ')
         }
         return serverResponse.message
     },
 })
 
 const toolTipOptions = (lease) => {
-    if (lease.status == "Failed") {
+    if (lease.status == 'Failed') {
         return {
             value: lease.status_msg,
             pt: {
                 arrow: {
                     style: {
-                        borderRightColor: "var(--primary-color)", // Customize the arrow color
+                        borderRightColor: 'var(--primary-color)', // Customize the arrow color
                     },
                 },
-                text: "rounded-md px-2 py-1 text-xs ring-1 ring-inset bg-red-50 text-red-800 ring-red-600/20",
+                text: 'rounded-md px-2 py-1 text-xs ring-1 ring-inset bg-red-50 text-red-800 ring-red-600/20',
             },
         }
     } else {
@@ -164,7 +162,7 @@ const toolTipOptions = (lease) => {
 }
 
 const handleOnProcessFile = (error, file) => {
-    router.reload({ only: ["leases"] })
+    router.reload({ only: ['leases'] })
 }
 
 const handleInit = () => {
@@ -174,15 +172,15 @@ const handleInit = () => {
 onMounted(() => {
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen("LeaseFileDeleted", (e) => {
-            toast.success(e.lease_deleted.file_name + ": Deleted successfully")
+        .listen('LeaseFileDeleted', (e) => {
+            toast.success(e.lease_deleted.file_name + ': Deleted successfully')
             router.reload({
-                "preserveScroll": true,
+                'preserveScroll': true,
             })
         })
-        .listen("LeaseProcessingUpdate", (e) => {
+        .listen('LeaseProcessingUpdate', (e) => {
             router.reload({
-                "preserveScroll": true,
+                'preserveScroll': true,
             })
         })
 })
@@ -214,12 +212,12 @@ onBeforeUnmount(() => {
         <Associates :associates="associates" />
 
         <FilePond
-            name="lease_document"
-            @init="handleInit"
-            @processfile="handleOnProcessFile"
             ref="pond"
             class-name="my-file-upload"
             label-idle="Lease Drop or <span class='filepond--label-action'>Browse</span>"
+            name="lease_document"
+            @init="handleInit"
+            @processfile="handleOnProcessFile"
         />
 
         <Table v-if="props.leases.data.length" containerClasses="pb-28">
@@ -228,29 +226,29 @@ onBeforeUnmount(() => {
                 <tr>
                     <!--                    <th scope="col" class="pl-4 pr-2 py-3">-->
                     <!--                    </th>-->
-                    <th scope="col" class="px-6 py-3">
+                    <th class="px-6 py-3" scope="col">
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th class="px-6 py-3" scope="col">
                         Name
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th class="px-6 py-3" scope="col">
                         Premise
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    <th class="px-6 py-3 whitespace-nowrap" scope="col">
                         GLA (SQFT)
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th class="px-6 py-3" scope="col">
                         Start Date
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th class="px-6 py-3" scope="col">
                         End Date
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    <th class="px-6 py-3 whitespace-nowrap" scope="col">
                         Rent (SQFT)
                     </th>
-                    <th scope="col" class="py-3">
+                    <th class="py-3" scope="col">
                     </th>
-                    <th scope="col" class="px-3 py-3 font-normal normal-case">
+                    <th class="px-3 py-3 font-normal normal-case" scope="col">
                         <!--                        <Menu as="div" class="relative inline-block text-left">-->
                         <!--                            <div>-->
                         <!--                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">-->
@@ -280,25 +278,25 @@ onBeforeUnmount(() => {
                     <!--                    <td class="pl-4 pr-2 py-4 space-x-2">-->
                     <!--                        <Checkbox />-->
                     <!--                    </td>-->
-                    <th scope="row" class="px-6 py-4">
+                    <th class="px-6 py-4" scope="row">
 
                         <div class="inline-block">
                             <span
-                                class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset"
-                                :class="getFileStatusClass(lease.lease_document.status)">
+                                :class="getFileStatusClass(lease.lease_document.status)"
+                                class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset">
 
                                   <span class="relative mr-1.5 flex h-2.5 w-2.5">
 
                                       <template
                                           v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
-                                          <span class="absolute inline-flex h-full w-full animate-ping rounded-full"
-                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
-                                          <span class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                                :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                          <span :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                                class="absolute inline-flex h-full w-full animate-ping rounded-full"></span>
+                                          <span :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                                class="relative inline-flex h-2.5 w-2.5 rounded-full"></span>
                                       </template>
 
-                                      <span v-else class="relative inline-flex h-2.5 w-2.5 rounded-full"
-                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"></span>
+                                      <span v-else :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                            class="relative inline-flex h-2.5 w-2.5 rounded-full"></span>
 
                                   </span>
 
@@ -313,8 +311,8 @@ onBeforeUnmount(() => {
                                 <div
                                     class="progress h-2.5 w-full bg-gray-200 rounded-full relative dark:bg-zinc-600 mt-2">
                                     <div
-                                        class="progress-bar h-2.5 bg-violet-500 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
                                         :style="`width: ${lease.lease_document.status_progress};`"
+                                        class="progress-bar h-2.5 bg-violet-500 rounded-full ltr:rounded-r-none rtl:rounded-l-none progress-bar-striped animate-strip"
                                         role="progressbar">
                                     </div>
                                 </div>
@@ -340,9 +338,9 @@ onBeforeUnmount(() => {
                         <a
                             v-else
                             :href="lease.lease_document.file_name"
-                            type="external"
-                            target="_blank"
                             class="text-gray-500"
+                            target="_blank"
+                            type="external"
                         >
                             {{ lease.lease_document.name }}
                         </a>
@@ -362,22 +360,23 @@ onBeforeUnmount(() => {
                         </template>
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ lease.rentable_sqft ? filters.formatNumber(lease.rentable_sqft) : "--" }}
+                        {{ lease.rentable_sqft ? filters.formatNumber(lease.rentable_sqft) : '--' }}
                     </td>
                     <td class="px-6 py-4 dark:text-zinc-100/80">
-                        {{ lease.start_date ?? "--" }}
+                        {{ lease.start_date ?? '--' }}
                     </td>
                     <td
-                        class="px-6 py-4 space-x-2"
                         :class="lease.expired ? 'text-red-500' : 'text-green-600'"
+                        class="px-6 py-4 space-x-2"
                     >
-                        {{ lease.end_date ?? "--" }}
+                        {{ lease.end_date ?? '--' }}
                     </td>
                     <td class="px-6 py-4 space-x-2">
-                        {{ lease.rent_per_sqft ? filters.formatMoney(lease.rent_per_sqft) : "--" }}
+                        {{ lease.rent_per_sqft ? filters.formatMoney(lease.rent_per_sqft) : '--' }}
                     </td>
                     <td class="py-4 ">
                         <PrimaryLink
+                            v-if="lease.lease_document.status == 'Ready'"
                             :href="route('assets.leases.chats.index', [asset, lease])"
                             icon-left="chat"
                         ></PrimaryLink>
@@ -400,8 +399,8 @@ onBeforeUnmount(() => {
 
                                     <Link
                                         v-if="lease.tenant"
-                                        :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                                         :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                        :href="route('assets.leases.show', [lease.asset_id, lease.id])"
                                     >
                                         <BoxIcon class="bx-search text-gray-500" />
                                         <span>View</span>
@@ -411,9 +410,9 @@ onBeforeUnmount(() => {
 
                                 <MenuItem>
                                     <a
+                                        :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
                                         :href="lease.lease_document.file_name"
                                         target="_blank"
-                                        :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
                                     >
                                         <BoxIcon class="bx-cloud-download text-gray-500" />
                                         <span>Download</span>
@@ -421,8 +420,8 @@ onBeforeUnmount(() => {
                                 </MenuItem>
 
                                 <MenuItem v-if="lease.is_archived">
-                                    <a href="#"
-                                       :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                    <a :class="['text-gray-700', 'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full', 'hover:bg-gray-100', 'hover:text-gray-900', 'text-left']"
+                                       href="#"
                                        @click="restoreLease(lease)"
                                     >
                                         <BoxIcon class="bx-box text-gray-500" />
@@ -452,10 +451,10 @@ onBeforeUnmount(() => {
                                         @click="confirmLeaseDeletion(lease)"
                                     >
                                         <BoxIcon
-                                            class="bx-trash"
                                             :class="(lease.is_deleting ? 'text-red-200':'text-red-500')"
+                                            class="bx-trash"
                                         />
-                                        <span>{{ (lease.is_deleting ? "Deleting..." : "Delete") }}</span>
+                                        <span>{{ (lease.is_deleting ? 'Deleting...' : 'Delete') }}</span>
                                     </Button>
 
                                 </MenuItem>

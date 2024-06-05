@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
     <i
-        class="bx text-[20px]"
         :class="props.class"
+        class="bx text-[18px]"
     />
 </template>

@@ -53,7 +53,6 @@ const closeModal = () => {
                 :href="route('roles.create')"
                 class="mb-4"
                 icon-left="plus"></PrimaryLink>
-
         </div>
 
         <Table>

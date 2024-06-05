@@ -1,7 +1,8 @@
 <script setup>
-import Table from "@/Components/Table.vue"
+import Table from '@/Components/Table.vue'
+
 const props = defineProps({
-    lease: Object
+    lease: Object,
 })
 </script>
 
@@ -9,18 +10,18 @@ const props = defineProps({
     <div class="p-2 bg-white">
 
         <Table
-            class="pb-0"
-            :data="lease.rent_schedule"
             :columns="['Start Date', 'End Date', 'Amount', 'Frequency']"
+            :data="lease.rent_schedule"
+            class="pb-0"
             containerClasses="max-h-64 overflow-y-auto"
         >
 
             <template #head>
                 <tr>
-                    <th scope="col" class="px-6 py-3">Start Date</th>
-                    <th scope="col" class="px-6 py-3">End Date</th>
-                    <th scope="col" class="px-6 py-3">Amount</th>
-                    <th scope="col" class="px-6 py-3">per SQFT</th>
+                    <th class="px-6 py-2" scope="col">Start Date</th>
+                    <th class="px-6 py-2" scope="col">End Date</th>
+                    <th class="px-6 py-2" scope="col">Amount</th>
+                    <th class="px-6 py-2" scope="col">per SQFT</th>
                 </tr>
             </template>
 
@@ -30,29 +31,29 @@ const props = defineProps({
                     class="bg-white border-b border-gray-50 dark:bg-zinc-700/50 dark:border-zinc-600"
 
                 >
-                    <td
-                        class="px-6 py-4 space-x-2"
+                    <th
                         :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                        class="row px-6 py-2 space-x-2"
                     >
                         {{ base_rent.start_date }}
-                    </td>
+                    </th>
 
                     <td
-                        class="px-6 py-4"
                         :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                        class="px-6 py-2"
                     >
                         {{ base_rent.end_date }}
                     </td>
 
                     <td
-                        class="px-6 py-4"
                         :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                        class="px-6 py-2"
                     >
                         {{ filters.formatMoney(base_rent.amount_total) }}
                     </td>
                     <td
-                        class="px-6 py-4"
                         :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
+                        class="px-6 py-2"
                     >
                         {{ filters.formatMoney(base_rent.amount_per_square_foot) }}
                     </td>
