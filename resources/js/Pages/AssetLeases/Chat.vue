@@ -545,10 +545,13 @@ onUnmounted(() => {
                                 <div class="relative grow overflow-hidden whitespace-nowrap text-sm text-gray-500">
                                   {{ truncatedMessage(conv_obj?.last_message?.message) || null }}
                                   <div
-                                      :class="{ 'from-gray-100': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
+                                      :class="{
+                                        'from-gray-100': localChat && localChat.chat_uuid === conv_obj.chat_uuid,
+                                        'from-white': !localChat || localChat.chat_uuid !== conv_obj.chat_uuid
+                                       }"
                                       class="
                                   absolute bottom-0 right-0 top-0
-                                  bg-gradient-to-l to-transparent w-24 from-white from-0%
+                                  bg-gradient-to-l to-transparent w-24 from-0%
                                   group-hover:from-gray-100"></div>
                                 </div>
 

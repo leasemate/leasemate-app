@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
     <Head title="Asset" />
 
     <AuthenticatedLayout>
-        
+
         <Hero :asset="asset" />
 
         <Associates :associates="associates" />
