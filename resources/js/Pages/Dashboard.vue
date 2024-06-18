@@ -338,7 +338,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tbody>
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
                                     <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
-                                        AOK Logistics
+                                        Apex Solutions Inc.
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         Elysian Valley Logistic
@@ -356,7 +356,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
                                     <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
                                         scope="row">
-                                        Antec Lighting
+                                        Stellar Innovations Ltd.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         Elysian Valley Logistic
@@ -374,7 +374,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
                                     <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
                                         scope="row">
-                                        Duck Logistics
+                                        Horizon Ventures Group
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         1940 Denby
@@ -392,7 +392,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
                                     <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
                                         scope="row">
-                                        JB Hunt
+                                        Evergreen Enterprises Co.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         SEC Government Building
@@ -410,7 +410,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
                                     <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
                                         scope="row">
-                                        ICC Cabling
+                                        BlueSky Technologies
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         Frogtown Spectrum
@@ -428,7 +428,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
                                     <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
                                         scope="row">
-                                        LA Slot Machine
+                                        FusionWorks Corp.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         Frogtown Spectrum
