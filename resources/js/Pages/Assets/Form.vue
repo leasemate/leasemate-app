@@ -264,8 +264,6 @@ onMounted(() => {
                 />
                 <InputError :message="form.errors.asset_photo" class="mt-2" />
             </div>
-
-            {{ props.asset }}
         </template>
 
         <template #actions>
