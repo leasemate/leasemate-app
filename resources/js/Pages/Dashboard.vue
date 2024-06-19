@@ -317,7 +317,7 @@ import { usePage } from '@inertiajs/vue3'
                         <div class="relative overflow-x-auto">
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
-                                <tr>
+                                <tr class="bg-gray-50">
                                     <th class="px-6 py-3" scope="col">
                                         Tenant
                                     </th>
@@ -341,7 +341,7 @@ import { usePage } from '@inertiajs/vue3'
                                         Apex Solutions Inc.
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        Elysian Valley Logistic
+                                        Lakeside Logistics Center
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         2,102
@@ -359,7 +359,7 @@ import { usePage } from '@inertiajs/vue3'
                                         Stellar Innovations Ltd.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        Elysian Valley Logistic
+                                        Oceanfront Plaza
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         5,234
@@ -377,7 +377,7 @@ import { usePage } from '@inertiajs/vue3'
                                         Horizon Ventures Group
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        1940 Denby
+                                        Oceanfront Plaza
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         10,020
@@ -395,7 +395,7 @@ import { usePage } from '@inertiajs/vue3'
                                         Evergreen Enterprises Co.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        SEC Government Building
+                                        Riverview Marketplace
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         40,302
@@ -413,7 +413,7 @@ import { usePage } from '@inertiajs/vue3'
                                         BlueSky Technologies
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        Frogtown Spectrum
+                                        Lakeside Logistics Center
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         1,200
@@ -431,7 +431,7 @@ import { usePage } from '@inertiajs/vue3'
                                         FusionWorks Corp.
                                     </th>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        Frogtown Spectrum
+                                        Riverview Marketplace
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         140,010
@@ -465,7 +465,7 @@ import { usePage } from '@inertiajs/vue3'
                         <div class="relative overflow-x-auto">
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
-                                <tr>
+                                <tr class="bg-gray-50">
                                     <th class="px-6 py-3" scope="col">
                                         Property
                                     </th>
@@ -483,7 +483,7 @@ import { usePage } from '@inertiajs/vue3'
                                 <tbody>
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
                                     <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
-                                        Elysian Valley Logistic
+                                        Riverview Marketplace
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         1,002,919
@@ -497,7 +497,7 @@ import { usePage } from '@inertiajs/vue3'
                                 </tr>
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
                                     <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
-                                        1940 Denby
+                                        Oceanfront Plaza
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         203,010
@@ -511,7 +511,7 @@ import { usePage } from '@inertiajs/vue3'
                                 </tr>
                                 <tr class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
                                     <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
-                                        SEC Government Building
+                                        Lakeside Logistics Center
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         745,092
@@ -521,20 +521,6 @@ import { usePage } from '@inertiajs/vue3'
                                     </td>
                                     <td class="px-6 py-3.5 dark:text-zinc-100">
                                         5.02
-                                    </td>
-                                </tr>
-                                <tr class="bg-white dark:bg-zinc-700 dark:border-zinc-600">
-                                    <td class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100">
-                                        Frogtown Spectrum
-                                    </td>
-                                    <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        425,001
-                                    </td>
-                                    <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        $0.75
-                                    </td>
-                                    <td class="px-6 py-3.5 dark:text-zinc-100">
-                                        4.45
                                     </td>
                                 </tr>
                                 </tbody>
