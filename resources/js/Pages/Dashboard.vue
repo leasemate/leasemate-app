@@ -1,11 +1,13 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import MiniChart from '@/Components/MiniChart.vue'
-import { usePage } from '@inertiajs/vue3'
+import { Head, usePage } from '@inertiajs/vue3'
 </script>
 
 <template>
     <AuthenticatedLayout>
+
+        <Head title="Dashboard" />
 
         <template #header>
             <span class="capitalize">Hello, {{ usePage().props.auth.user.name }}</span>
@@ -14,7 +16,7 @@ import { usePage } from '@inertiajs/vue3'
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
             <div class="card flex rounded-lg flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-md hover:shadow-xl transition">
+                <div class="card-body flex-1 rounded-lg shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
@@ -87,7 +89,7 @@ import { usePage } from '@inertiajs/vue3'
             </div>
 
             <div class="card flex rounded-lg flex-col justify-center dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-md hover:shadow-xl transition">
+                <div class="card-body flex-1 rounded-lg shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
@@ -159,7 +161,7 @@ import { usePage } from '@inertiajs/vue3'
             </div>
 
             <div class="card flex rounded-lg dark:bg-zinc-800 dark:border-zinc-600">
-                <div class="card-body shadow-md hover:shadow-xl transition">
+                <div class="card-body flex-1 rounded-lg shadow-md hover:shadow-xl transition">
                     <div>
                         <div class="grid grid-cols-12 gap-5 items-center">
                             <div class="col-span-6">
@@ -317,7 +319,7 @@ import { usePage } from '@inertiajs/vue3'
                         <div class="relative overflow-x-auto">
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
-                                <tr class="bg-gray-50">
+                                <tr class="bg-gray-50 dark:bg-gray-700">
                                     <th class="px-6 py-3" scope="col">
                                         Tenant
                                     </th>
@@ -465,7 +467,7 @@ import { usePage } from '@inertiajs/vue3'
                         <div class="relative overflow-x-auto">
                             <table class="text-sm text-left text-gray-500 w-full dark:bg-zinc-700 dark:border-zinc-600">
                                 <thead class="text-sm text-gray-700 dark:text-gray-100 ">
-                                <tr class="bg-gray-50">
+                                <tr class="bg-gray-50 dark:bg-gray-700">
                                     <th class="px-6 py-3" scope="col">
                                         Property
                                     </th>

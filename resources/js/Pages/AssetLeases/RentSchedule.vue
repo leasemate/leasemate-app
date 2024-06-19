@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="p-2 bg-white">
+    <div class="p-2">
 
         <Table
             :columns="['Start Date', 'End Date', 'Amount', 'Frequency']"
@@ -32,28 +32,28 @@ const props = defineProps({
 
                 >
                     <th
-                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
-                        class="row px-6 py-2 space-x-2"
+                        :class="base_rent.current ? 'font-semibold text-green-600 dark:text-green-700' : 'text-gray-600 dark:text-gray-400'"
+                        class="row px-6 py-2 space-x-2 dark:text-gray-400"
                     >
                         {{ base_rent.start_date }}
                     </th>
 
                     <td
-                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
-                        class="px-6 py-2"
+                        :class="base_rent.current ? 'font-semibold text-green-600 dark:text-green-700' : 'text-gray-600 dark:text-gray-400'"
+                        class="px-6 py-2 dark:text-gray-400"
                     >
                         {{ base_rent.end_date }}
                     </td>
 
                     <td
-                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
-                        class="px-6 py-2"
+                        :class="base_rent.current ? 'font-semibold text-green-600 dark:text-green-700' : 'text-gray-600 dark:text-gray-400'"
+                        class="px-6 py-2 dark:text-gray-400"
                     >
                         {{ filters.formatMoney(base_rent.amount_total) }}
                     </td>
                     <td
-                        :class="base_rent.current ? 'font-semibold text-green-600' : 'text-gray-600'"
-                        class="px-6 py-2"
+                        :class="base_rent.current ? 'font-semibold text-green-600 dark:text-green-700' : 'text-gray-600 dark:text-gray-400'"
+                        class="px-6 py-2 dark:text-gray-400"
                     >
                         {{ filters.formatMoney(base_rent.amount_per_square_foot) }}
                     </td>

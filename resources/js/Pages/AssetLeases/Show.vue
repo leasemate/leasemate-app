@@ -130,13 +130,13 @@ onBeforeUnmount(() => {
             </div>
             <div class="col-span-6 flex flex-col">
                 <div class="max-h-36 overflow-auto h-36">
-                    <FilePond
-                        ref="pond"
-                        class-name="my-file-upload"
-                        label-idle="Amendment Drop or <span class='filepond--label-action'>Browse</span>"
-                        name="lease_amendment"
-                        @processfile="handleOnProcessFile"
-                    />
+                    <!--                    <FilePond-->
+                    <!--                        ref="pond"-->
+                    <!--                        class-name="my-file-upload"-->
+                    <!--                        label-idle="Amendment Drop or <span class='filepond&#45;&#45;label-action'>Browse</span>"-->
+                    <!--                        name="lease_amendment"-->
+                    <!--                        @processfile="handleOnProcessFile"-->
+                    <!--                    />-->
                 </div>
                 <div class="ml-auto mt-4">
 
@@ -173,14 +173,18 @@ onBeforeUnmount(() => {
                         </div>
                     </template>
 
-                    <PrimaryLink
-                        v-if="lease.lease_document"
-                        :href="lease.lease_document.file_name"
-                        class="mt-4"
-                        target="_blank"
-                    >
-                        <BoxIcon class="bx-cloud-download"></BoxIcon>
-                    </PrimaryLink>
+                    <div class="flex justify-end">
+                        <PrimaryLink
+                            v-if="lease.lease_document"
+                            :href="lease.lease_document.file_name"
+                            class="mb-4"
+                            target="_blank"
+                        >
+                            <BoxIcon class="bx-cloud-download mr-2"></BoxIcon>
+                            Download Lease
+                        </PrimaryLink>
+                    </div>
+
 
                     <div class="grid grid-cols-12 gap-6">
 

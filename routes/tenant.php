@@ -14,12 +14,10 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\FilesController;
-use App\Http\Controllers\LeaseAmendmentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Models\Document;
-use App\Models\Lease;
+use App\Models\File;
 use App\Models\User;
 use App\Notifications\DocumentCompleteNotification;
 use Illuminate\Support\Facades\Route;
@@ -110,7 +108,7 @@ Route::middleware([
 
         //        dd($user->broadcastChannel());
         //        dump($user);
-        $file = \App\Models\File::find(1);
+        $file = File::find(1);
         //        dd($file);
         //        $file = new \App\Models\File();
 
@@ -136,7 +134,9 @@ Route::middleware([
         //
         //        dd($document);
 
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', [
+            'title' => 'Your Page Title'
+        ]);
     })->name('dashboard');
 
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');

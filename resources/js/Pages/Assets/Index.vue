@@ -1,47 +1,43 @@
 <script setup>
 
-import { Head, Link, router } from "@inertiajs/vue3"
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import PrimaryLink from "@/Components/PrimaryLink.vue";
-import Button from "@/Components/Button.vue"
-import TableDropdown from "@/Components/TableDropdown.vue"
-import { MenuItem } from "@headlessui/vue"
-import BoxIcon from "@/Components/BoxIcon.vue"
-import DangerButton from "@/Components/DangerButton.vue"
-import SecondaryButton from "@/Components/SecondaryButton.vue"
-import Modal from "@/Components/Modal.vue"
-import toast from "@/Stores/toast.js"
-import { ref } from "vue"
+import { Head, Link, router } from '@inertiajs/vue3'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import PrimaryLink from '@/Components/PrimaryLink.vue'
+import BoxIcon from '@/Components/BoxIcon.vue'
+import DangerButton from '@/Components/DangerButton.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import Modal from '@/Components/Modal.vue'
+import toast from '@/Stores/toast.js'
+import { ref } from 'vue'
 
 const props = defineProps({
     assets: Array,
-});
+})
 
 
-const assetToDelete = ref(null);
-const confirmingAssetDeletion = ref(false);
+const assetToDelete = ref(null)
+const confirmingAssetDeletion = ref(false)
 
 const confirmAssetDeletion = (asset) => {
-    confirmingAssetDeletion.value = true;
-    assetToDelete.value = asset;
-};
+    confirmingAssetDeletion.value = true
+    assetToDelete.value = asset
+}
 
 const closeModal = () => {
-    confirmingAssetDeletion.value = false;
-};
+    confirmingAssetDeletion.value = false
+}
 
 const deleteAsset = () => {
 
-    if(assetToDelete.value) {
-        closeModal();
+    if (assetToDelete.value) {
+        closeModal()
         try {
             router.delete(route('assets.destroy', assetToDelete.value.id), {
                 preserveScroll: true,
-            });
+            })
         } catch (error) {
-            toast.error(error);
-            console.log(error);
+            toast.error(error)
+            console.log(error)
         }
 
     }
@@ -65,21 +61,24 @@ const deleteAsset = () => {
         <div v-if="assets.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
             <!-- Repeat this block for each asset -->
-            <div  v-for="asset in assets" class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+            <div v-for="asset in assets"
+                 class="relative border border-gray-200 dark:border-gray-800 dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden">
                 <Link :href="route('assets.show', asset)">
-                    <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo" class="w-full h-48 object-cover" />
+                    <img :src="asset.asset_photo_url ?? '/images/asset-tmp-photo.png'" alt="Asset Photo"
+                         class="w-full h-48 object-cover" />
 
                     <div class="p-4">
-                        <h3 class="text-lg font-semibold">{{asset.name}}</h3>
-                        <p class="text-sm text-gray-600">{{ asset.address }}</p>
-                        <p class="text-sm text-gray-600">GLA: {{ filters.formatNumberSqFt(asset.gross_leasable_area)??'--' }}</p>
+                        <h3 class="text-lg font-semibold">{{ asset.name }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ asset.address }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">GLA:
+                            {{ filters.formatNumberSqFt(asset.gross_leasable_area) ?? '--' }}</p>
                     </div>
                 </Link>
 
                 <div class="absolute bottom-0 right-0 p-4">
                     <BoxIcon
-                        @click="confirmAssetDeletion(asset)"
                         class="bx-trash text-red-400 hover:text-red-600 cursor-pointer"
+                        @click="confirmAssetDeletion(asset)"
                     />
                 </div>
 
@@ -98,7 +97,7 @@ const deleteAsset = () => {
                 </h2>
 
                 <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+                    <SecondaryButton @click="closeModal"> Cancel</SecondaryButton>
 
                     <DangerButton
                         class="ml-3"
