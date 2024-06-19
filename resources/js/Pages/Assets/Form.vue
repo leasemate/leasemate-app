@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Link, useForm, usePage } from '@inertiajs/vue3'
 
 import PrimaryButton from '@/Components/PrimaryButton.vue'
@@ -165,6 +165,10 @@ const submit = () => {
 
 const preloadFiles = ref([])
 
+const computedCancelButton = computed(() => {
+    return props.asset.id ? route('assets.show', props.asset) : route('assets.index')
+})
+
 onMounted(() => {
     if (props.asset.asset_photo) {
         preloadFiles.value = [
@@ -261,12 +265,12 @@ onMounted(() => {
                 <InputError :message="form.errors.asset_photo" class="mt-2" />
             </div>
 
-
+            {{ props.asset }}
         </template>
 
         <template #actions>
             <div class="space-x-3">
-                <Link :href="route('assets.show', props.asset)">Cancel</Link>
+                <Link :href="computedCancelButton">Cancel</Link>
                 <PrimaryButton
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
