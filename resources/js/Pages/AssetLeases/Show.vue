@@ -179,6 +179,7 @@ onBeforeUnmount(() => {
                             :href="lease.lease_document.file_name"
                             class="mb-4"
                             target="_blank"
+                            type="external"
                         >
                             <BoxIcon class="bx-cloud-download mr-2"></BoxIcon>
                             Download Lease
