@@ -7,7 +7,6 @@ import { MetisMenu } from 'metismenujs'
 import SideNavLink from '@/Components/SideNavLink.vue'
 import TenantTitle from '@/Components/TenantTitle.vue'
 
-
 const showIcon = inject('showIcon')
 
 const closeVerticalMenu = () => {
@@ -147,14 +146,14 @@ onMounted(() => {
                                     <span data-key="t-dashboard"> Users</span>
                                 </Link>
                             </li>
-                            <li>
-                                <!--                                <a href="/app-calendar.html" class="">Calendar</a>-->
-                                <Link :href="route('roles.index')"
-                                      class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-indigo-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">
-                                    <!--                                    <i data-feather="lock"></i>-->
-                                    <span data-key="t-dashboard"> Roles</span>
-                                </Link>
-                            </li>
+                            <!--                            <li>-->
+                            <!--                                <a href="/app-calendar.html" class="">Calendar</a>-->
+                            <!--                                <Link :href="route('roles.index')"-->
+                            <!--                                      class="pl-14 pr-4 py-2 block text-[13.5px] font-medium text-gray-700 ease-linear hover:text-indigo-500 dark:text-gray-300 dark:active:text-white dark:hover:text-white">-->
+                            <!--                                    <i data-feather="lock"></i>-->
+                            <!--                                    <span data-key="t-dashboard"> Roles</span>-->
+                            <!--                                </Link>-->
+                            <!--                            </li>-->
                         </ul>
                     </li>
 

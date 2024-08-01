@@ -1,39 +1,30 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, reactive, ref, toRef } from "vue"
-import { usePage, Head, Link, router } from "@inertiajs/vue3"
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue"
-import PrimaryLink from "@/Components/PrimaryLink.vue"
-import Button from "@/Components/Button.vue"
-import Table from "@/Components/Table.vue"
+import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, toRef } from 'vue'
+import { Head, router, usePage } from '@inertiajs/vue3'
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import Button from '@/Components/Button.vue'
 
-import TabView from "primevue/tabview"
-import TabPanel from "primevue/tabpanel"
-import Panel from "primevue/panel"
+import Markdown from 'vue3-markdown-it'
+import 'highlight.js/styles/monokai.css'
 
-import Markdown from "vue3-markdown-it"
-import "highlight.js/styles/monokai.css"
-
-import { fileStatusClass } from "@/Composables/fileStatusClass.js"
-
-import VueFilePond, { setOptions } from "vue-filepond"
+import VueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType
-    from "filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js"
-import "filepond/dist/filepond.min.css"
+    from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js'
+import 'filepond/dist/filepond.min.css'
 
-import Hero from "@/Components/Lease/Hero.vue"
-import Associates from "@/Components/Lease/Associates.vue"
-import PrimaryButton from "@/Components/PrimaryButton.vue"
-import MessageLoader from "@/Components/Chat/MessageLoader.vue"
+import Hero from '@/Components/Lease/Hero.vue'
+import Associates from '@/Components/Lease/Associates.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import MessageLoader from '@/Components/Chat/MessageLoader.vue'
 
-import axios from "axios"
-import toast from "@/Stores/toast.js"
-import socketIOClient from "socket.io-client"
+import axios from 'axios'
+import toast from '@/Stores/toast.js'
+import socketIOClient from 'socket.io-client'
 
-import Modal from "@/Components/Modal.vue"
-import SecondaryButton from "@/Components/SecondaryButton.vue"
-import DangerButton from "@/Components/DangerButton.vue"
-import BoxIcon from "@/Components/BoxIcon.vue"
-import SecondaryLink from "@/Components/SecondaryLink.vue"
+import Modal from '@/Components/Modal.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import DangerButton from '@/Components/DangerButton.vue'
+import SecondaryLink from '@/Components/SecondaryLink.vue'
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -41,14 +32,14 @@ const user = computed(() => page.props.auth.user)
 //socket connection
 const socket = socketIOClient(import.meta.env.VITE_WEBSOCKET_CHAT_API_BASE_URL)
 const CHUNK_SIZE = 5  // Set the chunk size as per your requirement
-let socketIOClientId = ""
-let chatSessionId = ""
-let accumulatedOutput = ""
+let socketIOClientId = ''
+let chatSessionId = ''
+let accumulatedOutput = ''
 let lastMessage
 
 const initialTextareaHeight = 40
 const textareaHeight = ref(initialTextareaHeight)
-const messageToSend = ref("")
+const messageToSend = ref('')
 const messageField = ref(null)
 const isSending = ref(false)
 const errorMessage = ref(null)
@@ -92,11 +83,11 @@ const handleKeyDown = (event) => {
 
     errorMessage.value = null
 
-    if (event.key === "Enter" && event.shiftKey) {
+    if (event.key === 'Enter' && event.shiftKey) {
         textareaHeight.value += 30
     }
 
-    if (event.key === "Enter" && !event.shiftKey && !isSending.value) {
+    if (event.key === 'Enter' && !event.shiftKey && !isSending.value) {
         event.preventDefault()
         sendMessage()
     }
@@ -107,10 +98,10 @@ const handlePaste = (event) => {
     errorMessage.value = null
 
     const content = event.target.value
-    const pastedData = event.clipboardData.getData("text/plain")
-    const numberOfLines = pastedData.split("\n").length
+    const pastedData = event.clipboardData.getData('text/plain')
+    const numberOfLines = pastedData.split('\n').length
 
-    if (pastedData.includes("\n")) {
+    if (pastedData.includes('\n')) {
 
         textareaHeight.value = Math.min(numberOfLines * 30, 250)
         // console.log(textareaHeight.value);
@@ -120,7 +111,7 @@ const handlePaste = (event) => {
 }
 
 const addNewChat = () => {
-    router.visit(route("assets.leases.chats.index", [props.asset.id, props.lease.id]), {
+    router.visit(route('assets.leases.chats.index', [props.asset.id, props.lease.id]), {
         preserveScroll: true,
     })
 }
@@ -132,19 +123,19 @@ const scrollToBottom = () => {
 
 const selectChat = async (conv_obj) => {
     if (conv_obj.chat_uuid) {
-        router.visit(route("assets.leases.chats.index", [props.asset, props.lease, conv_obj.chat_uuid]), {
+        router.visit(route('assets.leases.chats.index', [props.asset, props.lease, conv_obj.chat_uuid]), {
             preserveScroll: true,
             // preserveState: true,
-            only: ["chats", "chat"],
+            only: ['chats', 'chat'],
         })
         scrollToBottom()
     }
 }
 
 const deleteChat = () => {
-
+    console.log('deleteChat')
     if (chatToDelete.value) {
-        router.delete(route("assets.leases.chats.destroy", [props.asset, props.lease, chatToDelete.value.chat_uuid]), {
+        router.delete(route('assets.leases.chats.destroy', [props.asset, props.lease, chatToDelete.value.chat_uuid]), {
             preserveScroll: true,
             onSuccess: (page) => {
                 if (page.props.flash.error) {
@@ -155,7 +146,7 @@ const deleteChat = () => {
                     localChatList.value = page.props.chats
                     chatToDelete.value = null
                     closeModal()
-                    toast.success("Chat deleted successfully!")
+                    toast.success('Chat deleted successfully!')
                 }
             },
         })
@@ -180,15 +171,15 @@ const truncatedMessage = (message) => {
 
 const initEmptyChat = () => {
     localChat.value.messages.unshift({
-        from: "bot",
-        message: "Hello! I am your personal assistant. How can I help you today?",
+        from: 'bot',
+        message: 'Hello! I am your personal assistant. How can I help you today?',
     })
 }
 
 const validate = () => {
 
-    if (messageToSend.value.trim() === "") {
-        errorMessage.value = "Please enter a message"
+    if (messageToSend.value.trim() === '') {
+        errorMessage.value = 'Please enter a message'
         isSending.value = false
         messageField.value.focus()
         return false
@@ -206,12 +197,12 @@ const sendMessage = async () => {
 
         // const chat_id = (!localChat.value.chat_uuid ? localChat.value.chat_uuid : null);
 
-        axios.post(route("assets.leases.chats.store", [
+        axios.post(route('assets.leases.chats.store', [
                 props.asset.id,
                 props.lease.id,
                 localChat.value.chat_uuid ?? null,
             ]), {
-                from: "user",
+                from: 'user',
                 message: messageToSend.value,
             })
             .then(function(response) {
@@ -224,21 +215,21 @@ const sendMessage = async () => {
                 // console.log(chatSessionId);
 
                 localChat.value.messages.push({
-                    from: "user",
+                    from: 'user',
                     message: messageToSend.value,
                 })
 
                 if (!localChat.value.chat_uuid) {
                     const empty_chat = defaultChatState()
                     empty_chat.last_message = {
-                        message: "New Chat",
+                        message: 'New Chat',
                     }
                     localChatList.value.unshift(empty_chat)
                 }
 
                 sendQuery(messageToSend.value)
 
-                messageToSend.value = ""
+                messageToSend.value = ''
                 textareaHeight.value = initialTextareaHeight
 
                 nextTick(() => {
@@ -261,7 +252,7 @@ const sendMessage = async () => {
 const sendQuery = async (question) => {
 
     isSending.value = true
-    errorMessage.value = ""
+    errorMessage.value = ''
 
     // chatSessionId='eb81b6b2-b506-4646-97dc-f9dd635be818';
     // let user_id = user.value.id;
@@ -292,17 +283,17 @@ const sendQuery = async (question) => {
 
         await axios.post(post_url, data, {
                 headers: {
-                    "Authorization": "Bearer " + user.value.jwt_token,
+                    'Authorization': 'Bearer ' + user.value.jwt_token,
                 },
             })
             .then(function(response) {
 
-                axios.post(route("assets.leases.chats.store", [
+                axios.post(route('assets.leases.chats.store', [
                         props.asset.id,
                         props.lease.id,
                         chatSessionId,
                     ]), {
-                        from: "bot",
+                        from: 'bot',
                         message: response.data.text,
                     })
                     .then(function(response) {
@@ -310,7 +301,7 @@ const sendQuery = async (question) => {
                         // console.log(response);
 
                         if (!localChat.value.chat_uuid) {
-                            router.visit(route("assets.leases.chats.index", [
+                            router.visit(route('assets.leases.chats.index', [
                                 props.asset.id,
                                 props.lease.id,
                                 chatSessionId,
@@ -327,7 +318,7 @@ const sendQuery = async (question) => {
             })
             .catch(async function(error) {
 
-                if (error.response.data.error_name == "TokenExpiredError") {
+                if (error.response.data.error_name == 'TokenExpiredError') {
 
                     // console.log('TokenExpiredError.. axios POST');
 
@@ -345,13 +336,13 @@ const sendQuery = async (question) => {
     } catch (error) {
         isSending.value = false
         errorMessage.value = error
-        console.error("Error sending query: ", error)
+        console.error('Error sending query: ', error)
     }
 }
 
 const refreshToken = async () => {
 
-    await axios.post(route("refresh-token"))
+    await axios.post(route('refresh-token'))
         .then(function(response) {
             // console.log('axios post response:', response.data);
             user.value.jwt_token = response.data.token
@@ -370,7 +361,7 @@ setOptions({
     allowMultiple: true,
     allowRevert: false,
     acceptedFileTypes: [
-        "application/pdf",
+        'application/pdf',
     ],
     // files: files,
     // server: {
@@ -410,8 +401,8 @@ onMounted(() => {
     messageField.value.focus()
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
-        .listen("FileStatusUpdate", (e) => {
-            router.reload({ only: ["leases"] })
+        .listen('FileStatusUpdate', (e) => {
+            router.reload({ only: ['leases'] })
         })
 
     nextTick(() => {
@@ -420,18 +411,18 @@ onMounted(() => {
 
     initEmptyChat()
 
-    socket.on("connect", () => {
+    socket.on('connect', () => {
         socketIOClientId = socket.id
         // console.log('Connected with id:', socketIOClientId);
         // startAskingQuestions();
 
     })
 
-    socket.on("start", () => {
+    socket.on('start', () => {
         // console.log('START!!!');
     })
 
-    socket.on("token", (token) => {
+    socket.on('token', (token) => {
 
         lastMessage = localChat.value.messages[localChat.value.messages.length - 1]
 
@@ -442,15 +433,15 @@ onMounted(() => {
             isSending.value = false
 
             // Find the last space to keep words intact
-            let lastSpaceIndex = accumulatedOutput.lastIndexOf(" ", CHUNK_SIZE)
+            let lastSpaceIndex = accumulatedOutput.lastIndexOf(' ', CHUNK_SIZE)
             if (lastSpaceIndex === -1) lastSpaceIndex = CHUNK_SIZE // If no space found, just cut at CHUNK_SIZE
             // Print up to the last complete word
             const partToPrint = accumulatedOutput.slice(0, lastSpaceIndex + 1)
 
             if (lastMessage) {
-                if (lastMessage.from == "user") {
+                if (lastMessage.from == 'user') {
                     localChat.value.messages.push({
-                        from: "bot",
+                        from: 'bot',
                         message: partToPrint,
                     })
                 } else {
@@ -465,11 +456,11 @@ onMounted(() => {
         }
     })
 
-    socket.on("sourceDocuments", (sourceDocuments) => {
+    socket.on('sourceDocuments', (sourceDocuments) => {
         // console.log('sourceDocuments:', sourceDocuments);
     })
 
-    socket.on("end", () => {
+    socket.on('end', () => {
 
         // console.log("END!!!");
 
@@ -478,7 +469,7 @@ onMounted(() => {
             lastMessage.message += accumulatedOutput
         }
         // Reset the state for the next query
-        accumulatedOutput = ""
+        accumulatedOutput = ''
     })
 
 })
@@ -537,9 +528,9 @@ onUnmounted(() => {
                             <div
                                 v-for="(conv_obj, index) in localChatList"
                                 :key="conv_obj.id"
-                                @click="selectChat(conv_obj)"
                                 :class="{ 'bg-gray-100': localChat && localChat.chat_uuid === conv_obj.chat_uuid }"
                                 class=" ml-1 mb-4 p-4 hover:bg-gray-100 rounded-lg cursor-pointer border-b shadow group"
+                                @click="selectChat(conv_obj)"
                             >
 
                                 <div class="flex items-center justify-between space-x-2">
@@ -558,8 +549,8 @@ onUnmounted(() => {
                                     </div>
 
                                     <i
-                                        @click.stop="confirmChatDeletion(conv_obj)"
                                         class="mdi mdi-trash-can text-sm text-gray-400 hover:text-red-500 cursor-pointer"
+                                        @click.stop="confirmChatDeletion(conv_obj)"
                                     ></i>
                                 </div>
 
@@ -575,28 +566,28 @@ onUnmounted(() => {
 
                         <div ref="messagesPanel" class="flex-1 overflow-y-auto mb-4 space-y-3">
 
-                            <div v-if="localChat && localChat.messages" v-for="(entry, index) in localChat.messages"
+                            <div v-for="(entry, index) in localChat.messages" v-if="localChat && localChat.messages"
                                  :key="index">
                                 <div
-                                    class="flex flex-row"
                                     :class="{ 'justify-start ': entry.from === 'bot', 'justify-end': entry.from === 'user' }"
+                                    class="flex flex-row"
                                 >
-                                    <div class="flex flex-col break-words max-w-[90%] flex-shrink-0"
-                                         :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }">
+                                    <div :class="{ 'items-start ': entry.from === 'bot', 'items-end': entry.from === 'user' }"
+                                         class="flex flex-col break-words max-w-[90%] flex-shrink-0">
                                         <div
-                                            class="message-bubble flex items-center px-4 py-2 h-auto"
                                             :class="{
                                                 'bg-gray-100 text-gray-700 rounded-3xl font-medium rounded-bl-none': entry.from === 'bot',
                                                 'bg-indigo-600 text-white rounded-3xl font-medium rounded-br-none': entry.from === 'user'
-                                            }">
-                                            <Markdown :source="entry.message" :breaks="true" />
+                                            }"
+                                            class="message-bubble flex items-center px-4 py-2 h-auto">
+                                            <Markdown :breaks="true" :source="entry.message" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
 
-                            <div class="my-1 sm:my-1.5" v-if="isSending">
+                            <div v-if="isSending" class="my-1 sm:my-1.5">
                                 <div class="flex flex-col items-start">
                                     <MessageLoader />
                                 </div>
@@ -611,40 +602,40 @@ onUnmounted(() => {
                             <div class="relative">
 
                             <textarea
-                                v-model="messageToSend"
-                                class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-50"
-                                style="resize: none;"
-                                :style="{ height: textareaHeight + 'px'}"
-                                placeholder="Type a message..."
-                                autocomplete="off"
-                                rows="1"
                                 ref="messageField"
+                                v-model="messageToSend"
+                                :style="{ height: textareaHeight + 'px'}"
+                                autocomplete="off"
+                                class="min-h-[44px] rounded-lg pl-4 pr-12 py-2 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-50"
+                                placeholder="Type a message..."
+                                rows="1"
+                                style="resize: none;"
                                 @keydown="handleKeyDown"
                                 @paste="handlePaste"></textarea>
 
                                 <button :disabled="isSending" @click="sendMessage">
                                     <svg
                                         v-show="!isSending"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
+                                        class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-indigo-600 dark:bg-indigo-200 hover:bg-indigo-700 dark:hover:bg-white focus:bg-indigo-700 dark:focus:bg-white active:bg-indigo-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-white"
                                         fill="none"
+                                        height="24"
                                         stroke="currentColor"
-                                        stroke-width="2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        class="absolute right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-indigo-600 dark:bg-indigo-200 hover:bg-indigo-700 dark:hover:bg-white focus:bg-indigo-700 dark:focus:bg-white active:bg-indigo-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-white">
+                                        stroke-width="2"
+                                        viewBox="0 0 24 24"
+                                        width="24"
+                                        xmlns="http://www.w3.org/2000/svg">
 
                                         <path d="M12 5l0 14"></path>
                                         <path d="M18 11l-6 -6"></path>
                                         <path d="M6 11l6 -6"></path>
                                     </svg>
 
-                                    <svg v-show="isSending" aria-hidden="true" role="status"
-                                         class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80"
-                                         viewBox="0 0 100 101"
+                                    <svg v-show="isSending" aria-hidden="true" class="absolute text-white animate-spin right-2 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-violet-500 text-white hover:opacity-80"
                                          fill="none"
+                                         role="status"
+                                         viewBox="0 0 100 101"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"

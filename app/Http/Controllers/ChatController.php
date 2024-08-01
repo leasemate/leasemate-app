@@ -11,6 +11,8 @@ use App\Models\Asset;
 use App\Models\Chat;
 use App\Models\Lease;
 use App\Services\ChatService;
+use Exception;
+use Log;
 
 class ChatController extends Controller
 {
@@ -50,14 +52,14 @@ class ChatController extends Controller
                 'chat' => new ChatResource($chatService->getChat()),
             ]);
 
-        } catch (\Exception $e) {
-            \Log::info($e);
-            \Log::info($e->getMessage());
-            \Log::info($e->getCode());
+        } catch (Exception $e) {
+            Log::info($e);
+            Log::info($e->getMessage());
+            Log::info($e->getCode());
 
             return response()->json([
                 'error' => $e->getMessage(),
-            ], ((int) $e->getCode() ?: 500));
+            ], ((int)$e->getCode() ?: 500));
 
         }
     }
@@ -70,14 +72,14 @@ class ChatController extends Controller
         try {
 
             $chatService = new ChatService($chat);
-            if (! $chatService->destroy()) {
-                throw new \Exception('Failed to delete chat.');
+            if (!$chatService->destroy()) {
+                throw new Exception('Failed to delete chat.');
             }
 
-            return redirect()->route('assets.leases.chats', [$asset, $lease]);
+            return redirect()->route('assets.leases.chats.index', [$asset, $lease]);
 
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
 
             return redirect()->back()->with('error', $e->getMessage());
         }

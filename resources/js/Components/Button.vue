@@ -4,12 +4,12 @@ defineProps({
         type: String,
         default: 'button',
     },
-});
+})
 
 </script>
 
 <template>
-    <button :type="type" class="" disabled="disabled">
+    <button :type="type" class="">
         <slot />
     </button>
 </template>

@@ -4,14 +4,14 @@ import { computed } from 'vue'
 const leaseDetails = computed(() => {
     return [
         { label: 'Option to Extend', value: props.lease_detail.option_to_extend },
-        { label: 'Right of First Offer', value: props.lease_detail.right_of_first_offer },
-        { label: 'Right of First Refusal', value: props.lease_detail.right_of_first_refusal },
+        // { label: 'Right of First Offer', value: props.lease_detail.right_of_first_offer },
+        // { label: 'Right of First Refusal', value: props.lease_detail.right_of_first_refusal },
         { label: 'TI Allowance', value: props.lease_detail.tenant_improvement_allowance },
         { label: 'Insurance Requirements', value: props.lease_detail.tenant_insurance_requirements },
         { label: 'Tenant Maintenance', value: props.lease_detail.tenant_maintenance_obligations },
         { label: 'Landlord Maintenance', value: props.lease_detail.landlord_maintenance_obligations },
-        { label: 'Assignment & Subletting', value: props.lease_detail.assignment_subletting },
-        { label: 'Holding Over', value: props.lease_detail.holding_over },
+        // { label: 'Assignment & Subletting', value: props.lease_detail.assignment_subletting },
+        // { label: 'Holding Over', value: props.lease_detail.holding_over },
     ]
 })
 

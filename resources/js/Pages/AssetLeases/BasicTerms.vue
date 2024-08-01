@@ -42,12 +42,12 @@ const props = defineProps({
                             {{ lease.term ? lease.term + ' Months' : '--' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="font-bold text-gray-600 dark:text-gray-400">Abatement</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-200">
-                            {{ lease.abatement ? lease.abatement + ' Months' : '--' }}
-                        </div>
-                    </div>
+                    <!--                    <div>-->
+                    <!--                        <div class="font-bold text-gray-600 dark:text-gray-400">Abatement</div>-->
+                    <!--                        <div class="text-sm text-gray-600 dark:text-gray-200">-->
+                    <!--                            {{ lease.abatement ? lease.abatement + ' Months' : '&#45;&#45;' }}-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
             </div>
 
