@@ -236,7 +236,7 @@ onMounted(() => {
                     :completeOnFocus="true"
                     :suggestions="items"
                     multiple
-                    optionLabel="display_name_with_roles"
+                    optionLabel="display_name_with_position"
                     @complete="search"
                 />
                 <div class="text-sm text-gray-200 mt-0.5">Asset Managers, Property Managers, Leasing Agents</div>

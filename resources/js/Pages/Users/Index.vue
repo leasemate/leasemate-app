@@ -140,12 +140,12 @@ const closeModal = () => {
 
                         <Link
                             :href="route('users.edit', user)"
-                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
+                            class="font-medium text-blue-600 dark:text-blue-500">Edit
                         </Link>
 
                         <Button
                             v-if="!user.is_super_admin"
-                            class="font-medium text-red-600 dark:text-blue-500 hover:underline"
+                            class="font-medium text-red-600 dark:text-blue-500"
                             @click="confirmDeletion(user)">Delete
                         </Button>
 

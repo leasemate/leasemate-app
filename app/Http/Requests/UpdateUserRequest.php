@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\CentralUser;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +20,7 @@ class UpdateUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -29,7 +30,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required',
             'email' => ['required', 'email', 'max:255', Rule::unique('mysql.users')->ignore($centralUser->id)],
             'position' => 'nullable',
-            'user_roles' => 'required|array',
+            'user_roles' => 'nullable|array',
         ];
     }
 

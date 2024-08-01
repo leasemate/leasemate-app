@@ -70,6 +70,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
         'email_verified_at' => 'datetime',
     ];
 
+    public static function search($search = ''): Builder
+    {
+        return self::with('roles')
+            ->where('name', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -82,7 +89,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return tenant('id').'.App.Model.User.'.$this->id;
+        return tenant('id') . '.App.Model.User.' . $this->id;
     }
 
     public function isSuperAdmin(): bool
@@ -95,18 +102,25 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
         $this->notify(new VerifyEmail());
     }
 
+    public function displayNameWithPosition(): Attribute
+    {
+        return Attribute::get(function (): string {
+            return $this->name . ($this->position ? ' (' . $this->position . ')' : '');
+        });
+    }
+
     public function displayNameWithRoles(): Attribute
     {
         return Attribute::get(function (): string {
-            $roles = $this->getRoleNames()->isNotEmpty() ? ' ('.$this->getRoleNames()->implode(', ').')' : '';
+            $roles = $this->getRoleNames()->isNotEmpty() ? ' (' . $this->getRoleNames()->implode(', ') . ')' : '';
 
-            return $this->name.$roles;
+            return $this->name . $roles;
         });
     }
 
     public function getZepUserIdAttribute()
     {
-        return tenant('id').'-'.$this->id;
+        return tenant('id') . '-' . $this->id;
     }
 
     public function asset()
@@ -117,13 +131,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Synca
     public function assets()
     {
         return $this->belongsToMany(Asset::class)->withTimestamps();
-    }
-
-    public static function search($search = ''): Builder
-    {
-        return self::with('roles')
-            ->where('name', 'like', '%'.$search.'%')
-            ->orWhere('email', 'like', '%'.$search.'%');
     }
 
     public function chats()

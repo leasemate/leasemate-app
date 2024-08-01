@@ -8,6 +8,7 @@ use App\Http\Resources\UserAssetResource;
 use App\Models\Team;
 use App\Models\User;
 use App\Notifications\CreatePassword;
+use Exception;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Support\Facades\DB;
@@ -30,16 +31,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return inertia()->render('Users/Create', [
-            'roles' => $this->getRoles(),
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreUserRequest $request, PasswordBroker $passwordBroker)
@@ -54,19 +45,20 @@ class UserController extends Controller
                 'global_id' => explode('.', tenant('domain'))[0],
             ]);
 
-            $user->syncRoles($request->user_roles);
+            //            $user->syncRoles($request->user_roles);
+            $user->syncRoles([1]);
 
             $user->ownedTeams()->save(Team::forceCreate([
                 'user_id' => $user->id,
-                'name' => explode(' ', $user->name, 2)[0]."'s Team",
+                'name' => explode(' ', $user->name, 2)[0] . "'s Team",
                 'personal_team' => true,
             ]));
 
             DB::commit();
 
-            session()->flash('success', $user->name.' User created successfully');
+            session()->flash('success', $user->name . ' User created successfully');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
 
@@ -74,6 +66,21 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return inertia()->render('Users/Create', [
+            'roles' => $this->getRoles(),
+        ]);
+    }
+
+    protected function getRoles()
+    {
+        return Role::all();
     }
 
     /**
@@ -113,13 +120,13 @@ class UserController extends Controller
                 $user->update($request->validated());
             }
 
-            $user->syncRoles($request->user_roles);
+//            $user->syncRoles($request->user_roles);
 
             DB::commit();
 
-            session()->flash('success', $user->name.' User updated successfully');
+            session()->flash('success', $user->name . ' User updated successfully');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e->getMessage());
 
@@ -127,6 +134,18 @@ class UserController extends Controller
         }
 
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Update the given verified user's profile information.
+     *
+     * @param array<string, string> $input
+     */
+    protected function updateVerifiedUser(User $user, array $input): void
+    {
+        $user->update($input);
+
+        $user->sendEmailVerificationNotification();
     }
 
     /**
@@ -138,9 +157,9 @@ class UserController extends Controller
 
             $user->delete();
 
-            session()->flash('success', $user->name.' User deleted successfully');
+            session()->flash('success', $user->name . ' User deleted successfully');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             session()->flash('error', $e->getMessage());
         }
 
@@ -155,16 +174,11 @@ class UserController extends Controller
 
             session()->flash('success', 'Invitation resent successfully');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             session()->flash('error', $e->getMessage());
         }
 
         return redirect()->route('users.index');
-    }
-
-    protected function getRoles()
-    {
-        return Role::all();
     }
 
     public function searchUsers()
@@ -172,17 +186,5 @@ class UserController extends Controller
         $users = User::search(request('q'))->get();
 
         return response()->json(UserAssetResource::collection($users));
-    }
-
-    /**
-     * Update the given verified user's profile information.
-     *
-     * @param  array<string, string>  $input
-     */
-    protected function updateVerifiedUser(User $user, array $input): void
-    {
-        $user->update($input);
-
-        $user->sendEmailVerificationNotification();
     }
 }

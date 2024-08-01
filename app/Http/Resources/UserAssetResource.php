@@ -16,9 +16,10 @@ class UserAssetResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => (string) $this->name,
-            'email' => (string) $this->email,
-            'display_name_with_roles' => (string) $this->display_name_with_roles,
+            'name' => (string)$this->name,
+            'email' => (string)$this->email,
+            'display_name_with_roles' => (string)$this->display_name_with_roles,
+            'display_name_with_position' => (string)$this->display_name_with_position,
             'disabled' => true,
             'roles' => $this->getRoleNames(),
         ];

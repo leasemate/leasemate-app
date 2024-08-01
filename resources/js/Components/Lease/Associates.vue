@@ -16,7 +16,7 @@ const props = defineProps({
 
         <ul class="my-4">
             <li v-for="associate in associates" :key="associate.id">
-                {{ associate.display_name_with_roles }} - {{ associate.email }}
+                {{ associate.display_name_with_position }} - {{ associate.email }}
             </li>
         </ul>
 
