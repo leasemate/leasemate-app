@@ -105,7 +105,6 @@ const switchToTeam = (team) => {
     })
 }
 
-
 const handleResize = () => {
     const sidebarMenu = document.querySelector('#sidebar-menu')
     if (sidebarMenu) {
@@ -229,14 +228,14 @@ onBeforeUnmount(() => {
                 <!--                    </div>-->
                 <!--                </div>-->
 
-                <div>
-                    <button
-                        class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block "
-                        type="button">
-                        <i class="h-5 w-5 block dark:hidden" data-feather="moon"></i>
-                        <i class="h-5 w-5 hidden dark:block" data-feather="sun"></i>
-                    </button>
-                </div>
+                <!--                <div>-->
+                <!--                    <button-->
+                <!--                        class="light-dark-mode text-xl px-4 h-[70px] text-gray-600 dark:text-gray-100 hidden sm:block "-->
+                <!--                        type="button">-->
+                <!--                        <i class="h-5 w-5 block dark:hidden" data-feather="moon"></i>-->
+                <!--                        <i class="h-5 w-5 hidden dark:block" data-feather="sun"></i>-->
+                <!--                    </button>-->
+                <!--                </div>-->
 
                 <!--                <div>-->
                 <!--                    <div class="dropdown relative text-gray-600 hidden sm:block">-->
