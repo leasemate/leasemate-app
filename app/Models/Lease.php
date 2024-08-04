@@ -12,11 +12,11 @@ class Lease extends Model
     use HasFactory;
     use SoftDeletes;
 
-    const TYPE_ORIGINAL = 'original';
+    public const TYPE_ORIGINAL = 'original';
 
-    const TYPE_AMENDMENT = 'amendment';
+    public const TYPE_AMENDMENT = 'amendment';
 
-    const TYPE_CURRENT = 'current';
+    public const TYPE_CURRENT = 'current';
 
     protected $guarded = [];
 
@@ -29,7 +29,7 @@ class Lease extends Model
         'rent_schedule' => 'json',
     ];
 
-    protected $dates = [
+    protected array $dates = [
         'start_date',
         'end_date',
         'execution_date',
@@ -40,23 +40,23 @@ class Lease extends Model
     public function rentPerSqFt(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => is_null($value) ? null : $value / 100,
-            set: fn ($value) => is_null($value) ? null : $value * 100,
+            get: fn($value) => is_null($value) ? null : $value / 100,
+            set: fn($value) => is_null($value) ? null : $value * 100,
         );
     }
 
     public function securityDeposit(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => is_null($value) ? null : $value / 100,
-            set: fn ($value) => is_null($value) ? null : $value * 100,
+            get: fn($value) => is_null($value) ? null : $value / 100,
+            set: fn($value) => is_null($value) ? null : $value * 100,
         );
     }
 
     public function isAmendment(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => $this->type === self::TYPE_AMENDMENT,
+            get: fn($value) => $this->type === self::TYPE_AMENDMENT,
         );
     }
 
@@ -80,6 +80,12 @@ class Lease extends Model
             });
     }
 
+    public function base_amendments()
+    {
+        return $this->hasMany(Lease::class, 'parent_id', 'id')
+            ->where('type', self::TYPE_AMENDMENT);
+    }
+
     public function amendments()
     {
         return $this->base_amendments()
@@ -87,12 +93,6 @@ class Lease extends Model
                 $q->whereIn('status', ['Ready', 'Failed']);
             })
             ->orderBy('execution_date', 'desc');
-    }
-
-    public function base_amendments()
-    {
-        return $this->hasMany(Lease::class, 'parent_id', 'id')
-            ->where('type', self::TYPE_AMENDMENT);
     }
 
     /**
@@ -144,14 +144,14 @@ class Lease extends Model
         return $this->morphMany(Document::class, 'documentable');
     }
 
-    public function lease_document()
-    {
-        return $this->morphOne(Document::class, 'documentable');
-    }
-
     public function lease_document_trashed()
     {
         return $this->lease_document()->withTrashed();
+    }
+
+    public function lease_document()
+    {
+        return $this->morphOne(Document::class, 'documentable');
     }
 
     public function lease_detail()

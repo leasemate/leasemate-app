@@ -14,7 +14,6 @@ const props = defineProps({
     assets: Array,
 })
 
-
 const assetToDelete = ref(null)
 const confirmingAssetDeletion = ref(false)
 
@@ -86,7 +85,7 @@ const deleteAsset = () => {
 
         </div>
 
-        <div v-else class="mt-10 py-48 bg-gray-50 rounded-lg shadow-md">
+        <div v-else class="my-10 py-48 bg-gray-50 rounded-lg shadow-md">
             <h2 class="text-center text-gray-300">No Assets</h2>
         </div>
 

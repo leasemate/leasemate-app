@@ -13,6 +13,7 @@ use App\Models\Asset;
 use App\Models\Chat;
 use App\Models\Document;
 use App\Models\Lease;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -25,14 +26,6 @@ class AssetLeaseController extends Controller
      * Display a listing of the resource.
      */
     public function index(Asset $asset)
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Asset $asset)
     {
         //
     }
@@ -58,12 +51,54 @@ class AssetLeaseController extends Controller
 
             return response()->json(['success' => 1, 'lease' => $lease]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
 
             return response()->json(['message' => $e->getMessage()], 422);
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(Asset $asset)
+    {
+        //
+    }
+
+    protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
+    {
+        $path = tenant('id') . '/leases/' . $asset->id;
+        $filename = $upload_document->hashName();
+        $storedName = "{$path}/{$filename}";
+
+        $document = $lease->documents()
+            ->create([
+                'asset_id' => $asset->id,
+                'uuid' => (string)Str::uuid(),
+                'collection_name' => $collection_name,
+                'name' => $upload_document->getClientOriginalName(),
+                'file_name' => $storedName,
+                'mime_type' => $upload_document->getMimeType(),
+                'disk' => config('filesystems.default'),
+                'size' => $upload_document->getSize(),
+                'extension' => $upload_document->getClientOriginalExtension(),
+            ]);
+
+        $registerLeaseUploadResponse = LeasemateApi::registerDocument($asset, $lease, $document, $storedName);
+
+        \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
+
+        if ($registerLeaseUploadResponse->failed()) {
+            throw new Exception('Failed to register lease upload.');
+        }
+
+        if (!app()->environment('local')) {
+            $upload_document->storePubliclyAs($path, $filename);
+        }
+
+        return $document;
     }
 
     public function storeAmendment(StoreLeaseAmendmentRequest $request, Asset $asset, Lease $lease)
@@ -86,10 +121,10 @@ class AssetLeaseController extends Controller
 
             return response()->json(['success' => 1, 'lease' => $lease]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             \Log::error($e->getMessage());
-            if (! app()->environment('production')) {
+            if (!app()->environment('production')) {
                 Log::error($e);
             }
 
@@ -152,7 +187,7 @@ class AssetLeaseController extends Controller
 
             return redirect()->back();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error($e->getMessage());
 
             return redirect()->back()->with('error', $e->getMessage());
@@ -166,7 +201,7 @@ class AssetLeaseController extends Controller
 
             return redirect()->back();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error($e->getMessage());
 
             return redirect()->back()->with('error', $e->getMessage());
@@ -180,44 +215,10 @@ class AssetLeaseController extends Controller
 
             return redirect()->back();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error($e->getMessage());
 
             return redirect()->back()->with('error', $e->getMessage());
         }
-    }
-
-    protected function saveDocument(Asset $asset, Lease $lease, UploadedFile $upload_document, string $collection_name = 'lease'): Document
-    {
-        $path = tenant('id').'/leases/'.$asset->id;
-        $filename = $upload_document->hashName();
-        $storedName = "{$path}/{$filename}";
-
-        $document = $lease->documents()
-            ->create([
-                'asset_id' => $asset->id,
-                'uuid' => (string) Str::uuid(),
-                'collection_name' => $collection_name,
-                'name' => $upload_document->getClientOriginalName(),
-                'file_name' => $storedName,
-                'mime_type' => $upload_document->getMimeType(),
-                'disk' => config('filesystems.default'),
-                'size' => $upload_document->getSize(),
-                'extension' => $upload_document->getClientOriginalExtension(),
-            ]);
-
-        $registerLeaseUploadResponse = LeasemateApi::registerDocument($asset, $lease, $document, $storedName);
-
-        \Log::info('registerDocumentUpload', ['registerDocumentUploadResponse' => $registerLeaseUploadResponse]);
-
-        if ($registerLeaseUploadResponse->failed()) {
-            throw new \Exception('Failed to register lease upload.');
-        }
-
-        if (! app()->environment('local')) {
-            $upload_document->storePubliclyAs($path, $filename);
-        }
-
-        return $document;
     }
 }

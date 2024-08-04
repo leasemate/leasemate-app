@@ -55,7 +55,6 @@ const closeModal = () => {
     confirmingLeaseDeletion.value = false
 }
 
-
 const deleteLease = () => {
 
     if (leaseToDelete.value) {
@@ -289,13 +288,16 @@ onBeforeUnmount(() => {
 
                                       <template
                                           v-if="!['Ready', 'Failed', 'Archived'].includes(lease.lease_document.status)">
-                                          <span :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
-                                                class="absolute inline-flex h-full w-full animate-ping rounded-full"></span>
-                                          <span :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
-                                                class="relative inline-flex h-2.5 w-2.5 rounded-full"></span>
+                                          <span
+                                              :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                              class="absolute inline-flex h-full w-full animate-ping rounded-full"></span>
+                                          <span
+                                              :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                              class="relative inline-flex h-2.5 w-2.5 rounded-full"></span>
                                       </template>
 
-                                      <span v-else :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
+                                      <span v-else
+                                            :class="getFileStatusClass(lease.lease_document.status, 'PROCESS_CLASSES')"
                                             class="relative inline-flex h-2.5 w-2.5 rounded-full"></span>
 
                                   </span>
@@ -446,15 +448,15 @@ onBeforeUnmount(() => {
                                     <Button
                                         :class="[
                                             'flex', 'items-center', 'justify-start', 'block', 'px-4', 'py-2', 'space-x-2', 'text-sm', 'w-full','text-left',
-                                            (lease.is_deleting ? 'text-red-200 cursor-default':'text-red-700 hover:bg-gray-100'),
+                                            (lease.lease_document.is_deleting ? 'text-red-200 cursor-default':'text-red-700 hover:bg-gray-100'),
                                             ]"
                                         @click="confirmLeaseDeletion(lease)"
                                     >
                                         <BoxIcon
-                                            :class="(lease.is_deleting ? 'text-red-200':'text-red-500')"
+                                            :class="(lease.lease_document.is_deleting ? 'text-red-200':'text-red-500')"
                                             class="bx-trash"
                                         />
-                                        <span>{{ (lease.is_deleting ? 'Deleting...' : 'Delete') }}</span>
+                                        <span>{{ (lease.lease_document.is_deleting ? 'Deleting...' : 'Delete') }}</span>
                                     </Button>
 
                                 </MenuItem>
@@ -469,7 +471,7 @@ onBeforeUnmount(() => {
             </template>
         </Table>
 
-        <div v-else class="mt-10 py-48 bg-gray-50 rounded-lg shadow-md">
+        <div v-else class="my-10 py-48 bg-gray-50 rounded-lg shadow-md">
             <h2 class="text-center text-gray-300">No Leases</h2>
         </div>
 
