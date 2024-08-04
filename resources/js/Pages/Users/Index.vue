@@ -139,12 +139,13 @@ const closeModal = () => {
                     <td class="px-6 py-4 space-x-2">
 
                         <Link
+                            v-if="$page.props.auth.user.is_super_admin || user.id === $page.props.auth.user.id"
                             :href="route('users.edit', user)"
                             class="font-medium text-blue-600 dark:text-blue-500">Edit
                         </Link>
 
                         <Button
-                            v-if="!user.is_super_admin"
+                            v-if="$page.props.auth.user.is_super_admin && !user.is_super_admin"
                             class="font-medium text-red-600 dark:text-blue-500"
                             @click="confirmDeletion(user)">Delete
                         </Button>

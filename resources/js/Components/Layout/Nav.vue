@@ -116,8 +116,7 @@ onMounted(() => {
                     <!--                        data-key="t-menu">Menu-->
                     <!--                    </li>-->
 
-                    <li>
-
+                    <li v-if="$page.props.features?.dashboard">
                         <SideNavLink :href="route('dashboard')">
                             <i data-feather="trending-up"></i>
                             <span data-key="t-dashboard"> Dashboard</span>

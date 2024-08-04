@@ -22,6 +22,7 @@ use App\Models\User;
 use App\Notifications\DocumentCompleteNotification;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Pennant\Feature;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,10 +121,24 @@ Route::middleware([
     });
 
     Route::get('/', function () {
+
         return redirect('dashboard');
     })->name('dashboard');
 
     Route::get('/dashboard', function () {
+
+        // get current tenant
+        $tenant = tenant();
+
+        $redirect = tenancy()->central(function () use ($tenant) {
+            if (Feature::for($tenant)->inactive('dashboard')) {
+                return redirect()->route('assets.index');
+            }
+        });
+
+        if ($redirect) {
+            return $redirect;
+        }
 
         //        $lease = Lease::with('amendments')->find(8);
 

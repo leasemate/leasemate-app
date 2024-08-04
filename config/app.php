@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -187,6 +187,7 @@ return [
 
         Spatie\Permission\PermissionServiceProvider::class,
 
+//        Laravel\Pennant\PennantServiceProvider::class,
     ])->toArray(),
 
     /*
