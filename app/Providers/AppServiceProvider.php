@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\Tenant;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Pennant\Feature;
 
@@ -23,9 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Log::info('AppServiceProvider boot');
-
-        Feature::define('dashboard', fn(Tenant $tenant) => $tenant->email == 'demo@leasemate.ai');
+        Feature::define('dashboard', fn (Tenant $tenant) => $tenant->email == 'demo@leasemate.ai');
 
         JsonResource::withoutWrapping();
     }

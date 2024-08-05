@@ -9,7 +9,6 @@ use App\Http\Resources\AssetResource;
 use App\Http\Resources\LeaseResource;
 use App\Http\Resources\UserAssetResource;
 use App\Models\Asset;
-use App\Models\Lease;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -31,7 +30,7 @@ class AssetController extends Controller
     {
         $storedName = $request
             ->file('asset_photo')
-            ->store(tenant('id').'/asset_photos', ['visibility' => 'public']);
+            ->store(tenant('id') . '/asset_photos', ['visibility' => 'public']);
 
         return response()->json([
             'success' => 1,
@@ -91,16 +90,13 @@ class AssetController extends Controller
      */
     public function show(Asset $asset)
     {
-        $leases = Lease::with([
-            'lease_document' => function ($query) {
-                $query->withTrashed();
-            },
-        ])
+        $leases = $asset
+            ->leases()
             ->current()
-            ->where('asset_id', $asset->id)
+            ->with('lease_document')
             ->orderBy('created_at', 'desc')
-            ->withTrashed()
-            ->paginate(5);
+            ->paginate(1)
+            ->withQueryString();
 
         return inertia()->render('Assets/Show', [
             'asset' => new AssetResource($asset),
@@ -138,7 +134,7 @@ class AssetController extends Controller
         try {
             DB::beginTransaction();
 
-            if (! $request->asset_photo || ($request?->asset_photo !== $asset->asset_photo)) {
+            if (!$request->asset_photo || ($request?->asset_photo !== $asset->asset_photo)) {
                 $asset->deletePhoto();
             }
 

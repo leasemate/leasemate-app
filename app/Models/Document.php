@@ -12,9 +12,9 @@ class Document extends Model
     use HasFactory;
     use SoftDeletes;
 
-    const COLLECTION_AMENDMENT = 'amendment';
+    public const COLLECTION_AMENDMENT = 'amendment';
 
-    const COLLECTION_LEASE = 'lease';
+    public const COLLECTION_LEASE = 'lease';
 
     protected $guarded = [];
 

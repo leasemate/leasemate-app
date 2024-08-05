@@ -40,23 +40,23 @@ class Lease extends Model
     public function rentPerSqFt(): Attribute
     {
         return new Attribute(
-            get: fn($value) => is_null($value) ? null : $value / 100,
-            set: fn($value) => is_null($value) ? null : $value * 100,
+            get: fn ($value) => is_null($value) ? null : $value / 100,
+            set: fn ($value) => is_null($value) ? null : $value * 100,
         );
     }
 
     public function securityDeposit(): Attribute
     {
         return new Attribute(
-            get: fn($value) => is_null($value) ? null : $value / 100,
-            set: fn($value) => is_null($value) ? null : $value * 100,
+            get: fn ($value) => is_null($value) ? null : $value / 100,
+            set: fn ($value) => is_null($value) ? null : $value * 100,
         );
     }
 
     public function isAmendment(): Attribute
     {
         return new Attribute(
-            get: fn($value) => $this->type === self::TYPE_AMENDMENT,
+            get: fn ($value) => $this->type === self::TYPE_AMENDMENT,
         );
     }
 
@@ -136,7 +136,9 @@ class Lease extends Model
 
     public function chats_with_last_message()
     {
-        return $this->hasMany(Chat::class)->with('last_message')->orderBy('updated_at', 'desc');
+        return $this->hasMany(Chat::class)
+            ->with('last_message')
+            ->orderBy('updated_at', 'desc');
     }
 
     public function documents()
@@ -151,7 +153,13 @@ class Lease extends Model
 
     public function lease_document()
     {
-        return $this->morphOne(Document::class, 'documentable');
+        $builder = $this->morphOne(Document::class, 'documentable');
+
+        if(request()->has('archived') && request()->get('archived') == 1) {
+            return $builder->onlyTrashed();
+        }
+
+        return $builder;
     }
 
     public function lease_detail()

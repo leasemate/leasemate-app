@@ -6,6 +6,7 @@ import PrimaryLink from '@/Components/PrimaryLink.vue'
 import SecondaryLink from '@/Components/SecondaryLink.vue'
 import Button from '@/Components/Button.vue'
 import Table from '@/Components/Table.vue'
+import Checkbox from 'primevue/checkbox'
 
 import { fileStatusClass } from '@/Composables/fileStatusClass.js'
 import VueFilePond, { setOptions } from 'vue-filepond'
@@ -22,7 +23,8 @@ import toast from '@/Stores/toast.js'
 import BoxIcon from '@/Components/BoxIcon.vue'
 import TableDropdown from '@/Components/TableDropdown.vue'
 
-import { MenuItem } from '@headlessui/vue'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+// import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import Pagination from '@/Components/Pagination.vue'
 
 const page = usePage()
@@ -34,6 +36,7 @@ const props = defineProps({
 })
 
 const leases = ref(props.leases)
+const archiveChecked = ref(false)
 
 // Watch for changes in the local ref
 watch(props.leases, (newLeases, oldLeases) => {
@@ -142,7 +145,7 @@ setOptions({
 })
 
 const toolTipOptions = (lease) => {
-    if (lease.status == 'Failed') {
+    if (lease.status === 'Failed') {
         return {
             value: lease.status_msg,
             pt: {
@@ -166,6 +169,26 @@ const handleOnProcessFile = (error, file) => {
 
 const handleInit = () => {
 
+}
+
+const handleArchivedFilter = (e) => {
+    if (e.target.checked) {
+        archiveChecked.value = true
+        router.get(route('assets.show', props.asset), {
+            archived: 1,
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+            only: ['leases'],
+        })
+    } else {
+        archiveChecked.value = false
+        router.get(route('assets.show', props.asset), {}, {
+            preserveScroll: true,
+            preserveState: true,
+            only: ['leases'],
+        })
+    }
 }
 
 onMounted(() => {
@@ -248,23 +271,39 @@ onBeforeUnmount(() => {
                     <th class="py-3" scope="col">
                     </th>
                     <th class="px-3 py-3 font-normal normal-case" scope="col">
-                        <!--                        <Menu as="div" class="relative inline-block text-left">-->
-                        <!--                            <div>-->
-                        <!--                                <MenuButton class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">-->
-                        <!--                                    <BoxIcon class="bx-filter-alt text-[20px] text-gray-500" />-->
-                        <!--                                </MenuButton>-->
-                        <!--                            </div>-->
+                        <Menu as="div" class="relative inline-block text-left">
+                            <div>
+                                <MenuButton
+                                    class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    <BoxIcon class="bx-filter-alt text-[20px] text-gray-500" />
+                                </MenuButton>
+                            </div>
 
-                        <!--                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">-->
-                        <!--                                <MenuItems class="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">-->
-                        <!--                                    <div class="py-1">-->
-                        <!--                                        <MenuItem v-slot="{ active }">-->
-                        <!--                                            <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Filters...</a>-->
-                        <!--                                        </MenuItem>-->
-                        <!--                                    </div>-->
-                        <!--                                </MenuItems>-->
-                        <!--                            </transition>-->
-                        <!--                        </Menu>-->
+                            <transition enter-active-class="transition ease-out duration-100"
+                                        enter-from-class="transform opacity-0 scale-95"
+                                        enter-to-class="transform opacity-100 scale-100"
+                                        leave-active-class="transition ease-in duration-75"
+                                        leave-from-class="transform opacity-100 scale-100"
+                                        leave-to-class="transform opacity-0 scale-95">
+                                <MenuItems
+                                    class="absolute right-0 z-10 mt-2 w-52 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div class="py-1">
+                                        <MenuItem v-slot="{ active }" disabled>
+                                            <div
+                                                :class="'flex items-center block px-4 py-2 text-sm space-x-2'"
+                                            >
+                                                <Checkbox
+                                                    v-model="archiveChecked"
+                                                    :binary="true"
+                                                    @change="handleArchivedFilter"
+                                                />
+                                                <span class="font-bold uppercase">Archived</span>
+                                            </div>
+                                        </MenuItem>
+                                    </div>
+                                </MenuItems>
+                            </transition>
+                        </Menu>
                     </th>
                 </tr>
             </template>

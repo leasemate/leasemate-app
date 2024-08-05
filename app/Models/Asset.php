@@ -26,7 +26,12 @@ class Asset extends Model
 
     public function leases()
     {
-        return $this->hasMany(Lease::class);
+        $builder = $this->hasMany(Lease::class);
+        if (request()->has('archived') && request()->get('archived') == 1) {
+            return $builder->onlyTrashed();
+        }
+
+        return $builder;
     }
 
     public function deletePhoto()
