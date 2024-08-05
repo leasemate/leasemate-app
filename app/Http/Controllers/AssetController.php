@@ -95,7 +95,7 @@ class AssetController extends Controller
             ->current()
             ->with('lease_document')
             ->orderBy('created_at', 'desc')
-            ->paginate(1)
+            ->paginate(10)
             ->withQueryString();
 
         return inertia()->render('Assets/Show', [
