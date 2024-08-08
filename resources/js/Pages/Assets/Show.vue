@@ -24,7 +24,6 @@ import BoxIcon from '@/Components/BoxIcon.vue'
 import TableDropdown from '@/Components/TableDropdown.vue'
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-// import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import Pagination from '@/Components/Pagination.vue'
 
 const page = usePage()
@@ -36,7 +35,7 @@ const props = defineProps({
 })
 
 const leases = ref(props.leases)
-const archiveChecked = ref(false)
+const archived = ref(false)
 
 // Watch for changes in the local ref
 watch(props.leases, (newLeases, oldLeases) => {
@@ -173,7 +172,7 @@ const handleInit = () => {
 
 const handleArchivedFilter = (e) => {
     if (e.target.checked) {
-        archiveChecked.value = true
+        archived.value = true
         router.get(route('assets.show', props.asset), {
             archived: 1,
         }, {
@@ -182,7 +181,7 @@ const handleArchivedFilter = (e) => {
             only: ['leases'],
         })
     } else {
-        archiveChecked.value = false
+        archived.value = false
         router.get(route('assets.show', props.asset), {}, {
             preserveScroll: true,
             preserveState: true,
@@ -192,6 +191,9 @@ const handleArchivedFilter = (e) => {
 }
 
 onMounted(() => {
+
+    const searchParams = new URLSearchParams(window.location.search)
+    archived.value = searchParams.get('archived') === '1'
 
     Echo.private(`tenant-global-channel.${page.props.tenant_id}`)
         .listen('LeaseFileDeleted', (e) => {
@@ -293,11 +295,13 @@ onBeforeUnmount(() => {
                                                 :class="'flex items-center block px-4 py-2 text-sm space-x-2'"
                                             >
                                                 <Checkbox
-                                                    v-model="archiveChecked"
+                                                    v-model="archived"
                                                     :binary="true"
+                                                    inputId="archived-checkbox"
                                                     @change="handleArchivedFilter"
                                                 />
-                                                <span class="font-bold uppercase">Archived</span>
+                                                <label class="font-bold uppercase cursor-pointer"
+                                                       for="archived-checkbox">Archived</label>
                                             </div>
                                         </MenuItem>
                                     </div>

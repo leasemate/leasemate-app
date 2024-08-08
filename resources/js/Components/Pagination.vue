@@ -78,6 +78,7 @@ defineProps({
                             :href="dataset.links.prev"
                             class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             preserve-scroll
+                            preserve-state
                         >
                             <span class="sr-only">Previous</span>
                             <svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -101,6 +102,7 @@ defineProps({
                                     }"
                                     :href="link.url"
                                     preserve-scroll
+                                    preserve-state
                                     v-html="link.label"
                                 />
                             </div>
@@ -111,6 +113,7 @@ defineProps({
                             :href="dataset.links.next"
                             class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             preserve-scroll
+                            preserve-state
                         >
                             <span class="sr-only">Next</span>
                             <svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
