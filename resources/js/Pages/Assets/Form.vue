@@ -21,6 +21,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filep
 // Import styles
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import toast from '@/Stores/toast.js'
 
 // Create FilePond component
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview)
@@ -74,6 +75,7 @@ let serverResponse = ''
 setOptions({
     server: {
         load: (source, load, error, progress, abort, headers) => {
+            
             if (props.asset.asset_photo_url) {
                 fetch(route('assets.load-photo', props.asset))
                     .then(response => {
@@ -88,12 +90,8 @@ setOptions({
                     .catch(err => {
                         error(err.message)
                     })
-
-                return {
-                    abort: () => {
-                        // This function is entered if the user cancels the load
-                    },
-                }
+            } else {
+                error('No photo URL available')
             }
         },
         process: {
@@ -114,8 +112,8 @@ setOptions({
             //     return formData;
             // },
             onerror: (response) => {
-                serverResponse = JSON.parse(response)
-                console.error(serverResponse)
+                toast.error('There was an error uploading the photo.')
+                console.error(response)
             },
         },
     },

@@ -16,8 +16,7 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        env('APP_CENTRAL_DOMAIN', 'localhost'),
-        //        env('APP_ENV') == 'local' ? "https://leasemate-app.us-1.sharedwithexpose.com" : null,
+        env('EXPOSE_SHARE') ? "https://leasemate-app.us-1.sharedwithexpose.com" : env('APP_CENTRAL_DOMAIN', 'localhost'),
     ],
 
     'queue_tenant_created' => env('QUEUE_TENANT_CREATED', false),
