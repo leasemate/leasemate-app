@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\HasTenants;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +18,7 @@ use Stancl\Tenancy\Contracts\Syncable;
 use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Syncable
+class User extends Authenticatable implements JWTSubject, Syncable
 {
     use HasApiTokens;
     use HasFactory;

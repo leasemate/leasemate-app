@@ -101,7 +101,7 @@ Route::middleware([
     'auth',
     config('jetstream.auth_session'),
     'tenant',
-    'verified',
+//    'verified',
 ])->group(function () {
 
     Route::get('/notify', function () {
