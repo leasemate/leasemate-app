@@ -41,6 +41,7 @@ class Authenticate extends Middleware
                 $request->session()->flash('status', 'This invitation has expired.');
             }
         }
+        $request->session()->put('url.intended', $request->fullUrl());
 
         return $request->expectsJson() ? null : route('login');
     }

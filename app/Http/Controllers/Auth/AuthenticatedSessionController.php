@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,29 +62,12 @@ class AuthenticatedSessionController extends Controller
 
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             $this->destroy($request);
 
             return redirect()->route('login')->with('error', $e->getMessage());
         }
-    }
-
-    public function forceLogin(Request $request)
-    {
-        if (! $request->hasValidSignature(false)) {
-            abort(403, 'Invalid login attempt.');
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        $this->createJwtToken($user);
-
-        Auth::login($user);
-
-        //        dump('force login');
-        //        dd($user);
-        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
@@ -98,6 +82,21 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return Inertia::location(route('home'));
+    }
+
+    public function forceLogin(Request $request)
+    {
+        if (! $request->hasValidSignature(false)) {
+            abort(403, 'Invalid login attempt.');
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        $this->createJwtToken($user);
+
+        Auth::login($user);
+
+        return redirect()->intended(session()->get('url.intended') ?? RouteServiceProvider::HOME);
     }
 
     protected function createJwtToken(User $user)
