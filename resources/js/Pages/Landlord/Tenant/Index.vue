@@ -48,7 +48,7 @@ const forceLoginTenant = (tenant) => {
                     </PrimaryLink>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-x-auto shadow-xl sm:rounded-lg">
                     <table class="w-full text-sm text-left text-gray-500 ">
                         <thead class="text-sm text-gray-700 dark:text-gray-100 bg-gray-50 dark:bg-zinc-600">
                         <tr>
@@ -59,10 +59,7 @@ const forceLoginTenant = (tenant) => {
                                 Domain
                             </th>
                             <th class="px-6 py-3" scope="col">
-                                Name
-                            </th>
-                            <th class="px-6 py-3" scope="col">
-                                Email
+                                Name/Email
                             </th>
                             <th class="px-6 py-3" scope="col">
                                 Login
@@ -84,10 +81,7 @@ const forceLoginTenant = (tenant) => {
                                 </a>
                             </td>
                             <td class="px-6 py-3.5 dark:text-zinc-100">
-                                {{ tenant.name }}
-                            </td>
-                            <td class="px-6 py-3.5 dark:text-zinc-100">
-                                {{ tenant.email }}
+                                {{ tenant.name }}<br>{{ tenant.email }}
                             </td>
                             <td class="px-6 py-3.5 dark:text-zinc-100">
                                 <SecondaryButton @click="forceLoginTenant(tenant)">
