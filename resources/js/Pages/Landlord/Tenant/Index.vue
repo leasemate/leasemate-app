@@ -49,65 +49,60 @@ const forceLoginTenant = (tenant) => {
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-
-                    <div>
-                        <table class="w-full text-sm text-left text-gray-500 ">
-                            <thead class="text-sm text-gray-700 dark:text-gray-100 bg-gray-50 dark:bg-zinc-600">
-                            <tr>
-                                <th class="px-6 py-3" scope="col">
-                                    #
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Domain
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Name
-                                </th>
-                                <th class="px-6 py-3" scope="col">
-                                    Email
-                                </th>
-                                <th class="px-6 py-3" scope="col">
+                    <table class="w-full text-sm text-left text-gray-500 ">
+                        <thead class="text-sm text-gray-700 dark:text-gray-100 bg-gray-50 dark:bg-zinc-600">
+                        <tr>
+                            <th class="px-6 py-3" scope="col">
+                                #
+                            </th>
+                            <th class="px-6 py-3" scope="col">
+                                Domain
+                            </th>
+                            <th class="px-6 py-3" scope="col">
+                                Name
+                            </th>
+                            <th class="px-6 py-3" scope="col">
+                                Email
+                            </th>
+                            <th class="px-6 py-3" scope="col">
+                                Login
+                            </th>
+                            <th class="px-6 py-3" scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="tenant in tenants"
+                            class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
+                            <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
+                                scope="row">
+                                {{ tenant.id }}
+                            </th>
+                            <td class="px-6 py-3.5 dark:text-zinc-100">
+                                <a :href="`http://${tenant.domain}`" target="_blank">
+                                    {{ tenant.domain }}
+                                    <i class="mdi mdi-arrow-top-right-bold-box-outline"></i>
+                                </a>
+                            </td>
+                            <td class="px-6 py-3.5 dark:text-zinc-100">
+                                {{ tenant.name }}
+                            </td>
+                            <td class="px-6 py-3.5 dark:text-zinc-100">
+                                {{ tenant.email }}
+                            </td>
+                            <td class="px-6 py-3.5 dark:text-zinc-100">
+                                <SecondaryButton @click="forceLoginTenant(tenant)">
                                     Login
-                                </th>
-                                <th class="px-6 py-3" scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="tenant in tenants"
-                                class="bg-white border-b border-gray-50 dark:bg-zinc-700 dark:border-zinc-600">
-                                <th class="px-6 py-3.5 font-medium text-gray-900 whitespace-nowrap dark:text-zinc-100"
-                                    scope="row">
-                                    {{ tenant.id }}
-                                </th>
-                                <td class="px-6 py-3.5 dark:text-zinc-100">
-                                    <a :href="`http://${tenant.domain}`" target="_blank">
-                                        {{ tenant.domain }}
-                                        <i class="mdi mdi-arrow-top-right-bold-box-outline"></i>
-                                    </a>
-                                </td>
-                                <td class="px-6 py-3.5 dark:text-zinc-100">
-                                    {{ tenant.name }}
-                                </td>
-                                <td class="px-6 py-3.5 dark:text-zinc-100">
-                                    {{ tenant.email }}
-                                </td>
-                                <td class="px-6 py-3.5 dark:text-zinc-100">
-                                    <SecondaryButton @click="forceLoginTenant(tenant)">
-                                        Login
-                                    </SecondaryButton>
-                                </td>
-                                <td class="px-6 py-3.5 dark:text-zinc-100">
-                                    <DangerButton class="justify-end" @click="deleteTenant(tenant)">
-                                        Delete
-                                    </DangerButton>
-                                </td>
-                            </tr>
+                                </SecondaryButton>
+                            </td>
+                            <td class="px-6 py-3.5 dark:text-zinc-100">
+                                <DangerButton class="justify-end" @click="deleteTenant(tenant)">
+                                    Delete
+                                </DangerButton>
+                            </td>
+                        </tr>
 
-                            </tbody>
-                        </table>
-
-                    </div>
-
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
