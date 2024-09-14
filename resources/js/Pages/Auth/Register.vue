@@ -1,20 +1,19 @@
 <script setup>
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-import {onMounted, watch} from 'vue';
-import GuestLayout from "@/Layouts/GuestLayout.vue";
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3'
+import { watch } from 'vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import AuthenticationCard from '@/Components/AuthenticationCard.vue'
+import Checkbox from '@/Components/Checkbox.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
 
-import toast from "@/Stores/toast";
-import TextInputGroup from "@/Components/TextInputGroup.vue";
+import toast from '@/Stores/toast'
+import TextInputGroup from '@/Components/TextInputGroup.vue'
 
 defineProps({
-    recentlyRegistered: Boolean
+    recentlyRegistered: Boolean,
 })
 
 const form = useForm({
@@ -25,33 +24,33 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     terms: false,
-});
+})
 
 //watch the form company name for changes and then update the domain name field with the same value, lower case, remove spaces
 watch(() => form.company_name, (value) => {
-    form.domain = value.toLowerCase().replace(/[^a-z0-9]/g, '');
-});
+    form.domain = value.toLowerCase().replace(/[^a-z0-9]/g, '')
+})
 
 const submit = () => {
     form.post(route('register.store'), {
         onSuccess: (visit) => {
             form.reset('password', 'password_confirmation')
             // console.log(visit)
-            if( visit.props.recentlyRegistered) {
-                toast.success('Thank you for registering. You will receive an email shortly once your account has been setup.');
+            if (visit.props.recentlyRegistered) {
+                toast.success('Thank you for registering. You will receive an email shortly once your account has been setup.')
             }
         },
         onError: (errors) => {
             // console.log(errors);
-            toast.error('There was an error creating your account.');
+            toast.error('There was an error creating your account.')
         },
         onFinish: (visit) => {
             // console.log('on finish')
             // console.log(visit)
             form.reset('password', 'password_confirmation')
-        }
-    });
-};
+        },
+    })
+}
 
 </script>
 
@@ -68,11 +67,11 @@ const submit = () => {
                     <TextInput
                         id="company_name"
                         v-model="form.company_name"
-                        type="text"
                         class="mt-1 block w-full"
                         required
+                        type="text"
                     />
-                    <InputError class="mt-2" :message="form.errors.company_name" />
+                    <InputError :message="form.errors.company_name" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -81,15 +80,15 @@ const submit = () => {
                         <TextInputGroup
                             id="domain_name"
                             v-model="form.domain"
-                            groupTextSide="right"
                             :groupText="`.${usePage().props.central_domain}`"
                             :groupTextClasses="'border-transparent text-slate-400'"
-                            type="text"
                             class="mt-1 block w-full"
+                            groupTextSide="right"
                             required
+                            type="text"
                         />
                     </div>
-                    <InputError class="mt-2" :message="form.errors.domain" />
+                    <InputError :message="form.errors.domain" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -97,11 +96,11 @@ const submit = () => {
                     <TextInput
                         id="name"
                         v-model="form.name"
-                        type="text"
                         class="mt-1 block w-full"
                         required
+                        type="text"
                     />
-                    <InputError class="mt-2" :message="form.errors.name" />
+                    <InputError :message="form.errors.name" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -109,12 +108,12 @@ const submit = () => {
                     <TextInput
                         id="email"
                         v-model="form.email"
-                        type="email"
+                        autocomplete="username"
                         class="mt-1 block w-full"
                         required
-                        autocomplete="username"
+                        type="email"
                     />
-                    <InputError class="mt-2" :message="form.errors.email" />
+                    <InputError :message="form.errors.email" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -122,12 +121,12 @@ const submit = () => {
                     <TextInput
                         id="password"
                         v-model="form.password"
-                        type="password"
+                        autocomplete="new-password"
                         class="mt-1 block w-full"
                         required
-                        autocomplete="new-password"
+                        type="password"
                     />
-                    <InputError class="mt-2" :message="form.errors.password" />
+                    <InputError :message="form.errors.password" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -135,12 +134,12 @@ const submit = () => {
                     <TextInput
                         id="password_confirmation"
                         v-model="form.password_confirmation"
-                        type="password"
+                        autocomplete="new-password"
                         class="mt-1 block w-full"
                         required
-                        autocomplete="new-password"
+                        type="password"
                     />
-                    <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                    <InputError :message="form.errors.password_confirmation" class="mt-2" />
                 </div>
 
                 <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
@@ -149,19 +148,28 @@ const submit = () => {
                             <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
 
                             <div class="ms-2">
-                                I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">Privacy Policy</a>
+                                I agree to the
+                                <a
+                                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                                    href="https://leasemate.ai/legal/"
+                                    target="_blank">Terms of Service</a>
+                                and <a
+                                class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                                href="https://leasemate.ai/privacy/"
+                                target="_blank">Privacy Policy</a>
                             </div>
                         </div>
-                        <InputError class="mt-2" :message="form.errors.terms" />
+                        <InputError :message="form.errors.terms" class="mt-2" />
                     </InputLabel>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-                    <Link :href="route('login')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                    <Link :href="route('login')"
+                          class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                         Already registered?
                     </Link>
 
-                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="ms-4">
                         Register
                     </PrimaryButton>
                 </div>
