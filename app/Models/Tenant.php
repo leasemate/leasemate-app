@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\LeasemateApi;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -11,7 +12,8 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase;
+    use HasDomains;
 
     public static function booted()
     {
@@ -28,7 +30,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             $registerTenantResponse = LeasemateApi::registerTenant($tenant);
 
             if ($registerTenantResponse->failed()) {
-                throw new \Exception("{$registerTenantResponse->status()}: {$registerTenantResponse->reason()}: API Error: Unable to register tenant.");
+                throw new Exception("{$registerTenantResponse->status()}: {$registerTenantResponse->reason()}: API Error: Unable to register tenant.");
             }
 
             Log::info('registerTenantResponse', ['registerTenantResponse' => $registerTenantResponse]);
@@ -44,7 +46,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             $deleteTenantResponse = LeasemateApi::deleteTenant($tenant);
 
             if ($deleteTenantResponse->failed()) {
-                throw new \Exception("{$deleteTenantResponse->status()}: {$deleteTenantResponse->reason()}: API Error: Unable to delete tenant.");
+                throw new Exception("{$deleteTenantResponse->status()}: {$deleteTenantResponse->reason()}: API Error: Unable to delete tenant.");
             }
 
             Log::info('deleteTenantResponse', ['deleteTenantResponse' => $deleteTenantResponse]);

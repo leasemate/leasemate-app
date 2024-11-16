@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Facades\LeasemateApi;
 use App\Models\Asset;
+use Exception;
 
 class AssetObserver
 {
@@ -15,7 +16,7 @@ class AssetObserver
         if (app()->environment('production')) {
             $response = LeasemateApi::registerAsset($asset);
             if ($response->failed()) {
-                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+                throw new Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
             }
         }
     }
@@ -29,7 +30,7 @@ class AssetObserver
         if (app()->environment('production')) {
             $response = LeasemateApi::updateAsset($asset);
             if ($response->failed()) {
-                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
+                throw new Exception("{$response->status()}: {$response->reason()}: API Error: Unable to register asset.");
             }
         }
     }
@@ -60,7 +61,7 @@ class AssetObserver
         if (app()->environment('production')) {
             $response = LeasemateApi::deleteAsset($asset);
             if ($response->failed()) {
-                throw new \Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
+                throw new Exception("{$response->status()}: {$response->reason()}: API Error: Unable to delete asset.");
             }
         }
     }

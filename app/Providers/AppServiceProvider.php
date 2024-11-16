@@ -22,7 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Feature::define('dashboard', fn (Tenant $tenant) => $tenant->email == 'demo@leasemate.ai');
+        //$tenant->email == 'demo@leasemate.ai'
+        Feature::define('dashboard', fn (Tenant $tenant) => true);
 
         JsonResource::withoutWrapping();
     }

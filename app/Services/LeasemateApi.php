@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Log;
 class LeasemateApi
 {
     private $baseUrl;
-
     private $apiKey;
-
     private $baseData;
 
     public function __construct($base_url, $api_key)
@@ -36,6 +34,47 @@ class LeasemateApi
         return $this->makeRequest()->post($endpoint);
     }
 
+    private function getEndpoint($endpoint): string
+    {
+        return $this->baseUrl.$endpoint;
+    }
+
+    //##################### Tenants ######################
+
+    private function post($endpoint, $data = [])
+    {
+        return $this->send('post', $endpoint, $data);
+    }
+
+    private function send($method, $endpoint, $data = [])
+    {
+        //        $callStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        //        $callingFunction = '';
+        //        // Check if there is a calling function
+        //        if (isset($callStack[1]['function'])) {
+        //            $callingFunction = $callStack[1]['function'];
+        //        }
+
+        $payload = array_merge($this->baseData, $data);
+
+        //        Log::info("SEND REQUEST: {$method}: {$endpoint} | method: {$callingFunction}", ['data:', $payload]);
+
+        //        Log::info($this->getEndpoint($endpoint));
+
+        return $this->makeRequest()->$method($this->getEndpoint($endpoint), $payload);
+    }
+
+    private function makeRequest()
+    {
+        return Http::acceptJson()
+            ->contentType('application/json')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.$this->apiKey,
+            ]);
+    }
+
+    //##################### Assets ######################
+
     public function chat($chat_uuid, $message)
     {
         $post_data = [
@@ -46,8 +85,6 @@ class LeasemateApi
 
         return $this->send('post', '/chat', $post_data);
     }
-
-    //##################### Tenants ######################
 
     public function registerTenant(Tenant $tenant)
     {
@@ -60,6 +97,13 @@ class LeasemateApi
 
         return $this->send('post', '/tenants', $post_data);
     }
+
+    private function getSubDomain($tenant_domain)
+    {
+        return explode('.', $tenant_domain)[0];
+    }
+
+    //##################### Documents ######################
 
     public function updateTenant(Tenant $tenant_id)
     {
@@ -79,8 +123,6 @@ class LeasemateApi
 
         return $this->send('delete', "/tenants/{$tenant->id}", $post_data);
     }
-
-    //##################### Assets ######################
 
     public function registerAsset(Asset $asset)
     {
@@ -105,14 +147,14 @@ class LeasemateApi
         return $this->send('post', "/assets/{$asset->id}", $post_data);
     }
 
+    //###################################################
+
     public function deleteAsset(Asset $asset)
     {
         Log::info('SERVICE: Delete asset:');
 
         return $this->send('delete', "/assets/{$asset->id}");
     }
-
-    //##################### Documents ######################
 
     public function registerDocument(
         Asset $asset,
@@ -165,39 +207,9 @@ class LeasemateApi
         return $this->send('delete', "/documents/{$document->id}");
     }
 
-    //###################################################
-
-    private function getSubDomain($tenant_domain)
-    {
-        return explode('.', $tenant_domain)[0];
-    }
-
-    private function send($method, $endpoint, $data = [])
-    {
-        $callStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        $callingFunction = '';
-        // Check if there is a calling function
-        if (isset($callStack[1]['function'])) {
-            $callingFunction = $callStack[1]['function'];
-        }
-
-        $payload = array_merge($this->baseData, $data);
-
-        Log::info("SEND REQUEST: {$method}: {$endpoint} | method: {$callingFunction}", ['data:', $payload]);
-
-        Log::info($this->getEndpoint($endpoint));
-
-        return $this->makeRequest()->$method($this->getEndpoint($endpoint), $payload);
-    }
-
     private function get($endpoint, $data = [])
     {
         return $this->send('get', $endpoint, $data);
-    }
-
-    private function post($endpoint, $data = [])
-    {
-        return $this->send('post', $endpoint, $data);
     }
 
     private function delete($endpoint, $data = [])
@@ -205,22 +217,8 @@ class LeasemateApi
         return $this->send('delete', $endpoint, $data);
     }
 
-    private function makeRequest()
-    {
-        return Http::acceptJson()
-            ->contentType('application/json')
-            ->withHeaders([
-                'Authorization' => 'Bearer '.$this->apiKey,
-            ]);
-    }
-
     private function getBaseUrl()
     {
         return $this->baseUrl;
-    }
-
-    private function getEndpoint($endpoint): string
-    {
-        return $this->baseUrl.$endpoint;
     }
 }
