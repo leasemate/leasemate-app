@@ -34,6 +34,6 @@ class Handler extends ExceptionHandler
     {
         return $this->shouldReturnJson($request, $exception)
             ? response()->json(['message' => $exception->getMessage()], 401)
-            : Inertia::location($exception->redirectTo() ?? route('login'));
+            : Inertia::location($exception->redirectTo($request) ?? route('login'));
     }
 }

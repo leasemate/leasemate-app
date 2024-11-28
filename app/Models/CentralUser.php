@@ -16,7 +16,10 @@ use Stancl\Tenancy\Database\Concerns\ResourceSyncing;
 class CentralUser extends Authenticatable implements MustVerifyEmail, SyncMaster
 {
     // Note that we force the central connection on this model
-    use CentralConnection, HasTenants, Notifiable, ResourceSyncing;
+    use CentralConnection;
+    use HasTenants;
+    use Notifiable;
+    use ResourceSyncing;
     use HasProfilePhoto;
 
     protected $guarded = [];

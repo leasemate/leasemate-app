@@ -6,30 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Stancl\Tenancy\Contracts\SyncMaster;
 use Stancl\Tenancy\Events\SyncedResourceChangedInForeignDatabase;
-use Stancl\Tenancy\Events\SyncedResourceSaved;
 use Stancl\Tenancy\Listeners\UpdateSyncedResource;
 
 class CustomUpdateSyncedResource extends UpdateSyncedResource
 {
-    //    public function handle(SyncedResourceSaved $event)
-    //    {
-    //        $syncedAttributes = $event->model->only($event->model->getSyncedAttributeNames());
-    //
-    //        $changedSyncedAttributes = array_intersect(array_keys($event->model->getChanges()), $event->model->getSyncedAttributeNames());
-    //        if(empty($changedSyncedAttributes)) {
-    //            return;
-    //        }
-    //
-    //        // We update the central record only if the event comes from tenant context.
-    //        if ($event->tenant) {
-    //            $tenants = $this->updateResourceInCentralDatabaseAndGetTenants($event, $syncedAttributes);
-    //        } else {
-    //            $tenants = $this->getTenantsForCentralModel($event->model);
-    //        }
-    //
-    //        $this->updateResourceInTenantDatabases($tenants, $event, $syncedAttributes);
-    //    }
-
     protected function updateResourceInCentralDatabaseAndGetTenants($event, $syncedAttributes)
     {
         /** @var Model|SyncMaster $centralModel */
