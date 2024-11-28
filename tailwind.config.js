@@ -1,33 +1,41 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
+const animate = require('tailwindcss-animate')
+
+import forms from '@tailwindcss/forms'
+import typography from '@tailwindcss/typography'
 
 const { bottom } = require('@popperjs/core')
 const plugin = require('tailwindcss/plugin')
-import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+    darkMode: ['class'],
+    safelist: ['dark'],
+    prefix: '',
+
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/**/*.js',
-        './resources/js/**/*.vue',
+        './resources/js/**/*.{js,jsx,vue}',
     ],
-    darkMode: ['class', '[data-mode="dark"]'],
 
     theme: {
-        screens: {
-            xs: "100%",
-            sm: '540px',
-            md: '720px	',
-            lg: '960px',
-            xl: '1140px',
-            '2xl': '1320px',
-        },
+        // screens: {
+        //     xs: '100%',
+        //     sm: '540px',
+        //     md: '720px	',
+        //     lg: '960px',
+        //     xl: '1140px',
+        //     '2xl': '1320px',
+        // },
         container: {
-            padding: '0.625rem',
+            center: true,
+            padding: '2rem',
+            screens: {
+                '2xl': '1400px',
+            },
         },
         fontFamily: {
             primary: ['IBM Plex Sans', 'sans-serif'],
@@ -69,36 +77,128 @@ export default {
                 'surface-700': 'rgb(var(--surface-700))',
                 'surface-800': 'rgb(var(--surface-800))',
                 'surface-900': 'rgb(var(--surface-900))',
-                'surface-950': 'rgb(var(--surface-950))'
+                'surface-950': 'rgb(var(--surface-950))',
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
+                primary: {
+                    DEFAULT: 'hsl(var(--primary))',
+                    foreground: 'hsl(var(--primary-foreground))',
+                },
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary))',
+                    foreground: 'hsl(var(--secondary-foreground))',
+                },
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive))',
+                    foreground: 'hsl(var(--destructive-foreground))',
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))',
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover))',
+                    foreground: 'hsl(var(--popover-foreground))',
+                },
+                card: {
+                    DEFAULT: 'hsl(var(--card))',
+                    foreground: 'hsl(var(--card-foreground))',
+                },
+                animation: {
+                    loader: 'loader 0.6s infinite alternate',
+                },
+                keyframes: {
+                    loader: {
+                        to: {
+                            opacity: 1,
+                            transform: 'translate3d(0, -1rem, 0)',
+                        },
+                    },
+                },
             },
-            animation: {
-                loader: "loader 0.6s infinite alternate"
+            borderRadius: {
+                // xl: 'calc(var(--radius) + 4px)',
+                // lg: 'var(--radius)',
+                // md: 'calc(var(--radius) - 2px)',
+                // sm: 'calc(var(--radius) - 4px)',
+                xl: '8px', // or a fallback value
+                lg: '6px',
+                md: '4px',
+                sm: '2px',
             },
             keyframes: {
-                loader: {
-                    to: {
-                        opacity: 1,
-                        transform: "translate3d(0, -1rem, 0)"
-                    }
-                }
-            }
+                'accordion-down': {
+                    from: { height: 0 },
+                    to: { height: 'var(--radix-accordion-content-height)' },
+                },
+                'accordion-up': {
+                    from: { height: 'var(--radix-accordion-content-height)' },
+                    to: { height: 0 },
+                },
+                'collapsible-down': {
+                    from: { height: 0 },
+                    to: { height: 'var(--radix-collapsible-content-height)' },
+                },
+                'collapsible-up': {
+                    from: { height: 'var(--radix-collapsible-content-height)' },
+                    to: { height: 0 },
+                },
+            },
+            animation: {
+                'accordion-down': 'accordion-down 0.2s ease-out',
+                'accordion-up': 'accordion-up 0.2s ease-out',
+                'collapsible-down': 'collapsible-down 0.2s ease-in-out',
+                'collapsible-up': 'collapsible-up 0.2s ease-in-out',
+            },
         },
     },
     plugins: [
+        animate,
         forms,
         typography,
         require('@tailwindcss/forms'),
-        plugin(function ({ addBase, theme }) {
+        plugin(function({ addBase, theme }) {
             addBase({
-                'h1': { fontSize: theme('fontSize.4xl'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
-                'h2': { fontSize: theme('fontSize.3xl'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
-                'h3': { fontSize: theme('fontSize.2xl'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
-                'h4': { fontSize: theme('fontSize.xl'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
-                'h5': { fontSize: theme('fontSize.lg'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
-                'h6': { fontSize: theme('fontSize.base'), fontWeight: theme('fontWeight.semibold'), fontFamily: theme('fontFamily.primary') },
+                'h1': {
+                    fontSize: theme('fontSize.4xl'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
+                'h2': {
+                    fontSize: theme('fontSize.3xl'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
+                'h3': {
+                    fontSize: theme('fontSize.2xl'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
+                'h4': {
+                    fontSize: theme('fontSize.xl'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
+                'h5': {
+                    fontSize: theme('fontSize.lg'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
+                'h6': {
+                    fontSize: theme('fontSize.base'),
+                    fontWeight: theme('fontWeight.semibold'),
+                    fontFamily: theme('fontFamily.primary'),
+                },
             })
         }),
-        plugin(function ({ addComponents, theme }) {
+        plugin(function({ addComponents, theme }) {
             addComponents({
                 '.btn': {
                     padding: '0.4375rem 0.75rem',
@@ -116,12 +216,12 @@ export default {
                     border: '1px',
                     borderStyle: 'solid',
                     borderColor: '#e5e7eb',
-                    marginBottom: theme('margin.5')
+                    marginBottom: theme('margin.5'),
                 },
                 '.card-body': {
                     padding: theme('padding.5'),
-                }
+                },
             })
-        })
+        }),
     ],
-};
+}

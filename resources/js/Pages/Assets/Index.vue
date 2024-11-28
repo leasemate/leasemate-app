@@ -100,7 +100,7 @@ const deleteAsset = () => {
 
                     <DangerButton
                         class="ml-3"
-                        @click="deleteAsset()"
+                        @click="deleteAsset"
                     >
                         Delete
                     </DangerButton>

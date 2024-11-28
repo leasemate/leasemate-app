@@ -1,44 +1,10 @@
-/* Template Name: Minia - Tailwindcss Admin Dashboard Template
-   Author: Themesbrand
-   Version: 1.0.0
-   File Description: Main Css file of the template
-*/
-
 /* // Tailwindcss */
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* Custom Css */
-@import "custom/general.css";
-@import "custom/components.css";
-@import "custom/form.css";
-//@import "custom/login.css";
-//@import "custom/auth.css";
-
-@import "structure/sidebar.css";
-
-/* @import "plugins/all-custom.css"; */
-@import "plugins/custom-scrollbar.css";
-//@import "plugins/range-slider.css";
-//@import "plugins/glightbox.css";
-//@import "plugins/sweetalert2.css";
-//@import "plugins/alertify.css";
-//@import "plugins/flatpickr.css";
-//@import "plugins/switch.css";
-//@import "plugins/choices.css";
-//@import "plugins/ckeditor.css";
-//@import "plugins/dropzon.css";
-//@import "plugins/datatables.css";
-//@import "plugins/table-responsive.css";
-//@import "plugins/apexchart.css";
-//@import "plugins/materialdesign.css";
-//@import "plugins/map.css";
-//@import "plugins/calender.css";
-
-@import "custom/chat-loader.css";
-
 :root {
+    --radius: 4px;
     --tw-sidebar-width: 250px;
     --tw-sidebar-bg: #fbfaff;
     --primary-color: #ff5733;
@@ -139,22 +105,23 @@
     background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
 }
 
-select{
+select {
     font-size: 14px !important;
 }
+
 .nav-tabs ul li a {
     @apply dark:text-gray-100;
 }
 
-.nav-tabs.border-tab ul li .active{
+.nav-tabs.border-tab ul li .active {
     @apply border border-b-0 rounded-md border-violet-300 rounded-b-none text-violet-300 dark:text-violet-300 ;
 }
 
-.nav-tabs.border-b-tabs ul li .active{
+.nav-tabs.border-b-tabs ul li .active {
     @apply border-violet-300 border-b-2 text-violet-300;
 }
 
-.nav-tabs.tab-pill ul li .active{
+.nav-tabs.tab-pill ul li .active {
     @apply bg-violet-300 text-white;
 }
 
@@ -165,13 +132,45 @@ select{
 .nav-tabs.bar-tabs ul li .active {
     @apply bg-violet-300 text-white;
 }
-.accordion-item .accordion-header{
+
+.accordion-item .accordion-header {
     @apply text-gray-200;
 }
-.accordion-item .accordion-header{
+
+.accordion-item .accordion-header {
     @apply text-gray-500;
 }
-.accordion-item .accordion-header.active{
+
+.accordion-item .accordion-header.active {
     @apply text-violet-500;
 }
 
+
+/* Custom Css */
+@import "custom/general.css";
+@import "custom/components.css";
+@import "custom/form.css";
+//@import "custom/login.css";
+//@import "custom/auth.css";
+
+@import "structure/sidebar.css";
+
+/* @import "plugins/all-custom.css"; */
+@import "plugins/custom-scrollbar.css";
+//@import "plugins/range-slider.css";
+//@import "plugins/glightbox.css";
+//@import "plugins/sweetalert2.css";
+//@import "plugins/alertify.css";
+//@import "plugins/flatpickr.css";
+//@import "plugins/switch.css";
+//@import "plugins/choices.css";
+//@import "plugins/ckeditor.css";
+//@import "plugins/dropzon.css";
+//@import "plugins/datatables.css";
+//@import "plugins/table-responsive.css";
+//@import "plugins/apexchart.css";
+//@import "plugins/materialdesign.css";
+//@import "plugins/map.css";
+//@import "plugins/calender.css";
+
+@import "custom/chat-loader.css";
