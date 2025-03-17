@@ -1,4 +1,6 @@
-# REAI
+# Leasemate App
+
+https://leasemate.ai/
 
 ## Document Status Updates
 
